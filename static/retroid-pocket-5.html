@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retroid Pocket 5 | Ryan Retro</title>
+    <title>Retroid Pocket 5 Compatibility | Ryan Retro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-        .retro-font {
-            font-family: 'Press Start 2P', cursive;
+        .retro-font { font-family: 'Press Start 2P', cursive; }
+        .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
+        .perf-perfect { color: #4ade80; } .perf-great { color: #38bdf8; } .perf-good { color: #facc15; }
+        .perf-playable { color: #fb923c; } .perf-unplayable { color: #f87171; }
+        .form-input {
+            background-color: #374151; border: 2px solid #1f2937;
+            border-radius: 0.25rem; padding: 0.5rem 0.75rem;
+            color: #d1d5db; width: 100%; transition: border-color 0.2s;
         }
-        .pixel-border {
-            border: 4px solid #000;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
-        }
+        .form-input:focus { outline: none; border-color: #facc15; }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -31,112 +34,108 @@
 
     <main class="py-12">
         <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-6xl mx-auto">
                 <div class="flex items-center mb-8">
                     <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font mr-4">RETROID</span>
                     <h1 class="retro-font text-3xl md:text-4xl">Retroid Pocket 5</h1>
                 </div>
-
-                <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border mb-8">
+                <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border mb-12">
                     <img src="http://static.photos/technology/1200x630/1" alt="Retroid Pocket 5" class="w-full h-96 object-cover">
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="retro-font text-lg mb-4">Specs</h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-center">
-                                <i data-feather="cpu" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>Snapdragon 865</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i data-feather="monitor" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>5.5" 1080p Display</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i data-feather="battery" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>6000mAh Battery</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="retro-font text-lg mb-4">Performance</h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-center">
-                                <i data-feather="play" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>Up to PS2/GameCube</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i data-feather="zap" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>Android 12 OS</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i data-feather="download" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>WiFi 6 + Bluetooth 5.2</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <h3 class="retro-font text-lg mb-4">Features</h3>
-                        <ul class="space-y-2">
-                            <li class="flex items-center">
-                                <i data-feather="sliders" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>Hall Effect Sticks</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i data-feather="mic" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>Dual Speakers</span>
-                            </li>
-                            <li class="flex items-center">
-                                <i data-feather="type" class="w-4 h-4 mr-2 text-yellow-400"></i>
-                                <span>Touchscreen</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
                 <div class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
                     <h2 class="retro-font text-2xl mb-6">Review</h2>
                     <div class="prose prose-invert max-w-none">
-                        <p class="mb-4">The Retroid Pocket 5 represents a major leap forward for Android-based retro handhelds, packing flagship-level performance in a compact form factor.</p>
-                        <p class="mb-4">With its Snapdragon 865 chipset, the RP5 can handle up to GameCube and PS2 emulation with ease, making it one of the most powerful retro handhelds on the market.</p>
-                        <p class="mb-4">The 5.5" 1080p display is crisp and vibrant, perfect for both retro pixel art and modern 3D games. The inclusion of Hall Effect analog sticks ensures precise control without drift issues.</p>
-                        <p>While slightly more expensive than previous Retroid models, the performance and build quality justify the price for serious retro gaming enthusiasts.</p>
+                        <p>The Retroid Pocket 5 represents a major leap forward for Android-based retro handhelds, packing flagship-level performance in a compact form factor. With its Snapdragon 865 chipset, the RP5 can handle up to GameCube and PS2 emulation with ease, making it one of the most powerful retro handhelds on the market.</p>
                     </div>
                 </div>
 
                 <div class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
-                    <h2 class="retro-font text-2xl mb-6">Supported Systems</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <a href="nintendo-switch.html" class="bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition">
-                            <h3 class="text-lg font-bold mb-2 flex items-center">
-                                <i data-feather="cpu" class="w-5 h-5 mr-2 text-red-500"></i>
-                                Nintendo Switch
-                            </h3>
-                            <p class="text-gray-300 text-sm">Most games playable at 30-60fps with some settings adjustments</p>
-                        </a>
-                        <div class="bg-gray-700 p-4 rounded-lg">
-                            <h3 class="text-lg font-bold mb-2 flex items-center">
-                                <i data-feather="cpu" class="w-5 h-5 mr-2 text-blue-500"></i>
-                                PlayStation 3
-                            </h3>
-                            <p class="text-gray-300 text-sm">Many games playable at 30fps with performance optimizations</p>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-lg">
-                            <h3 class="text-lg font-bold mb-2 flex items-center">
-                                <i data-feather="cpu" class="w-5 h-5 mr-2 text-green-500"></i>
-                                Windows
-                            </h3>
-                            <p class="text-gray-300 text-sm">Full Windows game support through Android compatibility layers</p>
-                        </div>
+                    <h2 class="retro-font text-2xl mb-6">Game Compatibility (PS2, GameCube, etc.)</h2>
+                    
+                    <div class="mb-6">
+                        <input type="text" id="game-search-box" class="form-input" placeholder="Search for a game...">
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-left text-gray-300" id="compatibility-table">
+                            <thead class="bg-gray-700 text-gray-100 retro-font text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="p-3">Game</th>
+                                    <th class="p-3">System</th>
+                                    <th class="p-3">Performance</th>
+                                    <th class="p-3">Driver</th>
+                                    <th class="p-3">Emulator</th>
+                                    <th class="p-3">Update</th>
+                                    <th class="p-3 min-w-[300px]">Notes</th>
+                                    <th class="p-3">Date Added</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-700 align-baseline">
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-6">
+                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font text-sm inline-block pixel-border border-2">
+                            ADD YOUR ENTRY
+                        </button>
                     </div>
                 </div>
 
+                <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden" data-aos="fade-up">
+                    <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
+                    <form id="compatibility-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="system" class="block mb-2 text-sm font-bold text-gray-300">System</label>
+                                <select id="system" class="form-input" required>
+                                    <option value="PlayStation 2">PlayStation 2</option>
+                                    <option value="GameCube">GameCube</option>
+                                    <option value="Wii">Wii</option>
+                                    <option value="3DS">3DS</option>
+                                    <option value="Nintendo Switch">Nintendo Switch</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="game-name" class="block mb-2 text-sm font-bold text-gray-300">Game Name</label>
+                                <input type="text" id="game-name" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="performance" class="block mb-2 text-sm font-bold text-gray-300">Performance</label>
+                                <select id="performance" class="form-input" required>
+                                    <option value="Perfect">Perfect</option>
+                                    <option value="Great">Great</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Playable">Playable</option>
+                                    <option value="Unplayable">Unplayable</option>
+                                </select>
+                            </div>
+                             <div>
+                                <label for="emulator" class="block mb-2 text-sm font-bold text-gray-300">Emulator</label>
+                                <input type="text" id="emulator" class="form-input">
+                            </div>
+                            <div>
+                                <label for="driver" class="block mb-2 text-sm font-bold text-gray-300">Driver</label>
+                                <input type="text" id="driver" class="form-input">
+                            </div>
+                            <div>
+                                <label for="update" class="block mb-2 text-sm font-bold text-gray-300">Game Update / Version</label>
+                                <input type="text" id="update" class="form-input" value="1.0">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                             <label for="notes" class="block mb-2 text-sm font-bold text-gray-300">Notes</label>
+                             <textarea id="notes" rows="3" class="form-input"></textarea>
+                        </div>
+                        <div class="flex items-center justify-end gap-4">
+                            <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font text-sm">CANCEL</button>
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded retro-font text-sm pixel-border border-2">SUBMIT ENTRY</button>
+                        </div>
+                    </form>
+                </div>
+                
                 <div class="flex justify-center">
-                    <a href="index.html#games" class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded retro-font text-sm">
-                        BACK TO DEVICES
+                    <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded retro-font text-sm">
+                        BACK TO HOME
                     </a>
                 </div>
             </div>
@@ -145,13 +144,109 @@
 
     <footer class="bg-black py-8">
         <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>© 2023 Ryan Retro. All rights reserved.</p>
-        </div>
+            </div>
     </footer>
 
     <script>
         AOS.init();
         feather.replace();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let allGames = [];
+            
+            const addEntryBtn = document.getElementById('add-entry-btn');
+            const formContainer = document.getElementById('add-entry-form-container');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const compatibilityForm = document.getElementById('compatibility-form');
+            const tableBody = document.querySelector('#compatibility-table tbody');
+            const searchBox = document.getElementById('game-search-box');
+
+            const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
+
+            // IMPORTANT: To make your site powerful, you need one central database.
+            // Add a "system" column to your compatibility_list.csv file.
+            // Then this script will fetch ALL games and you can filter them.
+            // For now, it will show everything.
+
+            function displayGames(gamesToDisplay) {
+                tableBody.innerHTML = '';
+                gamesToDisplay.sort((a, b) => a.name.localeCompare(b.name));
+
+                for (const game of gamesToDisplay) {
+                    const perfClass = performanceClassMap[game.performance] || '';
+                    const newRow = document.createElement('tr');
+                    newRow.className = 'hover:bg-gray-700/50';
+                    newRow.innerHTML = `
+                        <td class="p-3 font-bold">${game.name}</td>
+                        <td class="p-3">${game.system || 'N/A'}</td>
+                        <td class="p-3 font-bold ${perfClass}">${game.performance}</td>
+                        <td class="p-3">${game.driver || ''}</td>
+                        <td class="p-3">${game.emulator || ''}</td>
+                        <td class="p-3">${game.update || ''}</td>
+                        <td class="p-3">${game.notes || ''}</td>
+                        <td class="p-3">${game.date || ''}</td>
+                    `;
+                    tableBody.appendChild(newRow);
+                }
+            }
+
+            async function loadAndDisplayGames() {
+                try {
+                    const response = await fetch('/api/games');
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    allGames = await response.json();
+                    displayGames(allGames);
+                } catch (error) {
+                    console.error("Failed to load games:", error);
+                    tableBody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-400">Error loading compatibility data.</td></tr>`;
+                }
+            }
+
+            async function handleFormSubmit(e) {
+                e.preventDefault();
+                const newEntry = {
+                    system: document.getElementById('system').value,
+                    name: document.getElementById('game-name').value,
+                    performance: document.getElementById('performance').value,
+                    driver: document.getElementById('driver').value,
+                    emulator: document.getElementById('emulator').value,
+                    update_version: document.getElementById('update').value,
+                    notes: document.getElementById('notes').value
+                };
+
+                try {
+                    const response = await fetch('/api/games', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newEntry)
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    
+                    compatibilityForm.reset();
+                    formContainer.classList.add('hidden');
+                    await loadAndDisplayGames();
+                } catch (error) {
+                    console.error("Failed to submit entry:", error);
+                    alert("There was an error submitting your entry.");
+                }
+            }
+
+            function handleSearch() {
+                const searchTerm = searchBox.value.toLowerCase();
+                const filteredGames = searchTerm ? allGames.filter(game => game.name.toLowerCase().includes(searchTerm)) : allGames;
+                displayGames(filteredGames);
+            }
+
+            addEntryBtn.addEventListener('click', () => {
+                formContainer.classList.remove('hidden');
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+            cancelBtn.addEventListener('click', () => formContainer.classList.add('hidden'));
+            compatibilityForm.addEventListener('submit', handleFormSubmit);
+            searchBox.addEventListener('input', handleSearch);
+
+            loadAndDisplayGames();
+        });
     </script>
 </body>
 </html>
