@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <title>Retroid Pocket 5 Compatibility | Ryan Retro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -36,38 +36,38 @@
         <div class="container mx-auto px-4">
             <div class="max-w-6xl mx-auto">
                 <div class="flex items-center mb-8">
-                    <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font mr-4">RETROID</span>
+                    <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font mr-4">HANDHELD</span>
                     <h1 class="retro-font text-3xl md:text-4xl">Retroid Pocket 5</h1>
                 </div>
                 <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border mb-12">
                     <img src="http://static.photos/technology/1200x630/1" alt="Retroid Pocket 5" class="w-full h-96 object-cover">
                 </div>
-                <div class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
-                    <h2 class="retro-font text-2xl mb-6">Review</h2>
-                    <div class="prose prose-invert max-w-none">
-                        <p>The Retroid Pocket 5 represents a major leap forward for Android-based retro handhelds, packing flagship-level performance in a compact form factor. With its Snapdragon 865 chipset, the RP5 can handle up to GameCube and PS2 emulation with ease, making it one of the most powerful retro handhelds on the market.</p>
-                    </div>
-                </div>
 
                 <div class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
-                    <h2 class="retro-font text-2xl mb-6">Game Compatibility (PS2, GameCube, etc.)</h2>
-                    
+                    <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
+
+                    <div id="filter-container" class="mb-4 flex flex-wrap gap-2">
+                        <button data-filter="all" class="filter-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">All Systems</button>
+                        <button data-filter="switch" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Switch</button>
+                        <button data-filter="ps2" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
+                        <button data-filter="windows" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Windows</button>
+                        <button data-filter="gamecube" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">GameCube</button>
+                    </div>
+
                     <div class="mb-6">
                         <input type="text" id="game-search-box" class="form-input" placeholder="Search for a game...">
                     </div>
 
                     <div class="overflow-x-auto">
-                        <table class="min-w-full text-sm text-left text-gray-300" id="compatibility-table">
+                        <table id="compatibility-table" class="min-w-full text-sm text-left text-gray-300">
                             <thead class="bg-gray-700 text-gray-100 retro-font text-xs uppercase tracking-wider">
                                 <tr>
                                     <th class="p-3">Game</th>
                                     <th class="p-3">System</th>
                                     <th class="p-3">Performance</th>
-                                    <th class="p-3">Driver</th>
                                     <th class="p-3">Emulator</th>
-                                    <th class="p-3">Update</th>
                                     <th class="p-3 min-w-[300px]">Notes</th>
-                                    <th class="p-3">Date Added</th>
+                                    <th class="p-3">Date</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-700 align-baseline">
@@ -75,9 +75,7 @@
                         </table>
                     </div>
                     <div class="text-center mt-6">
-                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font text-sm inline-block pixel-border border-2">
-                            ADD YOUR ENTRY
-                        </button>
+                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">ADD YOUR ENTRY</button>
                     </div>
                 </div>
 
@@ -86,57 +84,53 @@
                     <form id="compatibility-form">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label for="system" class="block mb-2 text-sm font-bold text-gray-300">System</label>
+                                <label for="system" class="block mb-2 font-bold">System</label>
                                 <select id="system" class="form-input" required>
-                                    <option value="PlayStation 2">PlayStation 2</option>
-                                    <option value="GameCube">GameCube</option>
-                                    <option value="Wii">Wii</option>
-                                    <option value="3DS">3DS</option>
-                                    <option value="Nintendo Switch">Nintendo Switch</option>
+                                    <option value="switch">Nintendo Switch</option>
+                                    <option value="ps2">PlayStation 2</option>
+                                    <option value="windows">Windows</option>
+                                    <option value="gamecube">GameCube</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="game-name" class="block mb-2 text-sm font-bold text-gray-300">Game Name</label>
+                                <label for="device" class="block mb-2 font-bold">Handheld Device</label>
+                                <select id="device" class="form-input" required>
+                                    <option selected>Retroid Pocket 5</option>
+                                    <option>Ayn Odin 2</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="game-name" class="block mb-2 font-bold">Game Name</label>
                                 <input type="text" id="game-name" class="form-input" required>
                             </div>
                             <div>
-                                <label for="performance" class="block mb-2 text-sm font-bold text-gray-300">Performance</label>
+                                <label for="performance" class="block mb-2 font-bold">Performance</label>
                                 <select id="performance" class="form-input" required>
-                                    <option value="Perfect">Perfect</option>
-                                    <option value="Great">Great</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Playable">Playable</option>
-                                    <option value="Unplayable">Unplayable</option>
+                                    <option>Perfect</option>
+                                    <option>Great</option>
+                                    <option>Good</option>
+                                    <option>Playable</option>
+                                    <option>Unplayable</option>
                                 </select>
                             </div>
-                             <div>
-                                <label for="emulator" class="block mb-2 text-sm font-bold text-gray-300">Emulator</label>
+                            <div>
+                                <label for="emulator" class="block mb-2 font-bold">Emulator</label>
                                 <input type="text" id="emulator" class="form-input">
                             </div>
-                            <div>
-                                <label for="driver" class="block mb-2 text-sm font-bold text-gray-300">Driver</label>
+                             <div>
+                                <label for="driver" class="block mb-2 font-bold">Driver</label>
                                 <input type="text" id="driver" class="form-input">
-                            </div>
-                            <div>
-                                <label for="update" class="block mb-2 text-sm font-bold text-gray-300">Game Update / Version</label>
-                                <input type="text" id="update" class="form-input" value="1.0">
                             </div>
                         </div>
                         <div class="mb-6">
-                             <label for="notes" class="block mb-2 text-sm font-bold text-gray-300">Notes</label>
-                             <textarea id="notes" rows="3" class="form-input"></textarea>
+                            <label for="notes" class="block mb-2 font-bold">Notes</label>
+                            <textarea id="notes" rows="3" class="form-input"></textarea>
                         </div>
                         <div class="flex items-center justify-end gap-4">
-                            <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font text-sm">CANCEL</button>
-                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded retro-font text-sm pixel-border border-2">SUBMIT ENTRY</button>
+                            <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font">CANCEL</button>
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded retro-font">SUBMIT</button>
                         </div>
                     </form>
-                </div>
-                
-                <div class="flex justify-center">
-                    <a href="index.html" class="bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded retro-font text-sm">
-                        BACK TO HOME
-                    </a>
                 </div>
             </div>
         </div>
@@ -144,7 +138,8 @@
 
     <footer class="bg-black py-8">
         <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-            </div>
+            <p>© 2025 Ryan Retro. All rights reserved.</p>
+        </div>
     </footer>
 
     <script>
@@ -152,21 +147,45 @@
         feather.replace();
 
         document.addEventListener('DOMContentLoaded', function () {
-            let allGames = [];
-            
+            // --- PAGE CONFIGURATION ---
+            const CURRENT_DEVICE = "Retroid Pocket 5";
+            const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
+
+            // --- GLOBAL VARIABLES ---
+            let masterGameList = [];
+            let deviceSpecificGames = [];
+
+            // --- ELEMENT SELECTIONS ---
+            const tableBody = document.querySelector('#compatibility-table tbody');
+            const searchBox = document.getElementById('game-search-box');
+            const filterContainer = document.getElementById('filter-container');
             const addEntryBtn = document.getElementById('add-entry-btn');
             const formContainer = document.getElementById('add-entry-form-container');
             const cancelBtn = document.getElementById('cancel-btn');
             const compatibilityForm = document.getElementById('compatibility-form');
-            const tableBody = document.querySelector('#compatibility-table tbody');
-            const searchBox = document.getElementById('game-search-box');
 
             const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
 
-            // IMPORTANT: To make your site powerful, you need one central database.
-            // Add a "system" column to your compatibility_list.csv file.
-            // Then this script will fetch ALL games and you can filter them.
-            // For now, it will show everything.
+            async function loadAndPrepareData() {
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">Loading all compatibility data...</td></tr>`;
+                try {
+                    const fetchPromises = SYSTEMS_TO_FETCH.map(system =>
+                        fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : [])
+                    );
+                    const results = await Promise.all(fetchPromises);
+                    masterGameList = results.flat();
+                    deviceSpecificGames = masterGameList.filter(game => game.device === CURRENT_DEVICE);
+                    
+                    if (deviceSpecificGames.length === 0) {
+                         tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No reports found for ${CURRENT_DEVICE}. Be the first to add one!</td></tr>`;
+                         return;
+                    }
+                    displayGames(deviceSpecificGames);
+                } catch (error) {
+                    console.error("Failed to load game lists:", error);
+                    tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400">Error loading data.</td></tr>`;
+                }
+            }
 
             function displayGames(gamesToDisplay) {
                 tableBody.innerHTML = '';
@@ -179,73 +198,86 @@
                     newRow.innerHTML = `
                         <td class="p-3 font-bold">${game.name}</td>
                         <td class="p-3">${game.system || 'N/A'}</td>
-                        <td class="p-3 font-bold ${perfClass}">${game.performance}</td>
-                        <td class="p-3">${game.driver || ''}</td>
+                        <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
                         <td class="p-3">${game.emulator || ''}</td>
-                        <td class="p-3">${game.update || ''}</td>
-                        <td class="p-3">${game.notes || ''}</td>
+                        <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
                         <td class="p-3">${game.date || ''}</td>
                     `;
                     tableBody.appendChild(newRow);
                 }
             }
 
-            async function loadAndDisplayGames() {
-                try {
-                    const response = await fetch('/api/games');
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    allGames = await response.json();
-                    displayGames(allGames);
-                } catch (error) {
-                    console.error("Failed to load games:", error);
-                    tableBody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-400">Error loading compatibility data.</td></tr>`;
+            filterContainer.addEventListener('click', (event) => {
+                if (event.target.tagName !== 'BUTTON') return;
+                const filterValue = event.target.dataset.filter;
+
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('bg-yellow-400', 'text-black');
+                    btn.classList.add('bg-gray-600', 'text-white');
+                });
+                event.target.classList.add('bg-yellow-400', 'text-black');
+                event.target.classList.remove('bg-gray-600', 'text-white');
+
+                const searchInput = searchBox.value.toLowerCase();
+                let gamesToShow = deviceSpecificGames;
+
+                if (filterValue !== 'all') {
+                    gamesToShow = gamesToShow.filter(game => game.system && game.system.toLowerCase() === filterValue);
                 }
-            }
+
+                if (searchInput) {
+                    gamesToShow = gamesToShow.filter(game => game.name.toLowerCase().includes(searchInput));
+                }
+
+                displayGames(gamesToShow);
+            });
+            
+            searchBox.addEventListener('input', () => {
+                const activeFilter = document.querySelector('.filter-btn.bg-yellow-400').dataset.filter;
+                filterContainer.querySelector(`[data-filter="${activeFilter}"]`).click();
+            });
 
             async function handleFormSubmit(e) {
                 e.preventDefault();
+                const system = document.getElementById('system').value;
                 const newEntry = {
-                    system: document.getElementById('system').value,
+                    device: document.getElementById('device').value,
                     name: document.getElementById('game-name').value,
                     performance: document.getElementById('performance').value,
                     driver: document.getElementById('driver').value,
                     emulator: document.getElementById('emulator').value,
-                    update_version: document.getElementById('update').value,
-                    notes: document.getElementById('notes').value
+                    notes: document.getElementById('notes').value,
+                    update_version: "1.0" // You may want to add a field for this
                 };
-
+                
                 try {
-                    const response = await fetch('/api/games', {
+                    const response = await fetch(`/api/compatibility/${system}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(newEntry)
                     });
                     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    
-                    compatibilityForm.reset();
                     formContainer.classList.add('hidden');
-                    await loadAndDisplayGames();
+                    compatibilityForm.reset();
+                    await loadAndPrepareData();
                 } catch (error) {
                     console.error("Failed to submit entry:", error);
-                    alert("There was an error submitting your entry.");
+                    alert("Error submitting entry. Please check the logs.");
                 }
-            }
-
-            function handleSearch() {
-                const searchTerm = searchBox.value.toLowerCase();
-                const filteredGames = searchTerm ? allGames.filter(game => game.name.toLowerCase().includes(searchTerm)) : allGames;
-                displayGames(filteredGames);
             }
 
             addEntryBtn.addEventListener('click', () => {
                 formContainer.classList.remove('hidden');
                 formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
-            cancelBtn.addEventListener('click', () => formContainer.classList.add('hidden'));
-            compatibilityForm.addEventListener('submit', handleFormSubmit);
-            searchBox.addEventListener('input', handleSearch);
 
-            loadAndDisplayGames();
+            cancelBtn.addEventListener('click', () => {
+                formContainer.classList.add('hidden');
+            });
+            
+            compatibilityForm.addEventListener('submit', handleFormSubmit);
+
+            loadAndPrepareData();
         });
     </script>
 </body>
