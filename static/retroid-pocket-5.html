@@ -106,10 +106,11 @@
                                     <option>Ayn Odin 2</option>
                                 </select>
                             </div>
-                            <div>
-                                <label for="game" class="block mb-2 font-bold">Game Name</label>
-                                <input type="text" id="game" class="form-input" required>
-                            </div>
+<div>
+    <label for="game" class="block mb-2 font-bold">Game Name</label>
+    <input type="text" id="game" class="form-input" required list="game-suggestions">
+    <datalist id="game-suggestions"></datalist>
+</div>
                             <div>
                                 <label for="performance" class="block mb-2 font-bold">Performance</label>
                                 <select id="performance" class="form-input" required>
@@ -192,24 +193,36 @@
         }
 
         // --- NEW: Function to populate autocomplete suggestions for form fields ---
-        function populateDatalists(games) {
-            const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
-            const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
+// NEW: Upgraded function to populate ALL autocomplete suggestions
+function populateDatalists(games) {
+    const uniqueGames = [...new Set(games.map(g => g.game).filter(Boolean))];
+    const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
+    const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
 
-            emulatorDatalist.innerHTML = '';
-            uniqueEmulators.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                emulatorDatalist.appendChild(option);
-            });
+    const gameDatalist = document.getElementById('game-suggestions');
+    gameDatalist.innerHTML = '';
+    uniqueGames.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        gameDatalist.appendChild(option);
+    });
 
-            driverDatalist.innerHTML = '';
-            uniqueDrivers.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                driverDatalist.appendChild(option);
-            });
-        }
+    const emulatorDatalist = document.getElementById('emulator-suggestions');
+    emulatorDatalist.innerHTML = '';
+    uniqueEmulators.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        emulatorDatalist.appendChild(option);
+    });
+
+    const driverDatalist = document.getElementById('driver-suggestions');
+    driverDatalist.innerHTML = '';
+    uniqueDrivers.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        driverDatalist.appendChild(option);
+    });
+}
 
         // --- DATA LOADING & DISPLAY ---
         async function loadAndPrepareData() {
