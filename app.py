@@ -27,9 +27,8 @@ def get_compatibility_list(system_name: str):
     
     games_list = []
     try:
-        with open(file_path, mode='r', encoding='utf-8') as csvfile:
+        with open(file_path, mode='r', encoding='utf-8-sig') as csvfile: # Use utf-8-sig to handle BOM
             reader = csv.DictReader(csvfile)
-            print(f"Headers found in {system_name}.csv: {reader.fieldnames}")
             for row in reader:
                 games_list.append(row)
         return games_list
@@ -39,30 +38,38 @@ def get_compatibility_list(system_name: str):
 
 @app.post("/api/compatibility/{system_name}")
 async def add_game_entry(system_name: str, entry: GameEntry):
-    file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
-    headers = ['game', 'performance', 'driver', 'emulator', 'update', 'notes', 'date', 'device', 'system']
+    # This print statement is for debugging. It will show up in your logs.
+    print(f"Received new entry for {system_name}: {entry.dict()}")
     
-    if not os.path.exists(file_path):
-        with open(file_path, mode='w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(headers)
+    file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
+    headers = ['game', 'performance', 'driver', 'emulator', 'update', 'notes', 'date added', 'device', 'system']
+    
+    # Create file with headers if it doesn't exist
+    file_exists = os.path.exists(file_path)
+    try:
+        with open(file_path, mode='a', newline='', encoding='utf-8') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=headers)
+            if not file_exists:
+                writer.writeheader() # Add headers only if the file is new
 
-    with open(file_path, mode='a', newline='', encoding='utf-8') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=headers)
-        today_date = datetime.now().strftime('%Y-%m-%d')
-        new_row = {
-            'game': entry.game,
-            'performance': entry.performance,
-            'driver': entry.driver,
-            'emulator': entry.emulator,
-            'update': entry.update_version,
-            'notes': entry.notes,
-            'date': today_date,
-            'device': entry.device,
-            'system': system_name
-        }
-        writer.writerow(new_row)
-    return {"status": "success", "data": entry.dict()}
+            today_date = datetime.now().strftime('%Y-%m-%d')
+            new_row = {
+                'game': entry.game,
+                'performance': entry.performance,
+                'driver': entry.driver,
+                'emulator': entry.emulator,
+                'update': entry.update_version,
+                'notes': entry.notes,
+                'date added': today_date,
+                'device': entry.device,
+                'system': system_name
+            }
+            writer.writerow(new_row)
+            
+        return {"status": "success", "data": entry.dict()}
+    except Exception as e:
+        print(f"CRITICAL ERROR writing to CSV file {file_path}: {e}")
+        raise HTTPException(status_code=500, detail="Error saving entry.")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
