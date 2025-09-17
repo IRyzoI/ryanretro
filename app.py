@@ -11,7 +11,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 DATA_DIR = "data"
 
 class GameEntry(BaseModel):
-    name: str
+    game: str
     performance: str
     driver: str
     emulator: str
@@ -23,18 +23,13 @@ class GameEntry(BaseModel):
 def get_compatibility_list(system_name: str):
     file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
     if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail=f"Compatibility list for {system_name} not found.")
+        raise HTTPException(status_code=404, detail=f"List not found.")
     
     games_list = []
     try:
         with open(file_path, mode='r', encoding='utf-8') as csvfile:
-            # Use Python's built-in CSV reader which is more direct
             reader = csv.DictReader(csvfile)
-            
-            # --- THIS IS OUR ULTIMATE DEBUGGING TOOL ---
-            # It will print the exact headers it finds to your logs.
             print(f"Headers found in {system_name}.csv: {reader.fieldnames}")
-            
             for row in reader:
                 games_list.append(row)
         return games_list
@@ -45,23 +40,18 @@ def get_compatibility_list(system_name: str):
 @app.post("/api/compatibility/{system_name}")
 async def add_game_entry(system_name: str, entry: GameEntry):
     file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
-    
-    # Define headers to ensure consistency
     headers = ['game', 'performance', 'driver', 'emulator', 'update', 'notes', 'date', 'device', 'system']
     
-    # Create file with headers if it doesn't exist
-    file_exists = os.path.exists(file_path)
-    if not file_exists:
+    if not os.path.exists(file_path):
         with open(file_path, mode='w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(headers)
 
-    # Append the new row
     with open(file_path, mode='a', newline='', encoding='utf-8') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=headers)
         today_date = datetime.now().strftime('%Y-%m-%d')
         new_row = {
-            'game': entry.name,
+            'game': entry.game,
             'performance': entry.performance,
             'driver': entry.driver,
             'emulator': entry.emulator,
@@ -72,7 +62,6 @@ async def add_game_entry(system_name: str, entry: GameEntry):
             'system': system_name
         }
         writer.writerow(new_row)
-        
     return {"status": "success", "data": entry.dict()}
 
 @app.get("/", response_class=HTMLResponse)
