@@ -157,32 +157,34 @@
         // --- PAGE CONFIGURATION ---
         const CURRENT_DEVICE = "Retroid Pocket 5";
         const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
+        const rowsPerPage = 15; // Set how many items to show per page
 
-        // --- GLOBAL VARIABLES & ELEMENT SELECTIONS ---
+        // --- GLOBAL VARIABLES ---
         let deviceSpecificGames = [];
         let currentlyDisplayedGames = [];
         let currentPage = 1;
-        const rowsPerPage = 50;
+
+        // --- ELEMENT SELECTIONS ---
         const tableBody = document.querySelector('#compatibility-table tbody');
-        // ... (other elements)
+        const searchBox = document.getElementById('game-search-box');
+        const filterContainer = document.getElementById('filter-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pageInfo = document.getElementById('page-info');
+        const addEntryBtn = document.getElementById('add-entry-btn');
+        const formContainer = document.getElementById('add-entry-form-container');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const compatibilityForm = document.getElementById('compatibility-form');
         
         const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
 
-        // --- NEW: A helper function to make system names look nice ---
         function formatSystemName(systemSlug) {
             if (!systemSlug) return 'N/A';
-            const nameMap = {
-                'switch': 'Switch',
-                'ps2': 'PS2',
-                'windows': 'Windows',
-                'gamecube': 'GameCube'
-            };
-            // Return the pretty name if it exists, otherwise return the original slug
+            const nameMap = { 'switch': 'Switch', 'ps2': 'PS2', 'windows': 'Windows', 'gamecube': 'GameCube' };
             return nameMap[systemSlug] || systemSlug;
         }
 
         async function loadAndPrepareData() {
-            // ... (this function remains the same as before)
             tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">Loading all compatibility data...</td></tr>`;
             try {
                 const fetchPromises = SYSTEMS_TO_FETCH.map(system =>
@@ -190,6 +192,7 @@
                 );
                 const results = await Promise.all(fetchPromises);
                 const masterGameList = results.flat();
+
                 deviceSpecificGames = masterGameList.filter(game => game && game.device === CURRENT_DEVICE);
                 currentlyDisplayedGames = deviceSpecificGames;
                 
@@ -208,7 +211,9 @@
 
         function displayCurrentPage() {
             tableBody.innerHTML = '';
-            currentlyDisplayedGames.sort((a, b) => (a.game || '').localeCompare(b.game || ''));
+            // Use bracket notation ['...'] which is safer for headers with spaces
+            currentlyDisplayedGames.sort((a, b) => (a['game'] || '').localeCompare(b['game'] || ''));
+
             const startIndex = (currentPage - 1) * rowsPerPage;
             const endIndex = startIndex + rowsPerPage;
             const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
@@ -223,19 +228,12 @@
                     <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
                     <td class="p-3">${game.emulator || ''}</td>
                     <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
-                    <td class="p-3">${game.date || ''}</td>
+                    <td class="p-3">${game['date added'] || ''}</td>
                 `;
                 tableBody.appendChild(newRow);
             }
             updatePaginationControls();
         }
-
-        // ... (The rest of your functions: updatePaginationControls, applyFilters, event listeners, etc., remain the same)
-
-        // Make sure all other functions and event listeners from the previous complete script are here.
-        // For brevity, they are omitted, but you should use the full script from the last message
-        // and just add the `formatSystemName` function and modify the `displayCurrentPage` function as shown.
-        // Full script is re-included below for clarity.
 
         function updatePaginationControls() {
             const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
@@ -248,18 +246,19 @@
             const activeFilter = filterContainer.querySelector('.bg-yellow-400').dataset.filter;
             const searchTerm = searchBox.value.toLowerCase();
             let filteredGames = deviceSpecificGames;
+
             if (activeFilter !== 'all') {
                 filteredGames = filteredGames.filter(game => game.system && game.system.toLowerCase() === activeFilter);
             }
             if (searchTerm) {
                 filteredGames = filteredGames.filter(game => game.game && game.game.toLowerCase().includes(searchTerm));
             }
+
             currentlyDisplayedGames = filteredGames;
             currentPage = 1;
             displayCurrentPage();
         }
 
-        const filterContainer = document.getElementById('filter-container');
         filterContainer.addEventListener('click', (event) => {
             if (event.target.tagName !== 'BUTTON') return;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.replace('bg-yellow-400','bg-gray-600'));
@@ -267,16 +266,46 @@
             applyFilters();
         });
         
-        const searchBox = document.getElementById('game-search-box');
         searchBox.addEventListener('input', applyFilters);
 
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
         prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
         nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
         
-        // Form handling can be added here as before
-        
+        addEntryBtn.addEventListener('click', () => {
+            formContainer.classList.remove('hidden');
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            formContainer.classList.add('hidden');
+        });
+
+        compatibilityForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const system = document.getElementById('system').value;
+            const newEntry = {
+                device: document.getElementById('device').value,
+                game: document.getElementById('game').value,
+                performance: document.getElementById('performance').value,
+                driver: document.getElementById('driver').value,
+                emulator: document.getElementById('emulator').value,
+                notes: document.getElementById('notes').value,
+                update_version: "1.0" // You might want a form field for this
+            };
+            try {
+                await fetch(`/api/compatibility/${system}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newEntry)
+                });
+                formContainer.classList.add('hidden');
+                compatibilityForm.reset();
+                await loadAndPrepareData();
+            } catch (error) {
+                console.error("Failed to submit entry:", error);
+            }
+        });
+
         loadAndPrepareData();
     });
 </script>
