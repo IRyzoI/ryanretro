@@ -120,14 +120,16 @@
                                     <option>Unplayable</option>
                                 </select>
                             </div>
-                            <div>
-                                <label for="emulator" class="block mb-2 font-bold">Emulator</label>
-                                <input type="text" id="emulator" class="form-input">
-                            </div>
-                             <div>
-                                <label for="driver" class="block mb-2 font-bold">Driver</label>
-                                <input type="text" id="driver" class="form-input">
-                            </div>
+<div>
+    <label for="emulator" class="block mb-2 font-bold">Emulator</label>
+    <input type="text" id="emulator" class="form-input" list="emulator-suggestions">
+    <datalist id="emulator-suggestions"></datalist>
+</div>
+<div>
+    <label for="driver" class="block mb-2 font-bold">Driver</label>
+    <input type="text" id="driver" class="form-input" list="driver-suggestions">
+    <datalist id="driver-suggestions"></datalist>
+</div>
                         </div>
                         <div class="mb-6">
                             <label for="notes" class="block mb-2 font-bold">Notes</label>
@@ -163,29 +165,54 @@
         let deviceSpecificGames = [];
         let currentlyDisplayedGames = [];
         let currentPage = 1;
-        let sortColumn = 'game'; // Default sort column
-        let sortDirection = 'asc'; // Default sort direction ('asc' or 'desc')
+        let sortColumn = 'game';
+        let sortDirection = 'asc';
 
         // --- ELEMENT SELECTIONS ---
         const tableBody = document.querySelector('#compatibility-table tbody');
         const tableHead = document.querySelector('#compatibility-table thead');
-        // ... (all other element selections)
         const searchBox = document.getElementById('game-search-box');
         const filterContainer = document.getElementById('filter-container');
         const prevBtn = document.getElementById('prev-btn');
         const nextBtn = document.getElementById('next-btn');
         const pageInfo = document.getElementById('page-info');
-        
+        const addEntryBtn = document.getElementById('add-entry-btn');
+        const formContainer = document.getElementById('add-entry-form-container');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const compatibilityForm = document.getElementById('compatibility-form');
+        const emulatorDatalist = document.getElementById('emulator-suggestions');
+        const driverDatalist = document.getElementById('driver-suggestions');
+
         const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
 
-        // Helper function for display names
+        // --- HELPER FUNCTIONS ---
         function formatSystemName(systemSlug) {
             const nameMap = { 'switch': 'Switch', 'ps2': 'PS2', 'windows': 'Windows', 'gamecube': 'GameCube' };
             return nameMap[systemSlug] || systemSlug;
         }
 
+        // --- NEW: Function to populate autocomplete suggestions for form fields ---
+        function populateDatalists(games) {
+            const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
+            const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
+
+            emulatorDatalist.innerHTML = '';
+            uniqueEmulators.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                emulatorDatalist.appendChild(option);
+            });
+
+            driverDatalist.innerHTML = '';
+            uniqueDrivers.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                driverDatalist.appendChild(option);
+            });
+        }
+
+        // --- DATA LOADING & DISPLAY ---
         async function loadAndPrepareData() {
-            // ... (this function is the same as before)
             tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">Loading...</td></tr>`;
             try {
                 const fetchPromises = SYSTEMS_TO_FETCH.map(system => fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : []));
@@ -193,6 +220,9 @@
                 const masterGameList = results.flat();
                 deviceSpecificGames = masterGameList.filter(game => game && game.device === CURRENT_DEVICE);
                 currentlyDisplayedGames = deviceSpecificGames;
+                
+                populateDatalists(deviceSpecificGames); // Populate suggestions based on loaded data
+
                 if (deviceSpecificGames.length === 0) {
                      tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No reports found for ${CURRENT_DEVICE}.</td></tr>`;
                      updatePaginationControls();
@@ -205,8 +235,6 @@
 
         function displayCurrentPage() {
             tableBody.innerHTML = '';
-            
-            // --- SORTING LOGIC ---
             currentlyDisplayedGames.sort((a, b) => {
                 const valA = (a[sortColumn] || '').toLowerCase();
                 const valB = (b[sortColumn] || '').toLowerCase();
@@ -215,7 +243,6 @@
                 return 0;
             });
             updateSortIndicators();
-            // --- END SORTING ---
 
             const startIndex = (currentPage - 1) * rowsPerPage;
             const endIndex = startIndex + rowsPerPage;
@@ -243,8 +270,7 @@
             prevBtn.disabled = currentPage === 1;
             nextBtn.disabled = currentPage === totalPages;
         }
-        
-        // --- NEW: Function to handle sort indicator arrows ---
+
         function updateSortIndicators() {
             tableHead.querySelectorAll('th').forEach(th => {
                 const indicator = th.querySelector('.sort-indicator');
@@ -256,23 +282,20 @@
             });
         }
         
-        // --- NEW: Event listener for clicking table headers ---
+        // --- EVENT LISTENERS ---
         tableHead.addEventListener('click', (event) => {
             const newSortColumn = event.target.closest('th').dataset.sort;
             if (!newSortColumn) return;
-
             if (sortColumn === newSortColumn) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'; // Flip direction
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
             } else {
                 sortColumn = newSortColumn;
-                sortDirection = 'asc'; // Default to ascending
+                sortDirection = 'asc';
             }
-            
-            currentPage = 1; // Go back to the first page after sorting
+            currentPage = 1;
             displayCurrentPage();
         });
 
-        // --- Filtering, Search, and Form functions (no changes needed) ---
         function applyFilters() {
             const activeFilter = filterContainer.querySelector('.bg-yellow-400').dataset.filter;
             const searchTerm = searchBox.value.toLowerCase();
@@ -294,8 +317,46 @@
             applyFilters();
         });
         searchBox.addEventListener('input', applyFilters);
+
         prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
         nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
+
+        // --- RESTORED: Form submission and button listeners ---
+        addEntryBtn.addEventListener('click', () => {
+            formContainer.classList.remove('hidden');
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            formContainer.classList.add('hidden');
+        });
+
+        compatibilityForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const system = document.getElementById('system').value;
+            const newEntry = {
+                device: document.getElementById('device').value,
+                game: document.getElementById('game').value,
+                performance: document.getElementById('performance').value,
+                driver: document.getElementById('driver').value,
+                emulator: document.getElementById('emulator').value,
+                notes: document.getElementById('notes').value,
+                update_version: "1.0" // You might want a form field for this
+            };
+            try {
+                await fetch(`/api/compatibility/${system}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newEntry)
+                });
+                formContainer.classList.add('hidden');
+                compatibilityForm.reset();
+                await loadAndPrepareData();
+            } catch (error) {
+                console.error("Failed to submit entry:", error);
+                alert("There was an error submitting your entry.");
+            }
+        });
 
         // --- INITIAL LOAD ---
         loadAndPrepareData();
