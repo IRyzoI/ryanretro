@@ -149,7 +149,7 @@
         </div>
     </footer>
 
-    <script>
+<script>
     AOS.init();
     feather.replace();
 
@@ -158,135 +158,71 @@
         const CURRENT_DEVICE = "Retroid Pocket 5";
         const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
 
-        // --- GLOBAL VARIABLES ---
+        // --- GLOBAL VARIABLES & ELEMENT SELECTIONS ---
         let masterGameList = [];
         let deviceSpecificGames = [];
-        let currentlyDisplayedGames = [];
-
-        // --- NEW: Pagination State ---
-        let currentPage = 1;
-        const rowsPerPage = 50; // Show 50 items per page
-
-        // --- ELEMENT SELECTIONS ---
         const tableBody = document.querySelector('#compatibility-table tbody');
-        const searchBox = document.getElementById('game-search-box');
-        const filterContainer = document.getElementById('filter-container');
-        const addEntryBtn = document.getElementById('add-entry-btn');
-        // ... (other form elements)
-
-        // --- NEW: Pagination Element Selections ---
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const pageInfo = document.getElementById('page-info');
-        
-        const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
+        // ... (other elements)
 
         async function loadAndPrepareData() {
-            tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">Loading all compatibility data...</td></tr>`;
+            console.log("1. Starting to fetch data...");
             try {
                 const fetchPromises = SYSTEMS_TO_FETCH.map(system =>
                     fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : [])
                 );
                 const results = await Promise.all(fetchPromises);
-                masterGameList = results.flat();
-
-                deviceSpecificGames = masterGameList.filter(game => game.device === CURRENT_DEVICE);
-                currentlyDisplayedGames = deviceSpecificGames; // Initially, we display all device-specific games
                 
-                if (deviceSpecificGames.length === 0) {
-                     tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No reports found for ${CURRENT_DEVICE}. Check the 'device' column in your CSV.</td></tr>`;
-                     return;
+                console.log("2. Received raw data from server:", results);
+                
+                masterGameList = results.flat();
+                console.log("3. Combined data into one list:", masterGameList);
+
+                if (masterGameList.length > 0) {
+                    console.log("4. About to filter for device:", CURRENT_DEVICE);
+                    deviceSpecificGames = masterGameList.filter(game => game.device === CURRENT_DEVICE);
+                    console.log("5. Filtering complete. Found this many matching games:", deviceSpecificGames.length);
+                } else {
+                    deviceSpecificGames = [];
                 }
                 
-                currentPage = 1; // Reset to first page on new data load
-                displayCurrentPage();
+                if (deviceSpecificGames.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No reports found for ${CURRENT_DEVICE}. Check the console for clues.</td></tr>`;
+                    // This is our key debugging step!
+                    if(masterGameList.length > 0) {
+                        console.error("DEBUG: Filtering failed! The code is looking for '", CURRENT_DEVICE, "' but the first item in the CSV has this device value: '", masterGameList[0].device, "'");
+                    } else {
+                        console.error("DEBUG: The server returned no data at all.");
+                    }
+                    return;
+                }
+                
+                // If we get here, it worked. Now display the data.
+                // For simplicity, we'll remove pagination just for this test.
+                displayGames(deviceSpecificGames);
+
             } catch (error) {
-                console.error("Failed to load game lists:", error);
-                tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400">Error loading data. Check server logs.</td></tr>`;
+                console.error("CRITICAL ERROR: Failed to load or process game lists:", error);
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-400">A critical error occurred. Check the console.</td></tr>`;
             }
         }
 
-        /**
-         * MODIFIED: This function now handles slicing the data into pages.
-         */
-        function displayCurrentPage() {
+        function displayGames(gamesToDisplay) {
             tableBody.innerHTML = '';
-            
-            const startIndex = (currentPage - 1) * rowsPerPage;
-            const endIndex = startIndex + rowsPerPage;
-            const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
-
-            // Sort items on the current page alphabetically
-            paginatedItems.sort((a, b) => a.name.localeCompare(b.name));
-
-            for (const game of paginatedItems) {
-                const perfClass = performanceClassMap[game.performance] || '';
+            gamesToDisplay.sort((a, b) => a.name.localeCompare(b.name));
+            for (const game of gamesToDisplay) {
                 const newRow = document.createElement('tr');
-                newRow.className = 'hover:bg-gray-700/50';
                 newRow.innerHTML = `
                     <td class="p-3 font-bold">${game.name}</td>
                     <td class="p-3">${game.system || 'N/A'}</td>
-                    <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
+                    <td class="p-3">${game.performance || ''}</td>
                     <td class="p-3">${game.emulator || ''}</td>
                     <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
                     <td class="p-3">${game.date || ''}</td>
                 `;
                 tableBody.appendChild(newRow);
             }
-            updatePaginationControls();
         }
 
-        /**
-         * NEW: Function to update pagination buttons and text.
-         */
-        function updatePaginationControls() {
-            const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage);
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-        }
-
-        filterContainer.addEventListener('click', (event) => {
-            if (event.target.tagName !== 'BUTTON') return;
-            const filterValue = event.target.dataset.filter;
-
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('bg-yellow-400', 'text-black');
-                btn.classList.add('bg-gray-600', 'text-white');
-            });
-            event.target.classList.add('bg-yellow-400', 'text-black');
-
-            if (filterValue === 'all') {
-                currentlyDisplayedGames = deviceSpecificGames;
-            } else {
-                currentlyDisplayedGames = deviceSpecificGames.filter(game => game.system && game.system.toLowerCase() === filterValue);
-            }
-            
-            currentPage = 1; // Reset to the first page after filtering
-            displayCurrentPage();
-        });
-
-        // Add your search and form submission functions here...
-        // ...
-        
-        // --- NEW: Event listeners for Previous/Next buttons ---
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                displayCurrentPage();
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage);
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayCurrentPage();
-            }
-        });
-
-        // --- INITIAL LOAD ---
         loadAndPrepareData();
     });
 </script>
