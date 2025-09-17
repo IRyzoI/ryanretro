@@ -1,20 +1,14 @@
 import pandas as pd
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import os
 
-# --- Configuration ---
-DATA_FILE = "compatibility_list.csv"
-
-# --- FastAPI App Initialization ---
 app = FastAPI()
-
-# Mount the 'static' directory to serve index.html, css, js files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+DATA_DIR = "data"
 
-# --- Data Model for New Entries ---
 class GameEntry(BaseModel):
     name: str
     performance: str
@@ -22,16 +16,23 @@ class GameEntry(BaseModel):
     emulator: str
     update_version: str
     notes: str
+    device: str
 
-# --- Backend Functions ---
-def load_data():
-    if not os.path.exists(DATA_FILE):
-        pd.DataFrame(columns=['name', 'performance', 'driver', 'emulator', 'update', 'notes', 'date']).to_csv(DATA_FILE, index=False)
-    return pd.read_csv(DATA_FILE)
+@app.get("/api/compatibility/{system_name}")
+def get_compatibility_list(system_name: str):
+    file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail=f"Compatibility list for {system_name} not found.")
+    df = pd.read_csv(file_path)
+    return df.to_dict(orient="records")
 
-def save_entry(entry: GameEntry):
-    df = load_data()
-    today_date = pd.Timestamp.now().strftime('%Y/%m/%d')
+@app.post("/api/compatibility/{system_name}")
+async def add_game_entry(system_name: str, entry: GameEntry):
+    file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail=f"Compatibility list for {system_name} not found.")
+    df = pd.read_csv(file_path)
+    today_date = pd.Timestamp.now().strftime('%Y-%m-%d')
     new_row = {
         'name': entry.name,
         'performance': entry.performance,
@@ -39,25 +40,17 @@ def save_entry(entry: GameEntry):
         'emulator': entry.emulator,
         'update': entry.update_version,
         'notes': entry.notes,
-        'date': today_date
+        'date': today_date,
+        'device': entry.device,
+        # We add the 'system' column here based on the file it's being saved to
+        'system': system_name 
     }
     new_df = pd.DataFrame([new_row])
     updated_df = pd.concat([df, new_df], ignore_index=True)
-    updated_df.to_csv(DATA_FILE, index=False)
-
-# --- API Endpoints ---
-@app.get("/api/games")
-def get_games():
-    df = load_data()
-    return df.to_dict(orient="records")
-
-@app.post("/api/games")
-async def add_game(entry: GameEntry):
-    save_entry(entry)
+    updated_df.to_csv(file_path, index=False)
     return {"status": "success", "data": entry.dict()}
 
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    # This serves your main HTML file
+async def read_root():
     with open("static/index.html") as f:
         return HTMLResponse(content=f.read(), status_code=200)
