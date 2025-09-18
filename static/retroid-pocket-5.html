@@ -178,16 +178,13 @@
     </footer>
 
 <script>
-    // --- INITIALIZE LIBRARIES ---
     AOS.init({ once: true });
     feather.replace();
 
-    // --- MAIN SCRIPT ---
     document.addEventListener('DOMContentLoaded', function () {
         
-        // --- YOUTUBE VIDEO LOADER ---
         function loadYouTubeVideos() {
-            const YOUTUBE_CHANNEL_ID = 'UC_p5E_T-0ryE2y53A5i5_5w'; // Your Channel ID
+            const YOUTUBE_CHANNEL_ID = 'UC_p5E_T-0ryE2y53A5i5_5w';
             const SEARCH_TERM = 'Retroid Pocket 5';
             const MAX_VIDEOS = 3;
             if (typeof youtuberss === 'undefined') { return; }
@@ -214,7 +211,6 @@
             }, YOUTUBE_CHANNEL_ID);
         }
 
-        // --- COMPATIBILITY TABLE LOGIC ---
         const CURRENT_DEVICE = "Retroid Pocket 5";
         const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
         const rowsPerPage = 15;
@@ -240,29 +236,17 @@
             const gameDatalist = document.getElementById('game-suggestions');
             if (gameDatalist) {
                 gameDatalist.innerHTML = '';
-                uniqueGames.forEach(name => {
-                    const option = document.createElement('option');
-                    option.value = name;
-                    gameDatalist.appendChild(option);
-                });
+                uniqueGames.forEach(name => { const option = document.createElement('option'); option.value = name; gameDatalist.appendChild(option); });
             }
             const emulatorDatalist = document.getElementById('emulator-suggestions');
             if (emulatorDatalist) {
                 emulatorDatalist.innerHTML = '';
-                uniqueEmulators.forEach(name => {
-                    const option = document.createElement('option');
-                    option.value = name;
-                    emulatorDatalist.appendChild(option);
-                });
+                uniqueEmulators.forEach(name => { const option = document.createElement('option'); option.value = name; emulatorDatalist.appendChild(option); });
             }
             const driverDatalist = document.getElementById('driver-suggestions');
             if(driverDatalist) {
                 driverDatalist.innerHTML = '';
-                uniqueDrivers.forEach(name => {
-                    const option = document.createElement('option');
-                    option.value = name;
-                    driverDatalist.appendChild(option);
-                });
+                uniqueDrivers.forEach(name => { const option = document.createElement('option'); option.value = name; driverDatalist.appendChild(option); });
             }
         }
 
