@@ -95,7 +95,7 @@
                                     <th class="p-3" data-sort="game">Game <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="system">System <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="performance">Performance <span class="sort-indicator"></span></th>
-                                    <th class="p-3 min-w-[300px]" data-sort="notes">Notes <span class="sort-indicator"></span></th>
+                                    <th class="p-3" data-sort="notes">Notes <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="date added">Date <span class="sort-indicator"></span></th>
                                 </tr>
                             </thead>
@@ -110,14 +110,62 @@
                     </div>
 
                     <div class="text-center mt-6">
-                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">ADD YOUR ENTRY</button>
+                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded pixel-btn retro-font">ADD YOUR ENTRY</button>
                     </div>
                 </div>
 
                 <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden" data-aos="fade-up">
                     <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
                     <form id="compatibility-form">
-                        </form>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="system" class="block mb-2 font-bold">System</label>
+                                <select id="system" class="form-input" required>
+                                    <option value="switch">Nintendo Switch</option>
+                                    <option value="ps2">PlayStation 2</option>
+                                    <option value="windows">Windows</option>
+                                    <option value="gamecube">GameCube</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="device" class="block mb-2 font-bold">Handheld Device</label>
+                                <select id="device" class="form-input" required>
+                                    <option selected>Retroid Pocket 5</option>
+                                    <option>Ayn Odin 2</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="game" class="block mb-2 font-bold">Game Name</label>
+                                <input type="text" id="game" class="form-input" required list="game-suggestions">
+                                <datalist id="game-suggestions"></datalist>
+                            </div>
+                            <div>
+                                <label for="performance" class="block mb-2 font-bold">Performance</label>
+                                <select id="performance" class="form-input" required>
+                                    <option>Perfect</option> <option>Great</option> <option>Good</option>
+                                    <option>Playable</option> <option>Unplayable</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="emulator" class="block mb-2 font-bold">Emulator</label>
+                                <input type="text" id="emulator" class="form-input" list="emulator-suggestions">
+                                <datalist id="emulator-suggestions"></datalist>
+                            </div>
+                            <div>
+                                <label for="driver" class="block mb-2 font-bold">Driver</label>
+                                <input type="text" id="driver" class="form-input" list="driver-suggestions">
+                                <datalist id="driver-suggestions"></datalist>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="notes" class="block mb-2 font-bold">Notes</label>
+                            <textarea id="notes" rows="3" class="form-input"></textarea>
+                        </div>
+                        <div class="flex items-center justify-end gap-4">
+                            <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font">CANCEL</button>
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded retro-font">SUBMIT</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -164,14 +212,14 @@
         }
 
         const CURRENT_DEVICE = "Retroid Pocket 5";
-        const SYSTEMS_TO_FETCH = ["switch", "ps2"];
+        const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
         const rowsPerPage = 15;
         let deviceSpecificGames = [], currentlyDisplayedGames = [], currentPage = 1, sortColumn = 'game', sortDirection = 'asc';
         const tableBody = document.querySelector('#compatibility-table tbody'), tableHead = document.querySelector('#compatibility-table thead'),
               searchBox = document.getElementById('game-search-box'), filterContainer = document.getElementById('filter-container'),
               prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn'),
               pageInfo = document.getElementById('page-info'), addEntryBtn = document.getElementById('add-entry-btn'),
-              formContainer = document.getElementById('add-entry-form-container'), cancelBtn = document.querySelector('#cancel-btn'),
+              formContainer = document.getElementById('add-entry-form-container'), cancelBtn = document.getElementById('cancel-btn'),
               compatibilityForm = document.getElementById('compatibility-form');
         
         const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
@@ -179,6 +227,39 @@
         function formatSystemName(systemSlug) {
             const nameMap = { 'switch': 'Switch', 'ps2': 'PS2', 'windows': 'Windows', 'gamecube': 'GameCube' };
             return nameMap[systemSlug] || systemSlug;
+        }
+        
+        function populateDatalists(games) {
+            const uniqueGames = [...new Set(games.map(g => g.game).filter(Boolean))];
+            const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
+            const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
+            const gameDatalist = document.getElementById('game-suggestions');
+            if (gameDatalist) {
+                gameDatalist.innerHTML = '';
+                uniqueGames.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    gameDatalist.appendChild(option);
+                });
+            }
+            const emulatorDatalist = document.getElementById('emulator-suggestions');
+            if (emulatorDatalist) {
+                emulatorDatalist.innerHTML = '';
+                uniqueEmulators.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    emulatorDatalist.appendChild(option);
+                });
+            }
+            const driverDatalist = document.getElementById('driver-suggestions');
+            if(driverDatalist) {
+                driverDatalist.innerHTML = '';
+                uniqueDrivers.forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    driverDatalist.appendChild(option);
+                });
+            }
         }
 
         async function loadAndPrepareData() {
@@ -189,6 +270,9 @@
                 const masterGameList = results.flat();
                 deviceSpecificGames = masterGameList.filter(game => game && game.device === CURRENT_DEVICE);
                 currentlyDisplayedGames = deviceSpecificGames;
+                
+                populateDatalists(deviceSpecificGames);
+
                 if (deviceSpecificGames.length === 0) {
                     tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found.</td></tr>`;
                     updatePaginationControls(); return;
@@ -276,9 +360,42 @@
         searchBox.addEventListener('input', applyFilters);
         prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
         nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
-        if(addEntryBtn) { addEntryBtn.addEventListener('click', () => { formContainer.classList.remove('hidden'); formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); }); }
-        if(cancelBtn) { cancelBtn.addEventListener('click', () => { formContainer.classList.add('hidden'); }); }
-        if(compatibilityForm) { compatibilityForm.addEventListener('submit', async (e) => { e.preventDefault(); /* Form submission logic */ }); }
+        addEntryBtn.addEventListener('click', () => { formContainer.classList.remove('hidden'); formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+        cancelBtn.addEventListener('click', () => { formContainer.classList.add('hidden'); });
+
+        compatibilityForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const system = document.getElementById('system').value;
+            const newEntry = {
+                device: document.getElementById('device').value,
+                game: document.getElementById('game').value,
+                performance: document.getElementById('performance').value,
+                driver: document.getElementById('driver').value,
+                emulator: document.getElementById('emulator').value,
+                notes: document.getElementById('notes').value,
+                update_version: "1.0"
+            };
+            try {
+                const response = await fetch(`/api/compatibility/${system}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newEntry)
+                });
+
+                if (!response.ok) {
+                    // Try to get more info from the server error
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Server responded with an error');
+                }
+
+                formContainer.classList.add('hidden');
+                compatibilityForm.reset();
+                await loadAndPrepareData();
+            } catch (error) { 
+                console.error("Failed to submit entry:", error); 
+                alert(`Failed to submit entry: ${error.message}`);
+            }
+        });
         
         loadYouTubeVideos();
         loadAndPrepareData();
