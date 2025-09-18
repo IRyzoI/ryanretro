@@ -270,21 +270,14 @@
             } catch (error) { console.error("Failed to load data:", error); }
         }
 
-        function displayCurrentPage() {
+       function displayCurrentPage() {
     tableBody.innerHTML = '';
 
-    // A list of all possible "special" columns you might want to add to the notes.
-    // You can add or remove any headers from this list in the future!
     const detailHeaders = [
-        'driver', 
-        'dx wrapper', 
-        'game resolution', 
-        'gpu driver', 
-        'dxvk version', 
-        'vkd3d version'
+        'driver', 'emulator', 'dx wrapper', 'game resolution', 
+        'gpu driver', 'dxvk version', 'vkd3d version'
     ];
 
-    // A helper function to make header names look nice (e.g., 'dxvk version' -> 'DXVK Version')
     const formatHeader = (header) => {
         return header.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     };
@@ -303,19 +296,18 @@
 
     for (const game of paginatedItems) {
         let detailsHTML = '';
-        // Loop through our list of special headers
         detailHeaders.forEach(header => {
-            // Check if the game entry has this header and it's not empty or just a hyphen
-            if (game[header] && game[header].trim() !== '-' && game[header].trim() !== '') {
+            // THIS IS THE SAFETY CHECK: game.hasOwnProperty(header)
+            // It checks if the column exists before trying to read it.
+            if (game.hasOwnProperty(header) && game[header] && game[header].trim() !== '-' && game[header].trim() !== '') {
                 detailsHTML += `<strong class="text-yellow-400">${formatHeader(header)}:</strong> ${game[header]}<br>`;
             }
         });
 
-        // Combine the details with the original notes
         let notesContent = '';
         if (detailsHTML) {
             notesContent += `<div class="mb-2">${detailsHTML}</div>`;
-            if (game.notes) {
+            if (game.notes && game.notes.trim() !== '' && game.notes.trim() !== '-') {
                  notesContent += `<hr class="border-gray-600 my-2">${game.notes}`;
             }
         } else {
@@ -328,7 +320,6 @@
             <td class="p-3 font-bold">${game.game || 'Unknown'}</td>
             <td class="p-3">${formatSystemName(game.system)}</td>
             <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
-            <td class="p-3">${game.emulator || ''}</td>
             <td class="p-3 min-w-[250px]">${notesContent}</td>
             <td class="p-3">${game['date added'] || ''}</td>
         `;
