@@ -60,16 +60,17 @@
 
                     <div class="overflow-x-auto">
                         <table id="compatibility-table" class="min-w-full text-sm text-left text-gray-300">
-                            <thead class="bg-gray-700 text-gray-100 retro-font text-xs uppercase tracking-wider cursor-pointer">
-                                <tr>
-                                    <th class="p-3" data-sort="game">Game <span class="sort-indicator"></span></th>
-                                    <th class="p-3" data-sort="system">System <span class="sort-indicator"></span></th>
-                                    <th class="p-3" data-sort="performance">Performance <span class="sort-indicator"></span></th>
-                                    <th class="p-3" data-sort="emulator">Emulator <span class="sort-indicator"></span></th>
-                                    <th class="p-3 min-w-[300px]" data-sort="notes">Notes <span class="sort-indicator"></span></th>
-                                    <th class="p-3" data-sort="date added">Date <span class="sort-indicator"></span></th>
-                                </tr>
-                            </thead>
+<thead class="bg-gray-700 text-gray-100 retro-font text-xs uppercase tracking-wider cursor-pointer">
+    <tr>
+        <th class="p-3" data-sort="game">Game <span class="sort-indicator"></span></th>
+        <th class="p-3" data-sort="system">System <span class="sort-indicator"></span></th>
+        <th class="p-3" data-sort="performance">Performance <span class="sort-indicator"></span></th>
+        <th class="p-3" data-sort="driver">Driver <span class="sort-indicator"></span></th>
+        <th class="p-3" data-sort="emulator">Emulator <span class="sort-indicator"></span></th>
+        <th class="p-3 min-w-[250px]" data-sort="notes">Notes <span class="sort-indicator"></span></th>
+        <th class="p-3" data-sort="date added">Date <span class="sort-indicator"></span></th>
+    </tr>
+</thead>
                             <tbody class="divide-y divide-gray-700 align-baseline">
                                 </tbody>
                         </table>
@@ -125,6 +126,11 @@
     <label for="emulator" class="block mb-2 font-bold">Emulator</label>
     <input type="text" id="emulator" class="form-input" list="emulator-suggestions">
     <datalist id="emulator-suggestions"></datalist>
+</div>
+<div>
+    <label for="driver" class="block mb-2 font-bold">Driver</label>
+    <input type="text" id="driver" class="form-input" list="driver-suggestions">
+    <datalist id="driver-suggestions"></datalist>
 </div>
 <div>
     <label for="driver" class="block mb-2 font-bold">Driver</label>
@@ -264,14 +270,15 @@ function populateDatalists(games) {
             for (const game of paginatedItems) {
                 const perfClass = performanceClassMap[game.performance] || '';
                 const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td class="p-3 font-bold">${game.game || 'Unknown Game'}</td>
-                    <td class="p-3">${formatSystemName(game.system)}</td>
-                    <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
-                    <td class="p-3">${game.emulator || ''}</td>
-                    <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
-                    <td class="p-3">${game['date added'] || ''}</td>
-                `;
+newRow.innerHTML = `
+    <td class="p-3 font-bold">${game.game || 'Unknown Game'}</td>
+    <td class="p-3">${formatSystemName(game.system)}</td>
+    <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
+    <td class="p-3">${game.driver || ''}</td>
+    <td class="p-3">${game.emulator || ''}</td>
+    <td class="p-3 min-w-[250px]">${game.notes || ''}</td>
+    <td class="p-3">${game['date added'] || ''}</td>
+`;
                 tableBody.appendChild(newRow);
             }
             updatePaginationControls();
