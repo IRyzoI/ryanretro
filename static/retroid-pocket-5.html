@@ -54,6 +54,8 @@
                         <button data-filter="all" class="filter-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">All Systems</button>
                         <button data-filter="switch" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Switch</button>
                         <button data-filter="ps2" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
+                        <button data-filter="windows" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Windows</button>
+                        <button data-filter="gamecube" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">GameCube</button>
                     </div>
 
                     <div class="mb-6">
@@ -67,7 +69,7 @@
                                     <th class="p-3" data-sort="game">Game <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="system">System <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="performance">Performance <span class="sort-indicator"></span></th>
-                                    <th class="p-3 min-w-[300px]" data-sort="notes">Notes <span class="sort-indicator"></span></th>
+                                    <th class="p-3" data-sort="notes">Notes <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="date added">Date <span class="sort-indicator"></span></th>
                                 </tr>
                             </thead>
@@ -95,6 +97,8 @@
                                 <select id="system" class="form-input" required>
                                     <option value="switch">Nintendo Switch</option>
                                     <option value="ps2">PlayStation 2</option>
+                                    <option value="windows">Windows</option>
+                                    <option value="gamecube">GameCube</option>
                                 </select>
                             </div>
                             <div>
@@ -116,10 +120,20 @@
                                     <option>Playable</option><option>Unplayable</option>
                                 </select>
                             </div>
-                            <div>
-                                <label for="notes" class="block mb-2 font-bold">Notes</label>
-                                <textarea id="notes" rows="3" class="form-input"></textarea>
+                             <div>
+                                <label for="driver" class="block mb-2 font-bold">Driver</label>
+                                <input type="text" id="driver" class="form-input" list="driver-suggestions">
+                                <datalist id="driver-suggestions"></datalist>
                             </div>
+                            <div>
+                                <label for="emulator" class="block mb-2 font-bold">Emulator</label>
+                                <input type="text" id="emulator" class="form-input" list="emulator-suggestions">
+                                <datalist id="emulator-suggestions"></datalist>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="notes" class="block mb-2 font-bold">Notes</label>
+                            <textarea id="notes" rows="3" class="form-input"></textarea>
                         </div>
                         <div class="flex items-center justify-end gap-4">
                             <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font">CANCEL</button>
@@ -142,35 +156,6 @@
     feather.replace();
 
     document.addEventListener('DOMContentLoaded', function () {
-        
-        function loadYouTubeVideos() {
-            const YOUTUBE_CHANNEL_ID = 'UC_p5E_T-0ryE2y53A5i5_5w';
-            const SEARCH_TERM = 'Retroid Pocket 5';
-            const MAX_VIDEOS = 3;
-            if (typeof youtuberss === 'undefined') { return; }
-
-            youtuberss.getVideos(function(videos){
-                const videoContainer = document.getElementById('youtube-videos');
-                if (!videoContainer) return;
-                const filteredVideos = videos.filter(v => v.title.toLowerCase().includes(SEARCH_TERM.toLowerCase()));
-                const latestVideos = filteredVideos.slice(0, MAX_VIDEOS);
-                if (latestVideos.length === 0) {
-                    videoContainer.innerHTML = `<p class="text-center col-span-full">No videos found for "${SEARCH_TERM}".</p>`;
-                    return;
-                }
-                let videoHTML = '';
-                latestVideos.forEach(video => {
-                    videoHTML += `
-                    <a href="${video.link}" target="_blank" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block" data-aos="fade-up">
-                        <div class="relative pb-[56.25%] bg-black"><img src="${video.thumbnail_url}" alt="${video.title}" class="absolute h-full w-full object-cover"><div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40"><div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center"><i data-feather="play" class="text-white"></i></div></div></div>
-                        <div class="p-4"><h3 class="text-lg font-bold mb-2 leading-tight">${video.title}</h3></div>
-                    </a>`;
-                });
-                videoContainer.innerHTML = videoHTML;
-                feather.replace();
-            }, YOUTUBE_CHANNEL_ID);
-        }
-
         const CURRENT_DEVICE = "Retroid Pocket 5";
         const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
         const rowsPerPage = 15;
@@ -194,11 +179,20 @@
             const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
             const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
             const gameDatalist = document.getElementById('game-suggestions');
-            if(gameDatalist){ gameDatalist.innerHTML = ''; uniqueGames.forEach(name => { const option = document.createElement('option'); option.value = name; gameDatalist.appendChild(option); }); }
+            if (gameDatalist) {
+                gameDatalist.innerHTML = '';
+                uniqueGames.forEach(name => { const option = document.createElement('option'); option.value = name; gameDatalist.appendChild(option); });
+            }
             const emulatorDatalist = document.getElementById('emulator-suggestions');
-            if(emulatorDatalist){ emulatorDatalist.innerHTML = ''; uniqueEmulators.forEach(name => { const option = document.createElement('option'); option.value = name; emulatorDatalist.appendChild(option); }); }
+            if (emulatorDatalist) {
+                emulatorDatalist.innerHTML = '';
+                uniqueEmulators.forEach(name => { const option = document.createElement('option'); option.value = name; emulatorDatalist.appendChild(option); });
+            }
             const driverDatalist = document.getElementById('driver-suggestions');
-            if(driverDatalist){ driverDatalist.innerHTML = ''; uniqueDrivers.forEach(name => { const option = document.createElement('option'); option.value = name; driverDatalist.appendChild(option); }); }
+            if(driverDatalist) {
+                driverDatalist.innerHTML = '';
+                uniqueDrivers.forEach(name => { const option = document.createElement('option'); option.value = name; driverDatalist.appendChild(option); });
+            }
         }
 
         async function loadAndPrepareData() {
@@ -207,18 +201,13 @@
                 const fetchPromises = SYSTEMS_TO_FETCH.map(system => fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : []));
                 const results = await Promise.all(fetchPromises);
                 const masterGameList = results.flat();
-                
-                // --- THIS IS THE NEW, MORE POWERFUL FILTER ---
-                const normalizedDeviceName = CURRENT_DEVICE.replace(/\s/g, '');
-                deviceSpecificGames = masterGameList.filter(game => 
-                    game && game.device && game.device.replace(/\s/g, '') === normalizedDeviceName
-                );
-
+                deviceSpecificGames = masterGameList.filter(game => game && game.device && game.device.trim() === CURRENT_DEVICE);
                 currentlyDisplayedGames = deviceSpecificGames;
+                
                 populateDatalists(deviceSpecificGames);
 
                 if (deviceSpecificGames.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found for this device.</td></tr>`;
                     updatePaginationControls(); return;
                 }
                 currentPage = 1;
@@ -338,7 +327,6 @@
             }
         });
         
-        loadYouTubeVideos();
         loadAndPrepareData();
     });
 </script>
