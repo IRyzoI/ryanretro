@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <title>Retroid Pocket 5 Compatibility | Ryan Retro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -20,8 +20,6 @@
             color: #d1d5db; width: 100%; transition: border-color 0.2s;
         }
         .form-input:focus { outline: none; border-color: #facc15; }
-        .pixel-btn { transition: all 0.2s ease; }
-        .pixel-btn:hover { transform: translate(2px, 2px); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
@@ -36,20 +34,18 @@
 
     <main class="py-12">
         <div class="container mx-auto px-4">
-            <div class="max-w-7xl mx-auto">
-                
+            <div class="max-w-full mx-auto">
                 <div class="flex items-center mb-8">
                     <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font mr-4">HANDHELD</span>
                     <h1 class="retro-font text-3xl md:text-4xl">Retroid Pocket 5</h1>
                 </div>
-
                 <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border mb-12">
-                    <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png" alt="Retroid Pocket 5" class="w-full h-auto object-cover">
+                    <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png" alt="Retroid Pocket 5" class="w-full h-full object-cover">
                 </div>
 
-                <div id="compatibility-section" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
+                <div class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
                     <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
-                    
+
                     <div id="filter-container" class="mb-4 flex flex-wrap gap-2">
                         <button data-filter="all" class="filter-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">All Systems</button>
                         <button data-filter="switch" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Switch</button>
@@ -69,29 +65,31 @@
                                     <th class="p-3" data-sort="game">Game <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="system">System <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="performance">Performance <span class="sort-indicator"></span></th>
-                                    <th class="p-3" data-sort="notes">Notes <span class="sort-indicator"></span></th>
+                                    <th class="p-3" data-sort="emulator">Emulator <span class="sort-indicator"></span></th>
+                                    <th class="p-3 min-w-[300px]" data-sort="notes">Notes <span class="sort-indicator"></span></th>
                                     <th class="p-3" data-sort="date added">Date <span class="sort-indicator"></span></th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-700 align-baseline"></tbody>
+                            <tbody class="divide-y divide-gray-700 align-baseline">
+                                </tbody>
                         </table>
                     </div>
-                    
-                    <div id="pagination-controls" class="mt-6 flex items-center justify-center gap-4">
+                  </div> <div id="pagination-controls" class="mt-6 flex items-center justify-center gap-4">
                         <button id="prev-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Previous</button>
                         <span id="page-info" class="retro-font text-sm text-yellow-400">Page 1 of 1</span>
                         <button id="next-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Next</button>
                     </div>
 
                     <div class="text-center mt-6">
-                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded pixel-btn retro-font">ADD YOUR ENTRY</button>
+                    <div class="text-center mt-6">
+                        <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">ADD YOUR ENTRY</button>
                     </div>
                 </div>
 
                 <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden" data-aos="fade-up">
                     <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
                     <form id="compatibility-form">
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label for="system" class="block mb-2 font-bold">System</label>
                                 <select id="system" class="form-input" required>
@@ -108,28 +106,31 @@
                                     <option>Ayn Odin 2</option>
                                 </select>
                             </div>
-                            <div>
-                                <label for="game" class="block mb-2 font-bold">Game Name</label>
-                                <input type="text" id="game" class="form-input" required list="game-suggestions">
-                                <datalist id="game-suggestions"></datalist>
-                            </div>
+<div>
+    <label for="game" class="block mb-2 font-bold">Game Name</label>
+    <input type="text" id="game" class="form-input" required list="game-suggestions">
+    <datalist id="game-suggestions"></datalist>
+</div>
                             <div>
                                 <label for="performance" class="block mb-2 font-bold">Performance</label>
                                 <select id="performance" class="form-input" required>
-                                    <option>Perfect</option><option>Great</option><option>Good</option>
-                                    <option>Playable</option><option>Unplayable</option>
+                                    <option>Perfect</option>
+                                    <option>Great</option>
+                                    <option>Good</option>
+                                    <option>Playable</option>
+                                    <option>Unplayable</option>
                                 </select>
                             </div>
-                             <div>
-                                <label for="driver" class="block mb-2 font-bold">Driver</label>
-                                <input type="text" id="driver" class="form-input" list="driver-suggestions">
-                                <datalist id="driver-suggestions"></datalist>
-                            </div>
-                            <div>
-                                <label for="emulator" class="block mb-2 font-bold">Emulator</label>
-                                <input type="text" id="emulator" class="form-input" list="emulator-suggestions">
-                                <datalist id="emulator-suggestions"></datalist>
-                            </div>
+<div>
+    <label for="emulator" class="block mb-2 font-bold">Emulator</label>
+    <input type="text" id="emulator" class="form-input" list="emulator-suggestions">
+    <datalist id="emulator-suggestions"></datalist>
+</div>
+<div>
+    <label for="driver" class="block mb-2 font-bold">Driver</label>
+    <input type="text" id="driver" class="form-input" list="driver-suggestions">
+    <datalist id="driver-suggestions"></datalist>
+</div>
                         </div>
                         <div class="mb-6">
                             <label for="notes" class="block mb-2 font-bold">Notes</label>
@@ -152,133 +153,129 @@
     </footer>
 
 <script>
-  function parseCSV(csvText) {
-    const lines = csvText.trim().split('\n');
-    const headers = lines[0].split(',').map(h => h.trim());
-    return lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim());
-        return headers.reduce((obj, header, index) => {
-            obj[header] = values[index];
-            return obj;
-        }, {});
-    });
-}
-    AOS.init({ once: true });
+    AOS.init();
     feather.replace();
 
     document.addEventListener('DOMContentLoaded', function () {
+        // --- PAGE CONFIGURATION ---
         const CURRENT_DEVICE = "Retroid Pocket 5";
         const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
         const rowsPerPage = 15;
-        let deviceSpecificGames = [], currentlyDisplayedGames = [], currentPage = 1, sortColumn = 'game', sortDirection = 'asc';
-        const tableBody = document.querySelector('#compatibility-table tbody'), tableHead = document.querySelector('#compatibility-table thead'),
-              searchBox = document.getElementById('game-search-box'), filterContainer = document.getElementById('filter-container'),
-              prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn'),
-              pageInfo = document.getElementById('page-info'), addEntryBtn = document.getElementById('add-entry-btn'),
-              formContainer = document.getElementById('add-entry-form-container'), cancelBtn = document.getElementById('cancel-btn'),
-              compatibilityForm = document.getElementById('compatibility-form');
-        
+
+        // --- GLOBAL & STATE VARIABLES ---
+        let deviceSpecificGames = [];
+        let currentlyDisplayedGames = [];
+        let currentPage = 1;
+        let sortColumn = 'game';
+        let sortDirection = 'asc';
+
+        // --- ELEMENT SELECTIONS ---
+        const tableBody = document.querySelector('#compatibility-table tbody');
+        const tableHead = document.querySelector('#compatibility-table thead');
+        const searchBox = document.getElementById('game-search-box');
+        const filterContainer = document.getElementById('filter-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pageInfo = document.getElementById('page-info');
+        const addEntryBtn = document.getElementById('add-entry-btn');
+        const formContainer = document.getElementById('add-entry-form-container');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const compatibilityForm = document.getElementById('compatibility-form');
+        const emulatorDatalist = document.getElementById('emulator-suggestions');
+        const driverDatalist = document.getElementById('driver-suggestions');
+
         const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
 
+        // --- HELPER FUNCTIONS ---
         function formatSystemName(systemSlug) {
             const nameMap = { 'switch': 'Switch', 'ps2': 'PS2', 'windows': 'Windows', 'gamecube': 'GameCube' };
             return nameMap[systemSlug] || systemSlug;
         }
-        
-        function populateDatalists(games) {
-            const uniqueGames = [...new Set(games.map(g => g.game).filter(Boolean))];
-            const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
-            const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
-            const gameDatalist = document.getElementById('game-suggestions');
-            if (gameDatalist) {
-                gameDatalist.innerHTML = '';
-                uniqueGames.forEach(name => { const option = document.createElement('option'); option.value = name; gameDatalist.appendChild(option); });
-            }
-            const emulatorDatalist = document.getElementById('emulator-suggestions');
-            if (emulatorDatalist) {
-                emulatorDatalist.innerHTML = '';
-                uniqueEmulators.forEach(name => { const option = document.createElement('option'); option.value = name; emulatorDatalist.appendChild(option); });
-            }
-            const driverDatalist = document.getElementById('driver-suggestions');
-            if(driverDatalist) {
-                driverDatalist.innerHTML = '';
-                uniqueDrivers.forEach(name => { const option = document.createElement('option'); option.value = name; driverDatalist.appendChild(option); });
-            }
-        }
 
-async function loadAndPrepareData() {
-    tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Loading...</td></tr>`;
-    try {
-        // Fetch data from CSV files instead of an API
-        const fetchPromises = SYSTEMS_TO_FETCH.map(system => 
-            fetch(`/data/${system}.csv`) // <-- Changed this line
-                .then(res => {
-                    if (res.ok) return res.text();
-                    console.warn(`Could not find ${system}.csv, skipping.`);
-                    return "";
-                })
-        );
+        // --- NEW: Function to populate autocomplete suggestions for form fields ---
+// NEW: Upgraded function to populate ALL autocomplete suggestions
+function populateDatalists(games) {
+    const uniqueGames = [...new Set(games.map(g => g.game).filter(Boolean))];
+    const uniqueEmulators = [...new Set(games.map(g => g.emulator).filter(Boolean))];
+    const uniqueDrivers = [...new Set(games.map(g => g.driver).filter(Boolean))];
 
-        const csvResults = await Promise.all(fetchPromises);
-        let masterGameList = [];
-        
-        // Parse each CSV and add a 'system' property to each game
-        csvResults.forEach((csvText, index) => {
-            if (csvText) {
-                const system = SYSTEMS_TO_FETCH[index];
-                const games = parseCSV(csvText);
-                games.forEach(game => game.system = system); // Add system identifier
-                masterGameList.push(...games);
-            }
-        });
-
-        deviceSpecificGames = masterGameList.filter(game => game && game.device && game.device.trim() === CURRENT_DEVICE);
-        currentlyDisplayedGames = deviceSpecificGames;
-        
-        populateDatalists(deviceSpecificGames);
-
-        if (deviceSpecificGames.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found for this device.</td></tr>`;
-            updatePaginationControls();
-            return;
-        }
-
-        currentPage = 1;
-        displayCurrentPage();
-    } catch (error) {
-        console.error("Failed to load or parse data:", error);
-        tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Error loading game data.</td></tr>`;
-    }
-}
-
-function displayCurrentPage() {
-    tableBody.innerHTML = '';
-    currentlyDisplayedGames.sort((a, b) => {
-        const valA = (a[sortColumn] || '').toLowerCase();
-        const valB = (b[sortColumn] || '').toLowerCase();
-        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
+    const gameDatalist = document.getElementById('game-suggestions');
+    gameDatalist.innerHTML = '';
+    uniqueGames.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        gameDatalist.appendChild(option);
     });
-    updateSortIndicators();
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage; // <-- This is the fix
-    const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
 
-    for (const game of paginatedItems) {
-        const perfClass = performanceClassMap[game.performance] || '';
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td class="p-3 font-bold">${game.game || 'Unknown'}</td>
-            <td class="p-3">${formatSystemName(game.system)}</td>
-            <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
-            <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
-            <td class="p-3">${game['date added'] || ''}</td>
-        `;
-        tableBody.appendChild(newRow);
-    }
-    updatePaginationControls();
+    const emulatorDatalist = document.getElementById('emulator-suggestions');
+    emulatorDatalist.innerHTML = '';
+    uniqueEmulators.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        emulatorDatalist.appendChild(option);
+    });
+
+    const driverDatalist = document.getElementById('driver-suggestions');
+    driverDatalist.innerHTML = '';
+    uniqueDrivers.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        driverDatalist.appendChild(option);
+    });
 }
+
+        // --- DATA LOADING & DISPLAY ---
+        async function loadAndPrepareData() {
+            tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">Loading...</td></tr>`;
+            try {
+                const fetchPromises = SYSTEMS_TO_FETCH.map(system => fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : []));
+                const results = await Promise.all(fetchPromises);
+                const masterGameList = results.flat();
+                deviceSpecificGames = masterGameList.filter(game => game && game.device === CURRENT_DEVICE);
+                currentlyDisplayedGames = deviceSpecificGames;
+                
+                populateDatalists(deviceSpecificGames); // Populate suggestions based on loaded data
+
+                if (deviceSpecificGames.length === 0) {
+                     tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center">No reports found for ${CURRENT_DEVICE}.</td></tr>`;
+                     updatePaginationControls();
+                     return;
+                }
+                currentPage = 1;
+                displayCurrentPage();
+            } catch (error) { console.error("Failed to load data:", error); }
+        }
+
+        function displayCurrentPage() {
+            tableBody.innerHTML = '';
+            currentlyDisplayedGames.sort((a, b) => {
+                const valA = (a[sortColumn] || '').toLowerCase();
+                const valB = (b[sortColumn] || '').toLowerCase();
+                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+            updateSortIndicators();
+
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
+
+            for (const game of paginatedItems) {
+                const perfClass = performanceClassMap[game.performance] || '';
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td class="p-3 font-bold">${game.game || 'Unknown Game'}</td>
+                    <td class="p-3">${formatSystemName(game.system)}</td>
+                    <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
+                    <td class="p-3">${game.emulator || ''}</td>
+                    <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
+                    <td class="p-3">${game['date added'] || ''}</td>
+                `;
+                tableBody.appendChild(newRow);
+            }
+            updatePaginationControls();
+        }
 
         function updatePaginationControls() {
             const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
@@ -288,20 +285,26 @@ function displayCurrentPage() {
         }
 
         function updateSortIndicators() {
-             tableHead.querySelectorAll('th').forEach(th => {
+            tableHead.querySelectorAll('th').forEach(th => {
                 const indicator = th.querySelector('.sort-indicator');
                 if (th.dataset.sort === sortColumn) {
                     indicator.textContent = sortDirection === 'asc' ? ' ▲' : ' ▼';
-                } else { indicator.textContent = ''; }
+                } else {
+                    indicator.textContent = '';
+                }
             });
         }
         
+        // --- EVENT LISTENERS ---
         tableHead.addEventListener('click', (event) => {
             const newSortColumn = event.target.closest('th').dataset.sort;
             if (!newSortColumn) return;
             if (sortColumn === newSortColumn) {
                 sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else { sortColumn = newSortColumn; sortDirection = 'asc'; }
+            } else {
+                sortColumn = newSortColumn;
+                sortDirection = 'asc';
+            }
             currentPage = 1;
             displayCurrentPage();
         });
@@ -320,19 +323,26 @@ function displayCurrentPage() {
             currentPage = 1;
             displayCurrentPage();
         }
-        
         filterContainer.addEventListener('click', (event) => {
             if (event.target.tagName !== 'BUTTON') return;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.replace('bg-yellow-400','bg-gray-600'));
             event.target.classList.replace('bg-gray-600', 'bg-yellow-400');
             applyFilters();
         });
-
         searchBox.addEventListener('input', applyFilters);
+
         prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
         nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
-        addEntryBtn.addEventListener('click', () => { formContainer.classList.remove('hidden'); formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
-        cancelBtn.addEventListener('click', () => { formContainer.classList.add('hidden'); });
+
+        // --- RESTORED: Form submission and button listeners ---
+        addEntryBtn.addEventListener('click', () => {
+            formContainer.classList.remove('hidden');
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            formContainer.classList.add('hidden');
+        });
 
         compatibilityForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -344,27 +354,24 @@ function displayCurrentPage() {
                 driver: document.getElementById('driver').value,
                 emulator: document.getElementById('emulator').value,
                 notes: document.getElementById('notes').value,
-                update_version: "1.0"
+                update_version: "1.0" // You might want a form field for this
             };
             try {
-                const response = await fetch(`/api/compatibility/${system}`, {
+                await fetch(`/api/compatibility/${system}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newEntry)
                 });
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.detail || 'Server responded with an error');
-                }
                 formContainer.classList.add('hidden');
                 compatibilityForm.reset();
                 await loadAndPrepareData();
-            } catch (error) { 
-                console.error("Failed to submit entry:", error); 
-                alert(`Failed to submit entry: ${error.message}`);
+            } catch (error) {
+                console.error("Failed to submit entry:", error);
+                alert("There was an error submitting your entry.");
             }
         });
-        
+
+        // --- INITIAL LOAD ---
         loadAndPrepareData();
     });
 </script>
