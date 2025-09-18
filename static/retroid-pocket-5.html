@@ -138,159 +138,51 @@
     </footer>
 
 <script>
-    AOS.init({ once: true });
-    feather.replace();
-
     document.addEventListener('DOMContentLoaded', function () {
-        const CURRENT_DEVICE = "Retroid Pocket 5";
-        const SYSTEMS_TO_FETCH = ["switch", "ps2"];
-        const rowsPerPage = 15;
-        let deviceSpecificGames = [], currentlyDisplayedGames = [], currentPage = 1, sortColumn = 'game', sortDirection = 'asc';
-        const tableBody = document.querySelector('#compatibility-table tbody'), tableHead = document.querySelector('#compatibility-table thead'),
-              searchBox = document.getElementById('game-search-box'), filterContainer = document.getElementById('filter-container'),
-              prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn'),
-              pageInfo = document.getElementById('page-info'), addEntryBtn = document.getElementById('add-entry-btn'),
-              formContainer = document.getElementById('add-entry-form-container'), cancelBtn = document.getElementById('cancel-btn'),
-              compatibilityForm = document.getElementById('compatibility-form');
         
-        const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
+        async function runFinalDebugTest() {
+            console.log("--- Starting Final Debug Test with LARGE file ---");
+            const tableBody = document.querySelector('#compatibility-table tbody');
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Running final debug test... Please check the browser console.</td></tr>`;
 
-        function formatSystemName(systemSlug) {
-            const nameMap = { 'switch': 'Switch', 'ps2': 'PS2' };
-            return nameMap[systemSlug] || systemSlug;
-        }
-
-        async function loadAndPrepareData() {
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Loading...</td></tr>`;
             try {
-                const fetchPromises = SYSTEMS_TO_FETCH.map(system => fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : []));
-                const results = await Promise.all(fetchPromises);
-                const masterGameList = results.flat();
-                deviceSpecificGames = masterGameList.filter(game => game && game.device && game.device.trim() === CURRENT_DEVICE);
-                currentlyDisplayedGames = deviceSpecificGames;
-                if (deviceSpecificGames.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found for this device.</td></tr>`;
-                    updatePaginationControls(); return;
-                }
-                currentPage = 1;
-                displayCurrentPage();
-            } catch (error) { console.error("Failed to load data:", error); }
-        }
-
-        function displayCurrentPage() {
-            tableBody.innerHTML = '';
-            currentlyDisplayedGames.sort((a, b) => {
-                const valA = (a[sortColumn] || '').toLowerCase();
-                const valB = (b[sortColumn] || '').toLowerCase();
-                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-            updateSortIndicators();
-            const startIndex = (currentPage - 1) * rowsPerPage;
-            const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
-            for (const game of paginatedItems) {
-                const perfClass = performanceClassMap[game.performance] || '';
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td class="p-3 font-bold">${game.game || 'Unknown'}</td>
-                    <td class="p-3">${formatSystemName(game.system)}</td>
-                    <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
-                    <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
-                    <td class="p-3">${game['date added'] || ''}</td>
-                `;
-                tableBody.appendChild(newRow);
-            }
-            updatePaginationControls();
-        }
-
-        function updatePaginationControls() {
-            const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages;
-        }
-
-        function updateSortIndicators() {
-             tableHead.querySelectorAll('th').forEach(th => {
-                const indicator = th.querySelector('.sort-indicator');
-                if (th.dataset.sort === sortColumn) {
-                    indicator.textContent = sortDirection === 'asc' ? ' ▲' : ' ▼';
-                } else { indicator.textContent = ''; }
-            });
-        }
-        
-        tableHead.addEventListener('click', (event) => {
-            const newSortColumn = event.target.closest('th').dataset.sort;
-            if (!newSortColumn) return;
-            if (sortColumn === newSortColumn) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else { sortColumn = newSortColumn; sortDirection = 'asc'; }
-            currentPage = 1;
-            displayCurrentPage();
-        });
-
-        function applyFilters() {
-            const activeFilter = filterContainer.querySelector('.bg-yellow-400').dataset.filter;
-            const searchTerm = searchBox.value.toLowerCase();
-            let filteredGames = deviceSpecificGames;
-            if (activeFilter !== 'all') {
-                filteredGames = filteredGames.filter(game => game.system && game.system.toLowerCase() === activeFilter);
-            }
-            if (searchTerm) {
-                filteredGames = filteredGames.filter(game => game.game && game.game.toLowerCase().includes(searchTerm));
-            }
-            currentlyDisplayedGames = filteredGames;
-            currentPage = 1;
-            displayCurrentPage();
-        }
-        
-        filterContainer.addEventListener('click', (event) => {
-            if (event.target.tagName !== 'BUTTON') return;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.replace('bg-yellow-400','bg-gray-600'));
-            event.target.classList.replace('bg-gray-600', 'bg-yellow-400');
-            applyFilters();
-        });
-
-        searchBox.addEventListener('input', applyFilters);
-        prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
-        nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
-        addEntryBtn.addEventListener('click', () => { formContainer.classList.remove('hidden'); formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
-        cancelBtn.addEventListener('click', () => { formContainer.classList.add('hidden'); });
-
-        compatibilityForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const system = document.getElementById('system').value;
-            const newEntry = {
-                device: document.getElementById('device').value,
-                game: document.getElementById('game').value,
-                performance: document.getElementById('performance').value,
-                notes: document.getElementById('notes').value,
-                // These are simplified for this reset, add them back to the form if needed
-                driver: "", 
-                emulator: "",
-                update_version: "1.0"
-            };
-            try {
-                const response = await fetch(`/api/compatibility/${system}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newEntry)
-                });
+                // We are only testing your switch.csv file.
+                const response = await fetch(`/api/compatibility/switch`);
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.detail || 'Server responded with an error');
+                    console.error("ERROR: The server failed to send the switch.csv data.");
+                    return;
                 }
-                formContainer.classList.add('hidden');
-                compatibilityForm.reset();
-                await loadAndPrepareData();
+                const switchData = await response.json();
+                
+                console.log("SUCCESS: Successfully loaded", switchData.length, "rows from your switch.csv file.");
+                
+                if (switchData.length > 0) {
+                    const firstGame = switchData[0];
+                    const deviceInCSV = firstGame.device;
+                    const expectedDevice = "Retroid Pocket 5";
+                    
+                    console.log("---------------------------------------------------------");
+                    console.log("THIS IS THE FINAL ANSWER:");
+                    console.log("The code is looking for this exact text -> |" + expectedDevice + "|");
+                    console.log("The first row in your CSV file has this for the device -> |" + deviceInCSV + "|");
+                    console.log("---------------------------------------------------------");
+                    
+                    if (deviceInCSV && deviceInCSV.trim() === expectedDevice) {
+                        console.log("SUCCESS! The device names appear to match.");
+                        tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-green-400">Debug test passed! The device name is correct. There must be another issue.</td></tr>`;
+                    } else {
+                        console.error("FAILURE! The device names DO NOT MATCH. The text inside the two vertical bars |...| above must be identical. Please check for typos or extra spaces in your CSV's 'device' column.");
+                        tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-400">Debug Test Failed. The device name in your CSV does not match what the code expects. Check the browser console for the exact difference.</td></tr>`;
+                    }
+                } else {
+                     console.error("FAILURE! The switch.csv file was loaded but it contains zero rows of data.");
+                }
             } catch (error) { 
-                console.error("Failed to submit entry:", error); 
-                alert(`Failed to submit entry: ${error.message}`);
+                console.error("A critical JavaScript error occurred during the test:", error); 
             }
-        });
-        
-        loadAndPrepareData();
+        }
+
+        runFinalDebugTest();
     });
 </script>
 </body>
