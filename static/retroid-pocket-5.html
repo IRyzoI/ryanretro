@@ -80,6 +80,8 @@
                         <button data-filter="all" class="filter-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">All Systems</button>
                         <button data-filter="switch" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Switch</button>
                         <button data-filter="ps2" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
+                        <button data-filter="windows" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Windows</button>
+                        <button data-filter="gamecube" class="filter-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">GameCube</button>
                     </div>
 
                     <div class="mb-6">
@@ -113,7 +115,10 @@
                 </div>
 
                 <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden" data-aos="fade-up">
-                     </div>
+                    <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
+                    <form id="compatibility-form">
+                        </form>
+                </div>
             </div>
         </div>
     </main>
@@ -159,14 +164,14 @@
         }
 
         const CURRENT_DEVICE = "Retroid Pocket 5";
-        const SYSTEMS_TO_FETCH = ["switch", "ps2", "windows", "gamecube"];
+        const SYSTEMS_TO_FETCH = ["switch", "ps2"];
         const rowsPerPage = 15;
         let deviceSpecificGames = [], currentlyDisplayedGames = [], currentPage = 1, sortColumn = 'game', sortDirection = 'asc';
         const tableBody = document.querySelector('#compatibility-table tbody'), tableHead = document.querySelector('#compatibility-table thead'),
               searchBox = document.getElementById('game-search-box'), filterContainer = document.getElementById('filter-container'),
               prevBtn = document.getElementById('prev-btn'), nextBtn = document.getElementById('next-btn'),
               pageInfo = document.getElementById('page-info'), addEntryBtn = document.getElementById('add-entry-btn'),
-              formContainer = document.getElementById('add-entry-form-container'), cancelBtn = document.querySelector('#cancel-btn'), // Query selector for robustness
+              formContainer = document.getElementById('add-entry-form-container'), cancelBtn = document.querySelector('#cancel-btn'),
               compatibilityForm = document.getElementById('compatibility-form');
         
         const performanceClassMap = { 'Perfect': 'perf-perfect', 'Great': 'perf-great', 'Good': 'perf-good', 'Playable': 'perf-playable', 'Unplayable': 'perf-unplayable' };
@@ -228,7 +233,7 @@
         }
 
         function updateSortIndicators() {
-            tableHead.querySelectorAll('th').forEach(th => {
+             tableHead.querySelectorAll('th').forEach(th => {
                 const indicator = th.querySelector('.sort-indicator');
                 if (th.dataset.sort === sortColumn) {
                     indicator.textContent = sortDirection === 'asc' ? ' ▲' : ' ▼';
@@ -271,18 +276,9 @@
         searchBox.addEventListener('input', applyFilters);
         prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
         nextBtn.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
-        addEntryBtn.addEventListener('click', () => { formContainer.classList.remove('hidden'); formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
-        
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => { formContainer.classList.add('hidden'); });
-        }
-        if (compatibilityForm) {
-            compatibilityForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                // Form submission logic here...
-                await loadAndPrepareData();
-            });
-        }
+        if(addEntryBtn) { addEntryBtn.addEventListener('click', () => { formContainer.classList.remove('hidden'); formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' }); }); }
+        if(cancelBtn) { cancelBtn.addEventListener('click', () => { formContainer.classList.add('hidden'); }); }
+        if(compatibilityForm) { compatibilityForm.addEventListener('submit', async (e) => { e.preventDefault(); /* Form submission logic */ }); }
         
         loadYouTubeVideos();
         loadAndPrepareData();
