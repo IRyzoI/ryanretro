@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retroid Pocket 5 Compatibility | Ryan Retro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -66,7 +66,6 @@
 
 <section id="videos-section"></section>
 
-                <!-- Added id for jump link; content unchanged -->
                 <div id="compatibility" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12">
                     <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
 
@@ -287,13 +286,22 @@ function displayCurrentPage() {
 
             for (const game of paginatedItems) {
                 const perfClass = performanceClassMap[game.performance] || '';
+                
+                // MODIFICATION: Check for a valid driver and prepend it to the notes
+                let finalNotes = game.notes || '';
+                if (game.driver && game.driver.trim() && game.driver.trim() !== '-') {
+                    const driverInfo = `<b>Driver:</b> ${game.driver}`;
+                    // Add driver info, with a separator if notes already exist.
+                    finalNotes = finalNotes ? `${driverInfo}. ${finalNotes}` : driverInfo;
+                }
+
                 const newRow = document.createElement('tr');
                 newRow.innerHTML = `
                     <td class="p-3 font-bold">${game.game || 'Unknown Game'}</td>
                     <td class="p-3">${formatSystemName(game.system)}</td>
                     <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
                     <td class="p-3">${game.emulator || ''}</td>
-                    <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
+                    <td class="p-3 min-w-[300px]">${finalNotes}</td>
                     <td class="p-3">${game['date added'] || ''}</td>
                 `;
                 tableBody.appendChild(newRow);
