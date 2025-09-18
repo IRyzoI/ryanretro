@@ -152,6 +152,17 @@
     </footer>
 
 <script>
+  function parseCSV(csvText) {
+    const lines = csvText.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim());
+    return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        return headers.reduce((obj, header, index) => {
+            obj[header] = values[index];
+            return obj;
+        }, {});
+    });
+}
     AOS.init({ once: true });
     feather.replace();
 
@@ -195,52 +206,79 @@
             }
         }
 
-        async function loadAndPrepareData() {
-            tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Loading...</td></tr>`;
-            try {
-                const fetchPromises = SYSTEMS_TO_FETCH.map(system => fetch(`/api/compatibility/${system}`).then(res => res.ok ? res.json() : []));
-                const results = await Promise.all(fetchPromises);
-                const masterGameList = results.flat();
-                deviceSpecificGames = masterGameList.filter(game => game && game.device && game.device.trim() === CURRENT_DEVICE);
-                currentlyDisplayedGames = deviceSpecificGames;
-                
-                populateDatalists(deviceSpecificGames);
+async function loadAndPrepareData() {
+    tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Loading...</td></tr>`;
+    try {
+        // Fetch data from CSV files instead of an API
+        const fetchPromises = SYSTEMS_TO_FETCH.map(system => 
+            fetch(`/data/${system}.csv`) // <-- Changed this line
+                .then(res => {
+                    if (res.ok) return res.text();
+                    console.warn(`Could not find ${system}.csv, skipping.`);
+                    return "";
+                })
+        );
 
-                if (deviceSpecificGames.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found for this device.</td></tr>`;
-                    updatePaginationControls(); return;
-                }
-                currentPage = 1;
-                displayCurrentPage();
-            } catch (error) { console.error("Failed to load data:", error); }
-        }
-
-        function displayCurrentPage() {
-            tableBody.innerHTML = '';
-            currentlyDisplayedGames.sort((a, b) => {
-                const valA = (a[sortColumn] || '').toLowerCase();
-                const valB = (b[sortColumn] || '').toLowerCase();
-                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-            updateSortIndicators();
-            const startIndex = (currentPage - 1) * rowsPerPage;
-            const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
-            for (const game of paginatedItems) {
-                const perfClass = performanceClassMap[game.performance] || '';
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td class="p-3 font-bold">${game.game || 'Unknown'}</td>
-                    <td class="p-3">${formatSystemName(game.system)}</td>
-                    <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
-                    <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
-                    <td class="p-3">${game['date added'] || ''}</td>
-                `;
-                tableBody.appendChild(newRow);
+        const csvResults = await Promise.all(fetchPromises);
+        let masterGameList = [];
+        
+        // Parse each CSV and add a 'system' property to each game
+        csvResults.forEach((csvText, index) => {
+            if (csvText) {
+                const system = SYSTEMS_TO_FETCH[index];
+                const games = parseCSV(csvText);
+                games.forEach(game => game.system = system); // Add system identifier
+                masterGameList.push(...games);
             }
+        });
+
+        deviceSpecificGames = masterGameList.filter(game => game && game.device && game.device.trim() === CURRENT_DEVICE);
+        currentlyDisplayedGames = deviceSpecificGames;
+        
+        populateDatalists(deviceSpecificGames);
+
+        if (deviceSpecificGames.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">No reports found for this device.</td></tr>`;
             updatePaginationControls();
+            return;
         }
+
+        currentPage = 1;
+        displayCurrentPage();
+    } catch (error) {
+        console.error("Failed to load or parse data:", error);
+        tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center">Error loading game data.</td></tr>`;
+    }
+}
+
+function displayCurrentPage() {
+    tableBody.innerHTML = '';
+    currentlyDisplayedGames.sort((a, b) => {
+        const valA = (a[sortColumn] || '').toLowerCase();
+        const valB = (b[sortColumn] || '').toLowerCase();
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+    updateSortIndicators();
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage; // <-- This is the fix
+    const paginatedItems = currentlyDisplayedGames.slice(startIndex, endIndex);
+
+    for (const game of paginatedItems) {
+        const perfClass = performanceClassMap[game.performance] || '';
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td class="p-3 font-bold">${game.game || 'Unknown'}</td>
+            <td class="p-3">${formatSystemName(game.system)}</td>
+            <td class="p-3 font-bold ${perfClass}">${game.performance || ''}</td>
+            <td class="p-3 min-w-[300px]">${game.notes || ''}</td>
+            <td class="p-3">${game['date added'] || ''}</td>
+        `;
+        tableBody.appendChild(newRow);
+    }
+    updatePaginationControls();
+}
 
         function updatePaginationControls() {
             const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
