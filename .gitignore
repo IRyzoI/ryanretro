@@ -3,3 +3,10 @@ venv/
 .env
 cache/
 *.pyc
+# macOS
+.DS_Store
+data/.DS_Store
+
+# Python venv
+.venv/
+
