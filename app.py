@@ -39,7 +39,7 @@ app.add_middleware(
 YT_API_KEY = os.getenv("YT_API_KEY")  # set this in your environment
 DEFAULT_CHANNEL_ID = os.getenv("YT_CHANNEL_ID") or "UCh9GxjM-FNuSWv7xqn3UKVw"
 UA = {"User-Agent": "RyanRetro/1.0"}
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "ryanisthebest92")
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 
 CACHE_DIR = "cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
@@ -636,17 +636,17 @@ def post_compat(sub: CompatSubmission):
 # Debug & Admin helpers
 # --------------------------------------------------------------------------------------
 @app.get("/api/debug/where")
-def debug_where():
-        token = request.query_params.get("token", "")
+def debug_where(request: Request):
+    token = request.query_params.get("token", "")
     if not ADMIN_TOKEN or token != ADMIN_TOKEN:
         raise HTTPException(status_code=403, detail="Forbidden")
-    info = {
-        "DATA_DIR": DATA_DIR,
-        "DEFAULT_DATA_DIR": DEFAULT_DATA_DIR,
-        "DATA_DIR_csvs": _list_csvs(DATA_DIR),
-        "DEFAULT_DATA_DIR_csvs": _list_csvs(DEFAULT_DATA_DIR),
-    }
-    return JSONResponse(info)
+
+    try:
+        files = os.listdir(DATA_DIR)
+    except Exception:
+        files = []
+    return {"repo_dir": REPO_DIR, "data_dir": DATA_DIR, "data_files": files}
+
 
 @app.get("/api/debug/sample")
 def debug_sample(system: str):
