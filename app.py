@@ -636,7 +636,6 @@ def post_compat(sub: CompatSubmission):
 # Debug & Admin helpers
 # --------------------------------------------------------------------------------------
 @app.get("/api/debug/where")
-@app.get("/api/debug/where")
 def debug_where(request: Request):
     token = request.query_params.get("token", "")
     if not ADMIN_TOKEN or token != ADMIN_TOKEN:
@@ -650,15 +649,16 @@ def debug_where(request: Request):
     return {"repo_dir": REPO_DIR, "data_dir": DATA_DIR, "data_files": files}
 
 
-
 @app.get("/api/debug/sample")
-def debug_sample(system: str):
-        token = request.query_params.get("token", "")
+def debug_sample(request: Request, system: str):
+    token = request.query_params.get("token", "")
     if not ADMIN_TOKEN or token != ADMIN_TOKEN:
         raise HTTPException(status_code=403, detail="Forbidden")
+
     path = _find_csv_path(system)
     if not path:
-        raise HTTPException(404, f"{system}.csv not found")
+        raise HTTPException(status_code=404, detail=f"{system}.csv not found")
+
     out = []
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         r = csv.DictReader(f)
@@ -667,6 +667,7 @@ def debug_sample(system: str):
             if i >= 2:
                 break
     return {"path": path, "sample": out}
+
 
 @app.get("/admin/seed-data")
 def admin_seed_data(request: Request, force: int = 0, token: str = ""):
@@ -677,12 +678,12 @@ def admin_seed_data(request: Request, force: int = 0, token: str = ""):
     """
     need = os.getenv("SEED_TOKEN", "")
     if not need:
-        raise HTTPException(403, "Seeding disabled: set SEED_TOKEN in env.")
+        raise HTTPException(status_code=403, detail="Seeding disabled: set SEED_TOKEN in env.")
     if token != need:
-        raise HTTPException(403, "Invalid token.")
+        raise HTTPException(status_code=403, detail="Invalid token.")
 
     if not os.path.isdir(DEFAULT_DATA_DIR):
-        raise HTTPException(500, "No repo data directory found.")
+        raise HTTPException(status_code=500, detail="No repo data directory found.")
     os.makedirs(DATA_DIR, exist_ok=True)
 
     copied = []
@@ -694,6 +695,7 @@ def admin_seed_data(request: Request, force: int = 0, token: str = ""):
             copied.append(name)
 
     return {"ok": True, "copied": copied, "data_dir": DATA_DIR}
+
 
 # --------------------------------------------------------------------------------------
 # Guides (Markdown or static HTML)
