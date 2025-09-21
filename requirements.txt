@@ -3,6 +3,6 @@ uvicorn[standard]
 python-dotenv
 httpx
 markdown
-pydantic
-SQLAlchemy>=2.0
+pydantic>=2
+sqlalchemy>=2
 psycopg2-binary>=2.9
