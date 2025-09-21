@@ -507,11 +507,13 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/data", StaticFiles(directory=str(DATA_DIR)), name="data")
 
 @app.get("/", response_class=FileResponse)
+from fastapi.responses import RedirectResponse
+
+@app.get("/")
 def root():
-    index_path = STATIC_DIR / "index.html"
-    if not index_path.exists():
-        raise HTTPException(status_code=404, detail=f"index.html not found at {index_path}")
-    return FileResponse(str(index_path), media_type="text/html")
+    # Always serve the static homepage
+    return RedirectResponse(url="/static/index.html", status_code=307)
+
 
 # --------------------------------------------------------------------------------------
 # Compatibility CSV -> JSON API (read)
@@ -736,6 +738,10 @@ def serve_guide(slug: str):
     idx_path = STATIC_DIR / "guides" / slug / "index.html"
     if idx_path.exists():
         return FileResponse(str(idx_path), media_type="text/html")
+
+print(f"[startup] STATIC_DIR={STATIC_DIR}")
+print(f"[startup] DATA_DIR={DATA_DIR}")
+
 
     return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
 
