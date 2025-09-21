@@ -16,12 +16,6 @@ from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse, JSON
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-try:
-    # Pydantic v2-friendly config helper (optional)
-    from pydantic import ConfigDict
-    HAS_V2 = True
-except Exception:
-    HAS_V2 = False
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -102,7 +96,12 @@ def _lock_for(key: str) -> threading.Lock:
 # Matcher (prevents RP5/Flip 2 collisions via disambiguators)
 # --------------------------------------------------------------------------------------
 def _make_matcher(q: str, aliases: str):
+    """
+    Match if title contains any full phrase (q or alias) OR
+    (≥2 generic tokens) AND (at least 1 disambiguator token if any exist).
+    """
     import re as _re
+
     phrases: List[str] = []
     if q:
         phrases.append(q.strip().lower())
@@ -130,8 +129,10 @@ def _make_matcher(q: str, aliases: str):
 
     def match(title: str) -> bool:
         tl = (title or "").lower()
+        # full phrase hit (most permissive)
         if any(ph and ph in tl for ph in phrases):
             return True
+        # token fallback: require ≥2 generic hits AND at least one disambiguator (if any exist)
         gen_hits = sum(1 for t in generic_tokens if t in tl)
         if gen_hits >= 2:
             return (not disamb_tokens) or any(t in tl for t in disamb_tokens)
@@ -499,7 +500,6 @@ class GameEntry(BaseModel):
     device: str | None = None
     date_added: str | None = None
 
-# Helper: find CSV in DATA_DIR, else fallback to DEFAULT_DATA_DIR (repo)
 def _find_csv_path(system_name: str) -> str | None:
     filename = f"{system_name}.csv"
     p1 = os.path.join(DATA_DIR, filename)
@@ -538,13 +538,12 @@ SYSTEM_CSVS = {
 REQUIRED_COLS = {"device", "chipset", "system", "date added"}
 
 class CompatSubmission(BaseModel):
-    if HAS_V2:
-        model_config = ConfigDict(populate_by_name=True)  # pydantic v2
+    # common required
     device: str = Field(..., min_length=1)
     chipset: str = Field(..., min_length=1)
     system: str  = Field(..., min_length=1)
 
-    # optional, varies by system
+    # everything else is optional and varies by system
     game: Optional[str] = None
     performance: Optional[str] = None
     driver: Optional[str] = None
@@ -560,22 +559,25 @@ class CompatSubmission(BaseModel):
     game_title_id: Optional[str] = Field(None, alias="game title id")
     notes: Optional[str] = None
 
-    class Config:
-        # pydantic v1 fallback
-        allow_population_by_field_name = True
-
 @app.post("/api/compat/submit")
 def post_compat(sub: CompatSubmission):
+    """
+    Append a row to the appropriate system CSV.
+    Required in payload: device, chipset, system
+    Other fields are optional per-system, and will be added if present.
+    """
     system = (sub.system or "").strip().lower()
     if system not in SYSTEM_CSVS:
         raise HTTPException(status_code=400, detail=f"Unknown system '{sub.system}'")
 
+    # Path to the CSV
     file_path = os.path.join(DATA_DIR, SYSTEM_CSVS[system])
     os.makedirs(DATA_DIR, exist_ok=True)
 
-    row = json.loads(sub.json(by_alias=True, exclude_none=True))
+    # Flatten with alias names and strip Nones (Pydantic v2)
+    row = sub.model_dump(by_alias=True, exclude_none=True)
 
-    # Normalize pythonic keys to CSV header names (aliases do most already)
+    # Normalize any pythonic keys to CSV header names (aliases already do most of this)
     if "rom_region" in row and "rom region" not in row:
         row["rom region"] = row.pop("rom_region")
     if "winlator_version" in row and "winlator version" not in row:
@@ -595,7 +597,7 @@ def post_compat(sub: CompatSubmission):
 
     # Always set/override these
     row["system"] = system
-    row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")  # <-- slashes
+    row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")  # slashes
 
     # Read existing header order (if any)
     fieldnames: List[str] = []
@@ -608,6 +610,7 @@ def post_compat(sub: CompatSubmission):
     present = set(fieldnames)
     to_add = list((REQUIRED_COLS | set(row.keys())) - present)
     if not fieldnames:
+        # New file: start with a sensible order
         fieldnames = ["device", "chipset", "system", "game", "performance", "driver",
                       "emulator", "resolution", "rom region", "winlator version",
                       "dx wrapper", "game resolution", "dxvk version", "vkd3d version",
@@ -622,6 +625,7 @@ def post_compat(sub: CompatSubmission):
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             if write_header:
                 writer.writeheader()
+            # Fill missing cells with ''
             full_row = {k: row.get(k, "") for k in fieldnames}
             writer.writerow(full_row)
 
