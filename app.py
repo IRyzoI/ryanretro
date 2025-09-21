@@ -39,6 +39,7 @@ app.add_middleware(
 YT_API_KEY = os.getenv("YT_API_KEY")  # set this in your environment
 DEFAULT_CHANNEL_ID = os.getenv("YT_CHANNEL_ID") or "UCh9GxjM-FNuSWv7xqn3UKVw"
 UA = {"User-Agent": "RyanRetro/1.0"}
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "ryanisthebest92")
 
 CACHE_DIR = "cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
@@ -636,6 +637,9 @@ def post_compat(sub: CompatSubmission):
 # --------------------------------------------------------------------------------------
 @app.get("/api/debug/where")
 def debug_where():
+        token = request.query_params.get("token", "")
+    if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Forbidden")
     info = {
         "DATA_DIR": DATA_DIR,
         "DEFAULT_DATA_DIR": DEFAULT_DATA_DIR,
@@ -646,6 +650,9 @@ def debug_where():
 
 @app.get("/api/debug/sample")
 def debug_sample(system: str):
+        token = request.query_params.get("token", "")
+    if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Forbidden")
     path = _find_csv_path(system)
     if not path:
         raise HTTPException(404, f"{system}.csv not found")
