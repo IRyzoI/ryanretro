@@ -508,16 +508,29 @@ def latest_videos(
                 raise
 
 # --------------------------------------------------------------------------------------
+# Storage paths (repo data + persistent volume)
+# --------------------------------------------------------------------------------------
+import shutil
+
+REPO_DIR = os.path.dirname(__file__)
+DEFAULT_DATA_DIR = os.path.join(REPO_DIR, "data")      # fallback if no volume
+DATA_DIR = os.getenv("DATA_DIR", DEFAULT_DATA_DIR)     # set to /data on Railway
+
+os.makedirs(DATA_DIR, exist_ok=True)
+
+# One-time seed: if DATA_DIR is empty, copy CSVs from repo /data
+if not os.listdir(DATA_DIR) and os.path.isdir(DEFAULT_DATA_DIR):
+    for name in os.listdir(DEFAULT_DATA_DIR):
+        src = os.path.join(DEFAULT_DATA_DIR, name)
+        dst = os.path.join(DATA_DIR, name)
+        if os.path.isfile(src) and not os.path.exists(dst):
+            shutil.copyfile(src, dst)
+
+# --------------------------------------------------------------------------------------
 # Static mounts
 # --------------------------------------------------------------------------------------
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/data", StaticFiles(directory="data"), name="data")
-
-DATA_DIR = "data"
-
-@app.get("/")
-def root():
-    return RedirectResponse(url="/static/index.html")
+app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
+app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
 # --------------------------------------------------------------------------------------
 # Compatibility CSV -> JSON API (read)
