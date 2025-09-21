@@ -769,3 +769,8 @@ def serve_guide(slug: str):
         return FileResponse(idx_path, media_type="text/html")
 
     return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
+
+if __name__ == "__main__":
+    import os, uvicorn
+    uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
+
