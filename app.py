@@ -5,16 +5,18 @@ import time
 import json
 import hashlib
 import threading
+import shutil
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import httpx
 import markdown
 from fastapi import FastAPI, HTTPException, Response
-from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field  # consolidated import
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -33,16 +35,34 @@ app.add_middleware(
 )
 
 # --------------------------------------------------------------------------------------
-# Config
+# Paths (absolute) and config
 # --------------------------------------------------------------------------------------
+BASE_DIR = Path(__file__).resolve().parent
+
+# Static dir (serve your built site)
+STATIC_DIR = Path(os.getenv("STATIC_DIR", str(BASE_DIR / "static")))
+
+# Data dir (CSV storage). Accept either DATA_DIR or STORAGE_PATH env vars; default to repo /data
+DATA_DIR = Path(os.getenv("DATA_DIR") or os.getenv("STORAGE_PATH") or str(BASE_DIR / "data"))
+DEFAULT_DATA_DIR = BASE_DIR / "data"
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+# One-time seed: if DATA_DIR is empty, copy CSVs from repo /data
+if not any(DATA_DIR.iterdir()) and DEFAULT_DATA_DIR.exists():
+    for name in os.listdir(DEFAULT_DATA_DIR):
+        src = DEFAULT_DATA_DIR / name
+        dst = DATA_DIR / name
+        if src.is_file() and not dst.exists():
+            shutil.copyfile(src, dst)
+
+# Cache dir (absolute)
+CACHE_DIR = BASE_DIR / "cache"
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+# YouTube config
 YT_API_KEY = os.getenv("YT_API_KEY")  # set this in your environment
-# Default channel for homepage latest videos (set YT_CHANNEL_ID in .env, or hardcode here)
 DEFAULT_CHANNEL_ID = os.getenv("YT_CHANNEL_ID") or "UCh9GxjM-FNuSWv7xqn3UKVw"
-
 UA = {"User-Agent": "RyanRetro/1.0"}
-
-CACHE_DIR = "cache"
-os.makedirs(CACHE_DIR, exist_ok=True)
 CACHE_TTL_SECONDS = 24 * 3600
 CACHE_VERSION = "v5"  # bump to invalidate old caches when logic changes
 
@@ -57,7 +77,7 @@ _locks: Dict[str, threading.Lock] = {}
 
 def _cache_file(key: str) -> str:
     h = hashlib.sha1(key.encode("utf-8")).hexdigest()
-    return os.path.join(CACHE_DIR, f"{h}.json")
+    return str(CACHE_DIR / f"{h}.json")
 
 def _cache_read(key: str, ttl: int = CACHE_TTL_SECONDS):
     path = _cache_file(key)
@@ -100,9 +120,6 @@ def _make_matcher(q: str, aliases: str):
     """
     Match if title contains any full phrase (q or alias) OR
     (≥2 generic tokens) AND (at least 1 disambiguator token if any exist).
-
-    Disambiguator tokens are those that contain digits (e.g., '5', 'rp5', 'flip2', '8g2').
-    NOTE: pure-digit tokens like "2" or "5" are kept even if length == 1.
     """
     import re as _re
 
@@ -118,11 +135,10 @@ def _make_matcher(q: str, aliases: str):
     disamb_tokens: set[str] = set()
 
     def _tokenize(s: str):
-        # Keep numeric tokens even if a single character (e.g., "2", "5")
         for t in _re.findall(r"[a-z0-9]+", s.lower()):
-            if t.isdigit():          # "2", "5", "8"
+            if t.isdigit():
                 yield t
-            elif len(t) >= 2:        # drop single-letter alphabetic noise
+            elif len(t) >= 2:
                 yield t
 
     for ph in phrases:
@@ -134,10 +150,8 @@ def _make_matcher(q: str, aliases: str):
 
     def match(title: str) -> bool:
         tl = (title or "").lower()
-        # 1) full phrase hit (most permissive)
         if any(ph and ph in tl for ph in phrases):
             return True
-        # 2) token fallback: require ≥2 generic hits AND at least one disambiguator (if any exist)
         gen_hits = sum(1 for t in generic_tokens if t in tl)
         if gen_hits >= 2:
             return (not disamb_tokens) or any(t in tl for t in disamb_tokens)
@@ -145,20 +159,13 @@ def _make_matcher(q: str, aliases: str):
 
     return match
 
-
 # --------------------------------------------------------------------------------------
 # YouTube Data API (primary)
 # --------------------------------------------------------------------------------------
 def _yt_api_list_uploads(channel_id: str, pages: int = 12) -> List[Dict[str, str]]:
-    """
-    Fetch recent uploads via the channel's 'uploads' playlist.
-    pages=12 -> up to ~600 videos. Cheap and reliable.
-    """
     if not YT_API_KEY:
         return []
-
     with httpx.Client(timeout=10.0, headers=UA) as client:
-        # Get uploads playlist id
         r = client.get(
             "https://www.googleapis.com/youtube/v3/channels",
             params={"part": "contentDetails", "id": channel_id, "key": YT_API_KEY},
@@ -204,7 +211,6 @@ def _yt_api_list_uploads(channel_id: str, pages: int = 12) -> List[Dict[str, str
         return out
 
 def _yt_api_search(channel_id: str, query: str, limit: int) -> List[Dict[str, str]]:
-    """Search a channel using YouTube Data API v3 (requires YT_API_KEY)."""
     if not YT_API_KEY:
         return []
     url = "https://www.googleapis.com/youtube/v3/search"
@@ -338,7 +344,6 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
     matcher = _make_matcher(q, aliases)
     results: List[Dict[str, str]] = []
 
-    # Build phrases list (main q + distinct aliases)
     phrases: List[str] = []
     if q and q.strip():
         phrases.append(q.strip())
@@ -349,7 +354,7 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
             phrases.append(ph)
             seen_lower.add(ph.lower())
 
-    # 1) Primary: list uploads and filter locally (deep & cheap)
+    # 1) uploads list
     try:
         uploads = _yt_api_list_uploads(channel_id, pages=12) if YT_API_KEY else []
     except Exception as e:
@@ -360,7 +365,7 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
         print(f"[yt] uploads matched: {len(filtered)}")
         results.extend(filtered)
 
-    # 2) If not enough, API search per phrase (helps find older/oddly-titled matches)
+    # 2) API search per phrase
     if len(results) < limit and YT_API_KEY:
         try:
             for ph in phrases:
@@ -419,10 +424,7 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
 # Device pages
 @app.get("/api/youtube/latest")
 def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int = 18, force: int = 0):
-    # Exact phrases we’ll use to filter titles (local, strict)
     search_phrases = [p.strip().lower() for p in ([q] + aliases.split(',')) if p.strip()]
-
-    # Versioned cache key (you can also include aliases if you want per-alias caches)
     key = f"{CACHE_VERSION}:yt-api:{channel_id}|q={q.strip().lower()}"
 
     def _filter(items: List[Dict[str, str]] | None) -> List[Dict[str, str]]:
@@ -452,15 +454,9 @@ def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int =
 def latest_videos(
     response: Response,
     channel_id: str = DEFAULT_CHANNEL_ID,
-    limit: int = 3,   # show only 3 on homepage
+    limit: int = 3,
     force: int = 0
 ):
-    """
-    Simple latest uploads for homepage.
-    - Cached for 24h via file cache (+ Cache-Control header)
-    - Force refresh with ?force=1
-    - Output shape matches index.html expectations: id, title, thumb, publishedAt
-    """
     if not channel_id:
         raise HTTPException(status_code=400, detail="No channel_id. Set YT_CHANNEL_ID in .env or pass ?channel_id=")
 
@@ -474,7 +470,6 @@ def latest_videos(
             "thumb": f"https://i.ytimg.com/vi/{it['videoId']}/hqdefault.jpg",
             "publishedAt": it.get("publishedAt", "")
         } for it in items][:limit]
-        # cache headers
         if force:
             response.headers["Cache-Control"] = "no-store"
         else:
@@ -490,14 +485,12 @@ def latest_videos(
             if cached := _cache_read(key):
                 return _shape(cached)
         try:
-            # Cheap, accurate: official uploads list
             items = _yt_api_list_uploads(channel_id, pages=3)
             _cache_write(key, items)
             return _shape(items)
         except Exception as e:
             print(f"[home latest] yt error: {e}")
             try:
-                # Fallback: RSS feed (no API quota)
                 items = _rss_latest(channel_id)
                 _cache_write(key, items)
                 return _shape(items)
@@ -508,29 +501,17 @@ def latest_videos(
                 raise
 
 # --------------------------------------------------------------------------------------
-# Storage paths (repo data + persistent volume)
+# Static mounts and root page
 # --------------------------------------------------------------------------------------
-import shutil
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+app.mount("/data", StaticFiles(directory=str(DATA_DIR)), name="data")
 
-REPO_DIR = os.path.dirname(__file__)
-DEFAULT_DATA_DIR = os.path.join(REPO_DIR, "data")      # fallback if no volume
-DATA_DIR = os.getenv("DATA_DIR", DEFAULT_DATA_DIR)     # set to /data on Railway
-
-os.makedirs(DATA_DIR, exist_ok=True)
-
-# One-time seed: if DATA_DIR is empty, copy CSVs from repo /data
-if not os.listdir(DATA_DIR) and os.path.isdir(DEFAULT_DATA_DIR):
-    for name in os.listdir(DEFAULT_DATA_DIR):
-        src = os.path.join(DEFAULT_DATA_DIR, name)
-        dst = os.path.join(DATA_DIR, name)
-        if os.path.isfile(src) and not os.path.exists(dst):
-            shutil.copyfile(src, dst)
-
-# --------------------------------------------------------------------------------------
-# Static mounts
-# --------------------------------------------------------------------------------------
-app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
-app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
+@app.get("/", response_class=FileResponse)
+def root():
+    index_path = STATIC_DIR / "index.html"
+    if not index_path.exists():
+        raise HTTPException(status_code=404, detail=f"index.html not found at {index_path}")
+    return FileResponse(str(index_path), media_type="text/html")
 
 # --------------------------------------------------------------------------------------
 # Compatibility CSV -> JSON API (read)
@@ -547,8 +528,8 @@ class GameEntry(BaseModel):
 
 @app.get("/api/compatibility/{system_name}")
 def get_compatibility_list(system_name: str):
-    file_path = os.path.join(DATA_DIR, f"{system_name}.csv")
-    if not os.path.exists(file_path):
+    file_path = DATA_DIR / f"{system_name}.csv"
+    if not file_path.exists():
         raise HTTPException(status_code=404, detail="List not found.")
     rows: List[Dict[str, Any]] = []
     with open(file_path, mode="r", encoding="utf-8-sig", newline="") as f:
@@ -573,12 +554,10 @@ SYSTEM_CSVS = {
 REQUIRED_COLS = {"device", "chipset", "system", "date added"}
 
 class CompatSubmission(BaseModel):
-    # common required
     device: str = Field(..., min_length=1)
     chipset: str = Field(..., min_length=1)
     system: str  = Field(..., min_length=1)
 
-    # everything else is optional and varies by system
     game: Optional[str] = None
     performance: Optional[str] = None
     driver: Optional[str] = None
@@ -595,28 +574,21 @@ class CompatSubmission(BaseModel):
     notes: Optional[str] = None
 
     class Config:
-        allow_population_by_field_name = True  # accept alias or pythonic names
+        allow_population_by_field_name = True
 
 @app.post("/api/compat/submit")
 def post_compat(sub: CompatSubmission):
-    """
-    Append a row to the appropriate system CSV.
-    Required in payload: device, chipset, system
-    Other fields (like game/performance/driver/emulator...) are optional per-system,
-    and will be added if present.
-    """
     system = (sub.system or "").strip().lower()
     if system not in SYSTEM_CSVS:
         raise HTTPException(status_code=400, detail=f"Unknown system '{sub.system}'")
 
-    # Path to the CSV
-    file_path = os.path.join(DATA_DIR, SYSTEM_CSVS[system])
-    os.makedirs(DATA_DIR, exist_ok=True)
+    file_path = DATA_DIR / SYSTEM_CSVS[system]
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     # Flatten with alias names and strip Nones
     row = json.loads(sub.json(by_alias=True, exclude_none=True))
 
-    # Normalize any pythonic keys to CSV header names (aliases already do most of this)
+    # Normalize keys to CSV header names (aliases already do most)
     if "rom_region" in row and "rom region" not in row:
         row["rom region"] = row.pop("rom_region")
     if "winlator_version" in row and "winlator version" not in row:
@@ -636,11 +608,11 @@ def post_compat(sub: CompatSubmission):
 
     # Always set/override these
     row["system"] = system
-    row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")
+    row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")  # ensure YYYY/MM/DD
 
     # Read existing header order (if any)
     fieldnames: List[str] = []
-    if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+    if file_path.exists() and file_path.stat().st_size > 0:
         with open(file_path, "r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
             fieldnames = list(reader.fieldnames or [])
@@ -649,7 +621,6 @@ def post_compat(sub: CompatSubmission):
     present = set(fieldnames)
     to_add = list((REQUIRED_COLS | set(row.keys())) - present)
     if not fieldnames:
-        # New file: start with a sensible order
         fieldnames = ["device", "chipset", "system", "game", "performance", "driver",
                       "emulator", "resolution", "rom region", "winlator version",
                       "dx wrapper", "game resolution", "dxvk version", "vkd3d version",
@@ -657,14 +628,13 @@ def post_compat(sub: CompatSubmission):
     fieldnames += [c for c in to_add if c not in fieldnames]
 
     # Lock + write
-    lock = _lock_for(file_path)
+    lock = _lock_for(str(file_path))
     with lock:
-        write_header = not os.path.exists(file_path) or os.path.getsize(file_path) == 0
+        write_header = (not file_path.exists()) or (file_path.stat().st_size == 0)
         with open(file_path, "a", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             if write_header:
                 writer.writeheader()
-            # Fill missing cells with ''
             full_row = {k: row.get(k, "") for k in fieldnames}
             writer.writerow(full_row)
 
@@ -675,12 +645,11 @@ def post_compat(sub: CompatSubmission):
 # --------------------------------------------------------------------------------------
 @app.get("/guides/{slug}", response_class=HTMLResponse)
 def serve_guide(slug: str):
-    md_path = os.path.join("guides", f"{slug}.md")
-    if os.path.exists(md_path):
+    md_path = BASE_DIR / "guides" / f"{slug}.md"
+    if md_path.exists():
         with open(md_path, "r", encoding="utf-8") as f:
             md_content = f.read()
 
-        # Drop a leading H1 (we add our own)
         lines = md_content.splitlines()
         if lines and lines[0].lstrip().startswith("#"):
             lines = lines[1:]
@@ -760,17 +729,19 @@ def serve_guide(slug: str):
 </body>
 </html>"""
 
-    html_path = os.path.join("static", "guides", f"{slug}.html")
-    if os.path.exists(html_path):
-        return FileResponse(html_path, media_type="text/html")
+    html_path = STATIC_DIR / "guides" / f"{slug}.html"
+    if html_path.exists():
+        return FileResponse(str(html_path), media_type="text/html")
 
-    idx_path = os.path.join("static", "guides", slug, "index.html")
-    if os.path.exists(idx_path):
-        return FileResponse(idx_path, media_type="text/html")
+    idx_path = STATIC_DIR / "guides" / slug / "index.html"
+    if idx_path.exists():
+        return FileResponse(str(idx_path), media_type="text/html")
 
     return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
 
+# --------------------------------------------------------------------------------------
+# Dev/CLI entrypoint
+# --------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    import os, uvicorn
+    import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
-
