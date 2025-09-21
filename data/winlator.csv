@@ -1,0 +1,443 @@
+device,chipset,system,game,performance,winlator version,driver,dx wrapper,notes,date added
+Retroid Pocket 5,sd865,winlator,Pacman Championship Dx,Perfect,Glib CMod,2.41,DXVK 2.4.1,"run Launcher_64.exe 
+box64- 0.2.8
+box64 preset- compatibility
+https://archive.org/details/pac-man-championship-edition-dx_202306",2025/2/6
+Retroid Pocket 5,sd865,winlator,Fallout 4,Great,8.0 rev 1,24.1.0,DXVK,Plays well at 480p (will need to manually enter resolution in config file),2024/12/15
+Retroid Pocket 5,sd865,winlator,Gta IV,Playable,8.0 rev 1,24.1.0,DXVK,works with gta iv downgrader,2024/12/15
+Retroid Pocket 5,sd865,winlator,Gta V,Unplayable,8.0 rev 1,24.1.0,DXVK,Will boot into first mission at 640x360 with low poly around 15-20 fps but crashes within 1 minute.,2024/12/15
+Retroid Pocket 5,sd865,winlator,Metal Gear Solid V Ground Zeroes ,Playable,9,24.1.0,2.4.1,"Performance preset (BOX64_DYNAREC_SAFEFLAGS set to 0), 
+
+1280x720 or 1024 x 768 resolution (can go lower for better compatibility), 
+
+Fps uncapped or 30 fps lock.
+
+Windows 10 and Essential Startup Selection
+
+All other setting can be leaved as default 
+
+You can experience crashes as it is unstable.",2025/1/26
+Retroid Pocket 5,sd865,winlator,Need For Speed Pro Street,Perfect,9,24.1.0,DXVK,Runs 30 FPS and dips a little to 27 FPS sometimes but not a huge difference since that’s how Pro Street runs on console.,2025/5/22
+Retroid Pocket 5,sd865,winlator,"Runaway, The Dream of The Turtle",Perfect,Winlator  9 ou 10,24.1.0,CNC DDRAW,1280 x 720p     ,2025/5/18
+Retroid Pocket 5,sd865,winlator,The Elder Scrolls IV: Oblivion,Great,10 (Final),24.1.0,DXVK,"You need to install NorthernUI in order to use a controller. It does not naitivly support controller input.
+It runs perfectly in the beginning, but once I got outside, I couldn't move without wiggling the stick. I had to look up why it was happening and its because of the performance settings. If you have it on Performance in the container settings, you get stuck as well as npcs; intermediate you can move but frames drop below 30fps.
+
+Go to Settings in the Winlator menu and clone the Performance settings, then disable Box64_Dynarec_CallRet. Performance is now amazing and no issues. 
+Copy performance setting, edit it and disable Box64_Dynarec_CallRet. Then increase Box64_Dynarec_Forward to 1024 for better performance. ",2025/5/7
+Retroid Pocket 5,sd865,winlator,Mass Effect 2 Legendary Edition,Unplayable,Winlator Frost 9.0 v2,24.1.0,2.4.1,Does not run with a variety of drivers and wrappers,2025/07/02
+Retroid Pocket 5,sd865,winlator,Dark Souls Remastered,Great,9,24.3,2.5.2,Plays Great 35/50 FPS 720p,2025/2/21
+Retroid Pocket 5,sd865,winlator,Dead Space 3,Perfect,Winlator Frost 9.0 v2,24.3.0,1.10.3,Works perfectly ~30 fps stable,2025/3/26
+Retroid Pocket 5,sd865,winlator,Guns Of Fury,Perfect,9,24.3.0,2.5.2,-,2025/2/21
+Retroid Pocket 5,sd865,winlator,Crysis,Unplayable,glibcmod-Steam,24.3.0.9,2.4.1,Doesn't open,2024/12/14
+Retroid Pocket 5,sd865,winlator,Skyrim,Great,glibcmod-Steam,24.3.0.9,2.4.1,,2024/12/13
+Retroid Pocket 5,sd865,winlator,Stardew Valley,Unplayable,glibcmod-Steam,24.3.0.9,2.4.1,-,2024/12/13
+Retroid Pocket 5,sd865,winlator,Stumble Guys,Great,glibcmod-Steam,24.3.0.9,2.4.1,-,2024/12/13
+Retroid Pocket 5,sd865,winlator,Factorio,Perfect,10.0 (Hotfix),25.0.0,2.4.1,"Factorio v 1.1.107
+Environment variables for Controller to work:
+SDL_JOYSTICK_WGI = 0
+SDL_JOYSTICK_RAWINPUT = 0
+SDL_XINPUT_ENABLED = 1
+SDL_DIRECTINPUT_ENABLED = 0
+SDL_JOYSTICK_ALLOW_BACKGROUND = 1
+SDL_HINT_FORCE_RAISEWINDOW = 0
+SDL_ALLOW_TOPMOST = 0
+SDL_MOUSE_FOCUS_CLICKTHROUGH = 1
+SDL_JOYSTICK_HIDAPI = 1",2025/06/24
+Retroid Pocket 5,sd865,winlator,Batmam Arkham Knight,Great,10 Amod Fix / 5,25.0.0,2.3.1,"Custom Container, Custom Box Preset Drivers. Use d3d12. running 480p or 544p smooth playable games.",2025/08/10
+Retroid Pocket 5,sd865,winlator,Resident Evil 3 Remake,Playable,10 beta,25.0.0,DXVK 1.10.3,"Box Preset custom: 0.3.7 version
+
+BOX64_DYNAREC_SAFEFLAGS 1
+BOX64_DYNAREC_FASTNAN: ENABLE
+BOX64_DYNAREC_FASTROUND: 1
+X87DOUBLE: DISABLE
+BIGBLOCK: 3
+STRONGMEM: 2
+FORWARD: 512
+CALLRET: ENABLE
+WAIT: DISABLE
+NATIVEFLAGS: DISABLE
+WEAKBARRIER: 0
+
+Game settings, 720p everything low or disable except FidelityFX
+Runs a bit better than gamehub but the fps drops are heavier: around 27 to 29 fps
+
+all cores enabled, 70ºC thermalpad changed, perfomance mode, high perfomance less drops but more heat",2025/09/11
+Retroid Pocket 5,sd865,winlator,Assassins Creed 1,Great,8frost,25.0.0.1,DXVK,-,2024/12/22
+Retroid Pocket 5,sd865,winlator,Far Cry 3,Playable,8frost,25.0.0.1,DXVK,Plays around 20-26 fps with minimal crashing,2024/12/22
+Retroid Pocket 5,sd865,winlator,Sultan's Game,Playable,10.1 Hotfix,25.0.0.1,Vulkan,Cannot find a way to recognise controller so have to play with keyboard and mouse,2025/07/22
+Retroid Pocket 5,sd865,winlator,Outrun C2c 2006,Perfect,Winlator Frost 10.0Final V4.1,25.1.0.2,2.6.2,"Add ENIRONMENT VARIABLES: 
+name: WINEDLLOVERRIDES
+value: dinput8=n,b
+1080p 60 fps",2025/06/10
+Retroid Pocket 5,sd865,winlator,Alice Madness Returns,Perfect,Winlator Frost 10.0Final V4.1,25.2.0,1.10.3,"Box64 0.3.4
+Modify Performance preset:
+SAFEFLAG 1
+BIGBLOCK 3
+STRONGMEM 1
+WEAKBARRIER 1
+In shortcut advances -&gt; Exec Arguments:
+-force-dx9
+Runs perfect 720p 30fps",2025/06/10
+Odin 2 Portal,sd8g2,winlator,Red Dead Redemption 1,Great,1.5.2 Bionic Ludashi,Bionic turnip driver 25.2.0-S1,VKD3D,"Standard container 
+
+Pulseaudio
+
+4096 video memory
+
+Disable mango HUD
+
+Box 0.3.6
+Performance mode
+Aggressive",2025/07/18
+Retroid Pocket 5,sd865,winlator,Animal Well,Perfect,10 beta,Default,Vulkan,Switch to Vulkan graphics driver and it runs beautifully at 720P at 60FPS.,2025/3/6
+Retroid Pocket 5,sd865,winlator,Dead Space 2,Perfect,Winlator 10,Default,2.4.1,,2025/07/01
+Retroid Pocket 5,sd865,winlator,Tales Of Zestiria,Perfect,Frost 8.0R1 v4,Dxk,Default,"The game has a very slow first boot (more than 1 minute), but after that works flawlessly in 720p. Coudn't make it work with the fps mod though.",2025/1/15
+Retroid Pocket 5,sd865,winlator,The Legend Of Heroes: Trails To Azure,Playable,7.1.3 glibcmod,Dxk,2.3.1,"I mark it as playable but at random times, the sound disappears and soon after it freezes. I managed to play at most for ~45 minutes, then the sound disappeared and I managed to save, but soon after the game froze. 
+
+While the sound is working, the game plays just fine. A few drops in fps in 1080p but solid 60 on 720p with no noticeable difference in image.",2025/1/2
+Retroid Pocket 5,sd865,winlator,American Mcgee’s Alice,Perfect,9.0 or later,OpenGL,WineD3D,This game plays best at 720p or below and has full controller support.,2025/4/16
+Retroid Pocket 5,sd865,winlator,Gta Iv,Perfect,9.0 or later,OpenGL,DXVK,-,2025/07/20
+Retroid Pocket 5,sd865,winlator,The Elder Scrolls Iv: Oblivion,Perfect,9.0 or later,OpenGL,WineD3D,,2025/09/15
+Retroid Pocket 5,sd865,winlator,Mass Effect 2,Unplayable,10.1 frost,Plenty,2.4.,-,2025/07/28
+Retroid Pocket 5,sd865,winlator,Far Cry,Perfect,9.5,Turnip,DXVK,Played through the first level on low settings. Runs perfectly at 60-100 fps. It did run reasonable well at highest settings (at around 30-50fps) but crashed often.,2025/5/16
+Retroid Pocket 5,sd865,winlator,Lego Star Wars: The Complete Saga,Great,9,Turnip,DXVK,"Runs alright, odd thing is it runs better in 1080p than 720p. Some issues with sound on the title screen but okay in the game. ",2025/1/13
+Retroid Pocket 5,sd865,winlator,Ori And The Blind Forest,Great,9,Turnip,DXVK,Rendering issues during intro cutscene. Game character turned 90 degrees,2025/3/23
+Retroid Pocket 5,sd865,winlator,Overlord 2,Great,8.01,Turnip,2.4,"Needed to set a container up as running Windows 8 to get around some old NVidia Physx Installer ghosts from the past, but runs very well after. Hits a consistent 30-35fps with some drops to 27 when lots of minions are running amok! ",2024/12/18
+Retroid Pocket 5,sd865,winlator,Postal 2,Perfect,9,Turnip,DXVK ,"Played IT for around 2 Hours
+Did run the game at 30 FPS
+Used the Box64 performance preset 
+These environment variables reduce screen tearing (Case sensitive)
+MESA_VK_WSI_DEBUG = sw
+MESA_VK_WSI_PRESENT MODE = immediate 
+
+
+",2025/2/13
+Retroid Pocket 5,sd865,winlator,The Witcher Enhanced Edition Director's Cut,Perfect,9,Turnip,DXVK,"720p, Box64 Performance,  30-60 fps",2025/2/10
+Retroid Pocket 5,sd865,winlator,Void Stranger,Perfect,9,Turnip,DXVK,Set winlator controller input to auto (instead of 'both') for correct controller mapping. Runs perfect (why wouldnt it),2025/1/13
+Retroid Pocket 5,sd865,winlator,Pacman World Dx,Perfect,glib cmod,Turnip 24.1,DXVK 2.4.1,Run launcher_64.exe box64 0.2.8 box64 preset - compatibility. https://archive.org/details/pac-man-championship-edition-dx_202306,2025/2/6
+Retroid Pocket 5,sd865,winlator,Bioshock Remastered Edition,Great,9,Turnip 24.1.0,2.5.2,"GOG Version 1.0.122972
+1280/720p - between 40 to 80 fps (but using VSYNC in the hope of better battery life)
+Box64 0.3.2 on 030 (Performance based)
+-nointro argument to accelerate loading 
+2 variables to avoid tearing
+MESA_VK_WSI_PRESENT_MODE = immediate 
+MESA_VK_WSI_DEBUG = sw
+
+You have to wait 20s-ish to have Bioshock logo then another 90/110s to access the menu after that everything works fine. No crash so far but saving often in case of...",2025/1/13
+Retroid Pocket 5,sd865,winlator,Bioshock Remastered Edition,Unplayable,9,Turnip 24.1.0,DXVK,Won't move past opening screen image ,2025/1/7
+Retroid Pocket 5,sd865,winlator,Dishonored GOTY,Playable,9,Turnip 24.1.0,DXVK 2.4.1,"Average fps : 35
+Some graphical glitches (I dk how to repair this) but not problematic
+Performance : high performance
+1366x768
+Box64 : compatibility (game doesn't work in performance)
+Game graphics all minimum",2025/2/21
+Retroid Pocket 5,sd865,winlator,Driver: San Fransico,Perfect,9,Turnip 24.1.0,DXVK,Works great! 720p at default settings at 47-63fps,2025/1/22
+Retroid Pocket 5,sd865,winlator,Environmental Station Alpha,Perfect,8.0 (Revision 1),Turnip 24.1.0,DXVK 2.4.1,-,2024/12/14
+Retroid Pocket 5,sd865,winlator,Fallout 3,Great,Winlator 8.5.5 (wb64dev),Turnip 24.1.0,2.4,"Game runs beautiful; FPS 30+ on 1080p ultra; increases with performance toggle selection on quick settings.
+
+(Adjust game settings as see fit)",2024/12/21
+Retroid Pocket 5,sd865,winlator,Lego Indiana Jones 2,Unplayable,9,Turnip 24.1.0,DXVK ,"The game starts and works perfectly, but it recognizes the retroid controller as two separate controllers, making you control both characters at the same time and therefore makign the game unplayable (unless you're a massive masochist) ",2025/3/8
+Retroid Pocket 5,sd865,winlator,Need For Speed Underground 2,Great,Winlator 10.0 (Beta),Turnip 24.1.0,DXVK 1.10.3,"Game version 1.2.0 w/ dinput8.dll from xan1242 NFSU-XtendedInput and scripts folder from ThirteenAG WidescreenFix. Edit settings in \scripts\NFSUnderground.WidescreenFix.ini.
+Limited controller support.
+Container settings:
+1280x720
+DXVK 1.10.3 - (2.3.1 got better fps but game randomly freezes, unstable)
+Box64 - 0.3.2
+Preset - Performance
+Gamefixes:
+Start &gt; System Tools &gt; Wine Configuration &gt; Libraries &gt; pick dinput and dinput8 &gt; Edit &gt; Native then builtin
+Game settings:
+Everything maxed out except motion blur, DoF, (visual clarity); particle system and AA turned off (fps drops to 40fps w/ tiresmoke, near fountains and other particle effects); 80fps on avg (locked to 60fps in .ini)
+",2025/3/2
+Retroid Pocket 5,sd865,winlator,The Saboteur,Great,9,Turnip 24.1.0,DXVK,,2025/3/5
+Retroid Pocket 5,sd865,winlator,Ys VIII: Lacrimosa Of Dana,Playable,Ys VIII: Lacrimosa of Dana,Turnip 24.1.0,DXVK 2.4.1,"Plays great at 40-60 fps on 720p low settings, but the video occasionally freezes.",2024/12/23
+Retroid Pocket 5,sd865,winlator,Final Fantasy Xiii,Great,Winlator Frost 10.0Final V4.1,Turnip 24.1.0,DXVK 2.4.1.1,Runs acceptably well with some stutters and framerate drops but generally between 40-60FPS with 13Fix.,2025/06/28
+Retroid Pocket 5,sd865,winlator,Test Drive Unlimited,Perfect,Winlator 10,Turnip 24.1.0,DXVK,"1280x720
+55-60fps",2025/07/01
+Retroid Pocket 5,sd865,winlator,Wrath: Aeon Of Ruin,Great,10.1,Turnip 24.1.0,DXVK 2.4.1,"Runs very well inside winlator, but for some reason graphics are glitchy when running as a shortcut. Marked ""great"" because FPS is a bit inconsistent depending on the level.",2025/08/09
+Retroid Pocket 5,sd865,winlator,The Binding Of Isaac: Repentance ,Unplayable,9,Turnip 24.1.0 ,DVKD/Wine (tried them all) ,"Crashes on startup. Some people on reddit have said they've gotten it to work, though very badly, but I had no such luck. ",2025/3/8
+Retroid Pocket 5,sd865,winlator,Beyond: Two Souls,Great,9,Turnip 24.3.0,DXVK,"Set Box64 to Compatible (fixes random crashes), Audio driver to ALSA (game sound still is delayed and stutters) but better then PULSE. In-game graphics set to low for stable 30fps. Tested up to birthday party.",2025/2/11
+Retroid Pocket 5,sd865,winlator,Cuphead,Perfect,7.1.3 glibcmod,Turnip 24.3.0,2.4.1,"1920x1080   60fps+
+ALSA
+box64 0.3.1 (Performance)",2025/1/27
+Retroid Pocket 5,sd865,winlator,Dead Space 2,Perfect,Winlator Frost 9.0 v2,Turnip 24.3.0,1.10.3,The game works perfectly - 30 fps stable ,2025/3/26
+Retroid Pocket 5,sd865,winlator,Doom (2016),Great,Winlator@Frost Glibc Version 7.1.3 V2,Turnip 24.3.0,VKD3D 2.13,"I’ve set the graphics to the lowest settings in Doom and I get a consistent 40-50 fps. Minor glitches and freezes are rare, but keep in mind the game does heat up the RP5 to 60-70 degrees C, so it’s a good idea to keep the fan in sport mode!",2025/2/8
+Retroid Pocket 5,sd865,winlator,Lost Planet: Extreme Condition Colonies Edition,Perfect,9,Turnip 24.3.0,DXVK 2.5.2,"DX9 version, 50-60 FPS most of the time, Very Stable",2025/1/16
+Retroid Pocket 5,sd865,winlator,Low Magic Age,Perfect,9,Turnip 24.3.0,DXVK 2.5.2,Touchscreen game,2025/2/21
+Retroid Pocket 5,sd865,winlator,Metal Gear Rising: Revengeance,Great,"Winlator 9.0 (regular, not fork)",Turnip 24.3.0,2.5.2,"box64 set to performance in game set graphics and all settings to low. Game runs great (got past first boss with giant robot right after intro) FPS stays around 27-30. Fix screen tearing with this environment variable MESA_VK_WSI_PRESENT_MODE = immediate
+MESA_VK_WSI_DEBUG = sw",2025/2/18
+Retroid Pocket 5,sd865,winlator,Mirror’S Edge ,Perfect,9.0 official,Turnip 24.3.0,DXVK,Full setings &amp; showcase: https://www.reddit.com/r/retroid/s/QzO6Vp6NNz,2025/3/6
+Retroid Pocket 5,sd865,winlator,Need For Speed Underground 1,Great,Winlator@Frost Glibc​ 7.1.3 V3,Turnip 24.3.0,DXVK 1.5.5,"Game version 1.4.0 w/ ThirteenAG WidescreenFix (additional settings in \scripts\NFSUnderground.WidescreenFix.ini) and xan1242 NFSU-XtendedInput - xinput plugin for native controller support
+Container settings:
+1280x720
+DXVK 0.40.1 and 1.5.5 seems to yield more FPS on average, but 1.10.3 works fine
+Box64 - 0.3.2
+Preset - Performance
+fix tearing:
+MESA_VK_WSI_PRESENT_MODE = immediate
+MESA_VK_WSI_DEBUG = sw
+Gamefixes:
+Start &gt; Fixes &gt; Game fixes &gt; Lodmod,NFSU2,Etc fix.reg
+Game settings:
+Everything maxed out except motion blur (visual clarity) and particle system (fps drops to 30-40 in atlantica map in water areas, few fps drops w/ tiresmoke); 80fps on avg (70fps w/ 1.10.3) majority of time (locked to 60fps in .ini), fps could drop to 55+is for split second in some areas. Random audio glitches (?).
+",2025/2/14
+Retroid Pocket 5,sd865,winlator,UFO 50,Perfect,Glibc-cmod ,Turnip 24.3.0,2.4.1 gplasync,box64 0.2.7 box64 preset intermediate This was a repack game.,2025/1/5
+Retroid Pocket 5,sd865,winlator,Ys X: Nordics,Playable,Winlator Frost 10.0 Final V3,Turnip 24.3.0,DXVK 2.4.1.1,"Playable with FPS averaging in the 30s, graphics quality around the same as Switch handheld mode (which is good since Switch version has audio error when emulated). 
+Box64 0.3.2 performance preset.
+Ingame settings: 1280x720, Resolution scaling 85%, most settings set to low-off. You can turn on Rim lighting, Anti-aliasing and Texture filtering for slightly better image quality.",2025/5/19
+Retroid Pocket 5,sd865,winlator,Star Wars : K.o.t.o.r 2,Great,9,Turnip 24.3.0,Vulkan,GOG version seems to halt in the end but you can run the game. Played 1.5H w/o intro no problem.,2025/07/11
+Retroid Pocket 5,sd865,winlator,Need For Speed Most Wanted 2005,Perfect,10.1,Turnip 24.3.0,DXVK,"Works perfectly on high settings, vsync turned on recommended for a way smoother experience. nitro needs to be set in the control settings ingame (press arrow key to navigate from keyboard to retroid controller)",2025/07/23
+Retroid Pocket 5,sd865,winlator,Tiny Thor,Perfect,Cmod-v13.1,Turnip 24.3.0,2.3.1,Runs flawless at 60fps,2025/08/17
+Odin 2 Portal,sd8g2,winlator,Kingdoms Of Amalur Re Reckoning,Perfect,Bionic,Turnip 24.3.0 R9,DXVK 2.6.1,"Standard container using PulseAudio. 
+
+Direct3D, DirectSound, Visual C++ and WMD set to Native, the rest set to Builtin. 
+
+Box64:
+Version: 0.301
+Preset: Performance
+RC: Disabled",2025/06/03
+Odin 2 Portal,sd8g2,winlator,The Elder Scrolls V: Skyrim – Special Edition,Perfect,Bionic,Turnip 24.3.0 R9,DXVK 2.6.1,"Standard container using PulseAudio.
+
+Direct3D, DirectSound, Visual C++ and WMD set to Native, the rest set to Builtin.
+
+Box64:
+Version: 0.3.1 - 0450371-8g2-1
+Preset: Performance
+RC: Disabled",2025/06/03
+Odin 2 Portal,sd8g2,winlator,Asterix &amp; Obelix Xxl: Romastered,Playable,Bionic,Turnip 24.3.0 R9,DXVK 2.6.1,"Standard container using PulseAudio.
+
+Direct3D, DirectSound, Visual C++ and WMD set to Native, the rest set to Builtin.
+
+Box64:
+Version: 0.3.1.8g2
+Preset: Performance
+RC: Disabled
+
+The game seems to run fine but there are some textures that disappear and that can cause issues with pickups. Changing to 'Original ' mode solves the problem.",2025/06/03
+Retroid Pocket 5,sd865,winlator,Journey,Great,7.1.3 glibcmod,Turnip 24.3.0.9,2.4.1,"shortcut settings: 1280x720p (25-30 fps)
+audio driver ALSA
+box64 0.3.1 (Performance)
+add variables to avoid tearing MESA_VK_WSI_PRESENT_MODE = immediate 
+MESA_VK_WSI_DEBUG = sw",2025/1/12
+Retroid Pocket 5,sd865,winlator,Need For Speed Most Wanted 2012,Playable,winlator Frost 10v2,Turnip 25.0.0,DXVK,"Resolution: 720
+Container settings: Untouched
+Using the 905OC boot image
+Game settings: all low
+FPS: averages 50/55fps with dips down to 43fps when racing",2025/5/16
+Retroid Pocket 5,sd865,winlator,Ultimate Marvel Vs Capcom 3 ,Great,Win frost 8.0R1 v3,Turnip 25.0.0,DXVK,-,2024/12/14
+Retroid Pocket 5,sd865,winlator,Tomb Rider Goty,Perfect,Winlator Frost 10.0Final V4.1,Turnip 25.0.0,2.3.1,"Box64 0.3.4
+Preset: Performance
+Rung 720p 50-60 fps",2025/06/10
+Retroid Pocket 5,sd865,winlator,The Amazing Spiderman 2,Great,Winlator Frost 10.0Final V4.1,Turnip 25.0.0,DXVK 1.10.3,"720p 25-50 fps
+CUSTOM PRESET: safeflag 2 - fastnan ON - fastround 1 - Dynarec forward 128 - Maxcpu 8 
+all the rest OFF or 0.
+Box64 Version:
+0.3.4
+DXVK_ASYNC ON",2025/06/24
+Retroid Pocket 5,sd865,winlator,Need For Speed Pro Street,Perfect,Winlator Frost 10.0Final V4.1,Turnip 25.0.0,DXVK 2.4.1.1,"Perfect performance on V1.0 but very difficult to setup. Needed NFSPS Generic Fix V3 (not v4) for controller support and the RELOADED NOCD patch
+
+To run you also need to set dinput and dinput8 in Wine's configuration in the container to native then builtin
+
+Note that Xtendedinput does not work at all so Generic Fix V4 will not work
+
+I could not get patch v1.1 to work at all with any of the nocd patches",2025/06/28
+Retroid Pocket 5,sd865,winlator,Megaman 11,Perfect,10.0Hotfix Amod,Turnip 25.0.0,DXVK,Plug n Play,2025/07/22
+Retroid Pocket 5,sd865,winlator,Need For Speed Payback Pc,Perfect,Winlator 10 Amod Fix,Turnip 25.0.0,Dxvk 2.6.1,"Custom Preset
+- Safags 1
+Fastnan On
+Fastround On
+BigBlock 2/3
+Strongm3m 3
+512
+Weakbarrier 1
+MaxCpu 8/16
+Compatible to 480p-720p
+Play with Low/Medium Graphic Setting
+Box64 Version 0.3.4/0.3.6/0.3.7
+Use Pulse Audio",2025/08/12
+Retroid Pocket 5,sd865,winlator,Tales Of Arise,Great,7.1.3 glibc Frost,Turnip 25.0.0 V4,DXVK 2.5.2,"box64 0.3.2 performance preset
+
+1280*720 50% resolution scale 
+
+35-45 fps",2024/12/26
+Retroid Pocket 5,sd865,winlator,Skyrim Se Gog,Perfect,10 (Final) Hotfix,Turnip 25.0.0.0,DXVK 2.4.1,"For 45-60fps: 960x544 container res + all cores on. Also set in res iheight/iwidth in  SkyrimPrefs.ini to 960x544 manually. Low settings for most fluid framerate vs battery life. Fan sport or smart. No crashes so far, paws crossed.",2025/06/11
+Retroid Pocket 5,sd865,winlator,Far Cry 3,Perfect,Winlator Frost 10.0Final V4.1,Turnip 25.0.0.0,2.7.4,DXVK_FRAME_RATE=40,2025/09/01
+Retroid Pocket 5,sd865,winlator,Just Cause 2,Great,7.1.3 glibc Frost,Turnip 25.0.0.4,DXVK 1.10.3,"Game is playable at 1280x720 res. Drop down to 960x544 for a little more framerate stability if desired. Freeroaming is usually between 40-60fps. Firefights can hover around 30fps.
+
+Graphics driver version doesn't appear to be very important.
+DX Wrapper must be DXVK versions 1.10.3 or less, anything newer will cause a DirectX error.
+Any version of Box64 seems to work, I use 0.3.2.
+Set box64 preset to performance for better fps.
+
+If the game doesn't run for you, try these steps in this order:
+1. In the Winlator settings for your game's shortcut, open the Advanced tab and scroll down to ""Exec Arguments."" Put in ""/failsafe"" without the quotes. If the game boots up, remember to remove this arg before next launch.
+2. In your container's start menu look for a DirectX 2010 installer (in Frost it's in Start &gt; Install &gt; Install DX June 2010)
+3. Install the Visual C++ Redistributable 2010 (some versions of Winlator have an installer in the start menu, otherwise download from Microsoft.)
+
+Hopefully by this point the game is running for you.",2025/1/5
+Retroid Pocket 5,sd865,winlator,Metoid Planets,Great,Frost 9.0 v1.2,Turnip 25.0.0.8,DXVK 2.5.3.0,"Box64 Preset = Performance
+
+60fps. There is some slight ghosting when changing screens. The visuals are fixed with Box64 set to intermediate+ but the game will start slowing down in large rooms.",2025/2/11
+Retroid Pocket 5,sd865,winlator,The Binding Of Isaac: Repentance+,Perfect,Micewine v0.3.0,Turnip 25.1.0,DXVK 2.6.1,"Run arguments: -dx11
+
+Need to wait 2 mins, than works perfect.",2025/07/01
+Retroid Pocket 5,sd865,winlator,Hollow Knight: Silksong,Great,10.1,Turnip 25.1.0,DXVK 2.6.1,"BOX64 preset:Compatibility, PulseAudio driver, 1280x720 
+Runs very well at 40-60 FPS. Crashed once in 1-hour play session.",2025/09/05
+Retroid Pocket 5,sd865,winlator,Call Of Duty Modern Warfare,Perfect,Cmod-v13.1,Turnip 25.1.0,2.4.1 gplasync,"Screen Size: 1280 x 720
+
+Box 64
+Box 64 Preset: Performance
+
+IW3SP Mod for Controller Support (ONLY Works on Singleplayer Campaign!)
+
+60 FPS stable",2025/09/16
+Odin 2 Portal,sd8g2,winlator,Spec Ops The Line,Great,Winlator Cmod v13.1,Turnip 25.1.0,DXVK async 1.10.3,"Limiting the game to 30 or 40 fps will make the game run almost perfectly, also use the following settings
+The container must be:
+Wine version: Proton 9.0 ARM64EC
+64-bit emulator: FEXCore
+Renderer: GL
+GPU name: NVIDIA GeForce GTX 560 Ti
+Also, install PhysX, which comes in one of the game's folders.",2025/08/14
+Retroid Pocket 5,sd865,winlator,Stardew Valley,Perfect,Winlator Cmod v13.1.1,Turnip 25.3.0R3_AUTO,DXVK 1.10.3,"Game installed in compatibility mode (Properties → Beta → “compatibility”).
+The container uses Proton 9.0 x86_64 as the Wine base, with PulseAudio configured as the audio driver.
+Execution was performed with the Box64 v0.3.6 intermediate preset, using normal startup mode via Steam.
+
+Preset set to Unity, with the following adjustments:
+
+BOX64_DYNAREC_CALLRET = 1 (enabled)
+
+BOX64_DYNAREC_WAIT = 0 (disabled)
+
+BOX64_DYNAREC_SAFEFLAGS = 0
+
+BOX64_DYNAREC_BIGBLOCK = 0
+
+BOX64_DYNAREC_STRONGMEM = 1
+
+Result: perfect and stable gameplay on the Retroid Pocket 5, with no visual glitches or crashes.",2025/08/20
+Retroid Pocket 5,sd865,winlator,Blur,Great,9,Turnip  24.1.0,DXVK,-,2025/3/5
+Retroid Pocket 5,sd865,winlator,Oblivion,Great,8.0R1 (Brunodev),Turnip (24.3.0),DXVK,"1280x960 low on RP Mini, capped at 30fps. Modded Oblivion (Morroblivion, NorthernUI). Manually brought over via Zip file so needs regedit fix. FBO and needs directaudio to be Windows native. Will seem to freeze and not immediately show load screens but still completes load out, and then in game works very well (at least on the Cyrodil side of the map). ",2024/12/29
+Retroid Pocket 5,sd865,winlator,Full Metal Daemon Muramasa,Perfect,7.1.3 glibc longjunyu2,Turnip (24.3.0),DXVK,Set the PULSE_LATENCY_MSEC variable to 100 to fix audio issues,2025/06/12
+Retroid Pocket 5,sd865,winlator,Far Cry 2,Playable,Frost,Turnip (Adreno),DXVK,"800x600, Box64 @ Compatibility, Windows XP 64. Fully playable, occasional slowdown",2024/12/19
+Retroid Pocket 5,sd865,winlator,Flatout,Perfect,8.0 rev 1,Turnip (Adreno),DXVK,"Needs 4:3 aka 1024x768. Some glitches in loading screen, none in game. Few controls to map via Input Controls, plays really well.",2025/1/2
+Retroid Pocket 5,sd865,winlator,Gothic 1,Great,8.0 rev 1,Turnip (Adreno),DXVK,High FPS  (100+) possible on higher box64 presets. Full instructions: https://gist.github.com/cb109/361add3129d64fa81824bae049b1b0c9,2024/12/31
+Retroid Pocket 5,sd865,winlator,Sonic &amp; All-Stars Racing Transformed,Playable,10 Beta 2,Turnip (Adreno),DXVK,18-30 FPS,2025/3/14
+Retroid Pocket 5,sd865,winlator,UFO 50,Playable,8.0r1,Turnip (Adreno),DXVK,Advanced/Startup Selection: Aggressive. A few games need RP5 running High Performance to be playable,2024/12/27
+Retroid Pocket 5,sd865,winlator,Witcher 1,Playable,9,Turnip (Adreno),DXVK,-,2025/2/2
+Retroid Pocket 5,sd865,winlator,Sleeping Dogs: Definitive Edition,Perfect,8.0 Rev 1,Turnip (Adreno) 24.1.0,DXVK,"960 x 544. Medium settings graphics. Smooth as silk.
+
+Add Environment variables to remove screen tearing  (case sensitive):
+
+Name: MESA_VK_WSI_DEBUG 
+Value: immediate
+
+Name: MESA_VK_WSI_DEBUG
+Value: sw",2024/12/16
+Retroid Pocket 5,sd865,winlator,Dark Souls 2: Scholar Of The First Sin,Great,8,Turnip (default),DXVK,Performace mode (runs 25 to 45 fps all game) at 720p (graphics setings at mid-low),2025/1/8
+Retroid Pocket 5,sd865,winlator,Fallout New Vegas,Perfect,9,Turnip (default),DXVK (default),"Resolution: 1280/720p
+Average FPS: 40-60
+2 variables to avoid screen tearing
+MESA_VK_WSI_PRESENT_MODE = immediate
+MESA_VK_WSI_DEBUG = sw",2025/1/15
+Retroid Pocket 5,sd865,winlator,Doom1 + Doom 2,Perfect,9.0 or later,Turnip (default),WineD3D,full controler support,2025/07/28
+Retroid Pocket 5,sd865,winlator,Chained Echoes,Perfect,8.0 Revision 1,Turnip Adreno,DXVK,"Standard performance mode
+------Winlator settings:
+screen size 640x360
+sync every frame
+environment variables:
+MESA_VK_WSI_PRESENT_MODE = immediate
+MESA_VK_WSI_DEBUG = sw
+----- ingame settings:
+Screen mode: Fullscreen
+Window Size 1x",2024/12/28
+Retroid Pocket 5,sd865,winlator,Call Of Duty Modern Warfare 2,Great,Winlator Frost 10.0 Final V3,Turnip Adreno,DXVK 2.4.1,"Winlator:
+resolution 854x480
+Advanced options: startup selection=essential(lost audio on aggressive?)
+Processor Affinty 32-bit=include cpu1-8
+
+MW2 Video settings:
+resolution=854x480
+aspect ration=auto
+anti aliasing=off
+shadows=yes
+spec map=no
+depth of field=no
+soften smoke=no
+texture quality= manual
+texture res=high
+normal map=low
+spec map=low
+
+these are settings ive been using. no in game controller support so key-mapping required. analogue control for aiming not the best but manageable",2025/06/05
+Retroid Pocket 5,sd865,winlator,Batography,Perfect,Winlator 10,Turnip Adreno,DXVK,50-48 fps solid with controller support.,2025/06/07
+Retroid Pocket 5,sd865,winlator,Call Of Cthulhu: Dark Corners Of The Earth,Great,9,Turnip Adreno,DXVK,"Have to delete beth_logo.wmv, cocdcote_logo.wmv, hf_logo.wmv, legal.wmv, and warning.wmv files to get the game to boot. After that it'll boot up to main menu and runs pretty good. Also need to remap controls for RP5, doesn't auto do that, PC game was only mouse/keyboard.",2025/07/18
+Retroid Pocket 5,sd865,winlator,Fc 25,Playable,13.1.1,Turnip Adreno,DXVK,,2025/08/22
+Retroid Pocket 5,sd865,winlator,Tony Hawk's American Wasteland (Rethawed),Perfect,10.0 beta 2,Turnip Adreno 24.1.0,DXVK 2.4.1,"In order to play, you must transfer the already modded game from your PC (patcher won't work). Use Pulse Audio, use Box64 Performance, and pick aggressive startup.
+Add the following variables, for stability and controller support:
+PULSE_LATENCY_MSEC=120
+DXVK_FRAME_RATE=60
+BOX64_DYNAREC_PAUSE=0
+BOX64_DYNAREC_WEAKBARRIER=0
+SDL_JOYSTICK_WGI=0
+SDL_XINPUT_ENABLED=1
+SDL_JOYSTICK_RAWINPUT=0
+SDL_JOYSTICK_HIDAPI=1
+SDL_DIRECTINPUT_ENABLED=0
+SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS=1
+SDL_HINT_FORCE_RAISEWINDOW=0
+SDL_ALLOW_TOPMOST=0
+SDL_MOUSE_FOCUS_CLICKTHROUGH=1",2025/3/25
+Retroid Pocket 5,sd865,winlator,Dead Space,Perfect,Winlator 10 ,Turnip Adreno 25,VK3D3 2.14.1,"Box64 performance preset
+Ensure the settings are exactly as shown, as it crashed for me with any other settings I tried 
+
+Game ran really bad with DXVK, but with VK3D3 it runs at ~50 fps on low graphics. Can get medium graphics at a &gt;30fps and high at probably around 30fps, maybe a little lower. ",2025/3/13
+Retroid Pocket 5,sd865,winlator,Mafia 2 (Classic),Great,Winlator 10 ,Turnip Adreno 25,VKD3D,"Will get around 40-60 FPS, with it hanging around 50 the majority of the time, and reaching 60 during lighter parts of the game. Frames drop to 30 in large busy areas. 
+
+Play on low graphics, the lower the better, otherwise game runs fine.
+
+Box64 on performance!!!",2025/3/13
+Retroid Pocket 5,sd865,winlator,Fable Anniversary,Perfect,10,Turnip driver 24.1.0,DXVK version 2.4.1,"PulseAudio. Advanced Container Box64 Compatibility preset, aggressive startup, all cpu checked on. Winlator settings, box64 version 0.3.4, preset performance.",2025/5/12
+Retroid Pocket 5,sd865,winlator,Hammerwatch,Playable,8.0 rev 1,Turnip or VirGl,DXVK or WineD3D,"Usable FPS only when turning off almost all graphics effects and on 1280x720 or lower. Still looks nice, though.",2025/1/3
+Retroid Pocket 5,sd865,winlator,Halo 3,Great,"7.1.3-glibc (probably works fine on official 8.0, haven't tested)",Turnip-24.3.0-R-10 ,DXVK 2.4- gplasync,"• First follow this guide https://www.reddit.com/r/halo/comments/1gis0kd/winlator_halo_master_chief_collection_steam_copy/
+
+•Also, I was having issues running from SD, so internal storage is the safest option
+
+• You can pick and choose what games you want installed via Steam DLC, I chose Halo CE, Halo 3 &amp; ODST, around 40 GB in size
+
+• Run at 960x544, and **be sure to change Zink_Descriptors to cached** for better frame rates in  halo 3/ ODST/ CEA. 
+
+•Set Audio Driver to Pulse Audio
+
+Classic graphics ~60
+Anniversary Graphics: ~25-60
+Halo 3/ODST ~25-40
+
+There are slow downs in larger scenes in Halo 3 / ODST",2025/1/21
+Retroid Pocket 5,sd865,winlator,Sonic 4 Episode 2,Great,CMod 13,Turnip_v25.3.0_R3_Auto,WineD3D,It runs well but since the FPS is too good special stages and menus will be sped up. High performance mode though so it might slow down without it,2025/08/08
+Retroid Pocket 5,sd865,winlator,Ufo 50,Perfect,Cmod-v13.1,Turnip_v25.3.0_R3_Auto,2.4.1 gplasync,"PulseAudio as audio driver, box64 0.3.7 intermediate preset, normal startup selection, running through Steam. Haven't tested too extensively, but seems to run fine even at full resolution.",2025/08/16
+Retroid Pocket 5,sd865,winlator,Tetrachroma,Perfect,Cmod-v13.1,Turnip_v25.3.0_R3_Auto,2.4.1 gplasync,"ALSA-Reflector as audio driver, box64 0.3.7 intermediate preset, normal startup selection, running through Steam. Pretty much flawless.",2025/08/16
+Retroid Pocket 5,sd865,winlator,Monster Boy And The Cursed Kingdom,Perfect,9,Turnit 24.3.0,DXVK 2.5.2,"Run Perfect only needs enable ""Sync every frame"" in Turnip to run at 60 Fps",2025/2/20
+Retroid Pocket 5,sd865,winlator,Factorio,Great,10.1,Vortex (Universal) - Vulkan Version 1.3,DXVK 1.10.3,"Factorio: Space Age 2.0.55
+
+1. Launch the game the first time with '--low-vram' otherwise it will fail to allocate a texture that it does not have the available memory for.
+
+2. Change the graphics settings to the lowest presets.
+
+3. Controller Environment Variables (same as the other post):
+
+SDL_JOYSTICK_WGI = 0
+SDL_JOYSTICK_RAWINPUT = 0
+SDL_XINPUT_ENABLED = 1
+SDL_DIRECTINPUT_ENABLED = 0
+SDL_JOYSTICK_ALLOW_BACKGROUND = 1
+SDL_HINT_FORCE_RAISEWINDOW = 0
+SDL_ALLOW_TOPMOST = 0
+SDL_MOUSE_FOCUS_CLICKTHROUGH = 1
+SDL_JOYSTICK_HIDAPI = 1",2025/07/14
+Retroid Pocket 5,sd865,winlator,Doom1 + Doom 2,Perfect,all,any,WineD3D,perfect,2025/06/27
+Retroid Pocket 5,sd865,winlator,Torchlight 3,Great,9,default,default,Disable shadows for a lot better framerate,2025/2/20
+Retroid Pocket 5,sd865,winlator,Fallout New Vegas,Perfect,8,dxvk,DirectX,-,2025/4/1
+Retroid Pocket 5,sd865,winlator,Nubby's Number Factory,Perfect,9,turnip,DXVK,"environment variables to prevent tearing:
+MESA_VK_WSI_PRESENT_MODE=immediate
+MESA_VK_WSI_DEBUG=sw",2025/4/10
+Retroid Pocket 5,sd865,winlator,Dead Space,Perfect,9.0 or later,turnip 25.3.0_R6,dxvk-v2.6.2.1-async,"wine10.0-x64-1, 1080p, 30fps stable, high settings with low shadows. Runs Perfectly",2025/09/03

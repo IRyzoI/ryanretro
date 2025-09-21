@@ -1,0 +1,75 @@
+device,chipset,system,game,performance,driver,game title id,update,notes,date added
+Retroid Pocket 5,sd865,psvita,Angry Birds Star Wars,Perfect,Turnip 24.3.0 R9V2,PCSE00294,1.0,,2025/2/3
+Retroid Pocket 5,sd865,psvita,Angry Birds Trilogy,Perfect,Turnip 24.3.0 R9V2,PCSE00322,1.0,,2025/2/3
+Retroid Pocket 5,sd865,psvita,Asphalt: Injection,Perfect,Turnip 24.3.0 R9V2,PCSE00007,1.0,Loading screens seem slow but actual gameplay works great,2025/2/3
+Retroid Pocket 5,sd865,psvita,Assasin's Creed Chronicles,Unplayable,Turnip 24.3.0 R9V2,PCSB00792,1.0,Black screen after Ubisoft logo,2025/1/19
+Retroid Pocket 5,sd865,psvita,Assassins Creed III: Liberation,Playable,Default,PCSE-00053,1.0,,2025/5/23
+Retroid Pocket 5,sd865,psvita,Bastion,Perfect,Default,PCSE-00790,1.0,Using vita3k emulator.,2024/12/31
+Retroid Pocket 5,sd865,psvita,Batman Arkham Origins Blackgate,Playable,Turnip 24.3.0 R9V2,PCSB00353,1.0,"Visually ok, but audio is broken. ",2025/1/19
+Retroid Pocket 5,sd865,psvita,Borderlands 2,Perfect,Turnip 24.3.0 R9V2,PCSE00383,1.0,,2024/12/20
+Retroid Pocket 5,sd865,psvita,Catherine: Full Body,Unplayable,Turnip 24.3.0 R9V2,PCSG01179,1.03,Not completable on current Vita3k Android build (v12). The game will get stuck at the beginning of Stage 6.,2025/2/9
+Retroid Pocket 5,sd865,psvita,Catherine: Full Body,Great,Turnip 24.1.0 R18,PCSG01179,1.03,"Renderer Accuracy: High
+Resolution x2
+
+How to add English language patch info: https://www.reddit.com/r/VitaPiracy/comments/g0irqk/catherine_full_body_jp_englishspanish_port_with/
+",2025/1/25
+Retroid Pocket 5,sd865,psvita,Dragon's Crown,Perfect,Turnip 24.3.0 R9V2,PCSE00019,1.0,,2024/12/25
+Retroid Pocket 5,sd865,psvita,Drive Girls,Perfect,Turnip 24.3.0 R9V2,PCSE01099,1.0,Played 2-3 missions at 3x resolution without slowdown or audio/ visual errors.,2025/1/10
+Retroid Pocket 5,sd865,psvita,Duke Nukem Megaton Edition,Great,Turnip 24.3.0 R9V2,PCSE00339,1.0,Game runs great however replay data can be corrupted.,2024/12/19
+Retroid Pocket 5,sd865,psvita,Fallen Legion: Flames Of Rebellion,Unplayable,Turnip 24.3.0 R9V2,PCSB01136,1.0,"First loading around 3 FPS, I waited 5 minutes and nothing happened",2025/1/19
+Retroid Pocket 5,sd865,psvita,Final Fantasy X HD,Playable,Turnip 24.3.0 R9V2,pcse00283,1.0,"lots of missing textures and effects, sound stuttering but appears to run at a stable 30 fps",2025/1/24
+Retroid Pocket 5,sd865,psvita,Gravity Crash Ultra,Great,Turnip 24.3.0 R9V2,PSCE00439,1.0,"Essentially perfect gameplay, some audio distortion when a lot is happening",2025/1/2
+Retroid Pocket 5,sd865,psvita,Gravity Rush,Great,Turnip 24.3.0 R9V2,PCSA00011,1.0,Tested with x2 resolution. Stable 30fps,2024/12/19
+Retroid Pocket 5,sd865,psvita,Guacamelee!,Unplayable,Default,PCSE00033,1.0,Game crashes after Drinkbox Studio logo.,2025/3/21
+Retroid Pocket 5,sd865,psvita,Hatsune Miku F,Unplayable,Turnip 24.3.0 R9V2,PCSE00326,1.0,Game takes over ten minutes to load into a song. The game takes even longer to load into the menu. Once it loads in the game is fine without lag but the loading times make it almost unplayable. Sometimes it will also crash after the long wait time! ,2024/12/20
+Retroid Pocket 5,sd865,psvita,Injustice: Gods Among Us,Playable,Turnip 24.3.0 R9V2,PCSE00271,1.0,"The games is full of visual glitches, it runs really good tho. no slowdowns in fights but the glitches sometimes take the whole screen and its really hard to play. i played half of the campaing.",2025/2/15
+Retroid Pocket 5,sd865,psvita,J-Stars Victory VS+,Perfect,Turnip 24.3.0 R9V2,pcs00595,1.0,,2024/12/27
+Retroid Pocket 5,sd865,psvita,Lego Batman 2: DC Super Heroes,Unplayable,Turnip 24.3.0 R9V2,PCSE00061,1.0,Crashes just after starting game and required restart of my entire Retroid Pocket to load Vita 3k again.,2024/12/20
+Retroid Pocket 5,sd865,psvita,Limbo,Playable,Turnip 24.3.0 R9V2,PCSE00268,1.0,"It has a lot of graphical glitches, runs really good but you cant even see the yourself at a times",2025/2/15
+Retroid Pocket 5,sd865,psvita,Limbo,Perfect,Default,PCSE00268,1.0,Plays well at 30fps,2025/1/10
+Retroid Pocket 5,sd865,psvita,Mahjong Fight Club - Shinsei Zenkoku Taisen Han,Unplayable,Turnip 24.3.0 R9V2,PCSG00029,1.01,Cannot boot - hangs on splash screen,2025/1/5
+Retroid Pocket 5,sd865,psvita,Mortal Kombat,Great,Turnip 24.3.0 R9V2,PCSE00023,1.0,"I didn't finish the game yet, but it's running very well at this moment",2025/2/27
+Retroid Pocket 5,sd865,psvita,Muramasa Rebirth,Unplayable,Turnip 24.3.0 R9V2,PCSB00404,1.0,Crashes at first of second combat encounter. ,2024/12/25
+Retroid Pocket 5,sd865,psvita,Muramasa Rebirth ,Perfect,Turnip 24.3.0 R9V2,PCSB00240,1.06,Game will crash if not updated to lastest version of the game!,2024/12/29
+Retroid Pocket 5,sd865,psvita,Muramasa: Rebirth,Perfect,Turnip 24.3.0 R9V2,PCSB00404,v1.06,"Game MUST be updated to version 1.06, or audio will malfunction and game will crash during gameplay! Once updated, the game runs perfectly, with no slowdown or glitches that I saw. Was able to play through and beat Momohime's story without issue.
+
+Using turnip driver v24.2.0_R2, 1.5x resolution upscaling, no other changes to vita3k settings",2025/5/1
+Retroid Pocket 5,sd865,psvita,Odin Sphere Leifthrasir,Perfect,Turnip 24.3.0 R9V2,PCSB00986,1.0,"Was unable to go past the tutorial with HD textures (https://gbatemp.net/threads/odin-sphere-hd-texture-vita3k.655824/). Without HD texture I played 20 minutes with minor slow downs and 40-60 fps. (Internal upscaling x2 / Anisotropic filter x2). After chapter 4 I had to turn Anisotropic and Internal Upscaling to x1, otherwise it was really laggy.",2025/1/24
+Retroid Pocket 5,sd865,psvita,Persona 4 Golden,Perfect,Turnip 24.3.0 R9V2,PCSE00120,1.0,,2024/12/20
+Retroid Pocket 5,sd865,psvita,Playstation All-Stars Battle Royal,Great,Turnip 24.3.0 R9V2,PCSA00069,1.0,Runs perfect after shaders are loaded,2024/12/20
+Retroid Pocket 5,sd865,psvita,Race The Sun,Perfect,Turnip 24.3.0 R9V2,PSCE00461,1.0,,2025/1/2
+Retroid Pocket 5,sd865,psvita,Shovel Knight,Great,Default,PCSE-00640,1.0,"Performance is great, but the layering on the HUD is messed up - wouldn't recommend playing like that",2025/1/5
+Retroid Pocket 5,sd865,psvita,Sine Mora,Perfect,Turnip 24.3.0 R9V2,PCSE00090,1.0,Did not scale perfectly to RP5 screen running it 1x native.,2025/1/1
+Retroid Pocket 5,sd865,psvita,Sky Force Anniversary,Playable,Turnip 24.3.0 R9V2,PCSE00865,1.0,"2x res causes a vertex explosion on your ship at the end of each stage, but prevents other visual glitches.",2025/1/12
+Retroid Pocket 5,sd865,psvita,Sly 2: Band Of Thieves,Unplayable,Turnip 24.3.0 R9V2,PCSA00097,1.0,"Looks and controls better than the PS2 version - you can even use FPS hack to get a mostly smooth 60 FPS experience... at least during the first intro mission. After that's done and you jump into the van, the game hangs indefinitely. The cutscenes are bugged with characters doing their movement very quickly and then standing there without moving their mouths while the audio still plays. This is probably the bug hindering progress since the next cutscene won't load after the intro.",2025/1/1
+Retroid Pocket 5,sd865,psvita,Sly Cooper : Thieves In Time,Unplayable,Turnip 24.3.0 R9V2,PCSF00208,1.0,Stuck at first loading,2025/1/19
+Retroid Pocket 5,sd865,psvita,Soul Sacrifice Delta,Great,Turnip 24.3.0 R9V2,PCSF00532,1.3,"Superb at 2x resolution with device profile set to high performance. Essentially ""Perfect"" all round but one of the training levels early on had just white textures everywhere making passing the level guesswork, perfect aside from that.",2025/2/5
+Retroid Pocket 5,sd865,psvita,Street Figther X Tekken,Great,Default,PCSB00144,1.0,,2024/12/27
+Retroid Pocket 5,sd865,psvita,Tales Of Hearts R,Perfect,Turnip 24.3.0 R9V2,PCSB00550,1.0,Plays great 2x upscaled finished on my odin 2 and seems same performance wise.,2024/12/19
+Retroid Pocket 5,sd865,psvita,Tales Of Innocence R,Perfect,Turnip 24.3.0 R9V2,PCSG00009,1.0,Finished on odin 2 same performance as on my odin 2,2024/12/19
+Retroid Pocket 5,sd865,psvita,Tetris Ultimate,Perfect,Turnip 24.3.0 R9V2,pcsb00521,1.0,ras,2024/12/27
+Retroid Pocket 5,sd865,psvita,The Binding Of Isaac : Rebirth,Perfect,Turnip 24.3.0 R9V2,PCSB00676,1.0,Played smoothly 10 minutes at 60fps,2025/1/20
+Retroid Pocket 5,sd865,psvita,The Sly Trilogy,Unplayable,Turnip 24.3.0 R9V2,PCSF00338,1.0,Stuck at loading after choosing which game to play,2025/1/19
+Retroid Pocket 5,sd865,psvita,Thomas Was Alone,Great,Turnip 24.3.0 R9V2,PSCE00258,1.0,Some missing shadows and other graphical glitches occasionally ,2025/1/2
+Retroid Pocket 5,sd865,psvita,Trails In The Sky Fc Evolution,Unplayable,Turnip 24.3.0 R9V2,PCSG00488,English patch v1.1a,"There are frequent graphical errors in the English text, with dialogue often disappearing halfway through, or displaying completely random characters instead of the expected text. I've had the same issue with other drivers and previous versions of Vita3k, although it works fine in the desktop version. Performance seems perfect otherwise, but this has to be listed as unplayable considering that the game is almost entirely focused on story.",2024/12/20
+Retroid Pocket 5,sd865,psvita,Uncharted: Golden Abyss,Playable,Turnip 24.3.0 R9V2,PCSF00001,1.0,"Requires custom game config:
+Resolution 1.75  (above resolution causes textures glitch)
+High Renderer Accuracy
+Screen Filter: Used FSR
+Uncheck ""Disable Surface Sync""
+Audio: Cubeb (Default option causes more crackling)",2025/1/23
+Retroid Pocket 5,sd865,psvita,Wipeout 2048,Perfect,Turnip 24.3.0 R9V2,pcsa00015,1.0,x1,2024/12/27
+Retroid Pocket 5,sd865,psvita,World Of Final Fantasy,Great,Turnip 24.3.0 R9V2,PCSE00880,1.0,"Runs great however to get voice over you need to download voice pack, this is not a bug!",2024/12/19
+Retroid Pocket 5,sd865,psvita,Xcom: Enemy Unknown Plus ,Perfect,Turnip 23.2.0 R4,PCSE00656,1.0,Vita3K ZX,2025/5/28
+Retroid Pocket 5,sd865,psvita,Ys VIII: Lacrimosa Of Dana,Perfect,Turnip 24.3.0 R9V2,PCSE01103,1.0,,2024/12/23
+Retroid Pocket 5,sd865,psvita,Ys: Memories Of Celceta,Unplayable,Turnip 24.3.0 R9V2,PCSB00497,1.0,Stuck at launch,2025/1/23
+Retroid Pocket 5,sd865,psvita,Trails In The Sky Fc Evolution,Perfect,Turnip 24.1.0 R18,PCSG00488,1.0,Vulkan; Disable Surface Sync; Asynchronous Pipeline Comp; Audio: Cubeb; Enable NGS Support,2025/06/12
+Retroid Pocket 5,sd865,psvita,Trails In The Sky Sc Evolution,Perfect,Turnip 24.1.0 R18,PCSG00489,1.0,Vulkan; Disable Surface Sync; Asynchronous Pipeline Comp; Audio: Cubeb; Enable NGS Support,2025/06/12
+Retroid Pocket 5,sd865,psvita,Trails In The Sky The Third Evolution,Perfect,Turnip 24.1.0 R18,PCSG0049,1.0,Vulkan; Disable Surface Sync; Asynchronous Pipeline Comp; Audio: Cubeb; Enable NGS Support,2025/06/12
+Retroid Pocket 5,sd865,psvita,Chasm,Perfect,Turnip 25.2.0 R9,PCSE01031,1.0,,2025/06/16
+Retroid Pocket 5,sd865,psvita,Hatsune Miku: Project Diva F 2nd,Perfect,Turnip R9V2,PCSE00434,1.0,Runs perfectly,2025/06/24
+Retroid Pocket 5,sd865,psvita,Lego Batman 3 Beyond Gotham,Playable,Turnip 24.3.0 R9V2,PCSE00442,1.0,Audio glitch es stops when you turn off in-game music.,2025/07/20
+Retroid Pocket 5,sd865,psvita,Lego Marvel Super Heroes: Universe In Peril,Great,Turnip 24.3.0 R9V2,PCSE00250,1.0,"It works pretty good I have it on a 1.5x scale, having it on a 2x will drop it to about 30 fps. Theres also a weird audio glitch for the music so I recommend turning that off and there are some texture issues here and there but nothing game breaking.",2025/07/23
+Retroid Pocket 5,sd865,psvita,"Papers, Please",Unplayable,Turnip 24.3.0 R9V2,PCSE01056,1.1,The game crashes as soon as the first applicant enters the booth.,2025/08/18
+Retroid Pocket 5,sd865,psvita,Freedom Wars,Great,Turnip 24.3.0 R9V2,PCSA00147,1.22,"plays well at 2x resolution, slows down in some small parts, and some textures seem to be missing, but its more than playable",2025/08/23
+Retroid Pocket 5,sd865,psvita,Assasin's Creed Chronicles,Great,Turnip 24.1.0 R18,PCSB00792,1.0,Vita3k version 8 seen to work with heroes's cage bugged,2025/09/17

@@ -1,0 +1,202 @@
+device,chipset,system,game,performance,game resolution,driver,dxvk version,vkd3d version,notes,date added
+Retroid Pocket 5,sd865,gamehub,Blue Prince,Playable,854x480,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-proton-2.14.1,"20-25 fps
+GPU overclocked 905hz",2025/5/16
+Retroid Pocket 5,sd865,gamehub,Cyber Shadow,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Compatibility Layer: wine9.5-x64-1,2025/3/7
+Retroid Pocket 5,sd865,gamehub,Dead Island Definitive Edition,Perfect,960x544,Adreno_905.0,dxk3d-2.12,vkd6d-2.12,,2025/5/22
+Retroid Pocket 5,sd865,gamehub,Driver: San Fransico,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Runs great!,2025/1/31
+Retroid Pocket 5,sd865,gamehub,Elin,Playable,1280x720,default ,default ,default ,"Game freezes for a sec when 
+u click something
+
+You can lower the resolution
+to 960x544 for a small boost
+of fps",2025/4/5
+Retroid Pocket 5,sd865,gamehub,Fallout 3,Perfect,1280x720,turnip 24.1.0,2.4.1,dont know,winlator has no 'Game Settings -&gt; General',2025/2/14
+Retroid Pocket 5,sd865,gamehub,Fallout: New Vegas,Great,1280x720,turnip_v24.3.0-R12,dxvk-2.3.1-async,vkd3d-2.13,"FPS: 49-71
+It lags a bit sometimes n also barely crashes",2025/3/3
+Retroid Pocket 5,sd865,gamehub,Final Vendetta,Great,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Compatibility Layer: wine9.5-x64-1,2025/3/7
+Retroid Pocket 5,sd865,gamehub,Graze Counter Gm,Playable,1280x720,turnip_v24.3.0_R2,dxvk2.3.1-async,vk3d-2.12,Doesn't quite hit 60fps.  Mostly 55+ fps. When loads of bullets onscreen never drops below 30+fps. ,2025/3/7
+Retroid Pocket 5,sd865,gamehub,Gta Iv Definitive Edition,Playable,1280x720,turnip_v24.2.0_R19,dxvk-2.3.1-async,vkd3d-2.12,"Translation Params: SafeFlags=2, StongMem=0, FastNan=On, FastRound=On, X87Double=Off, BigBlock=2, CallRet=Off, Wait=Off, AlignedAtomics=Off, WeakBarrier=0, AVX=Disable, Forward=1024
+VRam Limit=2GB
+In-Game Graphics Settings: Textures, Reflections = Low; Water, Shadow=Medium; Night Shadows=Off; Texture Filter Quality=Anisotropic x4; Definition, VSync=On
+FPS=16-27",2025/5/17
+Retroid Pocket 5,sd865,gamehub,Gta V,Perfect,1280x720,Mesa Turnip driver v25.1.0_R2,1.10.3-async,None,Played best with wine9.5-x64-1. With proton9 it always stuck on rockstar club activation. Also game version is the one from FitGirl. ,2025/3/29
+Retroid Pocket 5,sd865,gamehub,Gta V,Great,1280x720,turnip_v25.1.0_R2,1.10.3-async,None,"Installer: fitgirl repack, Compatibility Layer: proton9.0-x64-2, Translation params: ""fast"" preset (to stop crashes after 10-15 mins), VRam Limit: 1GB, Observation: Only seems to work well on proton9 x64-2.",2025/3/26
+Retroid Pocket 5,sd865,gamehub,Hades,Perfect,1280x720,proton9.0-arm64x2,dxvk-2.3.1-async,vkd3d-2.12,"Add the included command line in Game settings - general - command line to get controller working. Game runs flawlessly at 60 fps, played several runs until the first boss Meg. ",2025/4/29
+Retroid Pocket 5,sd865,gamehub,Halo Master Chief Collection,Great,1280x720,Turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"Halo CE, Halo 3 and Halo 4 are working great (between 25-30 fps) but Halo 2 is not working.",2025/3/26
+Retroid Pocket 5,sd865,gamehub,Hollow Knight,Great,1280x720,Turnip_v25.0.0_R8,dxvk-2.3.1,vkd3d-2.12,"When you first start booting up the game it may take a few seconds to load.
+If you are using a controller that only supports DInput and a little of XInput (I'm currently using the razer kishi v2) you will need to disable DInput and ""Use Xbox Controller Layout"" as hollow knight has trouble using Xbox Controllers.
+FPS: 35-49",2025/3/3
+Retroid Pocket 5,sd865,gamehub,Inside,Unplayable,1280x720,turnip_v24.3.0_R7,dxvd-2.3.1-async,vkd3d-2.12,"Game boots to title screen after long loading time. 
+
+Controller inputs refuse to be recognized, even with Steam Input and Official Layout. Virtual keyboard recognized space bar to advance from title screen. 
+
+Performance looked potentially playable, but instructions for RP5 controller input will need to be made. ",2025/3/10
+Retroid Pocket 5,sd865,gamehub,Limbo,Perfect,1280x720,turnip_v24.3.0_R7,dxvd-2.3.1-async,vkd3d-2.12,,2025/3/6
+Retroid Pocket 5,sd865,gamehub,Mafia II (Classic),Perfect,1280x720,turnip_v24.3.0_R2,1.10.3-async,vod3d-2.12,"Playing flawlessly right out of the box. Please note you should manually install physX, since GameHub always stuck on this component, so you should install it from game’s Component section, after you changed your device’s language to Chinese Traditional. Otherwise it won’t download, and game will not start. ",2025/3/29
+Retroid Pocket 5,sd865,gamehub,Metro 2033 Redux,Perfect,1280x720,turnip_v24.3.0_R2,1.10.3-async,vkd3d-2.12,"Runs simply brilliant out of the box. Just the first Studio Logo intro lags a lot, after that - no lag, no stutter, stable 60 fps.",2025/4/14
+Retroid Pocket 5,sd865,gamehub,Mighty Morphing Power Rangers Ritas Rewind,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Compatibility Layer: wine9.5-x64-1,2025/3/7
+Retroid Pocket 5,sd865,gamehub,Mr. Sun's Hatbox,Perfect,1280x720,Turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,,2025/3/31
+Retroid Pocket 5,sd865,gamehub,Need For Speed: The Run,Playable,1280x720,turnip_v24.3.0_R2,dxvk_2.3.1-async,vkd3d-2.12,"""Story"" Crashes after first Race, Challenge mode runs just fine...",2025/5/5
+Retroid Pocket 5,sd865,gamehub,Penitent,Perfect,1280x720,Turnip_v24.3.0_R2,dxvd-2.3.1-async,vk3d-2.12,,2025/3/31
+Retroid Pocket 5,sd865,gamehub,Pokemon - Infinite Fusion,Perfect,1280x720,Turnip 24.0.1 R18,dxvk-2.3.1-async,vkd3d-2.12,,2025/2/6
+Retroid Pocket 5,sd865,gamehub,Pro Evolution Soccer 2013,Perfect,1280x720,turnip 24.3.0 r2,2.3.1-async,2.12,,2025/4/28
+Retroid Pocket 5,sd865,gamehub,Prodeus,Perfect,1280x720,Turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,works great out of the box,2025/2/2
+Retroid Pocket 5,sd865,gamehub,Sea Of Stars Dawn Of Equinox,Great,1280x720,turnip_v24.3.0-R12,dxvk-1.10.3-async,vkd3d-2.12,,2025/3/7
+Retroid Pocket 5,sd865,gamehub,Sleeping Dogs,Perfect,960x544,turnip_v25.0.0_R5,dxvk_2.3.1-async,vkd3d_2.12,"Game graphic preset: Medium
+
+Some slowdowns but perfect ",2025/4/5
+Retroid Pocket 5,sd865,gamehub,Sleeping Dogs,Great,960x544,turnip_v25.0.0_R5,dxvk_2.3.1-async,vkd3d_2.12,Set graphics to low,2025/4/5
+Retroid Pocket 5,sd865,gamehub,Sonic Lost World (Steam Version),Great,1280x1024,Turnip V24.3.0 R2,Dxvk 2.3.1 async,Vk3d 2.12,"Need all controller settings besides ""Use xbox controller"" on. Played up until the second level of the second World. Runs 60FPS for the most part. Used Goldberg to bypass the ""steam needs to be running"" screen",2025/2/5
+Retroid Pocket 5,sd865,gamehub,Stardew Valley,Great,1280x720,Turnip_v24.3.0_R2,2.3.1-async,vkd3d-2.12,,2025/2/2
+Retroid Pocket 5,sd865,gamehub,Stellaris ,Great,1280x720,turnip_v24.3.0_R2,dxvk_2.3.1-async,vkd3d-2.12,Set present parameters to performance to fix graphic issue,2025/4/5
+Retroid Pocket 5,sd865,gamehub,Street Fighter V,Great,854x480,turnip_v25.0.0_R5,dxvk-2.3.1-async,vkd3d-2.12,Selected great and not perfect just because it drops to 55 FPS at some point and the compromises of lowering the resolution is just difficult to read some of the subtitles but being a fighting game this is totally acceptable.,2025/2/8
+Retroid Pocket 5,sd865,gamehub,Thank Goodness You're Here,Perfect,1920x1080,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.1.2,"Capped at 40fps, runs perfect, may need dinput",2025/1/30
+Retroid Pocket 5,sd865,gamehub,The Elder Scrolls IV: Oblivion,Perfect,1280x720,  turnip_v24.3.0_R2,dxvk-2.3.1-async,  vkd3d-2.12,"35-60FPS
+
+Took a little jank to install. Had to use the GOG Installer EXE through the games settings-&gt;general-&gt;Enter Container Desktop.
+
+Then I redirected the Startup file path the the copied over OBSE_Loader.exe (GOG Version) which seemed to fix it all.
+
+Definitely requires the NorthernUI mod for controller support.",2025/2/6
+Retroid Pocket 5,sd865,gamehub,The Karate Kid Street Rumble,Great,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Compatibility Layer: proton9.0-arm64x-2,2025/3/7
+Retroid Pocket 5,sd865,gamehub,The Walking Dead The Definitive Edition ,Perfect,1280x720,8 Elite 800.26 to 800.26,1.10.3-async,2.12,"Red Magic 10 Pro ( 24 GB Ram / 1TB Rom )
+
+Works great on Snapdragon 8 Elite ( while maintaining texture quality to high and other graphics settings even to ultra with antialiasing enabled, it runs great ) 
+
+- maintain rendering to low setting ! 
+
+- Runs far beyond the 60fps range, while maintaining a fixated rate of 60 fps is recommended for a stable fps performance !",2025/4/18
+Retroid Pocket 5,sd865,gamehub,Ultra Street Fighter IV,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Plug and Play,2025/2/8
+Retroid Pocket 5,sd865,gamehub,Warhammer 40k Space Marine,Great,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,I set the graphic settings to low,2025/1/30
+Retroid Pocket 5,sd865,gamehub,Shogun Showdown,Great,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"Copied straight from GOG installation.
+proton9.0-arm64x2. Takes a few seconds to load even after GameHub init (black screen on start for ~10 seconds) but then everything is solid 60FPS",2025/06/14
+Retroid Pocket 5,sd865,gamehub,Darkest Dungeon,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-proton-2.14.1,Perfect 60fps,2025/06/24
+Retroid Pocket 5,sd865,gamehub,Risk Of Rain 2,Unplayable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-proton-2.14.1,shows 30fps feels more like 5,2025/06/24
+Retroid Pocket 5,sd865,gamehub,Tomb Raider,Perfect,1280x720,turnip_v24.3.0-R12,dxvk-2.3.1-async,vkd3d-2.12,meduim setting 45-50fps. Low solid 60fps,2025/06/24
+Retroid Pocket 5,sd865,gamehub,Warhammer 40k Space Marine,Unplayable,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Does not launch,2025/06/24
+Retroid Pocket 5,sd865,gamehub,Prince Of Persia Forgotten Sands,Unplayable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vod3d-2.12,black screen with mouse loads no further,2025/06/25
+Retroid Pocket 5,sd865,gamehub,Sifu,Unplayable,854x480,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,install u4 in 800x600 and add mono1 dep but freezes on main menu,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Dead Space,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,perfect 60fps out the gate,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Middle Earth Shadow Of Mordor,Great,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,30fps at 90% resolution low settings,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Warhammer 40k Boltgun,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,add mono1 to component to get first install process to work then runs great,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Sifu,Playable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,add mono1 to components for install runs at 25-30fps but have found to crash,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Mirrors Edge,Great,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Runs really smooth but crashes,2025/06/26
+Retroid Pocket 5,sd865,gamehub,My Friend Pedro,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,50-60fps no need for any changes,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Stray,Playable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,lowering res in game helps alot but still only runs 20-25fps,2025/06/26
+Retroid Pocket 5,sd865,gamehub,Baldis Basics,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Runs Amazing!,2025/07/02
+Retroid Pocket 5,sd865,gamehub,Alpha Protocol,Great,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"Cutscenes stutter a bit, gameplay is a smooth 30-40. Install physx, mono and vcreddist2022",2025/07/02
+Retroid Pocket 5,sd865,gamehub,Batman: Arkham Asylum - Game Of The Year Edition,Great,1280x720,turnip_v25.0.0_R5,dxvk-2.3.1,default,Installed Components: • mediafoundation-lite 1.1 • physx 1.0.0 • goldberg 1.2 • mono 1.0.0 • base 1.0.0 • Wine 1.0.0,2025/07/14
+Retroid Pocket 5,sd865,gamehub,Steamworld Heist Ii,Great,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"Buggy sound in intro movie. Xinput not working. However, Gamehub overlay can have the required keys, which can then be activated with Retroid screen mapping.",2025/07/15
+Retroid Pocket 5,sd865,gamehub,Blur,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"BOX 64 0.32
+PULSE
+TRAMS PARAMS SLOW",2025/07/16
+Retroid Pocket 5,sd865,gamehub,Star Wars: The Force Unleashed Ii,Perfect,1280x720,Turnip_24.3.0_R2,dxvk2.3.1-async,vkd3d-2.12,wine9.5-x64-1,2025/07/20
+Retroid Pocket 5,sd865,gamehub,Lego Star Wars The Force Awakens,Playable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vk3d-2.12,wine9.5-x64-1,2025/07/20
+Retroid Pocket 5,sd865,gamehub,Lego The Hobbit,Great,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"25-45 fps
+wine9.5-x64-1	
+Lowest graphic quality",2025/07/20
+Retroid Pocket 5,sd865,gamehub,Quake: Enhanced,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,worked with 0 changes,2025/08/06
+Retroid Pocket 5,sd865,gamehub,Chaos;head Noah,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"GOG Galaxy version used with COZ Patch applied
+
+Game is bugged to constantly scroll up on the menu with ""Use Xbox Controller Layout"" on
+
+With DInput, control mapping is totally messed up, but remapping the controls in the games settings will make the game control how it should (on-screen buttons will look weird, but the controls are intuitive enough to not need to look at it)",2025/08/07
+Retroid Pocket 5,sd865,gamehub,Hades Ii,Perfect,1280x720,Turnip_v25.0.0_R8,dxvk-2.3.1-async,vkd3d-2.12,"The game has Steam DRM, so to play your Steam copy you need to install Steam on GameHub and then install the game within Steam. I used this guide: https://www.youtube.com/watch?v=GAlcedbvQmI
+
+Plays at a great speed with no issues",2025/08/08
+Retroid Pocket 5,sd865,gamehub,Hexen + Heretic (remasters),Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,GOG / Fitgirl version work with 0 tinkering or changes. Just install and go. Use the _gog.exe file to launch,2025/08/08
+Retroid Pocket 5,sd865,gamehub,Rain World,Perfect,1360x768,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,,2025/08/08
+Retroid Pocket 5,sd865,gamehub,Dragon Ball: Sparking Zero,Unplayable,800x600,turnip_v24.3.0_R2,1.10.3-async,vkd3d-proton-2.14.1,Does immediately,2025/08/12
+Retroid Pocket 5,sd865,gamehub,Gta V,Perfect,1280x720,Mesa Turnip driver v25.1.0_R2,1.10.3-async,None,Played best with wine9.5-x64-1. With proton9 it always stuck on rockstar club activation. Also game version is the one from FitGirl.,2025/08/12
+Retroid Pocket 5,sd865,gamehub,Death's Door,Great,1280x720,Turnip_24.3.0_R2,default,default,45-60 fps based on the amount of particles on screen; use zero kimchi's BOX64 presents chat for unity games to prevent crashing,2025/08/19
+Retroid Pocket 5,sd865,gamehub,Red Dead Redemption (fit Girl Version),Perfect,1280x720,Turnip 25.0.0_R1,2.3.1-arm64ec,vkd3d-2.12,"Need to install the Vulkan Wrapper Mod (https://www.nexusmods.com/reddeadredemption/mods/153)
+1. Install game normally on your pc
+2. extract the vulkan wrapper mod to your games root folder (example: D:\games\red dead redemption\) and allow it to overwrite the existing files
+3. Copy the folder to your device and install in gamehub",2025/08/20
+Retroid Pocket 5,sd865,gamehub,Fate/extella: The Umbral Star,Perfect,1280x1024,default,default,default,In Game grafics gotta be at low for smooth 30 fps,2025/08/21
+Retroid Pocket 5,sd865,gamehub,Gta V,Perfect,1280x720,default,default,dont know,,2025/08/22
+Retroid Pocket 5,sd865,gamehub,Gta Iv Definitive Edition,Perfect,1280x720,default,default,default,,2025/09/03
+Retroid Pocket 5,sd865,gamehub,Gta V,Great,960x544,default,2.4.1,default,,2025/09/05
+Retroid Pocket 5,sd865,gamehub,Hollow Knight: Silksong,Great,1280x720,turnip_v24.3.0-R12,dxvk-2.3.1-async,vkd3d-2.12,"Used the GOG installer.
+Got a crash once while turning on a controller and the cutscenes have these weird green bar on the bottom and right other than that game runs great.",2025/09/05
+Retroid Pocket 5,sd865,gamehub,Sonic Lost World (versión De Steam,Great,1280×1024,Turnip V24.3.0 R2,Dxvk 2.3.1 async,Vk3d 2.12,Need all controller settings besides “Use xbox controller” on. Played up until the second level of the second World. Runs 60FPS for the most part. Used Goldberg to bypass the “steam needs to be running” screen,2025/09/06
+Retroid Pocket 5,sd865,gamehub,Gta V,Perfect,1280x720,proton9.0-arm64x2,dxvk-1.10.3-async,vkd6d-2.12,,2025/09/06
+Retroid Pocket 5,sd865,gamehub,Hollow Knight: Silksong,Great,1280x720,turnip_v24.3.0-R12,dxvk-2.3.1-async,vkd3d-2.12,,2025/09/06
+Retroid Pocket 5,sd865,gamehub,Hollow Knight: Silksong,Great,1280x720,turnip_v24.3.0-R12,dxvk-2.3.1-async,vkd3d-2.12,,2025/09/06
+Retroid Pocket 5,sd865,gamehub,Hollow Knight: Silksong,Perfect,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-proton-2.14.1,,2025/09/07
+Retroid Pocket 5,sd865,gamehub,Gta 5,Playable,854x480,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-proton-2.14.1,Gtat,2025/09/07
+Retroid Pocket 5,sd865,gamehub,Y's:memories Of Celceta,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Cut scenes are upside down/mirrored. Gameplay runs perfectly.,2025/09/08
+Retroid Pocket 5,sd865,gamehub,Db Sparking Zero,Playable,960x544,Turnip_24.3.0_R2,dxvk-2.3.1-async,dont know,,2025/09/08
+Retroid Pocket 5,sd865,gamehub,Gta V,Playable,1280x1024,default,default,default,,2025/09/09
+Retroid Pocket 5,sd865,gamehub,Bloomtown: A Different Story,Great,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Proton9.0-x64-3 - Box64-0.37-b1. Runs at 30FPS.,2025/09/10
+Retroid Pocket 5,sd865,gamehub,Boneraiser Minions,Perfect,1920x1080,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Protion9.0-x64-3 ; Box64-0.38-b1 ; Runs at a perfect 59FPS even with lots of enemies on screen.,2025/09/10
+Retroid Pocket 5,sd865,gamehub,Citizen Sleeper,Unplayable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Steam Version. Proton 9.0-x64-3. Box64-0.37-b1. Initial loading after selecting a save file takes... 3 and a half weeks. Then you get 10-15FPS in game.,2025/09/10
+Retroid Pocket 5,sd865,gamehub,Resident Evil 3 Remake,Playable,1280x720,default,default,default,"Just let gamehub install and autoconfig. all on low, fidelityFX enable. game runs at first at 30, then drops between 20-25 fps at 64ºC (thermal pad changed, not oem)",2025/09/11
+Retroid Pocket 5,sd865,gamehub,Gta V,Playable,854x480,default,default,default,,2025/09/13
+Retroid Pocket 5,sd865,gamehub,Tunic,Great,854x480,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"Compatibility Layer: wine10.6-arm64x-2
+Surface Format: RGBA8
+
+consistent 60fps
+
+can run at 720p but will dip into the lower 40fps range",2025/09/14
+Retroid Pocket 5,sd865,gamehub,Gta V,Perfect,960x544,default,default,vkd3d-2.12,,2025/09/15
+Retroid Pocket 5,sd865,gamehub,Assassins Creed Iii,Great,1280x720,turnip_v25.3.0_R6,dxvk-v2.6.2-1-async,vkd3d-2.12,,2025/09/15
+Retroid Pocket 5,sd865,gamehub,Tomb Raider,Perfect,1280x720,turnip_v25.3.0_R7,dxvk-v2.6.2-1-async,vkd3d-proton-2.14.1,Compatibility Layer: proton9.0-arm64x3,2025/09/15
+Retroid Pocket 5,sd865,gamehub,Chained Echoes,Perfect,1280x720,Turnip_v24.3.0_R2,dxvk-2.3.1,vk3d-2.12,CPU translator: Box64-0.37-b1,2025/09/15
+Retroid Pocket 5,sd865,gamehub,Eastward,Perfect,1920x1080,turnip_v25.3.0_R7,dxvk-2.3.1,vkd3d-2.12,"sometimes some glitches on menu UI, nothing that blocking progression",2025/09/16
+Retroid Pocket 5,sd865,gamehub,Juegos,Perfect,854x480,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-proton-2.14.1,,2025/09/16
+Retroid Pocket 5,sd865,gamehub,Sea Of Stars,Great,1280x720,Turnip_v24.3.0_R2,dxvk-2.3.1,vod3d-2.12,Version 5.1.0 of Gamehub. Runs under 60 fps but still plays well.,2025/09/16
+Retroid Pocket 5,sd865,gamehub,Forgive Me Father 2,Unplayable,1280x720,Turnip_24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Crashes before game loads.,2025/09/16
+Retroid Pocket 5,sd865,gamehub,Ni No Kuni Ii,Playable,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,Game settings at Low. 20FPS in over world. 25-30FPS in combat.,2025/09/17
+Retroid Pocket 5,sd865,gamehub,The Nonary Games,Perfect,1280x720,turnip_v24.3.0_R2,dxvk-2.3.1-async,vkd3d-2.12,"Install Dependencies, one of the Monos, don't know which one it was that did it tbh...",2025/09/17
+Retroid Pocket 5,sd865,gamehub,Gucamelee! 2,Perfect,1280x720,turnip_25.0.0_R1,dxvk-2.3.1-async,vkd3d-2.12,"Fullscreen, low details, Steam Lightweight",2025/09/17
+Retroid Pocket 5,sd865,gamehub,Final Fantasy Ix Remastered,Perfect,1920x1080,turnip_v25.3.0_R7,dxvd-2.3.1-arm64ecasync,Doesn't matter,"Proton10.0-arm64x2, Fex_20250910, Install Mono.",2025/09/17
+Retroid Pocket 5,sd865,gamehub,Final Fantasy Viii Remastered,Perfect,1920x1080,turnip_v25.3.0_R7,dxvk-2.6-arm64ec-async,vkd6d-2.12,"Compatibility Layer: Wine10.6-arm64x2
+CPU Translator : Fex_20250910",2025/09/17
+Retroid Pocket 5,sd865,gamehub,Final Fantasy Xiii,Playable,1920x1080,turnip_v25.3.0_R7,dxvk-v2.6-arm64ec-async,vkd3d-2.12,"Compatibility Layer: Wine10.6-arm64x2
+CPU Translator : Fex_20250910
+
+* Launcher works. Once launched can redirect to main exe.
+
+* uses ""FF13Fix"" and NT Core's ""4GB patch""
+*Install Mono
+*Cutscenes can run up to 60 and in game 40FPS in performance mode, battles can drop in big sequences like the intro.",2025/09/17
+Retroid Pocket 5,sd865,gamehub,Final Fantasy X Remastered,Great,1920x1080,turnip_v25.0.0_R1,dxvk-2.6-arm64ec-async,vkd3d-2.12,"Compatibility Layer: Wine10x64-2
+CPU Translator : Box64-0.37-B1
+------------
+Run Launcher on first boot to make config file, set graphics to medium, Once done can be redirected to main exe to skip launcher.
+
+You Can delete file FFX-2_Data.VBF if not wanting to play it to save space.
+
+GameSetting.ini and saves can be found in Documents\Square Enix, etc etc.
+
+My personal edits are :
+
+Resolution=1920*1080
+ScreenMode=SM_fullscreen
+Quality=VQ_medium
+VSync=on
+Anisotropic=8
+Shadow=1
+TextureQuality=TQ_high
+MSAA=4
+ColorCorrection=On
+PostAA=PAA_OFF
+UnSharpMask=Off",2025/09/17
+Odin 2 Portal,sd8g2,gamehub,Dead Island Definitive Edition,Great,960x544,proton9.0-x64-2,dxvk-2.2.1-async,vkd3d-2.12,Steam version works just right out the box,2025/06/14
+Odin 2 Portal,sd8g2,gamehub,Ultimate Marvel Vs. Capcom,Perfect,1280x720,proton9.0-x64-2,dxvk-2.2.1-async,vkd3d-2.12,,2025/07/05
+Odin 2 Portal,sd8g2,gamehub,Red Dead Redemption,Perfect,1280x720,Turnip 25.0.0 R1,Dxvk-2.3.1-arm64ec,vkd3d-2.12,"Solid 50 to 60fps
+
+No sound or visual glitches",2025/07/24
+Odin 2 Portal,sd8g2,gamehub,Doom 1 + 2,Perfect,1280x720,default,default,default,No issues,2025/09/10
+Odin 2 Portal,sd8g2,gamehub,Golf With Your Friends,Perfect,1280x720,default,default,default,"Steam version, workshop maps working",2025/09/10
+Odin 2 Portal,sd8g2,gamehub,Zombieville 3d,Great,1280x720,default,default,default,Dropped graphics to low and worked flawlessly outside of some ghost touch screen inputs,2025/09/10
+Odin 2 Portal,sd8g2,gamehub,Tiny Glade,Unplayable,1280x720,Turnip 25.0.0 R1,default,default,Graphics driver not supported,2025/09/10
+Odin 2 Portal,sd8g2,gamehub,Powewash Simulator Demo,Perfect,1280x720,Turnip 25.0.0 R1,default,default,Demo works flawlessly with steam version. assuming full game will work fine,2025/09/10
+Odin 2 Portal,sd8g2,gamehub,Shantea And The Seven Siren,Perfect,1280x720,Turnip 25.0.0 R1,dxvk-2.3.1-async,vkd3d-2.12,,2025/09/11
+Odin 2 Portal,sd8g2,gamehub,Hotline Miami,Unplayable,1280x720,proton9.0-x64-2,dxvk-2.2.1-async,vkd3d-2.12,Doesnt load,2025/09/11
+Odin 2 Portal,sd8g2,gamehub,Hotline Miami 2 : Wrong Number,Unplayable,1280x720,proton9.0-x64-2,dxvk-2.2.1-async,vkd3d-2.12,Doesnt Load,2025/09/11
+Odin 2 Portal,sd8g2,gamehub,Virtua Figther 5 R.e.v.o,Unplayable,1280x720,proton9.0-x64-2,dxvk-2.2.1-async,vkd3d-2.12,"Load, but unplayable",2025/09/11
+Odin 2 Portal,sd8g2,gamehub,Killer 7,Perfect,1280x720,proton9.0-x64-2,dxvk-2.2.1-async,vkd3d-2.12,,2025/09/11
+Odin 2 Portal,sd8g2,gamehub,Dead Rising,Unplayable,1280x720,proton9.0-x64-2,Dxvk-2.3.1-arm64ec,vkd3d-2.12,"Load, howerver FPS Drops,
+no loads after menu",2025/09/11

@@ -6,9 +6,12 @@
     <title>Ryan Retro - Retro Gaming Channel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+<link rel="dns-prefetch" href="//i.ytimg.com">
+<link rel="preconnect" href="https://huggingface.co" crossorigin>
+<link rel="dns-prefetch" href="//huggingface.co">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
         .retro-font {
@@ -25,434 +28,554 @@
             transform: translate(2px, 2px);
             box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
         }
-        .scanlines {
-            position: relative;
+        /* Clean, theme-aligned hero */
+.hero-header{
+  /* deep charcoal like the rest of the site */
+  background: #111827; /* slightly bluer than pure black for depth */
+}
+
+/* Subtle pixel grid */
+.hero-header::before{
+  content:"";
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;         /* grid size */
+  background-position: center;
+  pointer-events:none;
+  opacity:.35;                         /* keep it very subtle */
+}
+
+/* Soft vignette to focus the center */
+/* Softer vignette */
+.hero-header::after{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(
+    80% 60% at 50% 30%,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,.35) 55%,   /* was .55 */
+    rgba(0,0,0,.55) 100%   /* was .85 */
+  );
+  pointer-events:none;
+}
+
+
+/* Optional: tiny glow under the avatar to pop it off the background */
+.hero-header img{
+  box-shadow:
+    0 0 0 4px rgba(0,0,0,0.65),      /* inner bezel */
+    0 10px 30px rgba(0,0,0,0.45);    /* drop */
+}
+
+        /* START: New Scrollbar Styles */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
         }
-        .scanlines:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                rgba(18, 16, 16, 0) 50%, 
-                rgba(0, 0, 0, 0.25) 50%
-            );
-            background-size: 100% 4px;
-            pointer-events: none;
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1f2937;
+            border-radius: 10px;
         }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        /* END: New Scrollbar Styles */
     </style>
 </head>
 <body class="bg-gray-900 text-white font-sans">
-    <!-- Header with CRT TV effect -->
-    <header class="relative overflow-hidden bg-black py-8 scanlines">
-        <div class="absolute inset-0 bg-gradient-to-b from-purple-900 to-black opacity-50"></div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="flex flex-col items-center" data-aos="fade-down">
-                <img src="http://static.photos/gaming/200x200/42" alt="Ryan Retro Logo" class="w-32 h-32 rounded-full pixel-border mb-4">
-                <h1 class="retro-font text-4xl md:text-6xl text-yellow-400 mb-2 text-center">RYAN RETRO</h1>
-                <p class="text-xl text-gray-300 mb-6 text-center">Reliving the golden age of gaming</p>
-                <div class="flex space-x-4">
-                    <a href="#videos" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm">
-                        WATCH VIDEOS
-                    </a>
-                    <a href="#guides" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm">
-                        READ GUIDES
-                    </a>
-                    <a href="#games" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm">
-                        PLAY GAMES
-                    </a>
-                </div>
-                <button class="scroll-right-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 hover:bg-gray-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg z-10">
-                    <i data-feather="chevron-right" class="w-6 h-6"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+    <header class="hero-header relative overflow-hidden py-10 md:py-14">
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="flex flex-col items-center" data-aos="fade-down">
+      <img
+        src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+        alt="Ryan Retro Logo"
+        class="w-32 h-32 rounded-full pixel-border mb-4 bg-gray-900"
+      />
+      <h1 class="retro-font text-4xl md:text-6xl text-yellow-400 mb-3 text-center">
+        RYAN RETRO
+      </h1>
 
-    <!-- Play Games Section -->
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="#videos"
+           class="group bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center">
+          <i data-feather="youtube" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
+          WATCH VIDEOS
+        </a>
+
+        <a href="#guides"
+           class="group bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center">
+          <i data-feather="book-open" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
+          READ GUIDES
+        </a>
+
+        <a href="#games"
+           class="group bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center">
+          <i data-feather="list" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
+          PLAY GAMES
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
     <section id="games" class="py-16 bg-gray-800">
         <div class="container mx-auto px-4">
             <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-8 text-center" data-aos="fade-down">PLAY RETRO GAMES</h2>
             
-            <!-- Filter Buttons -->
             <div class="flex justify-center space-x-4 mb-8">
                 <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm" data-filter="all">ALL</button>
                 <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm" data-filter="retroid">RETROID</button>
                 <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm" data-filter="ayn">AYN</button>
-                <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm" data-filter="anbernic">ANBERNIC</button>
+                <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm" data-filter="ayaneo">AYANEO</button>
+
             </div>
 
-            <!-- Devices Container with Scroll Controls -->
             <div class="relative">
-                <div class="devices-container hide-scrollbar overflow-x-auto whitespace-nowrap pb-4">
-                <!-- Device 1 -->
-                <div class="device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-brand="retroid">
-                    <img src="http://static.photos/technology/640x360/1" alt="Retroid Pocket 5" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
+                 <div class="devices-container custom-scrollbar overflow-x-auto whitespace-nowrap pb-4">
+                    <a href="/static/handheld.html?device=Retroid%20Pocket%205" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-brand="retroid">
+                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" alt="Retroid Pocket 5" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Retroid Pocket 5</h3>
+                            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Powerful retro handheld with Snapdragon 865</p>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">Retroid Pocket 5</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Powerful retro handheld with Snapdragon 865</p>
-                        <a href="/static/retroid-pocket-5.html" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            LEARN MORE <i data-feather="info" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Device 2 -->
-                <div class="device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="100" data-brand="ayn">
-                    <img src="http://static.photos/technology/640x360/2" alt="AYN Odin 2 Portal" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
+                    </a>
+                    
+                    <a href="/static/handheld.html?device=Odin%202%20Portal" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="100" data-brand="ayn">
+                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" alt="AYN Odin 2 Portal" class="w-full h-48 object-cover object-bottom">
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">AYN Odin 2 Portal</h3>
+                            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Premium 7" Android handheld with excellent compatibility</p>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">AYN Odin 2 Portal</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Premium Android handheld for cloud gaming</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            LEARN MORE <i data-feather="info" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Device 3 -->
-                <div class="device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="200" data-brand="ayn">
-                    <img src="http://static.photos/technology/640x360/3" alt="AYN Odin 3" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
+                    </a>
+                    
+                    <a href="/static/handheld.html?device=Odin%203" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="200" data-brand="ayn">
+                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" alt="AYN Odin 3" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">AYN Odin 3</h3>
+                            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Snapdragon 8 Elite Android gaming powerhouse</p>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">AYN Odin 3</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Next-gen Android gaming powerhouse</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            LEARN MORE <i data-feather="info" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
+                    </a>
 
-                <!-- Device 4 -->
-                <div class="device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="300" data-brand="anbernic">
-                    <img src="http://static.photos/technology/640x360/4" alt="Anbernic 406H" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANBERNIC</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Anbernic 406H</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Compact handheld with premium build quality</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            LEARN MORE <i data-feather="info" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
+                    <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit"
+   class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border"
+   data-aos="fade-up" data-aos-delay="250" data-brand="ayaneo">
+  <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" alt="AYANEO Konkr Pocket Fit" class="w-full h-48 object-cover">
+  <div class="p-6">
+    <div class="flex items-center mb-2">
+      <span class="bg-indigo-500 text-black text-xs px-2 py-1 rounded retro-font">AYANEO</span>
+    </div>
+    <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Konkr Pocket Fit</h3>
+    <p class="text-gray-400 text-sm mb-4 whitespace-normal">High power handheld from Ayaneo's budget brand Konkr</p>
+  </div>
+</a>
 
-                <!-- Device 5 -->
-                <div class="device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="400" data-brand="retroid">
-                    <img src="http://static.photos/technology/640x360/5" alt="Retroid Pocket Flip 2" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Retroid Pocket Flip 2</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Clamshell design with powerful specs</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            LEARN MORE <i data-feather="info" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
 
-                <!-- Device 6 -->
-                <div class="device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="500" data-brand="ayn">
-                    <img src="http://static.photos/technology/640x360/6" alt="AYN Thor" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
+                    
+
+                    <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="400" data-brand="retroid">
+                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/fliip%2043.png" alt="Retroid Pocket Flip 2" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Retroid Pocket Flip 2</h3>
+                            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Clamshell design with powerful specs</p>
                         </div>
-                        <h3 class="text-xl font-bold mb-2">AYN Thor</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">High-end Windows handheld gaming device</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            LEARN MORE <i data-feather="info" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
+                    </a>
+
+                    <a href="/static/handheld.html?device=AYN%20Thor" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="500" data-brand="ayn">
+                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/aynthorwhite.png" alt="AYN Thor" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">AYN Thor</h3>
+                            <p class="text-gray-400 text-sm mb-4 whitespace-normal">High-end Windows handheld gaming device</p>
+                        </div>
+                    </a>
+
+                    <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic"
+   class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border"
+   data-aos="fade-up" data-brand="retroid">
+  <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20pkm.png"
+       alt="Retroid Pocket Classic" class="w-full h-48 object-cover">
+  <div class="p-6">
+    <div class="flex items-center mb-2">
+      <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
+    </div>
+    <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Retroid Pocket Classic</h3>
+    <p class="text-gray-400 text-sm mb-4 whitespace-normal">Retro-first handheld with classic form factor</p>
+  </div>
+</a>
+
+
+
                 </div>
-            </div>
+                </div>
         </div>
     </section>
 
-    <!-- Latest Videos -->
     <section id="videos" class="py-16 bg-gray-900">
         <div class="container mx-auto px-4">
             <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">LATEST VIDEOS</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Video 1 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border" data-aos="fade-up">
-                    <div class="relative pb-[56.25%] bg-black">
-                        <img src="http://static.photos/gaming/640x360/1" alt="Video thumbnail" class="absolute h-full w-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
-                                <i data-feather="play" class="text-white"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold mb-2">NES Hidden Gems You NEED to Play</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Discover these underrated NES classics that still hold up today!</p>
-                        <div class="flex justify-between text-gray-500 text-xs">
-                            <span>2 days ago</span>
-                            <span>125K views</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Video 2 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative pb-[56.25%] bg-black">
-                        <img src="http://static.photos/gaming/640x360/2" alt="Video thumbnail" class="absolute h-full w-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
-                                <i data-feather="play" class="text-white"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold mb-2">PS1 vs N64 - Ultimate Graphics Comparison</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Which 5th gen console had the best graphics? We compare 20 games!</p>
-                        <div class="flex justify-between text-gray-500 text-xs">
-                            <span>1 week ago</span>
-                            <span>342K views</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Video 3 -->
-                <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="200">
-                    <div class="relative pb-[56.25%] bg-black">
-                        <img src="http://static.photos/gaming/640x360/3" alt="Video thumbnail" class="absolute h-full w-full object-cover">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
-                                <i data-feather="play" class="text-white"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold mb-2">Sega Dreamcast - Why It Failed</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">The tragic story of Sega's final console and what went wrong.</p>
-                        <div class="flex justify-between text-gray-500 text-xs">
-                            <span>2 weeks ago</span>
-                            <span>512K views</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-12">
-                <a href="#" class="inline-block bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded pixel-btn retro-font">
-                    VIEW ALL VIDEOS
-                </a>
-            </div>
+            <div id="latest-videos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  <p class="col-span-full text-center text-gray-400">Loading latest videos…</p>
+</div>
+
+<div class="text-center mt-12">
+  <a id="view-all-videos"
+     href="https://www.youtube.com/@RyanRetro/videos"
+     target="_blank"
+     class="inline-block bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded pixel-btn retro-font">
+    VIEW ALL VIDEOS
+  </a>
+</div>
+
         </div>
     </section>
 
-    <!-- Guides Section -->
     <section id="guides" class="py-16 bg-gray-800">
-        <div class="container mx-auto px-4">
-            <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">RETRO GUIDES</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Guide 1 -->
-                <div class="bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up">
-                    <img src="http://static.photos/gaming/640x360/4" alt="Guide cover" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-yellow-500 text-black text-xs px-2 py-1 rounded retro-font">NES</span>
-                            <span class="text-gray-500 text-xs ml-2">15 min read</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">The Ultimate NES Starter Guide</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Everything you need to start collecting for the Nintendo Entertainment System.</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            READ GUIDE <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Guide 2 -->
-                <div class="bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="100">
-                    <img src="http://static.photos/gaming/640x360/5" alt="Guide cover" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">MODDING</span>
-                            <span class="text-gray-500 text-xs ml-2">25 min read</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">How to Mod Your Game Boy Advance</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Step-by-step guide to installing a backlit screen in your GBA.</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            READ GUIDE <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Guide 3 -->
-                <div class="bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="200">
-                    <img src="http://static.photos/gaming/640x360/6" alt="Guide cover" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <div class="flex items-center mb-2">
-                            <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">COLLECTING</span>
-                            <span class="text-gray-500 text-xs ml-2">10 min read</span>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Avoiding Fake Retro Games</h3>
-                        <p class="text-gray-400 text-sm mb-4 whitespace-normal">Learn how to spot counterfeit cartridges and protect your collection.</p>
-                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-                            READ GUIDE <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="container mx-auto px-4">
+    <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">RETRO GUIDES</h2>
 
-    <!-- About Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <!-- Steam on Android -->
+  <a href="/guides/steam-android"
+     class="bg-gray-900 rounded-lg overflow-hidden pixel-border block"
+     data-aos="fade-up" data-aos-delay="0">
+    <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg"
+         alt="Play Steam Games on Android | Full Guide"
+         class="w-full h-48 object-cover">
+    <div class="p-6">
+      <div class="flex items-center mb-2">
+        <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANDROID</span>
+        <span class="text-gray-500 text-xs ml-2">Full guide</span>
+      </div>
+      <h3 class="text-xl font-bold mb-2">Play Steam Games on Android</h3>
+      <p class="text-gray-400 text-sm mb-4 whitespace-normal">
+        Stream (or run) your Steam library on Android—setup, tips, and gotchas.
+      </p>
+      <span class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
+        READ GUIDE
+        <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
+      </span>
+    </div>
+  </a>
+
+  <!-- Switch on Android -->
+  <a href="/guides/switch-android"
+     class="bg-gray-900 rounded-lg overflow-hidden pixel-border block"
+     data-aos="fade-up" data-aos-delay="100">
+    <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png"
+         alt="Play Nintendo Switch Games on Android | Full Guide"
+         class="w-full h-48 object-cover">
+    <div class="p-6">
+      <div class="flex items-center mb-2">
+        <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANDROID</span>
+        <span class="text-gray-500 text-xs ml-2">Full guide</span>
+      </div>
+      <h3 class="text-xl font-bold mb-2">Play Nintendo Switch Games on Android</h3>
+      <p class="text-gray-400 text-sm mb-4 whitespace-normal">
+        Everything you need to get Switch titles running smoothly on Android.
+      </p>
+      <span class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
+        READ GUIDE
+        <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
+      </span>
+    </div>
+  </a>
+
+  <!-- PS3 on Android -->
+  <a href="/guides/ps3-android"
+     class="bg-gray-900 rounded-lg overflow-hidden pixel-border block"
+     data-aos="fade-up" data-aos-delay="200">
+    <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg"
+         alt="Play PS3 Games on Android | Full Guide"
+         class="w-full h-48 object-cover">
+    <div class="p-6">
+      <div class="flex items-center mb-2">
+        <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANDROID</span>
+        <span class="text-gray-500 text-xs ml-2">Full guide</span>
+      </div>
+      <h3 class="text-xl font-bold mb-2">Play PS3 Games on Android</h3>
+      <p class="text-gray-400 text-sm mb-4 whitespace-normal">
+        Set up, configure, and optimize PS3 gameplay on Android devices.
+      </p>
+      <span class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
+        READ GUIDE
+        <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
+      </span>
+    </div>
+  </a>
+</div>
+</section>
+
+
     <section class="py-16 bg-gray-900">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8" data-aos="fade-right">
-                    <img src="http://static.photos/people/640x360/7" alt="Ryan Retro" class="rounded-lg pixel-border w-full">
+                    <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="rounded-lg pixel-border w-full">
                 </div>
                 <div class="md:w-1/2" data-aos="fade-left">
                     <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-6">ABOUT RYAN RETRO</h2>
-                    <p class="text-gray-300 mb-4">Hey gamers! I'm Ryan, a lifelong retro gaming enthusiast with a passion for preserving gaming history.</p>
-                    <p class="text-gray-300 mb-6">Since 2008, I've been creating content that celebrates classic games, consoles, and the culture surrounding them. From in-depth retrospectives to hands-on hardware mods, my channel covers all aspects of retro gaming.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center">
-                            <i data-feather="youtube" class="mr-2"></i> SUBSCRIBE
-                        </a>
-                        <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center">
-                            <i data-feather="twitter" class="mr-2"></i> FOLLOW
-                        </a>
+                    <p class="text-gray-300 mb-4">HELLO everyone and welcome back to the Ryan Retro WEBSITE! I created this website as a resource for anyone who enjoys the same retro gaming handhelds I do.</p>
+                    <p class="text-gray-300 mb-6">I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid. As I grow older, gaming remains a great way to relax and relieve stress. It's something that gives us new joy while also connecting with nostalgic memories. I hope you enjoy your time here and check out my YouTube, Discord etc to connect more.</p>
+                    <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 w-full">
+
+  <!-- Patreon -->
+  <a href="https://patreon.com/ryanretro"
+     target="_blank"
+     class="flex-1 w-full sm:w-auto text-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
+    <i data-feather="star" class="mr-2"></i> PATREON
+  </a>
+
+  <!-- Ko-Fi -->
+  <a href="https://ko-fi.com/ryanretro"
+     target="_blank"
+     class="flex-1 w-full sm:w-auto text-center bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
+    <i data-feather="coffee" class="mr-2"></i> KO-FI
+  </a>
+
+  <!-- Discord -->
+  <a href="https://discord.gg/USNwF4N4VH"
+     target="_blank"
+     class="flex-1 w-full sm:w-auto text-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
+    <i data-feather="message-circle" class="mr-2"></i> DISCORD
+  </a>
+  <!-- Subscribe on YouTube -->
+  <a href="https://www.youtube.com/@RyanRetro?sub_confirmation=1"
+     target="_blank"
+     class="flex-1 w-full sm:w-auto text-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
+    <i data-feather="youtube" class="mr-2"></i> SUBSCRIBE
+  </a>
+</div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-black py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center">
-                        <img src="http://static.photos/gaming/100x100/42" alt="Ryan Retro Logo" class="w-12 h-12 rounded-full mr-4">
-                        <h3 class="retro-font text-xl text-yellow-400">RYAN RETRO</h3>
-                    </div>
-                    <p class="text-gray-500 text-sm mt-2">© 2023 Ryan Retro. All rights reserved.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-yellow-400"><i data-feather="youtube"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-yellow-400"><i data-feather="twitter"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-yellow-400"><i data-feather="instagram"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-yellow-400"><i data-feather="twitch"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-yellow-400"><i data-feather="discord"></i></a>
-                </div>
-            </div>
+<footer class="bg-black py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col items-center text-center">
+      <div class="flex items-center justify-center">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+             alt="Ryan Retro Logo" class="w-12 h-12 rounded-full mr-4">
+        <h3 class="retro-font text-xl text-yellow-400">RYAN RETRO</h3>
+      </div>
+
+      <!-- Business enquiries -->
+      <a href="mailto:rowdyrake@gmail.com?subject=Business%20Enquiry%20from%20Website"
+         class="mt-3 inline-flex items-center text-gray-300 hover:text-yellow-400">
+        <i data-feather="mail" class="w-5 h-5 mr-2"></i>
+        Business enquiries: <span class="ml-1 underline">rowdyrake@gmail.com</span>
+      </a>
+
+      <p class="text-gray-500 text-sm mt-2">© 2025 Ryan Retro. All rights reserved.</p>
+
+    </div>
+  </div>
+</footer>
+
+
+
+ <script>
+document.addEventListener('DOMContentLoaded', function() {
+  AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+  feather.replace();
+
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const deviceItems   = document.querySelectorAll('.device-item');
+  const container     = document.querySelector('.devices-container');
+
+  // Base (inactive) classes every button should have
+  const BASE = ['bg-gray-700','hover:bg-gray-600','text-white'];
+
+  // Active styles per filter
+  const ACTIVE = {
+    all:      ['bg-white','hover:bg-gray-200','text-gray-900'],
+    retroid:  ['bg-red-600','hover:bg-red-600','text-white'],
+    ayn:      ['bg-blue-600','hover:bg-blue-600','text-white'],
+    ayaneo:   ['bg-indigo-600','hover:bg-indigo-600','text-white'],
+  };
+
+  // All classes we might add as "active" (so we can remove reliably)
+  const ALL_ACTIVE_CLASSES = Object.values(ACTIVE).flat();
+
+  // Initialize: make every button neutral
+  filterButtons.forEach(btn => {
+    btn.classList.remove(...ALL_ACTIVE_CLASSES, 'text-gray-900'); // clear any old active
+    BASE.forEach(c => btn.classList.add(c));                      // add neutral look
+  });
+
+  // Click handler
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter').toLowerCase();
+
+      // 1) Reset everyone to base
+      filterButtons.forEach(btn => {
+        btn.classList.remove(...ALL_ACTIVE_CLASSES, 'text-white', 'text-gray-900');
+        BASE.forEach(c => btn.classList.add(c));
+      });
+
+      // 2) Apply active style to the clicked one
+      const activeClasses = ACTIVE[filter] || ACTIVE.all;
+      this.classList.remove(...BASE);
+      this.classList.add(...activeClasses);
+
+      // 3) Filter the items
+      deviceItems.forEach(item => {
+        const brand = item.getAttribute('data-brand').toLowerCase();
+        item.style.display = (filter === 'all' || brand === filter) ? 'inline-block' : 'none';
+      });
+
+      // 4) Snap back to start of the scroller
+      container.scrollLeft = 0;
+    });
+  });
+
+  // OPTIONAL: make "ALL" active on load so UI isn't empty
+  const defaultBtn = document.querySelector('.filter-btn[data-filter="all"]');
+  if (defaultBtn) defaultBtn.click();
+});
+</script>
+
+<script>
+(function(){
+  const grid = document.getElementById('latest-videos');
+  if (!grid) return;
+
+  const LIMIT = 3; // how many to show
+  const CACHE_KEY = `rr_latest_videos_v1_${LIMIT}`; // include LIMIT in the key
+  const CACHE_MS  = 15 * 60 * 1000;
+
+  const fmtTimeAgo = (iso) => {
+    const sec = Math.max(1, (Date.now() - new Date(iso).getTime())/1000);
+    const units = [
+      ['year',31536000],['month',2592000],['week',604800],
+      ['day',86400],['hour',3600],['minute',60]
+    ];
+    for (const [name, s] of units) {
+      const v = Math.floor(sec / s);
+      if (v >= 1) return `${v} ${name}${v>1?'s':''} ago`;
+    }
+    return 'Just now';
+  };
+
+  const cardHTML = ({ id, title, thumb, publishedAt }, i) => `
+    <a href="https://www.youtube.com/watch?v=${id}" target="_blank"
+       class="bg-gray-800 rounded-lg overflow-hidden pixel-border block group"
+       data-video-id="${id}" data-aos="fade-up" data-aos-delay="${i*100}">
+      <div class="relative pb-[56.25%] bg-black">
+        <img
+          src="${thumb}"
+          alt="${title.replace(/"/g,'&quot;')}"
+          width="480" height="360"
+          ${i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" fetchpriority="auto"'}
+          decoding="async"
+          class="absolute h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center opacity-90">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                 fill="currentColor" class="w-8 h-8 text-white ml-1">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
         </div>
-    </footer>
+      </div>
+      <div class="p-4">
+        <h3 class="text-lg md:text-xl font-bold mb-2 line-clamp-2">${title}</h3>
+        <div class="flex justify-between text-gray-500 text-xs">
+          <span>${publishedAt ? fmtTimeAgo(publishedAt) : ''}</span>
+          <span></span>
+        </div>
+      </div>
+    </a>`;
 
-    <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-        
-        feather.replace();
-        
-        // Device filtering and scrolling functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const deviceItems = document.querySelectorAll('.device-item');
-            const scrollRightBtn = document.querySelector('.scroll-right-btn');
-            const container = document.querySelector('.devices-container');
-            
-            // Filter devices
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const filter = this.getAttribute('data-filter').toLowerCase();
-                    
-                    // Update active button
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('bg-red-600', 'bg-blue-600', 'bg-green-600', 'bg-white');
-                        btn.classList.remove('hover:bg-red-700', 'hover:bg-blue-700', 'hover:bg-green-700', 'hover:bg-gray-200');
-                        
-                        if(btn === this) {
-                            if(filter === 'all') {
-                                btn.classList.add('bg-white', 'hover:bg-gray-200', 'text-gray-900');
-                            } else if(filter === 'retroid') {
-                                btn.classList.add('bg-red-600', 'hover:bg-red-600', 'text-white');
-                            } else if(filter === 'ayn') {
-                                btn.classList.add('bg-blue-500', 'hover:bg-blue-500', 'text-white');
-                            } else if(filter === 'anbernic') {
-                                btn.classList.add('bg-green-600', 'hover:bg-green-600', 'text-white');
-                            }
-                        } else {
-                            btn.classList.add('bg-gray-700', 'hover:bg-gray-600');
-                        }
-                    });
-                    
-                    // Filter devices by brand
-                    deviceItems.forEach(item => {
-                        const itemBrand = item.getAttribute('data-brand').toLowerCase();
-                        if (filter === 'all') {
-                            item.style.display = 'inline-block';
-                        } else {
-                            if (itemBrand === filter) {
-                                item.style.display = 'inline-block';
-                            } else {
-                                item.style.display = 'none';
-                            }
-                        }
-                    });
-                    
-                    // Scroll to start of container
-                    container.scrollLeft = 0;
-                });
-            });
+  function showError(msg) {
+    grid.innerHTML = `
+      <div class="col-span-full text-center">
+        <p class="text-red-400 mb-2">Couldn’t load latest videos.</p>
+        <p class="text-gray-400 mb-2 text-xs">${msg || ''}</p>
+        <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="text-yellow-400 underline">Open my channel</a>
+      </div>`;
+  }
 
-            // Initialize with all devices showing and white "All" button
-            filterButtons.forEach(btn => {
-                btn.classList.add('bg-gray-700', 'hover:bg-gray-600');
-                btn.classList.remove('bg-red-600', 'bg-blue-500', 'bg-green-600', 'bg-white');
-            });
-            filterButtons[0].classList.add('bg-white', 'hover:bg-gray-200', 'text-gray-900');
-            
-            // Scroll right button
-            scrollRightBtn.addEventListener('click', function() {
-                container.scrollBy({
-                    left: 300,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Show/hide scroll button based on scroll position
-            container.addEventListener('scroll', function() {
-                const maxScroll = container.scrollWidth - container.clientWidth;
-                scrollRightBtn.style.display = (container.scrollLeft >= maxScroll - 10) ? 'none' : 'flex';
-            });
-        });
-    </script>
+  async function render(data){
+    grid.innerHTML = data.slice(0, LIMIT).map((d,i) => cardHTML(d,i)).join('');
+    // Re-register the new elements with AOS for the fade/slide-in
+    if (window.AOS && typeof AOS.refreshHard === 'function') {
+      AOS.refreshHard();
+    } else if (window.AOS && typeof AOS.refresh === 'function') {
+      AOS.refresh();
+    }
+  }
+
+  async function loadVideos() {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { t, data } = JSON.parse(cached);
+        if (Date.now() - t < CACHE_MS && Array.isArray(data) && data.length) {
+          await render(data);
+          return;
+        }
+      }
+
+      const res = await fetch(`/api/latest-videos?limit=${LIMIT}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (!Array.isArray(data) || !data.length) {
+        grid.innerHTML = `<p class="col-span-full text-center text-gray-400">No uploads found.</p>`;
+        return;
+      }
+
+      await render(data);
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data }));
+    } catch (e) {
+      console.error(e);
+      showError(e.message);
+    }
+  }
+
+  const section = document.querySelector('#videos');
+  if ('IntersectionObserver' in window && section) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) { loadVideos(); io.disconnect(); }
+    }, { rootMargin: '200px' });
+    io.observe(section);
+  } else {
+    loadVideos();
+  }
+})();
+</script>
+
+
+
+
+
     <style>
-        .scroll-right-btn {
-            display: none;
-        }
-        @media (min-width: 768px) {
-            .scroll-right-btn {
-                display: flex;
-            }
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+
         .devices-container {
             scroll-behavior: smooth;
             white-space: nowrap;

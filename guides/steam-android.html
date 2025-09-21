@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Play Steam Games on Android | Full Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+    .retro-font { font-family: 'Press Start 2P', cursive; }
+    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
+    .prose-invert :where(h1,h2,h3,h4) { font-weight: 700; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Simple header -->
+  <header class="bg-gray-800 py-6">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+      <a href="/static/index.html" class="flex items-center">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="w-10 h-10 rounded-full mr-3 pixel-border">
+        <span class="retro-font text-yellow-400 text-lg">RYAN RETRO</span>
+      </a>
+      <a href="/static/index.html#guides" class="text-sm text-gray-300 hover:text-yellow-300">← Back to Guides</a>
+    </div>
+  </header>
+
+  <main class="py-10">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h1 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-6">
+        Play Steam Games on Android | Full Guide
+      </h1>
+
+      <!-- Video -->
+      <div class="mb-8 rounded-lg overflow-hidden pixel-border">
+        <div class="relative pb-[56.25%] bg-black">
+          <iframe class="absolute inset-0 w-full h-full"
+                  src="https://www.youtube.com/embed/fr9N8lHzU1U"
+                  title="Play Steam Games on Android | Full Guide"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <article class="prose prose-invert max-w-none">
+        <h2>Overview</h2>
+        <p>
+          This guide walks you through streaming (and in some cases running) your Steam library on Android handhelds.
+          We’ll cover the easiest path using Steam Link, plus performance tips and common pitfalls.
+        </p>
+
+        <h2>What You’ll Need</h2>
+        <ul>
+          <li>Windows/macOS/Linux PC with Steam installed</li>
+          <li>Android handheld/phone with 5GHz Wi-Fi (or USB-C Ethernet)</li>
+          <li>Steam Link app from Google Play</li>
+        </ul>
+
+        <h2>Quick Start</h2>
+        <ol>
+          <li>Install <strong>Steam Link</strong> on your Android device.</li>
+          <li>Ensure your PC and device are on the same network (preferably 5GHz).</li>
+          <li>Open Steam Link → pair with your PC → follow the on-screen test.</li>
+          <li>Launch a game and tweak bitrate/resolution in settings if needed.</li>
+        </ol>
+
+        <h2>Performance Tips</h2>
+        <ul>
+          <li>Use 5GHz Wi-Fi or a USB-C Ethernet adapter for lowest latency.</li>
+          <li>Cap FPS or reduce resolution if your network is congested.</li>
+          <li>Close background downloads on both PC and Android.</li>
+        </ul>
+
+        <h2>Troubleshooting</h2>
+        <ul>
+          <li><strong>Black screen:</strong> Alt+Tab once on PC; ensure GPU drivers are up to date.</li>
+          <li><strong>Stutter:</strong> Lower bitrate, lock to 30/45 FPS, or switch to Ethernet.</li>
+          <li><strong>Controller:</strong> In Steam → Settings → Controller, verify layout and glyphs.</li>
+        </ul>
+
+        <h2>Next Steps</h2>
+        <p>
+          Want a printable version or Markdown workflow? You can keep this guide as Markdown and
+          render it server-side later—this page is just a starter you can swap out anytime.
+        </p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="bg-black py-10 mt-12">
+    <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+      © 2025 Ryan Retro. All rights reserved.
+    </div>
+  </footer>
+
+  <script>document.addEventListener('DOMContentLoaded',()=>{ try{AOS.init({duration:600, once:true});}catch(e){} });</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+device,chipset,system,game,performance,emulator,resolution,driver,notes,date added
+Retroid Pocket 5,sd865,ps3,Bioshock Infinite,Unplayable,APS3e,720x480,Default,Crashes when getting to the title screen,2025/06/28
+Retroid Pocket 5,sd865,ps3,Guacamelee!,Perfect,RPCSX,720x480,Default,Frame drops only in loading screens,2025/06/23
+Retroid Pocket 5,sd865,ps3,Littlebigplanet,Unplayable,RPCSX,720x480,Default,"Dont try it, didn't even load",2025/06/24
+Retroid Pocket 5,sd865,ps3,Littlebigplanet,Perfect,APS3e,,Default,-,2025/07/01
+Retroid Pocket 5,sd865,ps3,Puppeteer,Unplayable,APS3e,,Default,Crashes on load,2025/06/28
+Retroid Pocket 5,sd865,ps3,Rayman Legends,Perfect,RPCSX,720x480,Default,Great :D,2025/06/23
+Retroid Pocket 5,sd865,ps3,Rayman Origins,Perfect,RPCSX,720x480,Default,"Nothing, just steady 60 FPS. You can upscale more but I want to save battery",2025/06/23
+Retroid Pocket 5,sd865,ps3,Rayman Origins,Perfect,APS3e,,Default,-,2025/07/01
+Retroid Pocket 5,sd865,ps3,Sonic The Hedgehog 4 - Episode I,Perfect,RPCSX,720p,Default,Perfect performance aside from slowdowns during shader compilation. You can even push 1080p.,2025/07/21
+Retroid Pocket 5,sd865,ps3,Sonic The Hedgehog 4 - Episode Ii,Perfect,RPCSX,720p,Default,"Much like Episode 1, slowdowns during shader compilation, but perfect performance otherwise.
+
+Best way to experience Sonic 4 Episode 2 on android.",2025/07/21
+Retroid Pocket 5,sd865,ps3,The Last Of Us,Perfect,APS3e,720p,Default,-,2025/07/23
+Retroid Pocket 5,sd865,ps3,Call Of Duty Modern Warfare,Unplayable,APS3e,480p,Default,4-14 FPS,2025/07/24
+Retroid Pocket 5,sd865,ps3,The Simpsons Game,Perfect,APS3e,480p,Default,"30 fps
+PPU Decoder: Interpreter
+PPU Threads: 3
+Write color buffer enabled
+Write depth buffer enabled
+Read Color Buffers enabled
+Read depth buffers enabled
+
+Vulkan 
+Adapter: Adreno 650
+Default Driver
+Custom Driver Force Max Clocks enabled",2025/07/24
+Retroid Pocket 5,sd865,ps3,Castle Crashers,Perfect,APS3e,720p,Default,-,2025/07/29
+Retroid Pocket 5,sd865,ps3,Dragon Age Origins,Great,APS3e,720p,Default,Plays great but the hair is more or less transparent and the hands can be weirdly colored. Occasional crashes but very playable.,2025/08/05
+Retroid Pocket 5,sd865,ps3,Way Of The Samurai 4,Playable,APS3e,720p,Default,Will need to enable frame skip to get it to play at full speed. It crashed a few times on me in the 2 hours I spent playing it.,2025/08/05
+Retroid Pocket 5,sd865,ps3,Dynasty Warriors: Gundam Reborn,Great,APS3e,720p,Default,Plays great with frame skip enabled.,2025/08/05
+Retroid Pocket 5,sd865,ps3,Final Fantasy Xiii-2,Unplayable,APS3e,720p,Default,I couldn't get past the menu screen,2025/08/05
+Retroid Pocket 5,sd865,ps3,Dragons Dogma: Dark Arisen,Unplayable,APS3e,720p,Default,FPS super low even with frame skip.,2025/08/05
+Retroid Pocket 5,sd865,ps3,Ultimate Marvel Vs. Capcom 3,Perfect,APS3e,720p,Default,Plays basically perfect. Occasional slowdowns due to shaders compiling.,2025/08/05
+Retroid Pocket 5,sd865,ps3,Dragon Ball Xenoverse,Playable,RPCSX,,Default,-,2025/08/06
+Retroid Pocket 5,sd865,ps3,Tekken 5: Dark Resurrection,Great,RPCSX,,Default,-,2025/08/07
+Retroid Pocket 5,sd865,ps3,Tekken 5: Dark Resurrection,Perfect,RPCSX,,Default,Slowdown when loading shaders but 60fps constant all other times,2025/08/07
+Retroid Pocket 5,sd865,ps3,Mortal Kombat,Playable,APS3e,,Default,not unplayable however very laggy during fights and never picks up back in FPS. you can win a few fights like this still,2025/08/11
+Retroid Pocket 5,sd865,ps3,Castle Crashers,Perfect,APS3e,720p,Default,Works perfectly,2025/08/12
+Retroid Pocket 5,sd865,ps3,Dragon Age 2,Unplayable,APS3e,720p,Default,Couldn't get past the title screen,2025/08/12
+Retroid Pocket 5,sd865,ps3,Lightning Returns: Final Fantasy Xiii,Perfect,APS3e,720p,Default,Ran and played great,2025/08/12
+Retroid Pocket 5,sd865,ps3,Ultra Street Fighter 4,Perfect,APS3e,720p,Default,Frame skip enabled with no real issues,2025/08/12
+Retroid Pocket 5,sd865,ps3,Dragon Ball Z Burst Limit,Perfect,RPCSX,720x480,Default,-,2025/08/21
+Retroid Pocket 5,sd865,ps3,Lego The Hobbit,Great,RPCSX,1280 x 720,Turnip 9v2,-,2025/09/08
+Retroid Pocket 5,sd865,ps3,Lego The Lord Of The Rings,Playable,RPCSX,1280 x 720,Default,"System GPU. Sluggish, but playable.",2025/09/09

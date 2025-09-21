@@ -1,0 +1,84 @@
+device,chipset,system,game,performance,driver,pre-compiled shaders,update,notes,date added
+Retroid Pocket 5,sd865,wiiu,Donkey Kong Tropical Freeze,Perfect,Qualcomm Adreno 819.1,No,1,Played first level 60 fps no problems,2025/07/21
+Retroid Pocket 5,sd865,wiiu,Assassin's Creed III,Unplayable,System,No,,"entering main menu possible, crashes as soon as being in 3D ingame",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Assassin's Creed IV - Black Flag,Unplayable,System,No,,crashes on initial load,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Axiom Verge,Perfect,System,No,,Runs perfectly at full speed,2024/12/20
+Retroid Pocket 5,sd865,wiiu,Batman Origins,Unplayable,System,Yes,,Freezes upon starting.,2024/12/20
+Retroid Pocket 5,sd865,wiiu,Bayonetta,Playable,System,Yes,,It's playable (barely) between 25-35 fps during combat - at least in the prologue,2024/12/26
+Retroid Pocket 5,sd865,wiiu,Bayonetta 2,Unplayable,System,Yes,,Invisible character during load screen/ crash to Cemu menu during opening cutscene,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Call Of Duty - Black Ops II,Unplayable,System,No,,crashes on initial load,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Call Of Duty - Ghosts,Unplayable,System,No,,crashes on initial load,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Cars 3: Driven To Win,Unplayable,System,Yes,v16,"Audio and control are present, but screen is completely black except for a ""Drive"" icon.",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Darksiders,Unplayable,System,Yes,,Chrashes on the title screen.,2024/12/25
+Retroid Pocket 5,sd865,wiiu,Donkey Kong Tropical Freeze,Great,System,Yes,,"Slight stuttering every once in a while, but very playable.  Played first 2 levels.",2025/5/21
+Retroid Pocket 5,sd865,wiiu,Donkey Kong Tropical Freeze,Unplayable,System,Yes,version 2 Title ID 0005000010137f00,Vertex explosion on Donkey Kong causing massive slow down. Issue not present in desktop version. ,2024/12/25
+Retroid Pocket 5,sd865,wiiu,Dr Luigi,Perfect,System,No,Latest,-,2025/07/04
+Retroid Pocket 5,sd865,wiiu,Ducktales Remastered,Perfect,System,No,,-,2024/12/19
+Retroid Pocket 5,sd865,wiiu,Fast Racing Neo,Playable,System,Yes,1,"Doesn't play at full speed, but averages 45-50 on high-performance mode",2025/1/4
+Retroid Pocket 5,sd865,wiiu,Hyrule Warriors,Unplayable,System,No,,Crashes right after the first cutscene,2025/1/23
+Retroid Pocket 5,sd865,wiiu,Kirby And The Rainbow Curse,Playable,System,Yes,1,"Loads in, touch screen control works but none of the mapped buttons work. Had to exit Cemu to go back to menu",2025/07/05
+Retroid Pocket 5,sd865,wiiu,Legend Of Kay Anniversary,Perfect,System,No,,"Played about an hour, seems to run perfectly at full speed",2024/12/20
+Retroid Pocket 5,sd865,wiiu,Legend Of Zelda Windwaker,Great,System,No,,Played until first dungeon ,2024/12/19
+Retroid Pocket 5,sd865,wiiu,Legend Of Zelda: Breath Of The Wild,Unplayable,System,Yes,,Crashes a few moments after you take control of Link. ,2024/12/25
+Retroid Pocket 5,sd865,wiiu,Lego Batman 2 - DCSuper Heroes,Unplayable,System,No,,"possible to get ingame, display flickers extremely, sound completly bugged",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Lego City Undercover,Unplayable,System,No,,"possible to get ingame, display flickers extremely, sound completly bugged",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Mario Kart 8,Great,System,No,CEMU 0.2,Does not get hung up between courses now.,2025/06/27
+Retroid Pocket 5,sd865,wiiu,Mario Kart 8,Unplayable,System,No,,"After completing one cup game hangs , you can technically play all cups but not complete them that's why deemed ""Unplayable""",2024/12/19
+Retroid Pocket 5,sd865,wiiu,Mario Party 10,Unplayable,System,No,,"very playable in main world seems, minigames are crashing",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Mario Tennis Ultra Smash,Unplayable,System,No,,"Horrible graphical issues, regular crashes. Only menu works.",2025/1/17
+Retroid Pocket 5,sd865,wiiu,Mass Effect,Unplayable,System,No,,"A lot of graphical issues, glitch, etc. that why i consider the game unplayable. Framerate: 25fps (15-30)",2025/1/12
+Retroid Pocket 5,sd865,wiiu,Minecraft: Wii U Edition,Great,System,No,v688,-,2025/06/27
+Retroid Pocket 5,sd865,wiiu,Monster Hunter 3 Ultimate,Perfect,System,Yes,v32,"Other than some slowdown in the village, the game seems to run at full speed without any audio/ visual errors. Temp runs around 61C.",2025/1/10
+Retroid Pocket 5,sd865,wiiu,Nano Assault Neo,Playable,System,No,,Runs at a solid 60 when using the graphics pack to turn down the resolution. But textures disappear in some levels. The projectiles shot from enemies flash on and off sometimes so you have to remember where they are when they disappear. But if you can get over that it's a fun experience.,2025/3/22
+Retroid Pocket 5,sd865,wiiu,Nes Remix,Perfect,System,No,v16,"Some sounds are buggy, which makes them crackle. Other than that, the game is perfectly working.",2025/07/03
+Retroid Pocket 5,sd865,wiiu,New Super Mario Bros. U + New Super Luigi U,Perfect,System,Yes,,Played with one screen as well as two!,2024/12/20
+Retroid Pocket 5,sd865,wiiu,Ninja Gaiden 3 Razors Edge,Unplayable,System,Yes,,"Glitches from the start, able to get past menus but thats it.",2025/4/25
+Retroid Pocket 5,sd865,wiiu,Ninja Gaiden 3: Razor's Edge,Unplayable,System,No,,"Looks good until first play screen, then only lighting effects visible",2025/1/27
+Retroid Pocket 5,sd865,wiiu,Pac Man And The Ghostly Adventures,Unplayable,System,Yes,,Crashes to Cemu menu immediately after loading.,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Paper Mario Color Splash,Unplayable,System,Yes,1,"Loads shaders then crashes back to game select screen. Tried a few Turnip drivers, nothing working so far",2025/07/05
+Retroid Pocket 5,sd865,wiiu,Rayman Legends,Unplayable,System,No,,"Game run with resolution of 720p@60fps (graphics mod), but requires game pad including motion controls",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Severed,Perfect,System,No,,Don't forget to enable the WiiU gamepad,2024/12/22
+Retroid Pocket 5,sd865,wiiu,Shantae And The Pirate’S Curse,Playable,System,Yes,,"The sound is weird, but it plays well. ",2024/12/25
+Retroid Pocket 5,sd865,wiiu,Shantae: Half-Genie Hero,Perfect,System,No,v80,"Played through first world, runs flawlessly.",2025/1/9
+Retroid Pocket 5,sd865,wiiu,Shovel Knight,Perfect,System,Yes,,-,2024/12/25
+Retroid Pocket 5,sd865,wiiu,Sonic Boom - Rise Of Lyric,Unplayable,System,No,1.1.0,-,2025/06/27
+Retroid Pocket 5,sd865,wiiu,Sonic Boom - Rise Of Lyric,Unplayable,System,No,,crashes on initial load,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Sonic Lost World,Unplayable,System,No,1.1.0,-,2025/06/27
+Retroid Pocket 5,sd865,wiiu,Sonic Lost World,Unplayable,System,No,,crashes on initial load as soon as you press the start button,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Splatoon,Unplayable,System,Yes,v288,"Extreme slowdown without graphics packs. Can't center camera with motion controls. All character bodies are invisible, but clothing remains. You can pass the tutorial and reach the Plaza, but stages don't load in story mode. I didn't try multiplayer (if that's even possible).",2025/1/7
+Retroid Pocket 5,sd865,wiiu,Star Fox Zero,Unplayable,System,No,,"Technically playable, but listing as unplayable due to poor performance. Runs hot enough to require the fan in sport mode (71c without). Motion controls cannot be centered. Massive slowdown in most areas. Reducing the resolution via graphics pack produces a black screen in TV view, and other visual glitches in Gamepad view. Opening tutorial crashed several times when trying to look around or shoot.",2025/1/7
+Retroid Pocket 5,sd865,wiiu,Super Mario Maker,Perfect,System,No,,it works good,2025/1/10
+Retroid Pocket 5,sd865,wiiu,Super Mario World 3d,Perfect,System,Yes,,-,2024/12/20
+Retroid Pocket 5,sd865,wiiu,Super Smash Bros. For Wii U,Playable,System,No,Latest,-,2025/06/27
+Retroid Pocket 5,sd865,wiiu,Super Smash Bros. For Wii U,Unplayable,System,No,4,charackters invisible,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Tekken Tag Tournament 2 - Wii U Edition,Unplayable,System,No,1,"first load possible, crashes at character selection, crash on initial load from second start on",2025/1/8
+Retroid Pocket 5,sd865,wiiu,Tekken Tag Tournament 2 Wii U Edition,Unplayable,System,No,Latest,Crashes on character select,2025/1/2
+Retroid Pocket 5,sd865,wiiu,The Amazing Spider-Man 2,Playable,System,No,,"slowdowns below 30fps, while shaders are compiling, no crashes so far",2025/5/5
+Retroid Pocket 5,sd865,wiiu,The Legend Of Zelda : The Wind Waker,Playable,System,No,,"Used Cemu 0.1 (new port march 2025), pictobox fix worked, played until mojo Forest island - the game runs 60fps smooth 70% of the time, 30% of the time, it lagged down to 15/25fps due to particles mostly (lava, fire, explosion, waterfall, rain, tornados). The game is still playable and I guess finishable. ",2025/3/17
+Retroid Pocket 5,sd865,wiiu,The Legend Of Zelda: The Wind Waker HD,Unplayable,System,No,,Runs great but will crash when trying to save a photo from the pictobox,2025/2/9
+Retroid Pocket 5,sd865,wiiu,The Legend Of Zelda: The Wind Waker HD,Unplayable,System,Yes,,Played more than 3 hours. The game crashes when saving a picture from the pictobox. That makes the game unplayable.,2025/2/9
+Retroid Pocket 5,sd865,wiiu,The Legend Of Zelda: The Wind Waker HD,Perfect,System,Yes,,Only played until 1st dungeon,2025/1/23
+Retroid Pocket 5,sd865,wiiu,The Legend Of Zelda: Twilight's Princess HD,Perfect,System,No,v81,-,2024/12/22
+Retroid Pocket 5,sd865,wiiu,Thomas Was Alone,Perfect,System,Yes,,-,2024/12/25
+Retroid Pocket 5,sd865,wiiu,Tom Clancy's Splinter Cell - Blacklist,Unplayable,System,No,,crashes on initial load,2025/1/8
+Retroid Pocket 5,sd865,wiiu,Watch Dogs,Unplayable,System,No,,"Beta 16 shows slash screen, then crashes, beta 17 crashes instantly",2025/5/4
+Retroid Pocket 5,sd865,wiiu,Year Walk,Unplayable,System,Yes,,Gets to the start screen but not beyond. ,2024/12/25
+Retroid Pocket 5,sd865,wiiu,Lego Marvel Avengers,Great,System,No,1,20-30 fps,2025/07/25
+Retroid Pocket 5,sd865,wiiu,Minecraft: Story Mode,Great,System,No,Latest,"All textures are blurred a bit, and there are very small frame dips, but other than that, it's amazing.",2025/08/15
+Odin 2 Portal,sd8g2,wiiu,Bayonetta,Perfect,System,No,1,-,2025/06/23
+Retroid Pocket 5,sd865,wiiu,Darksiders: Warmastered Edition,Perfect,Turnip 24.3.0 9v2,No,1,Get the version of CEMU that let's you chose a Turnip Driver (9v2).,2025/07/04
+Retroid Pocket 5,sd865,wiiu,Tekken Tag Tournament 2 - Wii U Edition,Playable,Turnip 24.3.0 9v2,No,2,Using the custom driver to Turnip 24.3.0 9v2 it doesn't crash in character selection but the gameplay is slowed because of poor performance,2025/06/27
+Retroid Pocket 5,sd865,wiiu,The Legend Of Zelda: The Wind Waker Hd,Unplayable,Turnip 24.3.0 9v2,No,1,"Cemu 2.0, seems to be greatly playable untul tree/grass cutting effects come into play. FPS drops to unplayable states in that cases.",2025/07/04
+Retroid Pocket 5,sd865,wiiu,Fist Of The North Star - Ken's Rage 2,Great,Turnip 24.3.0 9v2,No,2,"System driver crashes the game after the FMVs. 
+Using Mr Purple driver here worked nicely.",2025/07/17
+Retroid Pocket 5,sd865,wiiu,Steamworld Collection,Unplayable,Turnip 24.3.0 9v2,No,1,Crashes when choosing a game.,2025/07/20
+Retroid Pocket 5,sd865,wiiu,Mario Tennis Ultra Smash,Perfect,Turnip 24.3.0 9v2,No,CEMU .2,Needs Turnip driver to play or you will not be able to see anything outside of the menu screen.,2025/08/12
+Retroid Pocket 5,sd865,wiiu,Devil's Third,Great,Turnip 24.3.0 9v2,Yes,1,30~45 fps,2025/08/20
+Retroid Pocket 5,sd865,wiiu,Lego Marvel Super Heros,Playable,Turnip 24.3.0 9v2,Yes,1,Lots of weird glitching and artifacting. About 26fps,2025/09/02
+Retroid Pocket 5,sd865,wiiu,Injustice God Among Us,Unplayable,Turnip 25.2.0,Yes,latest,Turnip drivers you get into the fight but the models are really messed up. Also frequent crashes,2025/07/18
+Odin 2 Portal,sd8g2,wiiu,Mario Kart 8,Perfect,Turnip V25.x.x,No,1,-,2025/08/13
+Retroid Pocket 5,sd865,wiiu,Pushmo World,Playable,mesa turnip 25.2.0-r5,No,1,"Default drivers worked amazing but had unplayable graphical glitch with upside down manholes (~1.5 hours into game) that made me switch drivers, after switching drivers the performance is a bit bumpy but it's a puzzle game so it's fine.",2025/07/22
+Retroid Pocket 5,sd865,wiiu,Batman Origins,Great,turnip 25.1.0-devel-unified(mr_purple_666),Yes,1,"async-on
+accurate-on
+but there are some graphics errors
+dont use 60fps mod",2025/08/20

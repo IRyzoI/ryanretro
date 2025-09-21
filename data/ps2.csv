@@ -1,0 +1,181 @@
+device,chipset,system,game,performance,emulator,resolution,rom region,notes,date added
+Retroid Pocket 5,sd865,ps2,.Hack//Infection,Perfect,NetherSX2 (3668),5x Native,NTSC,"Ran at a solid 30fps even at 5x native, and even still had room to fast forward. ",2024/12/14
+Retroid Pocket 5,sd865,ps2,Ace Combat 04: Shattered Skies,Playable,NetherSX2,1x Native,NTSC,"Playable but with noticeable(~25%) slowdown when looking at the ground. Matched preferred PCSX2 settings/fixes as close as possible(search 'Ace Combat Emulation Guide'), but Aether/Nether are not quite up to snuff in their abandoned state.",2025/1/21
+Retroid Pocket 5,sd865,ps2,Ace Combat 5 - The Unsung War,Playable,NetherSX2,1x Native,NTSC,"Same settings as Ace Combat Zero, only tested first story mission, 50-60 FPS at 1x Native, no visual bugs. EE Cycle Rate 100% (0), EE Cycle Skip Normal (0) Frame limit enabled, normal speed 100%, OpenGL, Bilinear (PS2), Mipmapping Automatic, Trilinear Automatic, Anisotropic disabled, Blending Accuracy Ultra, Texture Preloading Partial, Hardware Download Unsynchronized (Non-deterministic)",2025/4/1
+Retroid Pocket 5,sd865,ps2,Ace Combat 5: The Unsung War,Unplayable,AetherSX2,1x Native,NTSC,"The arcade was okay, story mode story cutscenes ran perfectly, but as soon as you start playing in story mode, it lags hard. Ive tried changing backend, aspect ratio, and various other setting but it would not speed up to 100%.",2025/3/8
+Retroid Pocket 5,sd865,ps2,Ace Combat Zero - The Belkan War,Playable,NetherSX2 4248,1x Native,NTSC,"60 FPS at 1x Native, no visual bugs. EE Cycle Rate 100% (0), EE Cycle Skip Normal (0) Frame limit enabled, normal speed 100%, OpenGL, Bilinear (PS2), Mipmapping Automatic, Trilinear Automatic, Anisotropic disabled, Blending Accuracy Ultra, Texture Preloading Partial, Hardware Download Unsynchronized (Non-deterministic)",2025/4/1
+Retroid Pocket 5,sd865,ps2,Ape Escape 2,Perfect,NetherSX2,3x Native,NTSC,-,2024/12/19
+Retroid Pocket 5,sd865,ps2,Ape Escape 3,Perfect,NetherSX2,3x Native,NTSC,-,2024/12/19
+Retroid Pocket 5,sd865,ps2,Atelier Iris 2,Perfect,NetherSX2,3x Native,NTSC,"Runs like a dream. Even got the opening movie to load correctly.  Vulkan, Nearest-Neighbor, 4 x filtering. ",2024/12/17
+Retroid Pocket 5,sd865,ps2,ATV Quad Power Racing 2,Unplayable,NetherSX2 Classic,0.75x Native,PAL,Doesn't work well,2024/12/15
+Retroid Pocket 5,sd865,ps2,Auto Modellista,Perfect,AetherSX2,5x Native,PAL,60hz mode,2024/12/14
+Retroid Pocket 5,sd865,ps2,Baldur's Gate: Dark Alliance,Great,NetherSX2 (4248),2.5x Native,NTSC,"Runs great.  Some minor slowdowns, but rare.",2025/1/22
+Retroid Pocket 5,sd865,ps2,Baldur's Gate: Dark Alliance,Unplayable,NetherSX2 (3668),1x Native,NTSC,"Used fast/unsafe defaults. Some slowdown in the opening cutscene, but significant slowdown once gameplay started. Ran at about 30 - 40% speed even in High Performance mode. ",2025/1/17
+Retroid Pocket 5,sd865,ps2,Battlefield 2 Modern Combat,Playable,AetherSX2,1x Native,NTSC,"Dont go past 1x. It bogs down during vehicle movement or parachuting. The aiming is wonky, but at 1x it is playable. Turn the performance to high",2025/3/8
+Retroid Pocket 5,sd865,ps2,Beat Down - Fists Of Vengence,Perfect,NetherSX2 (4248),2x Native,NTSC,-,2024/12/16
+Retroid Pocket 5,sd865,ps2,Beyond Good And Evil,Playable,NetherSX2 Classic,2.5x Native,NTSC,"There's a lot of stuttering in even the first cutscene, and the shadows are wonky as well. Recommend playing the Gamecube version instead.",2025/3/28
+Retroid Pocket 5,sd865,ps2,Black,Perfect,NetherSX2 (3668),3x Native,NTSC,Played through the first mission with widescreen hacks enabled. Played without a hitch.,2025/1/15
+Retroid Pocket 5,sd865,ps2,Bully,Perfect,NetherSX2,2x Native,NTSC,Runs great at 2x upscale!,2024/12/16
+Retroid Pocket 5,sd865,ps2,Burnout 3: Takedown,Perfect,NetherSX2 Classic (3668),3x Native,NTSC,Very slight frame drops in busy scenes which were probably also present on the original.,2024/12/16
+Retroid Pocket 5,sd865,ps2,Burnout Dominator,Perfect,NetherSX2 4248,3x Native,NTSC,Solid performance,2025/07/05
+Retroid Pocket 5,sd865,ps2,Burnout Revenge,Perfect,NetherSX2 (4248),2x Native,NTSC,"Solid performance, even with HD textures loaded",2025/2/1
+Retroid Pocket 5,sd865,ps2,Bust A Move: Dance Summit 2001,Perfect,AetherSX2,2x Native,PAL,Runs at a consistent 60fps in OpenGL,2025/1/11
+Retroid Pocket 5,sd865,ps2,Call Of Duty 3,Perfect,NetherSX2,2.5x Native,PAL,Perfect,2025/06/10
+Retroid Pocket 5,sd865,ps2,Call Of Duty: World At War Final Front,Perfect,AetherSX2,2x Native,NTSC,-,2024/12/15
+Retroid Pocket 5,sd865,ps2,Castlevania Curse Of Darkness,Perfect,AetherSX2,2x Native,PAL,Vulkan+ 60hz mode,2024/12/14
+Retroid Pocket 5,sd865,ps2,Champions Of Norrath,Great,NetherSX2 (3668),1x Native,NTSC,"Performance improves vastly with General Settings &gt; Fast/Unsafe settings.
+Title Screen still slows down, but not as much. Gameplay runs mostly fullspeed. 
+However there are some minor graphical glitches such as the occasional texture pop-in. ",2024/12/21
+Retroid Pocket 5,sd865,ps2,Champions Of Norrath,Perfect,NetherSX2 1.9,3x Native,NTSC,"Hardware mode set to ""disable readbacks""",2024/12/19
+Retroid Pocket 5,sd865,ps2,Champions Of Norrath,Playable,NetherSX2 (3668),1x Native,NTSC,"Runs abysmally on the title screen. Once in-game, it runs much better, but still occasionally stutters and has significant slowdown when around certain fire effects and caves. ",2024/12/14
+Retroid Pocket 5,sd865,ps2,Crash Bandicoot Nitro Kart,Perfect,NetherSX2 4248,2x Native,NTSC,-,2025/06/18
+Retroid Pocket 5,sd865,ps2,Crash Bandicoot: The Wrath Of Cortex,Perfect,AetherSX2,2x Native,PAL,-,2025/2/21
+Retroid Pocket 5,sd865,ps2,Def Jam: Fight For Ny,Perfect,AetherSX2,3x Native,PAL,Tested on RP Mini,2025/2/12
+Retroid Pocket 5,sd865,ps2,Destroy All Humans!,Perfect,AetherSX2,2x Native,PAL,"Runs perfectly after minor tweaks in settings due to graphical glitches.
+Graphics:Blending Accuracy = Minimum
+Advanced: Fast Texture Invalidation = Enabled, Half-Pixel Offset = Special(Texture), Skip Draw End = 1-3 (see what works for you)",2025/3/5
+Retroid Pocket 5,sd865,ps2,Devil May Cry 3,Great,NetherSX2,2x Native,NTSC,Just some slight drops but runs great for sure. I'd say fine to keep at 2x (what I played).,2024/12/21
+Retroid Pocket 5,sd865,ps2,Dragon Quest VIII,Great,NetherSX2 (3668),2x Native,NTSC,"Some hitches but totally playable, for blacked out cutscenes use ""toggle software renderer"" then turn it back off after cutscene. ",2025/4/15
+Retroid Pocket 5,sd865,ps2,Dragon Quest VIII,Playable,AetherSX2,1x Native,NTSC,-,2025/3/18
+Retroid Pocket 5,sd865,ps2,Dragon Quest VIII,Great,NetherSX2 (3668),2x Native,NTSC,Some dips which may be improved by lowering resolution.  Screen goes black during a cutscene when you leave the forest for the first time but it will eventually come back.,2024/12/17
+Retroid Pocket 5,sd865,ps2,Dynasty Warriors 3 Xtreme Legends,Perfect,NetherSX2 (3668),5x Native,NTSC,Runs flawlessly at 5x Native. Tested in the Nanman Campaign.,2024/12/14
+Retroid Pocket 5,sd865,ps2,ESPN NFL 2k5,Perfect,NetherSX2 (4248),2x Native,NTSC,Solid 60 fps. Using Vulkan GPU render if that matters.,2025/2/1
+Retroid Pocket 5,sd865,ps2,ESPN NFL 2k5,Unplayable,NetherSX2,0.75x Native,PAL,-,2024/12/22
+Retroid Pocket 5,sd865,ps2,Fatal Frame,Perfect,AetherSX2,3x Native,NTSC,In game save sometimes corrupts in prologue.,2024/12/15
+Retroid Pocket 5,sd865,ps2,Fatal Frame 2,Perfect,AetherSX2,3x Native,NTSC,Looks amazing in the Retroid pocket 5!,2024/12/17
+Retroid Pocket 5,sd865,ps2,Fatal Frame 3,Playable,AetherSX2,1X Native,NTSC,Tried on 3x resolution but was dipping very low in frame and causing audio skips. tried 2x as well and was still low in frames. Would not go above 30 FPS on native resolution. Frames still dip at native resolution but is playable at between 30-20 FPS,2024/12/18
+Retroid Pocket 5,sd865,ps2,Fifa 11,Great,AetherSX2,3x Native,PAL,Stutters a bit when I make leg-breaking tackles,2024/12/14
+Retroid Pocket 5,sd865,ps2,Fight Night 2004,Perfect,NetherSX2 3664,4x Native,PAL,"OpenGL, everything default ",2025/2/28
+Retroid Pocket 5,sd865,ps2,Fight Night Round 3,Perfect,NetherSX2 (4248),2.5x Native,NTSC,"Vulkan, with widescreen patch, works great",2025/2/1
+Retroid Pocket 5,sd865,ps2,Final Fantasy X,Perfect,NetherSX2 (3668),3x Native,NTSC,Vulkan with hardware download mode set to Disable Readbacks,2025/2/12
+Retroid Pocket 5,sd865,ps2,Final Fantasy Xii,Great,AetherSX2,2x Native,PAL,-,2025/2/17
+Retroid Pocket 5,sd865,ps2,Flatout 2,Perfect,NetherSX2,1x Native,NTSC,-,2025/1/21
+Retroid Pocket 5,sd865,ps2,Gitaroo Man,Perfect,NetherSX2 (4248),2x Native,NTSC,"Near the end of each stage the enemy's audio sounds like it glitched a little, not a deal breaker though.",2024/12/16
+Retroid Pocket 5,sd865,ps2,God Hand,Perfect,NetherSX2,3x,NTSC,"Runs flawlessly, Looks great",2025/07/07
+Retroid Pocket 5,sd865,ps2,God Of War,Perfect,NetherSX2,2x Native,NTSC,"Works perfect, no tweaks needed",2025/1/3
+Retroid Pocket 5,sd865,ps2,God Of War,Perfect,NetherSX2,3x Native,NTSC,"Runs perfectly at 60fps at a 3x upscale, and supports native widescreen. Vulcan + Turnip 9v2",2024/12/25
+Retroid Pocket 5,sd865,ps2,God Of War 2,Perfect,NetherSX2,2x Native,NTSC,"The game runs at full speed at basically all the time, the only part that I noticied a slowdown was at the Perceus fight. But I think this was caused by a graphic glitch because of his invisibility. I beat the game and I was using version v1.9a-dev of NetherSX2",2025/2/5
+Retroid Pocket 5,sd865,ps2,Gran Turismo 2,Perfect,AetherSX2,2x Native,NTSC,Some minor slowdowns when loading shaders,2024/12/16
+Retroid Pocket 5,sd865,ps2,Gran Turismo 4,Perfect,AetherSX2,2x,NTSC,-,2025/07/01
+Retroid Pocket 5,sd865,ps2,Gran Turismo 4,Great,NetherSX2,3x Native,NTSC,Disable readbacks for clubman stages will have low fps,2024/12/19
+Retroid Pocket 5,sd865,ps2,Grand Theft Auto III,Great,NetherSX2,2x Native,NTSC,Some slight slowdown sometimes but impressive and running well on Nether.,2024/12/21
+Retroid Pocket 5,sd865,ps2,Harry Potter And The Chamber Of Secrets,Playable,AetherSX2,3x Native,NTSC,"Game runs well sometimes, sometimes not, graphical issues too. FPS drops happpen too. I guess it can be finished. ",2025/3/4
+Retroid Pocket 5,sd865,ps2,Harry Potter And The Prisoner Of Askaban,Perfect,NetherSX2,2x Native,PAL,-,2025/1/20
+Retroid Pocket 5,sd865,ps2,Haunting Ground,Great,NetherSX2 Classic 2.0,3x Native,NTSC,"Runs excellent overall. Vulkan struggles with the shadows and darker areas. OpenGL handles those better, but has occasional visual glitches. Neither option is too bad. Widescreen patch from PCSX2's patch list works great.",2025/4/15
+Retroid Pocket 5,sd865,ps2,Hokuto No Ken Fighting (Atomisave),Perfect,Aethersx2 Turnip Mod,2x Native,NTSC,-,2025/1/6
+Retroid Pocket 5,sd865,ps2,Jak 2,Great,AetherSX2 4248,3x Native,NTSC,OpenGL to remove strange shadowing. Scenes and gameplay runs 100% except certain unimportant locations.,2025/1/26
+Retroid Pocket 5,sd865,ps2,Jak 3,Great,NetherSX2 (3668),2x Native,PAL,"Changed the following settings to fix shadows, texture flickering and models missing eyes.
+
+Graphic Renderer = OpenGL
+Graphics Settings &gt; Blending Accuracy = High
+Advanced Settings &gt; Enable Manual Hardware Fixes 
+Advanced Settings &gt; Enable Auto Flush (Hardware)
+Advanced Settings &gt; Enable Texture Inside RT.
+",2025/1/16
+Retroid Pocket 5,sd865,ps2,Jak And Daxter - The Precursor Legacy,Great,NetherSX2 (3668),3x Native,NTSC,"Runs smoothly, but has some graphical glitches. Most can be fixed by changing the following settings:
+Graphics Settings &gt; Blending Accuracy = High
+Advanced Settings &gt; Enable Manual Hardware Fixes, Enable Auto Flush (Hardware),  Enable Texture Inside RT.
+Graphic Renderer = OpenGL
+Unfortunately some graphical bugs still occur, such as distant water not rendering correctly.",2024/12/15
+Retroid Pocket 5,sd865,ps2,Killzone,Playable,AetherSX2,1x Native,PAL,The game works fine but on 1 mission crash always in the same place,2025/4/21
+Retroid Pocket 5,sd865,ps2,King Of Fighters 2002 Um,Perfect,Aethersx2 Turnip Mod,2x Native,NTSC,The only emulator that runs this game perfectly.,2025/1/6
+Retroid Pocket 5,sd865,ps2,King Of Fighters Maximum Impact Regulation A,Perfect,AetherSX2,2x Native,PAL,60fps OpenGL,2025/1/11
+Retroid Pocket 5,sd865,ps2,Kingdom Hearts,Perfect,NetherSX2,2.5x Native,NTSC,-,2025/2/4
+Retroid Pocket 5,sd865,ps2,Kingdom Hearts,Perfect,NetherSX2,2x Native,NTSC,Vulkan Required. 2x Upscale. 60 fps,2024/12/16
+Retroid Pocket 5,sd865,ps2,Kingdom Hearts 2,Perfect,AetherSX2,2.5x Native,NTSC,Im on day two and havent had a slow down yet and ive upscaled past 1080p and it runs amazing! Also did not need it at high performance with sport fan speed. I scaled back to performance with auto fan speed and no drop in performance,2025/3/8
+Retroid Pocket 5,sd865,ps2,Kingdom Hearts II Final Mix Plus,Great,AetherSX2,2x Native,NTSC,Some small pfs dips in heavier scenes and choppiness when doing manual camera spins but completely playable. Set audio to async to minimise the perceived lag. Works just as well with x3 native but 2d textures look more out of place.,2024/12/26
+Retroid Pocket 5,sd865,ps2,Knights Of The Temple II,Perfect,AetherSX2,2x Native,NTSC,-,2024/12/16
+Retroid Pocket 5,sd865,ps2,L.A. Rush,Great,NetherSX2,2.5x Native,NTSC,"Fix for stuttering when Sun/Moon is visible:
+Graphics Settings -&gt; Hardware Download Mode -&gt; Disable Readbacks",2025/1/1
+Retroid Pocket 5,sd865,ps2,Legend Of Kay,Perfect,AetherSX2,1.5x Native,PAL,Vulkan. Runs perfectly,2025/2/1
+Retroid Pocket 5,sd865,ps2,Max Pain,Unplayable,NetherSX2,1x Native,PAL,stalls on black screen on loading the game,2024/12/17
+Retroid Pocket 5,sd865,ps2,Max Payne,Perfect,NetherSX2,2x Native,NTSC,-,2024/12/28
+Retroid Pocket 5,sd865,ps2,Medal Of Honor,Perfect,Retroarch 64,2x Native,PAL,-,2025/1/1
+Retroid Pocket 5,sd865,ps2,Nascar 09,Perfect,NetherSX2,2x Native,NTSC,"Perfect at 2x, Playable at 3x",2024/12/31
+Retroid Pocket 5,sd865,ps2,Nba Ballers: Phenom,Perfect,NetherSX2,2x Native,Other (Please state in Notes),"USA copy runs great, you can push 3x if you want no settings change",2025/1/29
+Retroid Pocket 5,sd865,ps2,Ncaa Football 2011,Perfect,NetherSX2,2x Native,NTSC,Runs perfect on default settings,2024/12/31
+Retroid Pocket 5,sd865,ps2,Need For Speed - Underground 2,Great,NetherSX2,2x Native,NTSC,"OpenGL renderer, disable hardware download mode, EE Cycle skip: mild underclock",2025/2/6
+Retroid Pocket 5,sd865,ps2,Need For Speed Most Wanted,Perfect,AetherSX2,3x Native,NTSC,-,2025/4/16
+Retroid Pocket 5,sd865,ps2,Need For Speed Most Wanted Usa V2.00,Great,NetherSX2,1.5x Native,NTSC,Set optimal setting with gpu render set to opengl runs at 50 to 55 with some drops,2024/12/17
+Retroid Pocket 5,sd865,ps2,Need For Speed Underground 2,Great,NetherSX2,3x,NTSC,"Vulkan! 3x or even more, small brakes on the selection screen, in the races is smooth.",2025/06/22
+Retroid Pocket 5,sd865,ps2,Need For Speed: Prostreet,Great,NetherSX2,2x Native,NTSC,"OpenGL, Disable Hardware Download, Set EE Cycle Skip to Mild Underclock",2025/2/11
+Retroid Pocket 5,sd865,ps2,Persona 3 Fes,Perfect,NetherSX2,1.5,NTSC,Flawless,2025/1/16
+Retroid Pocket 5,sd865,ps2,Peter Jackson's King Kong,Playable,NetherSX2,1x Native,NTSC,Hovers around 20fps and has big drops when there's an effect on screen like fire. Couldn't find settings to improve it.,2025/3/5
+Retroid Pocket 5,sd865,ps2,Prince Of Persia: The Sands Of Time,Great,NetherSX2,x2 Native,PAL,"Works great with any settings. Find OpenGL a better choice. The game itself looks slow, but that's the game's ""feature"". 32-35 stable FPS.",2025/3/15
+Retroid Pocket 5,sd865,ps2,Pro Evolution Soccer 6,Perfect,AetherSX2,3x Native,NTSC,-,2024/12/16
+Retroid Pocket 5,sd865,ps2,Pro Evolution Soccer 2014,Perfect,AetherSX2,3x Native,NTSC,-,2024/12/16
+Retroid Pocket 5,sd865,ps2,Radiata Stories,Great,NetherSX2 Classic (3668),2x Native,NTSC,"60FPS, some slowdown in some particular areas (Church with lots of NPCs, some cutscenes). Graphicals glitches in some areas (also present in PCSX2 Nightly as of this time).",2025/2/25
+Retroid Pocket 5,sd865,ps2,Ratchet &amp; Clank,Great,AetherSX2,3x Native,NTSC,-,2024/12/17
+Retroid Pocket 5,sd865,ps2,Ratchet &amp; Clank - Up Your Arsenal,Perfect,NetherSX2 (3668),1x Native,NTSC,"OpenGL, Optimal/safe defaults",2025/1/2
+Retroid Pocket 5,sd865,ps2,Ratchet: Gladiator,Perfect,NetherSX2,2x Native,PAL,"Standard settings on NetherSX2, 2x res and worked great up to perfect on launch.",2025/4/3
+Retroid Pocket 5,sd865,ps2,Rayman 3: Hoodlum Havoc,Perfect,AetherSX2,x2 Native,PAL,It runs incredibly well,2025/2/21
+Retroid Pocket 5,sd865,ps2,Rayman Revolution,Perfect,AetherSX2,2x Native,PAL,-,2025/2/21
+Retroid Pocket 5,sd865,ps2,Resident Evil Outbreak,Perfect,NetherSX2,1x Native,Other (Please state in Notes),Not sure what Rom region to choose in the form but it runs perfectly without any tinkering.,2025/1/7
+Retroid Pocket 5,sd865,ps2,Return To Castle Wolfenstein,Perfect,Nethersx2,3x,NTSC,Ran perfectly was able to play through entire game,2025/07/14
+Retroid Pocket 5,sd865,ps2,Ring Of Red,Perfect,NetherSX2,2x Native,NTSC,"Perfect 30fps @ 2x, but small graphic glitches between stages, I recommend 1.5x to reduce them ",2024/12/16
+Retroid Pocket 5,sd865,ps2,Samurai Warriors: Xtreme Legends,Perfect,NetherSX2 (3668),4x Native,NTSC,"Runs perfectly at 4x Native, has very rare stutters at 5x Native. ",2024/12/14
+Retroid Pocket 5,sd865,ps2,Shadow Hearts,Perfect,NetherSX2 Classic (3668),2x Native,NTSC,-,2024/12/17
+Retroid Pocket 5,sd865,ps2,Shadow Hearts Covenant,Great,NetherSX2 Classic,2.5x Native,NTSC,"Runs well with Vulkan, occasional drops, and flickering subtitle text in some videos. ",2024/12/31
+Retroid Pocket 5,sd865,ps2,Shadow Of Memories,Great,NetherSX2,3x Native,NTSC,Completed game some small artifacts in cut scene but really very few ( redish borders but nothing gamebreaking),2024/12/15
+Retroid Pocket 5,sd865,ps2,Shadow Of The Colossus,Great,NetherSX2 Classic,1.5x,NTSC,"Finished the game at 20-50 FPS with these settings:
+EE Cycle Skip - Mild Underclock(1)
+GPU Renderer - Vulkan
+
+With all other settings, the intro stutters at the end and the flying sand colossus lags too
+EE Timing Hack and OPH Flag don't help
+This game is notoriously hard to run, og PS2 runs it at 15 FPS sometimes",2025/06/30
+Retroid Pocket 5,sd865,ps2,Shadow Of The Colossus,Great,NetherSX2 1.8,1.5x Native,NTSC,"Somewhat stuttery 30 FPS, Vulkan, Widescreen (in-game, no patch), Standard performance mode. Slim transparent lines on top + left of screen, can remove top line with in-game 'Screen Placement' setting.",2024/12/28
+Retroid Pocket 5,sd865,ps2,Shijou Saikyou No Teishi - Kenichi,Great,NetherSX2,3x Native,Other (Please state in Notes),Japan-only game. EE Cycle Rate 180% (2). Sometimes drops to 57fps but perfect besides that,2024/12/27
+Retroid Pocket 5,sd865,ps2,Silent Hill 2,Great,NetherSX2,2.5x Native,NTSC,-,2025/1/11
+Retroid Pocket 5,sd865,ps2,Simpsons: Hit And Run,Great,NetherSX2 1.9,3x Native,NTSC,EE Cycle Rate = 130% to get mostly 60fps,2024/12/20
+Retroid Pocket 5,sd865,ps2,Sly 2 - Band Of Thieves,Great,NetherSX2 (3668),1x Native,NTSC,"OpenGL, Fast/unsafe defaults
+
+FPS dips here and there, but still fairly smooth. FMV's can stutter slightly.",2025/1/2
+Retroid Pocket 5,sd865,ps2,Sly 3: Honour Among Thieves,Playable,NetherSX2,1x Native,PAL,"Settings: Open GL, FXAA Shader on, Instant VU1 off. (Can be framey at times but it works)",2025/2/9
+Retroid Pocket 5,sd865,ps2,Sly Cooper And The Thievius Raccoonus,Great,NetherSX2 (3668),1x Native,NTSC,"OpenGL, Fast/unsafe defaults
+
+Plays quite well on Fast/unsafe defaults.",2025/1/14
+Retroid Pocket 5,sd865,ps2,Sly Cooper And The Thievius Raccoonus,Playable,NetherSX2 (3668),2x Native,NTSC,"EE -3, 3 seems to make it run smoother.",2024/12/21
+Retroid Pocket 5,sd865,ps2,Soulcalibur Iii,Playable,NetherSX2 (3668),2x Native,NTSC,"Using the native 16:9 support in the game instead of widescreen patches.
+Game works smoothly or terribly depending on the stage.  Certain stages, like the Egyptian Temple, have certain lighting effects that slow the game down extremely when on screen. ",2025/1/15
+Retroid Pocket 5,sd865,ps2,Spiderman - Web Of Shadows,Perfect,AetherSX2,3x Native,NTSC,-,2024/12/16
+Retroid Pocket 5,sd865,ps2,Ssx,Perfect,NetherSX2,2x Native,NTSC,-,2025/5/16
+Retroid Pocket 5,sd865,ps2,Star Ocean: Till The End Of Time,Great,NetherSX2 (3668),3x Native,NTSC,"Unfortunately, there's some occasional graphical artifacts. A microstutter at the start of battles sometimes, might be reduced on lower resolutions. Otherwise runs great. Tested in the Ruins of Barr and the first cutscene. ",2024/12/14
+Retroid Pocket 5,sd865,ps2,Star Wars,Perfect,Psx,2x Native,PAL,-,2024/12/22
+Retroid Pocket 5,sd865,ps2,Star Wars - Starfighter,Great,NetherSX2 (3668),1x Native,NTSC,"Vulkan, Fast/unsafe defaults
+
+Some slowdown occurs on the first mission. The following missions were completely smooth. Could possibly occur later in the game.",2025/1/2
+Retroid Pocket 5,sd865,ps2,Stolen,Unplayable,NetherSX2 Classic,1x Native,NTSC,Low FPS (in the 20s) even in the tutorial bit. It doesn't bode well for the rest of the game.,2025/3/28
+Retroid Pocket 5,sd865,ps2,Tales Of Rebirth,Perfect,NetherSX2,3x Native,Other (Please state in Notes),Fan translated japanese version works great,2024/12/17
+Retroid Pocket 5,sd865,ps2,Tales Of The Abyss,Perfect,NetherSX2,2.5x Native,NTSC,Works Perfectly,2025/1/29
+Retroid Pocket 5,sd865,ps2,Tekken Tag Tournament,Playable,NetherSX2 (3668),3x Native,NTSC,"Plays near flawlessly... unless you're in the ever-so troublesome Ogre Temple stage. Then the game slows down significantly, and going down to 1x Native doesn't help. Since whether you fight on this stage is more or less random, I can't really rate this higher than Playable. ",2025/1/15
+Retroid Pocket 5,sd865,ps2,Tekken Tag Tournament,Perfect,Nethersx2 4248,2x Native,NTSC,"This game favours Vulkan backend, stable 60fps at X2 resolution scale",2024/12/15
+Retroid Pocket 5,sd865,ps2,The Getaway,Unplayable,AetherSX2,1x Native,PAL,-,2025/4/21
+Retroid Pocket 5,sd865,ps2,The Getaway Black Monday,Unplayable,AetherSX2,1x Native,PAL,-,2025/4/21
+Retroid Pocket 5,sd865,ps2,The King Of Fighters 98 Ultimate Match,Great,Aethersx2 Turnip Mod,2x Native,NTSC,Play is great with very few graphics bugs.,2025/1/6
+Retroid Pocket 5,sd865,ps2,The King Of Fighters 2006,Perfect,NetherSX2 (3668),3x Native,NTSC,"The King of Fighters 2006 is the US release of The King of Fighters Maximum Impact 2. Played through Mai Shiranui's story mode, and performance never dipped once. ",2025/1/15
+Retroid Pocket 5,sd865,ps2,Time Splitters 2,Perfect,NetherSX2,2x Native,PAL,-,2025/4/15
+Retroid Pocket 5,sd865,ps2,Tomb Raider Anniversary,Great,AetherSX2,2x Native,NTSC,OpenGL seems to be the best renderer. Loading screen artwork missing.,2025/1/11
+Retroid Pocket 5,sd865,ps2,Valkyrie Profile 2: Silmeria,Playable,AetherSX2,3x Native,PAL,Slowdown in graphically intense areas but will run generally well on high performance,2025/1/3
+Retroid Pocket 5,sd865,ps2,We Love Katamari,Perfect,AetherSX2,3.5x Native,NTSC,"It does not need to be at 3.5x, but its the only game ive tried so far that can run this well.",2025/3/8
+Retroid Pocket 5,sd865,ps2,Wwe Smackdown! Here Comes The Pain,Perfect,NetherSX2 (3668),2x Native,NTSC,"Game runs perfect, have pushed to 3x before with no issues. Minor flickering on some load screens but gameplay is fine",2025/1/29
+Retroid Pocket 5,sd865,ps2,Yakuza,Great,NetherSX2 Classic,2x,NTSC,"Completed the game, OpenGL
+
+Increasing the resolution past 2x gives more stutters when loading a new location, increasing the resolution past Native gives a vertical line in the middle of the screen, Vulkan crashes in Chapter 3",2025/06/30
+Retroid Pocket 5,sd865,ps2,Yakuza,Perfect,NetherSX2,2x Native,NTSC,-,2024/12/31
+Retroid Pocket 5,sd865,ps2,Twisted Metal: Black,Playable,NetherSX2,2.5x Native,NTSC,Switching the Hardware Download Mode to Disable Readbacks fixes a lot of slowdown issues,2025/07/28
+Retroid Pocket 5,sd865,ps2,Matrix: The Path Of Neo,Great,NetherSX2 Classic,1x Native,NTSC,"Minor slowdown once in a while, but really good otherwise. I didn't do much with the configs, so it has pottential to be even better",2025/08/07
+Retroid Pocket 5,sd865,ps2,Tony Hawk's American Wasteland,Perfect,AetherSX2,2.5x Native,NTSC,-,2025/08/09
+Retroid Pocket 5,sd865,ps2,Need For Speed Most Wanted,Perfect,Psx,1x Native,NTSC,-,2025/08/10
+Retroid Pocket 5,sd865,ps2,Wipeout Fusion,Great,NetherSX2 Classic (3668),2x Native,PAL,Turnip 25.3.0 R4,2025/08/14
+Retroid Pocket 5,sd865,ps2,Sly Cooper And The Thievius Raccoonus,Perfect,NetherSX2,1.5x Native,PAL,"Performance Mode: High Performance
+
+In NetherSX change Render to -&gt; OpenGL",2025/08/22
+Retroid Pocket 5,sd865,ps2,Pinball Hall Of Fame: The Williams Collection,Perfect,NetherSX2,2x Native,NTSC,"Works great, no changes needed.",2025/09/01
+Retroid Pocket 5,sd865,ps2,Blade Ii,Perfect,NetherSX2,2x Native,NTSC,"Works great, no changes needed.",2025/09/01
+Retroid Pocket 5,sd865,ps2,Harry Potter And The Sorcerer's Stone,Perfect,NetherSX2,X2,PAL,"2x resolution
+OpenGL
+Its always stable 30FPS
+I use C71A6146.pnach to get it to 50FPS (it drops fps sometimes but its worth getting 50fps)",2025/09/08
+Odin 2 Portal,sd8g2,ps2,God Of War II,Perfect,NetherSX,3x,NTSC,-,2025/07/08
+Odin 2 Portal,sd8g2,ps2,Spyro: A Hero's Tail,Perfect,NetherSX,3x,NTSC,-,2025/08/22
