@@ -4,3 +4,5 @@ python-dotenv
 httpx
 markdown
 pydantic
+SQLAlchemy>=2.0
+psycopg2-binary>=2.9
