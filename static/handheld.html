@@ -827,40 +827,20 @@ if (videosSection) {
 
   async function fetchAndCacheData(systemId){
   if (masterDataCache[systemId]) return masterDataCache[systemId];
-  const config = SYSTEM_CONFIG[systemId];
-  if (!config) { masterDataCache[systemId] = []; return []; }
-
-  return new Promise((resolve) => {
-    let settled = false;
-    const done = (arr) => { if (!settled) { settled = true; masterDataCache[systemId] = arr; resolve(arr); } };
-
-    Papa.parse(`${config.path}?v=${Date.now()}`, {
-      download: true,
-      header: true,
-      skipEmptyLines: 'greedy',
-      dynamicTyping: false,
-      // IMPORTANT: parse on main thread. Worker can silently hang on some hosts.
-      worker: false,
-      // the defaults for delimiter/quote/escape already handle your CSV correctly
-      complete: (results) => {
-        const rows = Array.isArray(results.data) ? results.data : [];
-        const normalized = rows.map(r => {
-          const o = {};
-          for (const k in r) o[k.trim().toLowerCase()] = typeof r[k] === 'string' ? r[k].trim() : r[k];
-          return o;
-        });
-        done(normalized);
-      },
-      error: (err) => {
-        console.warn(`Papa.parse error for ${config.path}:`, err);
-        done([]);
-      }
-    });
-
-    // belt & suspenders: if something odd happens, don’t hang forever
-    setTimeout(() => done(masterDataCache[systemId] || []), 10000);
+  const res = await fetch(`/api/compatibility/${systemId}`);
+  if (!res.ok) { masterDataCache[systemId] = []; return []; }
+  const payload = await res.json();
+  const rows = Array.isArray(payload.rows) ? payload.rows : [];
+  // normalize to lowercase keys (your code expects that)
+  const normalized = rows.map(r => {
+    const o = {};
+    for (const k in r) o[k.trim().toLowerCase()] = typeof r[k] === 'string' ? r[k].trim() : r[k];
+    return o;
   });
+  masterDataCache[systemId] = normalized;
+  return normalized;
 }
+
 
 
   async function ensureSystemDataCached(systemId){ if (!masterDataCache[systemId]) await fetchAndCacheData(systemId); }
@@ -1029,18 +1009,41 @@ nextBtn?.addEventListener('click', () => {
     displayCurrentPage();
     updateURLState();
   }
+// Active button colors per system
+const ACTIVE_BTN_STYLES = {
+  switch:   ['bg-red-600',  'text-white'], // Switch = red
+  ps2:      ['bg-green-700','text-white'], // PS2 = dark green
+  ps3:      ['bg-black',    'text-white'], // PS3 = black
+  winlator: ['bg-sky-500',  'text-white'], // Winlator = light blue
+  wiiu:     ['bg-blue-600', 'text-white'], // Wii U = blue
+  gamehub:  ['bg-blue-900', 'text-white'], // GameHub = navy
+  psvita:   ['bg-teal-500', 'text-white'], // PS Vita = teal
+};
+
+// For reliably clearing old active styles
+const ALL_ACTIVE_CLASSES = Array.from(
+  new Set(Object.values(ACTIVE_BTN_STYLES).flat())
+);
 
   function highlightSystemButton(systemId){
-    document.querySelectorAll('#system-buttons button').forEach(b=>{
-      b.classList.remove('bg-yellow-400','text-black');
-      b.classList.add('bg-gray-600','text-white');
-    });
-    const activeBtn = document.querySelector(`#system-buttons [data-system="${systemId}"]`);
-    if (activeBtn) {
-      activeBtn.classList.remove('bg-gray-600','text-white');
-      activeBtn.classList.add('bg-yellow-400','text-black');
-    }
+  // Reset all buttons to "inactive"
+  document.querySelectorAll('#system-buttons button').forEach(b=>{
+    // remove any previous active color classes + text overrides
+    b.classList.remove(...ALL_ACTIVE_CLASSES, 'text-black');
+    // set the neutral look
+    b.classList.remove('bg-yellow-400'); // old highlight if present
+    b.classList.add('bg-gray-600','text-white');
+  });
+
+  // Activate the chosen one with its per-system color
+  const activeBtn = document.querySelector(`#system-buttons [data-system="${systemId}"]`);
+  if (activeBtn) {
+    activeBtn.classList.remove('bg-gray-600','text-white');
+    const cls = ACTIVE_BTN_STYLES[systemId] || ['bg-yellow-400','text-black']; // fallback
+    activeBtn.classList.add(...cls);
   }
+}
+
   document.getElementById('system-buttons')?.addEventListener('click', (e)=>{
     const btn = e.target.closest('button[data-system]'); if (!btn) return;
     const systemId = btn.dataset.system; if (systemId === currentSystemId) return;
