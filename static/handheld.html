@@ -1009,48 +1009,65 @@ nextBtn?.addEventListener('click', () => {
     displayCurrentPage();
     updateURLState();
   }
-// Active button colors per system
-const ACTIVE_BTN_STYLES = {
-  switch:   ['bg-red-600',  'text-white'], // Switch = red
-  ps2:      ['bg-green-700','text-white'], // PS2 = dark green
-  ps3:      ['bg-black',    'text-white'], // PS3 = black
-  winlator: ['bg-sky-500',  'text-white'], // Winlator = light blue
-  wiiu:     ['bg-blue-600', 'text-white'], // Wii U = blue
-  gamehub:  ['bg-blue-900', 'text-white'], // GameHub = navy
-  psvita:   ['bg-teal-500', 'text-white'], // PS Vita = teal
+
+// ---------- Mobile-friendly system button highlighting ----------
+const SYSTEM_ACTIVE = {
+  switch:   ['bg-red-600','text-white'],    // Switch = red
+  ps2:      ['bg-green-700','text-white'],  // PS2 = dark green
+  ps3:      ['bg-black','text-white'],      // PS3 = black
+  winlator: ['bg-sky-500','text-white'],    // Winlator = light blue
+  wiiu:     ['bg-blue-600','text-white'],   // Wii U = blue
+  gamehub:  ['bg-blue-900','text-white'],   // GameHub = navy
+  psvita:   ['bg-teal-500','text-white'],   // PS Vita = teal
 };
 
-// For reliably clearing old active styles
-const ALL_ACTIVE_CLASSES = Array.from(
-  new Set(Object.values(ACTIVE_BTN_STYLES).flat())
-);
+// Neutral look for non-active buttons
+const BASE_NEUTRAL = ['bg-gray-600','text-white','hover:bg-gray-500'];
 
-  function highlightSystemButton(systemId){
-  // Reset all buttons to "inactive"
-  document.querySelectorAll('#system-buttons button').forEach(b=>{
-    // remove any previous active color classes + text overrides
-    b.classList.remove(...ALL_ACTIVE_CLASSES, 'text-black');
-    // set the neutral look
-    b.classList.remove('bg-yellow-400'); // old highlight if present
-    b.classList.add('bg-gray-600','text-white');
+// All classes we might add when active (so we can remove reliably)
+const ALL_ACTIVE = [...new Set(Object.values(SYSTEM_ACTIVE).flat())];
+
+function setActiveSystemBtn(systemId){
+  const wrap = document.getElementById('system-buttons');
+  if (!wrap) return;
+
+  wrap.querySelectorAll('button[data-system]').forEach(btn => {
+    // reset aria + classes
+    btn.setAttribute('aria-pressed','false');
+    btn.classList.remove(...ALL_ACTIVE,'text-black','bg-yellow-400');
+    // ensure neutral state for non-actives
+    BASE_NEUTRAL.forEach(c => btn.classList.add(c));
   });
 
-  // Activate the chosen one with its per-system color
-  const activeBtn = document.querySelector(`#system-buttons [data-system="${systemId}"]`);
-  if (activeBtn) {
-    activeBtn.classList.remove('bg-gray-600','text-white');
-    const cls = ACTIVE_BTN_STYLES[systemId] || ['bg-yellow-400','text-black']; // fallback
-    activeBtn.classList.add(...cls);
+  const active = wrap.querySelector(`[data-system="${systemId}"]`);
+  if (active) {
+    // remove neutral + hover so iOS "sticky hover" can't override
+    active.classList.remove(...BASE_NEUTRAL);
+    // apply system color
+    (SYSTEM_ACTIVE[systemId] || ['bg-yellow-400','text-black']).forEach(c => active.classList.add(c));
+    active.setAttribute('aria-pressed','true');
   }
 }
 
-  document.getElementById('system-buttons')?.addEventListener('click', (e)=>{
-    const btn = e.target.closest('button[data-system]'); if (!btn) return;
-    const systemId = btn.dataset.system; if (systemId === currentSystemId) return;
+// Pointer-friendly handler (works great on touch + mouse)
+(function wireSystemButtons(){
+  const wrap = document.getElementById('system-buttons');
+  if (!wrap) return;
+
+  const handler = (e) => {
+    const btn = e.target.closest('button[data-system]');
+    if (!btn) return;
+    e.preventDefault();
+    const systemId = btn.dataset.system;
+    if (!systemId) return;
     localStorage.setItem(STORAGE_KEY, systemId);
-    highlightSystemButton(systemId);
-    loadSystemData(systemId);
-  });
+    setActiveSystemBtn(systemId);
+    if (systemId !== currentSystemId) loadSystemData(systemId);
+  };
+
+  wrap.addEventListener('pointerup', handler, {passive:false});
+  wrap.addEventListener('click', handler, {passive:false});
+})();
 
   const perfFilters = document.getElementById('perf-filters');
   perfFilters?.addEventListener('click', (e)=>{
@@ -1174,7 +1191,8 @@ try {
     }
   })();
 
-  highlightSystemButton(currentSystemId);
+  // Set initial active color + data
+  setActiveSystemBtn(currentSystemId);
   loadSystemData(currentSystemId);
 });
 
