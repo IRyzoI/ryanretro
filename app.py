@@ -636,6 +636,7 @@ def post_compat(sub: CompatSubmission):
 # Debug & Admin helpers
 # --------------------------------------------------------------------------------------
 @app.get("/api/debug/where")
+@app.get("/api/debug/where")
 def debug_where(request: Request):
     token = request.query_params.get("token", "")
     if not ADMIN_TOKEN or token != ADMIN_TOKEN:
@@ -645,7 +646,9 @@ def debug_where(request: Request):
         files = os.listdir(DATA_DIR)
     except Exception:
         files = []
+
     return {"repo_dir": REPO_DIR, "data_dir": DATA_DIR, "data_files": files}
+
 
 
 @app.get("/api/debug/sample")
