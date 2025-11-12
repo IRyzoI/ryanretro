@@ -1535,3 +1535,276 @@ Retroid Pocket 5,sd865,switch,Stardew Valley,Playable,Turnip 24.3.0 9v2,Yuzu,1.5
 Retroid Pocket 5,sd865,switch,Tennis In The Face,Perfect,Turnip 24.3.0 9v2,Yuzu,1,-,2024/12/12
 Retroid Pocket 5,sd865,switch,Undead Horde,Great,Turnip 24.3.0 9v2,Yuzu,1.2.1,frame drops some times when summoning the large amt of undead,2024/12/12
 Retroid Pocket 5,sd865,switch,Windjammers 2,Perfect,Turnip 24.3.0 9v2,Yuzu,1.0.2,-,2024/12/12
+Retroid Pocket 5,sd865,switch,Trails in The Sky 1st,Unplayable,Almost all,Eden Legacy 0.3.3,,Crash main menu,2025/09/22
+Retroid Pocket 5,sd865,switch,Abzu,Perfect,Rev 9.2,Eden,,'-,2025/09/23
+Retroid Pocket 5,sd865,switch,Saints Row: The Third,Playable,Qualcomm v819.2,Eden v0.0.3 (Google Play),,"[Retroid Pocket 5 Test] - (Important to use Qualcomm Drivers, Turnip results in instant crash) Default Settings are Playable but In-Game is extremely dark (regardless of brightness setting) where everything is a silhouette. Great performance on main menu (60 fps steady), significant drop in-game (~23-30 fps stuttering).",2025/09/23
+Retroid Pocket 5,sd865,switch,Dragon Ball Xenoverse 2,Perfect,Qualcomm Driver v819.1,Eden Standart,,"Resolution between 0.75X and 1X. Runs allways at 30fps in Battle. No crashes with this Driver. Audio in ""cubeb"" mode",2025/09/23
+Retroid Pocket Flip 2,sd865,switch,Contra Operation Galuga,Perfect,GPU 0.746.0 Qualcomm,Eden,,Works Perfect without any issues.,2025/09/23
+Retroid Pocket Flip 2,sd865,switch,Mortal Kombat 1,Playable,BioSensor MK1,Eden,,Low glitches but playable 40 fps ups & down,2025/09/23
+Retroid Pocket Flip 2,sd865,switch,Super Mario Party Jamboree,Perfect,GPU 0.746.0 Qualcomm,Eden,,'-,2025/09/23
+Retroid Pocket 5,sd865,switch,MADO MONOGATARI: Fia and the Wonderous Academy,Perfect,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Eden,,"Docked Mode; Accuracy Level: Normal; Resolution: 1x; Disk Shader Cache: On; Force maximum clocks (Adreno only): On; Use Asynchronous Shaders: Off; Use Reactive Flushing: On; Vsync mode: FIFO For Eden's Veil Settings: Enable Host MMU Emulation: On; I had Enhanced Frame Pacing and Use Fast GPU Time off even though these are enabled by default if you've never used them, though they might be fine to have on and not affect anything; I had the RP5 on standard Performance Mode; I think the most important setting is Forcing Maximum Clocks and Reactive Flushing, previously if I was in Performance Mode, the FPS would drop from locked 30 to 22-23FPS and it would occasionally crash after the prologue and you have to form your first party, this happened once where it crashed the entire RP5 and the save I had done moments before didn't save at all, so having the maximum clocks on put the gameplay fairly steady at locked 30FPS, and was able to do the first tower with at least 15 minutes without any issues.
+",2025/09/24
+Retroid Pocket 5,sd865,switch,Fire Emblem Warriors,Great,Mesa Turnip Driver v25.3.0-R8,Eden v0.0.3 (Google Play),,"Handheld Mode
+
+Graphics:
+Accuracy level High
+0.75x res
+Disk shade cache on
+Vsync off
+AA off
+Anisotropic filtering default
+Window adapting filter bilinear
+
+Eden’s Veil:
+Enhanced frame pacing on
+Use fast gpu time on
+Act decoding method gpu
+Enable host mmu emulation on
+
+In high performance mode, I get around 30fps in quality mode in the game, but there are dips.
+",2025/09/24
+Retroid Pocket Flip 2,sd865,switch,Spongebob Squarepants: Battle For Bikini Bottom: Rehydrated,Great,Mesa Turnip Driver v25.3.0-R8,Citron ,,"Set game to 0.75x resolution for a better framerate. Set max clocks on and use async shaders
+
+Game doesnt appear to have any glitches or bugs and I am 3 hours in. Game runs at 40-50FPS average and 60FPS indoors. Perfectly playable and enjoyable. I havent messed around too much with other drivers but id recommend using whatever the latest Kimchi driver is. ",2025/09/24
+Retroid Pocket 5,sd865,switch,Legend of Tianding,Perfect,Qualcomm 615.65,Citron,,'-,2025/09/25
+Retroid Pocket 5,sd865,switch,Pokemon Sword,Perfect,Qualcom 819.2,Eden,,"Speed: 200%; Dock mode: on; 0.75x; Disney Shader Cache: on; Force Maximum Clocks: on; Async Shaders: on; Vsync: Off
+
+ON: Provoking Vertex + Descriptor Indexing + Sample Shading 25% + Enhanced Frame Pacing + Custom CPU Ticks (16000) + Skip CPU Inner Invalidation + Enable Host MMU + Sync Core Speed
+
+ASTC: GPU and Uncompressed; VRAM Usage: Aggressive; SpirV On Load
+
+I'm getting abut 30 to 50 fps with this settings. The RP5 is making a lot of noise but idc that much
+
+",2025/09/25
+Retroid Pocket 5,sd865,switch,Saint seiya,Perfect,Eden,Eden,,'-,2025/09/25
+Retroid Pocket 5,sd865,switch,Metroid Prime Remastered,Playable,turnip_mrpurple_T22hf-toasted (25.3.0-deve),Eden,,"Game runs great, shader stutters every now and then. I have played for a little over 1hr now and setting Extended Dynamic State to 1, graphics to 1x, handheld mode, and also force maximum clocks. I have encountered a few random crashes but since changing the above it’s not crashed but save as often as you can.",2025/09/25
+Retroid Pocket Flip 2,sd865,switch,Legend Of Zelda: Breath Of The Wild,Perfect,Mr.Purple T19,Citron,,"As of September 25th 2025 Citron is still the current best way to play BOTW! Follow my instructions to get a perfect 35-40 FPS in the open world and 60FPS in shrines
+
+- Install game update 1.6.0
+- Set resolution to 0.75x in graphic settings
+- set force maximum clocks to on
+- set use async shaders to on
+- Install the pre-configured ultracam files from this link: https://drive.google.com/file/d/11LNdPKfhLGUcuLTtknKuWq4BZBDJ3i5M/view?usp=sharing
+- Extract the file above and place the ""Ultracam"" folder in the following directory on your device Internal shared storage\Android\data\org.citron.citron_emu\files\load\01007EF00011E000
+- On your retroid go to BOTW in Citron and click on ""Add-ons"" and make sure that UltraCam is toggled on. 
+
+Tip: To fix the white water reflection bug, go near some water in the game (pond, river ect) and then save your game, Exit the game completely by closing Citron, Go back into Citron and clear the shader cache for BOTW and then load back in from the save you did earlier from near the water, you will load near the water and this time the water reflections will work properly. You will need to repeat this if you swap to any other driver in the future so just stay on Mr Purple T19. 
+
+",2025/09/26
+Retroid Pocket 5,sd865,switch,Pokemon Brilliant Diamond,Perfect,Mesa Turnip Driver V25.3.0-R9,Eden,,"Running Luminescent Platinum 2.2
+Stable @ 55-60fps, graphics accuracy level must be high or else it crashes on Rowan intro. ",2025/09/26
+Retroid Pocket 5,sd865,switch,Hades 2,Perfect,Mesa Turnip 24.3.0 R9 v2,Eden,,'-,2025/09/26
+Retroid Pocket Flip 2,sd865,switch,Ea Sports Fc 26,Unplayable,Mesa Turnip 24.3.0 R9 v2,Yuzu,,Crashes on loading screen,2025/09/26
+Retroid Pocket 5,sd865,switch,Super Mario Bros. Wonder,Perfect,Turnip v25.3.0_R7,Eden Legacy 0.0.3,,"Saw crashes gallor while using several other recommendtions listed here. I tried out Eden Legacy and turned resolution down to 75%, force max clocks, turned on asynchronous shaders and it fixed som crashes I was running into. Will it fix the whole game? ....unknown...but this seems to help me for now. ",2025/09/26
+Retroid Pocket 5,sd865,switch,Luig,Perfect,Almost all,Eden,,'-,2025/09/26
+Retroid Pocket 5,sd865,switch,Luigi's Mansion 2 Hd,Perfect,Almost all,Eden,,'-,2025/09/26
+Retroid Pocket 5,sd865,switch,Luigi's Mansion 2 Hd,Perfect,Almost all,Eden,,'-,2025/09/26
+Retroid Pocket 5,sd865,switch,Luigi's Mansion 2 Hd,Perfect,Almost all,Eden,,'-,2025/09/26
+Retroid Pocket 5,sd865,switch,Papwr Mario The Thousand Year Door,Great,Turnip 25.1.0,Eden Legacy 0.0.3,,"Mostly ran at 30 fps, sometimes dipped to 22-25 depending on what's happening. I got past the prologue and the first fight in rogueport and got into town. No visual glitches or any other issues. Eden settings were default, Mr. Purple T19 (Turnip 25.1.0) drivers used as recommended by Eden in the settings. This was in handheld mode, not docked.",2025/09/26
+Retroid Pocket 5,sd865,switch,Paper Mario: The Thousand-Year Door,Great,Turnip 25.1.0,Eden Legacy 0.0.3,,"Mostly ran at 30 fps, sometimes dipped to 22-25 depending on what's happening. I got past the prologue and the first fight in rogue port and got into town. No visual glitches or any other issues. Eden settings were default, Mr. Purple T19 (Turnip 25.1.0) drivers used as recommended by Eden in the settings. This was in handheld mode, not docked.",2025/09/26
+Retroid Pocket 5,sd865,switch,pokemon,Perfect,Mesa Turnip Driver V25.2.0-R2,Eden,,'-,2025/09/28
+Retroid Pocket 5,sd865,switch,PAC-MAN WORLD 2 Re-PAC,Perfect,Mr Purple 25.3.0 T22,Eden Legacy 0.0.3,,"58-60+
+
+Limit Speed - Off
+Docked Mode
+Resolution 0.75
+
+I have Disc Shader, Force Max Clocks and Asyc Shaders all ENABLED. I've not tested it with any other settings, just my own default ones.
+",2025/09/28
+Retroid Pocket 5,sd865,switch,Dredge,Playable,turnip_mrpurple_T22hf-toasted.adpkg,Eden,," The gameplay is practically perfect, but it occasionally crashes when transitioning between menus. It only happened once in an hour of play, and I had to close the emulator.",2025/09/29
+Retroid Pocket 5,sd865,switch,Super Mario RPG,Perfect,Qualcomm 0.746.0/Qualcomm Adreno 819.2,Sudachi,,Used Qualcomm 0.746.0 to get past the introduction and switched to Qualcomm Adreno 819.2 after. Stays mostly at a solid 60fps dropping to 57 at the lowest. ,2025/09/29
+Retroid Pocket 5,sd865,switch,Final Fantasy Tactics,Perfect,T19,Citron,,No tinkering needed. Runs with current patch or 1.0,2025/09/30
+Retroid Pocket Flip 2,sd865,switch,Helo Kitty Island Adventure,Perfect,Turnip 25.1.0,Eden,,Perfect 30 fps in handheld mode.,2025/09/30
+Retroid Pocket 5,sd865,switch,Ravenswatch,Great,Turnip 25.3.0 R7,Citron,,Plays fantastic,2025/09/30
+Retroid Pocket 5,sd865,switch,Final Fantasy Tactics :  The Ivalice Chronicles,Perfect,Turnip 25.3.0-R7,Citron,,"Install the available update for the game and it runs perfectly (not sure about beforehand, I updated before launching the first time)",2025/09/30
+Retroid Pocket 5,sd865,switch,Pipistrello and the Cursed Yoyo,Great,Qualcomm (Default),Sudachi,,"Works ALMOST perfectly, other than some slight graphical anomalies during room transitions. I was able to 100% the game, with the latest updates, with no slow downs or issues. ",2025/09/30
+Retroid Pocket Flip 2,sd865,switch,Hades,Playable,Mesa Turnip 24.3.0 R9 v2,Eden v0.0.3 (Google Play),,Game seems to be perfect but hangs when going from 1 area of crossroads to the next. A workaround is to restart the game. The real problem arises when selecting a boon in the crossroads. The game hangs after a boon is selected (for som reason not when only looking at them ). restarting the game gets you back to the start of that section which makes selecting boons impossible. So very limited play only.,2025/10/02
+Retroid Pocket Flip 2,sd865,switch,Hades 2,Perfect,Mesa Turnip 24.3.0 R9 v2,Eden v0.0.3 (Google Play),,Game seems to be perfect but hangs when going from 1 area of crossroads to the next. A workaround is to restart the game. The real problem arises when selecting a boon in the crossroads. The game hangs after a boon is selected (for som reason not when only looking at them ). restarting the game gets you back to the start of that section which makes selecting boons impossible. So very limited play only. ,2025/10/02
+Retroid Pocket 5,sd865,switch,Trails in The Sky 1st,Playable,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Citron,,"Works beyond main menu, at 15-20 fps, however. Minor glitches in first cutscene. ",2025/10/02
+Retroid Pocket 5,sd865,switch,PAC-MAN WORLD 2 Re-PAC,Perfect,Qualcomm (Default),Eden,,"System GPU Driver
+Limit Speed ON
+Docked Mode Off
+Resolution 1x
+Disk Shader Cache ON
+Force Maximum Clocks ON
+Use Async Shaders ON
+",2025/10/03
+Retroid Pocket 5,sd865,switch,New Super Mario Bros. U Deluxe,Perfect,Mesa Turnip Driver V25.3.0-R9,Sudachi,,'-,2025/10/04
+Retroid Pocket 5,sd865,switch,Hades 2,Perfect,	Mesa Turnip 24.3.0 R9 v2,Eden v0.0.3,,"As others have stated, game hangs going between screens, particularly in the crossroads. It also crashes when selecting a boon for the first time. If you transfer a save where a boon has been previously selected, you can change boons perfectly fine from then on.",2025/10/04
+Odin 2 Portal,sd8g2,switch,Naruto Ultimate Ninja Storm 2,Perfect,Mr Purple 25.3.0 T22 hot fix,Eden,,'-,2025/10/05
+Retroid Pocket 5,sd865,switch,Unpacking,Perfect,Turnip Adreno Driver 25.1.0,Eden,,"Played through the first level on Docked mode. Did not update the game. Had no issues, lags, or crashes.",2025/10/05
+Retroid Pocket 5,sd865,switch,Turnip Boy Robs a Bank,Perfect,Mesa Turnip Driver v25.3.0-R9,Eden,,Docked Mode. Did not update the game. I robbed the bank 6 times and I had no lags or crashes,2025/10/05
+Retroid Pocket 5,sd865,switch,Captain Toad Treasure Tracker ,Perfect,Mr.Purple T19,Eden v0.0.3,,Runs Great between 60 fps all of time,2025/10/05
+Retroid Pocket 5,sd865,switch,Final Fantasy Tactics The Ivalice Chronicles ,Perfect,Mr purple 19,Sudachi,,Docked mode. 1080p runs basically flawless. Have about 20 hours so far. I just got to Dorter Trade City. 😤,2025/10/06
+Retroid Pocket 5,sd865,switch,Lego Party,Unplayable,Almost all,Eden v0.0.3,,chrashes by start,2025/10/06
+Retroid Pocket 5,sd865,switch,Super dragón ball heroes,Perfect,Eden,Eden,,'-,2025/10/07
+Retroid Pocket 5,sd865,switch,Sonic racing: crossworlds,Playable,Mesa Turnip Driver V25.2.0-R2,Eden,,"Version 1.12
+Dock mode: off
+Resolution: 0.5x
+Disk sahder cache; force maximum clocks; use asynchronous shaders: on
+Vsync: off
+Window adapting filter: Nearest Neighbor
+Provoking vertex; descriptor indexing: on
+DMA Level: high
+Enhances frame pacing: on
+ASTC Decoding Method: GPU
+ASTC Recompression Method: BC1
+VRAM Usage Mode: Aggressive
+Optimize Spir-V Output: Always
+Skip CPU Inner Invalidation, Enable Host MMU Emulation; Enable LRU Cache; Synchronize Core Speed: on
+
+Could finnish the first race with stutterings and crashed at the scoreboard. If you really want to play it, that's the way to go (unless there's a better option lmao)
+",2025/10/07
+Retroid Pocket 5,sd865,switch,Yokai Watch 4,Great,Kimchi driver v25.3.0 r10,Eden Legacy 0.0.3,,game runs a consistent 30 fps most areas I’ve gotten to the human model yokai boss fight so far) cutscenes are playable with minor dips recommended to have an overclocked unit and overclock turned on in Eden settings,2025/10/08
+Retroid Pocket 5,sd865,switch,Mario,Perfect,Almost all,Eden,,'-,2025/10/08
+Retroid Pocket 5,sd865,switch,Yokai Watch 4,Great,Kimchi driver v25.3.0 r11,Eden Nightly 27799 legacy,,"(Overclocked @preformance mode/ smart fan enabled)
+Preforms perfect in most areas of the game including inside buildings, battles, and overworld the only place stopping it from getting a perfect score is cutscenes but they are still watchable with little notice in dips unlike before.",2025/10/09
+Retroid Pocket 5,sd865,switch,Conscript,Perfect,Mesa Turnip 24.3.0 R9 v2,Eden,,Flawless,2025/10/09
+Retroid Pocket 5,sd865,switch,Super Mario Bros. Wonder,Perfect,Almost all,Eden v0.0.3,,'-,2025/10/09
+Retroid Pocket 5,sd865,switch,Bioshock Remastered,Great,Mr.Purple T19,Eden v0.0.3,,"Make sure to enable adreno maximum clocks and put the accuracy level on high. I think the rest is ""optional"" to change or not. But, I'd put the ASTC Decoding Method on GPU, VRAM Usage on aggressive and Optimize Spir V on On Load or Always",2025/10/12
+Retroid Pocket 5,sd865,switch,Final Fantasy Xii,Perfect,Turnip driver v25.3.0-T22-1.4.325,Eden,,"Resolution 1x, Disk Shader Cache, FIFO on, FSR 25%, NCE",2025/10/12
+Retroid Pocket 5,sd865,switch,LAPIN,Perfect,Turnip 24.2.0 R20,Eden,,'-,2025/10/12
+Retroid Pocket Flip 2,sd865,switch,Absolum,Perfect,Turnip 24.3.4-Unified (@Mr_Purple_666),Eden,,Perfect 60 fps in docked mode,2025/10/12
+Retroid Pocket Flip 2,sd865,switch,Call Of Duty - Black Ops II,Perfect,mesa turnip 25.2.0-r5,,,'-,2025/10/13,Yes
+Retroid Pocket 5,sd865,switch,No Man's Sky,Unplayable,Qualcomm Adreno 819.2,Eden v0.0.3,,The game opens but has a lot of graphical glitches. Tried changing some settings on Eden's Veil and the best I got was a lot of graphical glitches running at 10/16 FPS. Wait Eden 0.4 or try on another emulator (or even gamehub),2025/10/14
+Retroid Pocket 5,sd865,switch,Rush Rally Origins,Unplayable,Mesa Turnip Driver V25.3.0-R9,Eden,,"Graphics all over the place, only car and trees looks good",2025/10/14
+Retroid Pocket 5,sd865,switch,Rush Rally Origins,Unplayable,default,Eden,,"Graphics all over the place, only car and trees looks good",2025/10/14
+Retroid Pocket 5,sd865,switch,#DRIVE,Perfect,default,Eden,,'-,2025/10/14
+Retroid Pocket 5,sd865,switch,Crashlands,Perfect,BioSensor MK1,Eden,,Runs smooth 60fps,2025/10/14
+Retroid Pocket Flip 2,sd865,switch,GNOSIA,Perfect,Turnip Adreno Driver 25.1.0-devel-Unified (@My_Purple_666),Eden Legacy 0.0.3,,It closed a few times after turning the screen off and later back on but never during the actual gameplay.,2025/10/14
+Retroid Pocket 5,sd865,switch,Metroid Prime Remastered,Playable,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Eden Standart,,'-,2025/10/15
+Retroid Pocket 5,sd865,switch,Pokemon Legends: ZA,Great,Turnip v25.3.0_R7,Eden,,"Playable at 0.5 resolution, experience significant lag at some scenes but mostly run at around 25 fps. Cutscenes seems to run a lot slower. 0.75 resolution seems to crash the game. Text and textures are still okay enough, but it definitely is not as good as the actual switch itself ",2025/10/15
+Retroid Pocket Flip 2,sd865,switch,Monster Sanctuary,Perfect,Mesa Turnip 24.3.0 R9 v2,Yuzu,,Flawless and phenomenal,2025/10/15
+Retroid Pocket 5,sd865,switch,Pokemon Legends: Z-A,Great,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Eden,,"Handheld Mode
+Resolution: 0.75X
+
+Runs at 30 fps with some graphical glitches",2025/10/16
+Retroid Pocket 5,sd865,switch,Pokemon Legends : Z-A,Playable,Turnip Driver Adreno Driver 25.1.0-devel-Unified (@Mr_Purple_666),Eden Legacy 0.0.3,,"Im surprised this works out of the box..atleast set it to High performance mode tho
+
+you can only use this specific driver to run and rerun it from a save...using other version will crash upon opening the game
+
+Ok so there are graphical glitches, alot of sprites are missing
+
+mainly the eye pupils are missing for EVERYTHING
+
+not so stable 30fps",2025/10/16
+Retroid Pocket 5,sd865,switch,Pokemon Legends : Z-A,Great,turnip_mrpurple-T19-toasted.adpkg,Eden v0.0.3,,"Settings:
+
+Emulator: Latest Eden Nightly build.
+
+Firmware: 20.1.0 Prod Keys: 20.1.0, but 20.3.0 is literally identical.
+
+Drivers: Mr Purple's T19
+
+No other settings changed, tried some different settings to fix the slight flickering/visual bugs, but no luck, it just tanked my fps. Flickering isn't really that noticeable anyway. ",2025/10/16
+Retroid Pocket 5,sd865,switch,Kingdoms of Amalur Re-Reckoning,Perfect,Mr purple 19,Eden,,Launches and plays without issue. Will update as I play though heavily ,2025/10/17
+Retroid Pocket 5,sd865,switch,Dig,Perfect,Almost all,Citron,,'-,2025/10/17
+Retroid Pocket 5,sd865,switch,The Bridge Curse Road to Salvation,Great,Mesa Turnip Driver 24.2.0 R20,Eden v0.0.3,,30fps,2025/10/18
+Retroid Pocket Flip 2,sd865,switch,New Super Mario Bros. U + New Super Luigi U,Perfect,Turnip 25.2.0,,,'-,2025/10/18,Yes
+Retroid Pocket 5,sd865,switch,Pokemon Legends Z-A ,Great,Turnip Adreno Driver 25.1.0-devel-Unified (@My_Purple_666),Eden 0.0.3 Optimized,,"Async shaders on
+Max GPU clock
+Dis shaders cache on
+Vsgnc: Fifo(on)
+Enable LRU Cache on
+Docked off
+1x resolution 
+Update v1.01
+It's honestly nearly perfect except the random graphical stuttering but it's not bad at all. 
+I get 30 fps with slight slow downs but nothing ever dips low enough to notice but I haven't beat the game. Not to say I won't or couldn't with these settings",2025/10/18
+Retroid Pocket Flip 2,sd865,switch,Super Mario World 3d,Perfect,Turnip 25.2.0,,,'-,2025/10/18,Yes
+Retroid Pocket 5,sd865,switch,Pokemon Legends : Z-A,Great,Turnip 25.0.0 R8 K11MCH1,Eden Legacy 0.0.3,,"High performance mode required
+Firmware 20.5.0, Keys 20.3.0
+Have gotten to rank E so far while doing all available side quests
+Canari rank up match consistently crashes, set CPU and GPU accuracy to ""High"" during her fight to get past it",2025/10/19
+Retroid Pocket 5,sd865,switch,mortal kombart,Perfect,mesa turnip 25.2.0-r5,Eden,,'-,2025/10/19
+Odin 2 Portal,sd8g2,switch,Hollow Knight Silksong,Perfect,System GPU driver,Eden,,'-,2025/10/20
+Retroid Pocket 5,sd865,switch,Wizordium,Perfect,Mr purple 19,Citron,,60fps and runs SO SMOOTH!,2025/10/21
+Retroid Pocket Flip 2,sd865,switch,Twilight Monk,Playable,Mr.Purple T19,Eden,,Sometime it crash on a loading. There is some glitch also (white shader or light not working properly) and loading quite long but it's playable if you save often,2025/10/21
+Retroid Pocket 5,sd865,switch,BAllXPit,Unplayable,Mr Purple 25.3.0 T22,Eden,,Only get a black screen when launching the game. Tried different Mr Purple and Qualcomm drivers.,2025/10/22
+Retroid Pocket 5,sd865,switch,The Cosmic Wheel Sisterhood,Perfect,Turnip 24.1.0 R18,Eden 0.0.2-pre-alpha,,Game stuttered on first load but played great after restarting the handheld.,2025/10/22
+Retroid Pocket 5,sd865,switch,Pokemon Legends: Arceus,Perfect,Default driver,Eden,,'-,2025/10/24
+Retroid Pocket 5,sd865,switch,Pokemon Shield,Perfect,GPU 0.746.0 Qualcomm,Eden v0.0.3,,'-,2025/10/24
+Retroid Pocket 5,sd865,switch,tony hawk pro skater 1+2,Perfect,Mr Purple 25.3.0 T22,Eden,,'-,2025/10/25
+AYN Thor,sd8g2,switch,Outer wilds,Unplayable,Almost all,Eden,,Vidéo Glitches…threes are yellow.tried on Eden and citron ,2025/10/26
+Retroid Pocket Flip 2,sd865,switch,Mario Kart 8 Deluxe,Perfect,Mesa Turnip Driver 24.2.0 R20,Eden,,'-,2025/10/26
+Odin 2 Portal,sd8g2,switch,Celeste,Perfect,Mr Purple 25.3.0 T22 hot fix,Eden Legacy 0.3.3,,Plays great docked 60fps,2025/10/26
+Odin 2 Portal,sd8g2,switch,Tunic,Perfect,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Eden Legacy 0.3.3,,"played 1 hour, no problem stable 60 Docked, one colour glitch after campfire",2025/10/26
+Odin 2 Portal,sd8g2,switch,Absolum,Perfect,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Eden Legacy,,Runs flawless docked mode,2025/10/26
+AYN Thor,sd8g2,switch,deathsmiles 1&2,Perfect,Mr Purple 25.3.0 T22,Eden,,works perfectly,2025/10/26
+AYN Thor,sd865,switch,Dodonpachi Dai Ou Jou,Perfect,Mr Purple 25.3.0 T22,Eden,,'-,2025/10/26
+AYN Thor,sd865,switch,Dodonpachi Resurrection,Perfect,Mr Purple 25.3.0 T22,Eden,,'-,2025/10/26
+AYN Thor,sd865,switch,Dodonpachi Sai Dai Ou Jou,Perfect,Mr Purple 25.3.0 T22,Eden,,'-,2025/10/26
+AYN Thor,sd865,switch,Shinobi art of vengeance,Unplayable,Almost all,Eden ,,Won't boot at all in eden and citron,2025/10/26
+AYN Thor,sd865,switch,Shinobi: Art Of Vengance,Unplayable,Default driver,Citron,,Won't boot at all in eden and citron,2025/10/26
+AYN Thor,sd865,switch,Super Mario Galaxy 2,Great,default,Citron,,Few drops when shaders compile but don't crash like in eden,2025/10/26
+AYN Thor,sd8g2,switch,Sonic Mania,Perfect,Default driver,Eden,,'-,2025/10/26
+AYN Thor,sd8g2,switch,Tony Hawk's Pro Skater 1+2,Perfect,Mr Purple 25.3.0 T22,Eden,,"Only played the first stage but played well, in the beginning some frame skips as shaders compiled, after ran well. ",2025/10/27
+Retroid Pocket 5,sd865,switch,Pokemon Sword,Perfect,Mesa Turnip 24.3.0 R9 v2,Sudachi,,"XCI works perfectly.
+NSP does crashes when making character, can just import save to fix this.",2025/10/28
+Retroid Pocket 5,sd865,switch,Hot Wheels Unleashed,Great,turnip_mrpurple-T19-toasted.adpkg,Eden 0.0.4,,"Disk Shader Cache: On, Asynchronous Shaders: On. Some fps drops but enjoyable.",2025/10/28
+Retroid Pocket 5,sd865,switch,The Mummy Demastered,Perfect,Turnip Adreno Driver 25.1.0-devel-Unified (@My_Purple_666),Eden,,"No issues, 2-D Metroidvania",2025/10/28
+Retroid Pocket 5,sd865,switch,Once upon a katamari,Perfect,Qualcom Adreno 819.2,Citron,,'-,2025/10/28
+Retroid Pocket 5,sd865,switch,Ys X Nordics,Great,Turnip 25.3.0,Eden 0.0.4,,'-,2025/10/29
+Retroid Pocket 5,sd865,switch,Ys X Nordics (rev2),Great,Mesa turnip driver 26.0-R1,Eden,,"Use EDEN 0.0.4 rc1 OPTIMIZED to avoid texture issue and game freeze
+
+Game plays great and u can also increase game speed up to 50-60 fps",2025/10/29
+Retroid Pocket 5,sd865,switch,Ninja Gaiden Sigma 2,Playable,Turnip 24.3.0 9v2,Eden,,"Tested on both Eden v0.0.4 and Sudachi using the same drivers for both emulators.
+
+The game runs fine-ish with dips into the 40s but stays at a consistent 50 to 60 FPS. Once you get to the Water Capital on Chapter 6 the game tanks hard (probably due to all the water and open spaces) It will rarely go above 20 FPS. Subsequent levels share a similar layout so I think it's safe to assume that performance might still be subpar even if you push through this level. ",2025/10/30
+Retroid Pocket 5,sd865,switch,Ball X Pit,Perfect,Qualcomm,Eden 0.0.4 rc1,,Default settings with Eden 0.0.4 - appears to work perfectly (not tested past a couple of quick runs).  Eden 0.0.3 and other emulators would get a black screen on load,2025/10/30
+Retroid Pocket 5,sd865,switch,ShapeHero Factory,Perfect,Qualcomm,Eden 0.0.4 rc1,,"Default settings appear to work perfectly, but not tested extensively.  Anything before Eden 0.0.4 would get a black screen on loading",2025/10/30
+Retroid Pocket 5,sd865,switch,Cobalt Core,Unplayable,"Qualcomm, Turnip 9v2","Eden 0.0.4, Eden 0.0.3, Sudachi, Citron 0.8",,Tried several configurations of drivers and emulators - everything gets to a partial blue loading bar and then a freeze/crash,2025/10/30
+Retroid Pocket Flip 2,sd865,switch,The Great Ace Attorney Chronicles,Perfect,Turnip,Yuzu,,"Runs pretty much perfectly, just gave across 2 crashes during cutscenes across the 7 cases I've played, but other than that its perfect.",2025/10/30
+Odin 2 Portal,sd8g2,switch,Final Fantasy Tactics Ivalice,Perfect,,Eden .4 rc1,,'-,2025/10/31,1920x1080,NTSC
+Retroid Pocket 5,sd865,switch,Mortal Kombat Legacy Kollection,Perfect,System GPU driver,Eden Legacy 0.0.4,,'-,2025/10/31
+Retroid Pocket 5,sd865,switch,Ball X Pit,Perfect,System GPU driver,Eden Legacy 0.0.4,,'-,2025/10/31
+Retroid Pocket 5,sd865,switch,Plants vs Zombies: Replanted,Perfect,Mesa Turnip 24.3.0 R9 v2,Eden Legacy 0.0.4,,'-,2025/10/31
+Retroid Pocket 5,sd865,switch,Heretic + Hexen,Perfect,System GPU driver,Eden Legacy 0.0.4,,'-,2025/10/31
+AYN Thor,sd8g2,switch,Final Fantasy Tactics Ivalice Chronicles,Perfect,Mr Purple 25.3.0 T22,Eden (0.4),,Including game update 1.2. Ran perfectly on here and citron,2025/10/31
+AYN Thor,sd8g2,switch,Little Nightmares Ii,Perfect,Turnip Adreno Driver T22-hotfix (@Mr_Purple_666),Eden,,'-,2025/10/31
+Retroid Pocket 5,sd865,switch,Lollipop Chainsaw Repro,Playable,Mr.Purple T19,Citron,,"It's amazing that it even runs, but it has tons of painful stuttering and FPS dips constantly throughout the gameplay. Playable, but Painful",2025/10/31
+AYN Thor,sd8g2,switch,The Legend Of Zelda: Tears Of The Kingdom,Perfect,Eden,Eden,,'-,2025/10/31
+Retroid Pocket 5,sd865,switch,Mortal Kombat 1,Great,Mr.Purple T19,Eden 0.0.4 rc1,,Con Resolucion X1,2025/11/01
+Retroid Pocket 5,sd865,switch,Pokemon Legends Z-A,Great,Turnip Adreno Driver 25.1.0-devel-Unified (@My_Purple_666),Eden .4 rc1,,'-,2025/11/01
+AYN Thor,sd8g2,switch,Outer wilds ,Perfect,Mesa turnip driver V25.2. -R11 Auto,Citron,,"Played the first part at full resolution everything was perfect no shader issues or glitches.
+
+Using the lasted Citron as of Nov 1st, 2025 
+Docked mode 
+With Mesa turnip driver V25.2. -R11 Auto
+
+",2025/11/02
+Retroid Pocket 5,sd865,switch,No More Heroes,Unplayable,"Qualcomm, Turnip 9v2",Eden Legacy 0.0.4,,Crashes,2025/11/02
+Retroid Pocket 5,sd865,switch,Pokemon Legends: Arceus,Perfect,Eden,Eden,,'-,2025/11/02
+Retroid Pocket 5,sd865,switch,Fire Emblem: Three Houses,Perfect,Kimchi driver v26.0.0 R2,Citron,,Best setting. Good sound. 30fps ,2025/11/02
+Retroid Pocket Flip 2,sd865,switch,Super Mario Galaxy,Perfect,Default driver,Eden 0.0.4,,opening plays good w/out drivers (turnip drivers = frame drops) only played opening sequence so far,2025/11/03
+Retroid Pocket Flip 2,sd865,switch,Super Mario Galaxy 2,Perfect,Default driver,Eden 0.0.4,,Only played opening played well w/out drivers (turnip drivers = framedrops),2025/11/03
+Retroid Pocket 5,sd865,switch,West of Dead,Perfect,Mesa Turnip 24.3.0 R9 v2,Sudachi,,Runs perfect 60FPS,2025/11/04
+Retroid Pocket 5,sd865,switch,Life Is Strange: Before The Storm Remastered,Perfect,turnip_mrpurple T19,Eden v0.0.3,,Runs at a perfect 30 frames ,2025/11/04
+Retroid Pocket 5,sd865,switch,Portal,Perfect,turnip_mrpurple T19,Eden v0.0.3,,"Each room takes a moment to load, but the game ran at 60fps with no crashes",2025/11/04
+Retroid Pocket 5,sd865,switch,Monster Prom XXL,Perfect,turnip_mrpurple T19,Eden v0.0.3,,"No issues, but download 1.3 update to avoid save corruption (not the fault of the emulator) ",2025/11/04
+Retroid Pocket 5,sd865,switch,Biped 2,Unplayable,Multiple,Eden 0.0.4 Optimized,,"Game starts and plays well, but crashes after first tutorial level and save is lost. So at least nice to try it as a demo ;-)",2025/11/05
+Retroid Pocket 5,sd865,switch,Attack on Titan 2 The Final Battle,Perfect,Default driver,Citron,,"1x, asynchronous shaders on, and force maximum clocks on",2025/11/06
+Retroid Pocket 5,sd865,switch,Resident Evil,Perfect,Turnip,Eden,,'-,2025/11/06
+Retroid Pocket 5,sd865,switch,Sea Of Stars,Perfect,Qualcomm,Eden 0.0.4,,"Runs perfectly, no more crashes on light puzzle part",2025/11/06
+AYN Thor,sd8g2,switch,Portal 2,Perfect,Qualcomm 0.676.53,Citron,,Nice 60fps Docked on default setting,2025/11/06
+AYN Thor,sd8g2,switch,Super Mario Bros. Wonder,Perfect,Mesa Turnip 24.3.0 R9 v2,Citron,,"With the driver i recommended it runs pretty solid at 50-60FPS never really dropping during game play.
+Also no need for force max clock speeds it runs great default! ",2025/11/07
+Retroid Pocket Flip 2,sd865,switch,Apollo Justice: Ace Attorney Trilogy,Playable,GPU system driver Qualcomm 0.746.0,Eden .4 rc1,,"Stable 30fps throughout, but some issues with 3D rendering (some pieces of evidence in the court record can flicker or occasionally disappear/3D rendered scenes may be invisible)",2025/11/07
+Retroid Pocket 5,sd865,switch,My time at Sandrock,Great,GPU 0.746.0 Qualcomm,Eden Legacy 0.0.4,,"Graphics: .75, anti aliasing: Off | Runs at a decent 25~30 fps",2025/11/07
+Retroid Pocket 5,sd865,switch,MLB The Show 25,Playable,Mr.Purple T19,Sudachi,,"FPS bounces between 20-30 FPS but it's playable for sure. Handheld mode, 1x. Can turn it down to .75x but the performance to quality tradeoff not worth it IMO. It works on Citron as well with the same setup but is ~5 FPS worse on there. Eden (legacy and regular) crashes on startup no matter the driver.",2025/11/07
+Retroid Pocket 5,sd865,switch,Persona 4 Arena Ultimax,Perfect,Turnipdriver v24.1.0 - R18,Eden,,perfectly smooth with no fps drop or crash even in docked mode,2025/11/07
+Retroid Pocket 5,sd865,switch,Borderlands 2,Perfect,Mesa Turnip 24.3.0 R4,Yuzu 2921a2426,,Only works with Yuzu 2921a2426,2025/11/07
+Retroid Pocket 5,sd865,switch,Hades,Perfect,Almost all,Eden,,'-,2025/11/08
+Odin 3,sd8elite,switch,Hollow Knight Silksong,Perfect,System,Eden,,'-,2025/11/08
+Retroid Pocket 5,sd865,switch,Castle Crashers,Unplayable,turnip_mrpurple T19,Citron,,Sound but no picture,2025/11/09
+Retroid Pocket 5,sd865,switch,Chicory: A Colorful Tale,Perfect,Mr.Purple T19,Citron,,'-,2025/11/09
+Retroid Pocket 5,sd865,switch,Children of Morta,Perfect,Mr.Purple T19,Citron,,Failed to boot first time but ran perfectly on second boot,2025/11/09
+Retroid Pocket 5,sd865,switch,Cocoon,Unplayable,Mr.Purple T19,Citron,,"Screen flicker, to black. Loading screen appears. Crashes when loading bar nearly full.",2025/11/09
+Retroid Pocket 5,sd865,switch,Cookie Cutter,Perfect,Mr.Purple T19,Citron,,'-,2025/11/09
+Retroid Pocket 5,sd865,switch,Tony Hawk's Pro Skater 1+2,Unplayable,Mr.Purple T19,Citron,,Loads perfectly but crashes on launch of level,2025/11/09
+Retroid Pocket 5,sd865,switch,Tony Hawk's Pro Skater 1+2,Perfect,Mr Purple 25.1.0-devel-Unified,Sudachi,,Silky smooth,2025/11/09
+Retroid Pocket 5,sd865,switch,Mario Kart 8 Deluxe,Unplayable,Mr Purple 25.1.0-devel-Unified,Citron,,Hard crashes console on load of Sunshine Airport,2025/11/09
+Retroid Pocket 5,sd865,switch,Zelda breath of wilde,Great,Turnip,Citra,,'-,2025/11/09
+Retroid Pocket Flip 2,sd865,switch,.hack//g.u. Last Recode,Perfect,Almost all,Cemu,,'-,2025/11/10
+Retroid Pocket 5,sd865,switch,Voidwrought,Perfect,Turnip 24.3.0 9v2,Eden 0.0.4,,'-,2025/11/10
+Retroid Pocket 5,sd865,switch,ShapeHero Factory,Playable,Qualcomm,Eden 0.0.4 rc1,,"Appears to perform well but freezes on game end or on defeating the main boss.  All the progression between runs is there, but this prevents access to postgame content like secret/endless levels.  A shame - it's almost perfect",2025/11/11
