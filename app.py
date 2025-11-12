@@ -801,6 +801,21 @@ def serve_guide(slug: str):
 def root():
     return RedirectResponse(url="/static/index.html")
 
+
+from fastapi import UploadFile, Form
+
+@app.post("/admin/upload-csv")
+async def upload_csv(file: UploadFile, system: str = Form(...), request: Request):
+    token = request.query_params.get("token", "")
+    if token != os.getenv("ADMIN_TOKEN", ""):
+        raise HTTPException(status_code=403, detail="Forbidden")
+    dst = os.path.join(DATA_DIR, f"{system}.csv")
+    contents = await file.read()
+    with open(dst, "wb") as f:
+        f.write(contents)
+    return {"ok": True, "path": dst, "size": len(contents)}
+    
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8080")))
