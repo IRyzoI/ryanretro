@@ -801,18 +801,20 @@ def serve_guide(slug: str):
 def root():
     return RedirectResponse(url="/static/index.html")
 
-@app.put("/admin/upload-csv-raw")
-async def upload_csv_raw(request: Request, system: str):
-    token = request.query_params.get("token", "")
-    if token != os.getenv("ADMIN_TOKEN", ""):
-        raise HTTPException(status_code=403, detail="Forbidden")
-    dst = os.path.join(DATA_DIR, f"{system}.csv")
-    contents = await request.body()
-    if not contents:
-        raise HTTPException(status_code=400, detail="Empty body")
-    with open(dst, "wb") as f:
-        f.write(contents)
-    return {"ok": True, "path": dst, "size": len(contents)}
+#uncomment this section when updating CSVs
+
+# @app.put("/admin/upload-csv-raw")
+# async def upload_csv_raw(request: Request, system: str):
+#     token = request.query_params.get("token", "")
+#     if token != os.getenv("ADMIN_TOKEN", ""):
+#         raise HTTPException(status_code=403, detail="Forbidden")
+#     dst = os.path.join(DATA_DIR, f"{system}.csv")
+#     contents = await request.body()
+#     if not contents:
+#         raise HTTPException(status_code=400, detail="Empty body")
+#     with open(dst, "wb") as f:
+#         f.write(contents)
+#     return {"ok": True, "path": dst, "size": len(contents)}
 
 
 if __name__ == "__main__":
