@@ -6,3 +6,4 @@ markdown
 pydantic>=2
 sqlalchemy>=2
 psycopg2-binary>=2.9
+python-multipart
