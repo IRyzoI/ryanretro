@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Switch + Windows Benchmarks | Ryan Retro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Retro + body fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            retro: ['"Press Start 2P"', 'cursive'],
+            body: ['Roboto', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Device header colors */
+    .device-rp5   { background:#42b849; color:#0b130b; }
+    .device-g2    { background:#ffd76a; color:#1b1507; }
+    .device-odin  { background:#57c4ff; color:#041019; }
+    .device-konkr { background:#ff9966; color:#1b0e06; }
+    .device-fold  { background:#ff6b80; color:#1b0508; }
+
+    /* Main data table */
+    .rr-table {
+      border-radius: 1rem;
+      overflow: hidden;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .rr-table th,
+    .rr-table td {
+      border: none;
+      padding: 0.5rem 0.5rem;
+    }
+    .rr-table th {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: .8rem;
+    }
+
+    /* Make headers clickable for sorting */
+    .rr-table th.sortable {
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    /* No icon if not sorted */
+    .rr-table th.sortable::after {
+      content: '';
+    }
+    .rr-table th.sortable[data-sort-dir="asc"]::after {
+      content: '▲';
+      font-size: 0.65em;
+      opacity: 0.8;
+      margin-left: 0.3rem;
+    }
+    .rr-table th.sortable[data-sort-dir="desc"]::after {
+      content: '▼';
+      font-size: 0.65em;
+      opacity: 0.8;
+      margin-left: 0.3rem;
+    }
+
+    /* Zebra rows (dark theme) – now includes Game column too */
+    .rr-table tbody tr:nth-child(odd) td {
+      background:#0f0a20;
+    }
+    .rr-table tbody tr:nth-child(even) td {
+      background:#171129;
+    }
+    
+    /* Game column purple backgrounds */
+.rr-table thead .game-col-header {
+  background:#453f7f;
+  color:#f9fafb;
+}
+
+.rr-table tbody tr:nth-child(odd) td.game-col {
+  background:#675eb5;
+  color:#f9fafb;
+}
+
+.rr-table tbody tr:nth-child(even) td.game-col {
+  background:#564898;
+  color:#f9fafb;
+}
+
+
+    /* Simple game column – no sticky, no special background */
+    .game-col {
+      white-space: nowrap;
+      color:#fff;
+    }
+
+    /* Highlight best value cell */
+    .rr-table td.best-cell {
+      background:#4ade80 !important;
+      color:#052e16;
+      font-weight: 700;
+    }
+
+    /* Pixel frame */
+    .pixel-border {
+      border: 4px solid #000;
+      box-shadow: 8px 8px 0 rgba(0,0,0,0.35);
+      border-radius: 1.25rem;
+    }
+
+    /* Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0b051f; border-radius: 999px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 999px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+    /* Vertical lines for all columns */
+    .rr-table td,
+    .rr-table th {
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+    .rr-table td:last-child,
+    .rr-table th:last-child {
+      border-right: none;
+    }
+
+    /* Mini mode for mobile: tighter, smaller, hide chipset line */
+    .mini-mode .rr-table th,
+    .mini-mode .rr-table td {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      font-size: 0.65rem;
+    }
+    .mini-mode .rr-table th span {
+      display: none; /* hides the (865), (G2 Gen 2) chip text */
+    }
+
+    /* Column + mode toggle button styles – simple, themed */
+    .device-toggle,
+    .mode-toggle {
+      border-radius: 999px;
+      border-width: 1px;
+      padding: 0.25rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background:#020617;
+      border-color:#4b5563;
+      color:#e5e7eb;
+      opacity:0.75;
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        opacity 0.15s ease,
+        transform 0.1s ease;
+    }
+
+    .device-toggle:hover,
+    .mode-toggle:hover {
+      transform: translateY(-1px);
+      opacity: 1;
+    }
+
+    .device-toggle.on,
+    .mode-toggle.on {
+      opacity: 1;
+    }
+
+    .device-toggle.off,
+    .mode-toggle.off {
+      opacity: 0.45;
+      color:#9ca3af;
+      border-color:#4b5563;
+      background:#020617;
+    }
+
+    /* Per-device colour accents (ON states) */
+    .toggle-rp5.on {
+      border-color:#42b849;
+      background:rgba(66,184,73,0.18);
+      color:#bbf7d0;
+    }
+
+    .toggle-g2.on {
+      border-color:#ffd76a;
+      background:rgba(255,215,106,0.16);
+      color:#fef9c3;
+    }
+
+    .toggle-odin.on {
+      border-color:#57c4ff;
+      background:rgba(87,196,255,0.16);
+      color:#e0f2fe;
+    }
+
+    .toggle-konkr.on {
+      border-color:#ff9966;
+      background:rgba(255,153,102,0.18);
+      color:#ffedd5;
+    }
+
+    .toggle-fold.on {
+      border-color:#ff6b80;
+      background:rgba(255,107,128,0.18);
+      color:#ffe4e6;
+    }
+
+    /* Mode toggle accents */
+    .mode-all.on {
+      border-color:#a855f7;
+      background:rgba(168,85,247,0.25);
+      color:#e9d5ff;
+    }
+
+    .mode-switch.on {
+      border-color:#ef4444;
+      background:rgba(239,68,68,0.25);
+      color:#fee2e2;
+    }
+
+    .mode-windows.on {
+      border-color:#38bdf8;
+      background:rgba(56,189,248,0.22);
+      color:#e0f2fe;
+    }
+  </style>
+</head>
+
+<body class="bg-[#0b051f] min-h-screen flex flex-col text-slate-100 font-body">
+  <div class="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex-1">
+
+    <!-- Header -->
+    <header class="flex items-center gap-4 mb-8">
+      <a href="/static/index.html" class="shrink-0">
+        <img
+          src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+          alt="Ryan Retro logo"
+          class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl shadow-xl"
+        />
+      </a>
+      <div>
+        <h1 class="text-xl sm:text-2xl lg:text-3xl font-retro text-yellow-300 tracking-tight leading-tight">
+          BENCHMARKS
+        </h1>
+        <p class="text-sm sm:text-base text-slate-300 mt-2">
+          Comparing the power of Snapdragon chipsets across various systems.
+        </p>
+      </div>
+    </header>
+
+    <!-- MAIN TABLE CARD -->
+    <section id="benchCard" class="bg-slate-900/90 backdrop-blur rounded-2xl border border-slate-700/80 shadow-2xl shadow-black/70 p-4 sm:p-6 mb-8 pixel-border">
+      <!-- Mode toggles -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div class="flex flex-wrap items-center gap-2 text-[0.7rem]">
+          <span class="text-slate-400 mr-1 leading-none">View:</span>
+          <button type="button" class="mode-toggle mode-all on" data-mode="combined" aria-pressed="true">
+            All
+          </button>
+          <button type="button" class="mode-toggle mode-switch off" data-mode="switch" aria-pressed="false">
+            Switch
+          </button>
+          <button type="button" class="mode-toggle mode-windows off" data-mode="windows" aria-pressed="false">
+            Windows
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 text-[0.7rem]">
+          <span class="text-slate-400 mr-1 leading-none">Tools:</span>
+          <!-- Toggle highlight button -->
+          <button
+            id="toggleHighlight"
+            type="button"
+            class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-3 py-2 rounded-full border border-emerald-400 text-emerald-300 bg-slate-900/70 hover:bg-emerald-500 hover:text-slate-900 transition shadow-sm"
+            aria-pressed="false"
+          >
+            💡 Highlight best per row: OFF
+          </button>
+
+          <!-- Mini mode button -->
+          <button
+            id="toggleMiniMode"
+            type="button"
+            class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-3 py-2 rounded-full border border-sky-400 text-sky-300 bg-slate-900/70 hover:bg-sky-400 hover:text-slate-900 transition shadow-sm"
+            aria-pressed="false"
+          >
+            📱 Mini mode (mobile): OFF
+          </button>
+        </div>
+      </div>
+
+      <!-- Column toggles -->
+      <div class="flex flex-wrap items-center gap-2 mb-3 text-[0.7rem]">
+        <span class="text-slate-400 mr-1 leading-none">Show devices:</span>
+        <button type="button" class="device-toggle toggle-rp5 on" data-col-index="1" aria-pressed="true">
+          RP5
+        </button>
+        <button type="button" class="device-toggle toggle-g2 on" data-col-index="2" aria-pressed="true">
+          G2
+        </button>
+        <button type="button" class="device-toggle toggle-odin on" data-col-index="3" aria-pressed="true">
+          Odin 2
+        </button>
+        <button type="button" class="device-toggle toggle-konkr on" data-col-index="4" aria-pressed="true">
+          Konkr
+        </button>
+        <button type="button" class="device-toggle toggle-fold on" data-col-index="5" aria-pressed="true">
+          Fold 7
+        </button>
+      </div>
+
+      <!-- Table wrapper -->
+      <div class="relative overflow-x-auto custom-scrollbar rounded-2xl border border-slate-800/80 bg-[#050313]/90 shadow-xl shadow-black/60 p-2 sm:p-3">
+        <!-- Combined table (default active) -->
+        <table class="rr-table text-center text-xs sm:text-sm" data-mode="combined">
+          <thead class="font-extrabold">
+            <tr class="text-slate-900">
+              <th class="px-3 py-3 text-left min-w-[12rem] sortable game-col-header">
+                Game
+              </th>
+              <th class="device-rp5 px-2 py-3 min-w-[9rem] sortable">
+                <strong>Retroid Pocket 5</strong><br>
+                <span class="text-[0.72rem] font-bold">(865)</span>
+              </th>
+              <th class="device-g2 px-2 py-3 min-w-[7rem] sortable">
+                <strong>Retroid Pocket G2</strong><br>
+                <span class="text-[0.72rem] font-bold">(G2 Gen 2)</span>
+              </th>
+              <th class="device-odin px-2 py-3 min-w-[7rem] sortable">
+                <strong>Odin 2 Portal</strong><br>
+                <span class="text-[0.72rem] font-bold">(8 Gen 2)</span>
+              </th>
+              <th class="device-konkr px-2 py-3 min-w-[7rem] sortable">
+                <strong>Konkr Pocket Fit</strong><br>
+                <span class="text-[0.72rem] font-bold">(G3 Gen 3)</span>
+              </th>
+              <th class="device-fold px-2 py-3 min-w-[7rem] sortable">
+                <strong>Samsung Fold 7</strong><br>
+                <span class="text-[0.72rem] font-bold">(8 Elite)</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="font-semibold text-slate-100">
+            <!-- For now, Combined = Switch-only. You can later add Windows rows here too. -->
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Captain Toad: Treasure Tracker</td>
+              <td>45</td><td>75</td><td>80</td><td>155</td><td>75</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Donut County</td>
+              <td>38</td><td>80</td><td>76</td><td>156</td><td>75</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">FIFA 18</td>
+              <td>60</td><td>73</td><td>86</td><td>150</td><td>82</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Golf Story</td>
+              <td>126</td><td>126</td><td>175</td><td>185</td><td>180</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Gris</td>
+              <td>61</td><td>115</td><td>110</td><td>260</td><td>126</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Pokémon Sword (Open Areas)</td>
+              <td>30</td><td>33</td><td>50</td><td>53</td><td>50</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Pokémon Sword (In Battle)</td>
+              <td>40</td><td>70</td><td>84</td><td>123</td><td>95</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Slay the Spire</td>
+              <td>110</td><td>115</td><td>142</td><td>145</td><td>200</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Tennis in the Face</td>
+              <td>124</td><td>106</td><td>124</td><td>124</td><td>124</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Legend of Zelda: Breath of the Wild</td>
+              <td>25</td><td>41</td><td>37</td><td>48</td><td>38</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Legend of Zelda: Echoes of Wisdom</td>
+              <td>38</td><td>35</td><td>58</td><td>55</td><td>-</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Legend of Zelda: Tears of the Kingdom</td>
+              <td>22</td><td>35</td><td>44</td><td>46</td><td>-</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Witcher 3</td>
+              <td>14</td><td>30</td><td>42</td><td>35</td><td>41</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Switch-only table -->
+        <table class="rr-table text-center text-xs sm:text-sm" data-mode="switch" style="display:none;">
+          <thead class="font-extrabold">
+            <tr class="text-slate-900">
+              <th class="px-3 py-3 text-left min-w-[12rem] sortable game-col-header">
+                Game
+              </th>
+              <th class="device-rp5 px-2 py-3 min-w-[9rem] sortable">
+                <strong>Retroid Pocket 5</strong><br>
+                <span class="text-[0.72rem] font-bold">(865)</span>
+              </th>
+              <th class="device-g2 px-2 py-3 min-w-[7rem] sortable">
+                <strong>Retroid Pocket G2</strong><br>
+                <span class="text-[0.72rem] font-bold">(G2 Gen 2)</span>
+              </th>
+              <th class="device-odin px-2 py-3 min-w-[7rem] sortable">
+                <strong>Odin 2 Portal</strong><br>
+                <span class="text-[0.72rem] font-bold">(8 Gen 2)</span>
+              </th>
+              <th class="device-konkr px-2 py-3 min-w-[7rem] sortable">
+                <strong>Konkr Pocket Fit</strong><br>
+                <span class="text-[0.72rem] font-bold">(G3 Gen 3)</span>
+              </th>
+              <th class="device-fold px-2 py-3 min-w-[7rem] sortable">
+                <strong>Samsung Fold 7</strong><br>
+                <span class="text-[0.72rem] font-bold">(8 Elite)</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="font-semibold text-slate-100">
+            <!-- Same as combined for now -->
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Captain Toad: Treasure Tracker</td>
+              <td>45</td><td>75</td><td>80</td><td>155</td><td>75</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Donut County</td>
+              <td>38</td><td>80</td><td>76</td><td>156</td><td>75</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">FIFA 18</td>
+              <td>60</td><td>73</td><td>86</td><td>150</td><td>82</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Golf Story</td>
+              <td>126</td><td>126</td><td>175</td><td>185</td><td>180</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Gris</td>
+              <td>61</td><td>115</td><td>110</td><td>260</td><td>126</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Pokémon Sword (Open Areas)</td>
+              <td>30</td><td>33</td><td>50</td><td>53</td><td>50</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Pokémon Sword (In Battle)</td>
+              <td>40</td><td>70</td><td>84</td><td>123</td><td>95</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Slay the Spire</td>
+              <td>110</td><td>115</td><td>142</td><td>145</td><td>200</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Tennis in the Face</td>
+              <td>124</td><td>106</td><td>124</td><td>124</td><td>124</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Legend of Zelda: Breath of the Wild</td>
+              <td>25</td><td>41</td><td>37</td><td>48</td><td>38</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Legend of Zelda: Echoes of Wisdom</td>
+              <td>38</td><td>35</td><td>58</td><td>55</td><td>-</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Legend of Zelda: Tears of the Kingdom</td>
+              <td>22</td><td>35</td><td>44</td><td>46</td><td>-</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">The Witcher 3</td>
+              <td>14</td><td>30</td><td>42</td><td>35</td><td>41</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Windows-only table (coming soon) -->
+        <table class="rr-table text-center text-xs sm:text-sm" data-mode="windows" style="display:none;">
+          <thead class="font-extrabold">
+            <tr class="text-slate-900">
+              <th class="px-3 py-3 text-left min-w-[12rem] sortable game-col-header">
+                Game
+              </th>
+              <th class="device-rp5 px-2 py-3 min-w-[9rem] sortable">
+                <strong>Retroid Pocket 5</strong><br>
+                <span class="text-[0.72rem] font-bold">(865)</span>
+              </th>
+              <th class="device-g2 px-2 py-3 min-w-[7rem] sortable">
+                <strong>Retroid Pocket G2</strong><br>
+                <span class="text-[0.72rem] font-bold">(G2 Gen 2)</span>
+              </th>
+              <th class="device-odin px-2 py-3 min-w-[7rem] sortable">
+                <strong>Odin 2 Portal</strong><br>
+                <span class="text-[0.72rem] font-bold">(8 Gen 2)</span>
+              </th>
+              <th class="device-konkr px-2 py-3 min-w-[7rem] sortable">
+                <strong>Konkr Pocket Fit</strong><br>
+                <span class="text-[0.72rem] font-bold">(G3 Gen 3)</span>
+              </th>
+              <th class="device-fold px-2 py-3 min-w-[7rem] sortable">
+                <strong>Samsung Fold 7</strong><br>
+                <span class="text-[0.72rem] font-bold">(8 Elite)</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="font-semibold text-slate-100">
+            <tr>
+              <td class="px-3 py-6 text-left text-center game-col" colspan="6" style="text-align:center;">
+                <span class="font-bold text-slate-100 text-sm sm:text-base">
+                  Results coming soon.
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="mt-4 text-xs sm:text-sm text-slate-300">
+        💡 Tip: Use Highlight to show which handheld wins in each game and disable/enable handhelds for comparison.<br>
+        Watch the Switch shootout on
+        <a href="https://www.youtube.com/watch?v=drV-Adi-krY" class="font-bold text-yellow-300 underline" target="_blank">
+          YouTube
+        </a>
+      </p>
+    </section>
+
+    <a href="/static/index.html"
+       class="inline-flex items-center gap-2 text-sm font-bold text-slate-900 bg-yellow-300 rounded-full px-4 py-2 shadow-md hover:bg-yellow-200 transition">
+      ← Back to home
+    </a>
+  </div>
+
+  <footer class="py-4 text-center text-xs text-slate-400">
+    © 2025 Ryan Retro. All rights reserved.
+  </footer>
+
+  <!-- Sorting + highlight + mini mode + column toggles + mode toggles -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let activeMode = 'combined';
+      const modeButtons = document.querySelectorAll('.mode-toggle');
+      const tables = document.querySelectorAll('.rr-table[data-mode]');
+      const toggleHighlightBtn = document.getElementById('toggleHighlight');
+      const miniBtn = document.getElementById('toggleMiniMode');
+      const benchCard = document.getElementById('benchCard');
+      const deviceToggleButtons = document.querySelectorAll('.device-toggle');
+
+      let highlightOn = false;
+      let miniOn = false;
+
+      // Column visibility (0 = Game, 1–5 = devices; we only toggle 1–5)
+      const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: true };
+
+      function getActiveTable() {
+        return document.querySelector('.rr-table[data-mode="' + activeMode + '"]');
+      }
+
+      function clearHighlight() {
+        const active = getActiveTable();
+        if (!active) return;
+        active.querySelectorAll('td.best-cell').forEach(cell => cell.classList.remove('best-cell'));
+      }
+
+      function applyHighlight() {
+        const active = getActiveTable();
+        if (!active) return;
+        const tbody = active.querySelector('tbody');
+        const rows = tbody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+          const cells = Array.from(row.querySelectorAll('td')).slice(1); // skip game col
+          let maxVal = -Infinity;
+
+          cells.forEach(cell => {
+            if (window.getComputedStyle(cell).display === 'none') return;
+            const val = parseFloat(cell.textContent.trim());
+            if (!isNaN(val) && val > maxVal) maxVal = val;
+          });
+
+          if (maxVal === -Infinity) return;
+
+          cells.forEach(cell => {
+            if (window.getComputedStyle(cell).display === 'none') return;
+            const val = parseFloat(cell.textContent.trim());
+            if (!isNaN(val) && val === maxVal) {
+              cell.classList.add('best-cell');
+            }
+          });
+        });
+      }
+
+      function sortByColumn(table, colIndex) {
+        const tbody = table.querySelector('tbody');
+        const headers = table.querySelectorAll('thead th.sortable');
+        const header = headers[colIndex];
+        const isNumeric = colIndex > 0;
+
+        if (!header) return;
+
+        const currentDir = header.dataset.sortDir;
+        const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+
+        headers.forEach(h => h.removeAttribute('data-sort-dir'));
+        header.dataset.sortDir = newDir;
+
+        const rowsArray = Array.from(tbody.querySelectorAll('tr'));
+
+        rowsArray.sort((a, b) => {
+          const aText = (a.children[colIndex] || {}).textContent?.trim() || '';
+          const bText = (b.children[colIndex] || {}).textContent?.trim() || '';
+
+          if (isNumeric) {
+            const aVal = parseFloat(aText);
+            const bVal = parseFloat(bText);
+            const aNum = isNaN(aVal) ? -Infinity : aVal;
+            const bNum = isNaN(bVal) ? -Infinity : bVal;
+            return aNum - bNum;
+          } else {
+            return aText.localeCompare(bText);
+          }
+        });
+
+        if (newDir === 'desc') {
+          rowsArray.reverse();
+        }
+
+        rowsArray.forEach(row => tbody.appendChild(row));
+
+        if (highlightOn) {
+          clearHighlight();
+          applyHighlight();
+        }
+      }
+
+      // Attach sorting handlers for EACH table
+      tables.forEach(table => {
+        const headers = table.querySelectorAll('thead th.sortable');
+        headers.forEach((th, index) => {
+          th.addEventListener('click', () => {
+            sortByColumn(table, index);
+          });
+        });
+      });
+
+      // Mode toggle
+      modeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const newMode = btn.getAttribute('data-mode');
+          if (newMode === activeMode) return;
+
+          activeMode = newMode;
+
+          modeButtons.forEach(b => {
+            const m = b.getAttribute('data-mode');
+            if (m === activeMode) {
+              b.classList.add('on');
+              b.classList.remove('off');
+              b.setAttribute('aria-pressed', 'true');
+            } else {
+              b.classList.remove('on');
+              b.classList.add('off');
+              b.setAttribute('aria-pressed', 'false');
+            }
+          });
+
+          tables.forEach(table => {
+            const m = table.getAttribute('data-mode');
+            table.style.display = (m === activeMode) ? '' : 'none';
+          });
+
+          Object.keys(columnVisibility).forEach(ci => {
+            setColumnVisibility(parseInt(ci, 10), columnVisibility[ci]);
+          });
+
+          clearHighlight();
+          if (highlightOn) {
+            applyHighlight();
+          }
+        });
+      });
+
+      // Highlight toggle
+      toggleHighlightBtn.addEventListener('click', () => {
+        highlightOn = !highlightOn;
+
+        if (highlightOn) {
+          applyHighlight();
+          toggleHighlightBtn.setAttribute('aria-pressed', 'true');
+          toggleHighlightBtn.textContent = '💡 Highlight best per row: ON';
+        } else {
+          clearHighlight();
+          toggleHighlightBtn.setAttribute('aria-pressed', 'false');
+          toggleHighlightBtn.textContent = '💡 Highlight best per row: OFF';
+        }
+      });
+
+      // Mini mode toggle
+      miniBtn.addEventListener('click', () => {
+        miniOn = !miniOn;
+        benchCard.classList.toggle('mini-mode', miniOn);
+
+        if (miniOn) {
+          miniBtn.setAttribute('aria-pressed', 'true');
+          miniBtn.textContent = '📱 Mini mode (mobile): ON';
+        } else {
+          miniBtn.setAttribute('aria-pressed', 'false');
+          miniBtn.textContent = '📱 Mini mode (mobile): OFF';
+        }
+      });
+
+      // Column visibility toggle (applies to ALL tables so view stays consistent)
+      function setColumnVisibility(colIndex, visible) {
+        tables.forEach(table => {
+          const headerRow = table.querySelector('thead tr');
+          const headerCell = headerRow.children[colIndex];
+          if (headerCell) {
+            headerCell.style.display = visible ? '' : 'none';
+          }
+
+          const tbody = table.querySelector('tbody');
+          tbody.querySelectorAll('tr').forEach(row => {
+            const cell = row.children[colIndex];
+            if (cell) {
+              cell.style.display = visible ? '' : 'none';
+            }
+          });
+        });
+
+        columnVisibility[colIndex] = visible;
+
+        if (highlightOn) {
+          clearHighlight();
+          applyHighlight();
+        }
+      }
+
+      deviceToggleButtons.forEach(btn => {
+        const colIndex = parseInt(btn.getAttribute('data-col-index'), 10);
+
+        btn.addEventListener('click', () => {
+          const currentlyVisible = columnVisibility[colIndex] !== false;
+          const nowVisible = !currentlyVisible;
+
+          setColumnVisibility(colIndex, nowVisible);
+
+          if (nowVisible) {
+            btn.classList.remove('off');
+            btn.classList.add('on');
+            btn.setAttribute('aria-pressed', 'true');
+          } else {
+            btn.classList.remove('on');
+            btn.classList.add('off');
+            btn.setAttribute('aria-pressed', 'false');
+          }
+        });
+      });
+
+      // Initialize device buttons visual state (all ON)
+      deviceToggleButtons.forEach(btn => btn.classList.add('on'));
+    });
+  </script>
+</body>
+</html>
