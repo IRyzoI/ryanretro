@@ -10,3 +10,6 @@ data/.DS_Store
 # Python venv
 .venv/
 
+.DS_Store
+static/.DS_Store
+
