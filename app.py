@@ -797,9 +797,22 @@ def serve_guide(slug: str):
 
     return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
 
-@app.get("/")
+@app.get("/", response_class=FileResponse)
 def root():
-    return RedirectResponse(url="/static/index.html")
+    # Serve the homepage directly at "/"
+    index_path = os.path.join(REPO_DIR, "static", "index.html")
+    return FileResponse(index_path)
+
+@app.get("/handheld", response_class=FileResponse)
+def handheld_page():
+    handheld_path = os.path.join(REPO_DIR, "static", "handheld.html")
+    return FileResponse(handheld_path)
+
+@app.get("/benchmarks", response_class=FileResponse)
+def benchmarks_page():
+    benchmarks_path = os.path.join(REPO_DIR, "static", "benchmarks.html")
+    return FileResponse(benchmarks_path)
+
 
 #uncomment this section when updating CSVs
 
