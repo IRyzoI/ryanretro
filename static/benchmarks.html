@@ -85,21 +85,20 @@
     }
     
     /* Game column purple backgrounds */
-.rr-table thead .game-col-header {
-  background:#453f7f;
-  color:#f9fafb;
-}
+    .rr-table thead .game-col-header {
+      background:#453f7f;
+      color:#f9fafb;
+    }
 
-.rr-table tbody tr:nth-child(odd) td.game-col {
-  background:#675eb5;
-  color:#f9fafb;
-}
+    .rr-table tbody tr:nth-child(odd) td.game-col {
+      background:#675eb5;
+      color:#f9fafb;
+    }
 
-.rr-table tbody tr:nth-child(even) td.game-col {
-  background:#564898;
-  color:#f9fafb;
-}
-
+    .rr-table tbody tr:nth-child(even) td.game-col {
+      background:#564898;
+      color:#f9fafb;
+    }
 
     /* Simple game column – no sticky, no special background */
     .game-col {
@@ -241,6 +240,42 @@
       background:rgba(56,189,248,0.22);
       color:#e0f2fe;
     }
+    
+    .rr-legend-wrapper {
+  margin: 1rem 0;
+}
+
+.rr-legend-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 6px;
+}
+
+.rr-legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.rr-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rr-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid #1f1b3a;
+}
+
+.rr-label {
+  font-size: 0.9rem;
+  color: #e5e5e5;
+}
+
   </style>
 </head>
 
@@ -267,7 +302,7 @@
     </header>
 
     <!-- MAIN TABLE CARD -->
-    <section id="benchCard" class="bg-slate-900/90 backdrop-blur rounded-2xl border border-slate-700/80 shadow-2xl shadow-black/70 p-4 sm:p-6 mb-8 pixel-border">
+    <section id="benchCard" class="bg-slate-900/90 backdrop-blur rounded-2xl border border-slate-700/80 shadow-2xl shadow-black/70 p-4 sm:py-6 sm:px-6 mb-8 pixel-border">
       <!-- Mode toggles -->
       <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div class="flex flex-wrap items-center gap-2 text-[0.7rem]">
@@ -293,6 +328,16 @@
             aria-pressed="false"
           >
             💡 Highlight best per row: OFF
+          </button>
+
+          <!-- Colorful mode button -->
+          <button
+            id="toggleColorMode"
+            type="button"
+            class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-3 py-2 rounded-full border border-fuchsia-400 text-fuchsia-300 bg-slate-900/70 hover:bg-fuchsia-400 hover:text-slate-900 transition shadow-sm"
+            aria-pressed="false"
+          >
+            🌈 Colorful ranking: OFF
           </button>
 
           <!-- Mini mode button -->
@@ -541,6 +586,33 @@
           </tbody>
         </table>
       </div>
+      
+      <div class="rr-legend-wrapper">
+  <p class="rr-legend-title">FPS Ranking (from worst to best):</p>
+  <div class="rr-legend">
+    <div class="rr-item">
+      <span class="rr-swatch" style="background:#ef4444"></span>
+      <span class="rr-label">Worst</span>
+    </div>
+    <div class="rr-item">
+      <span class="rr-swatch" style="background:#fb923c"></span>
+      <span class="rr-label">Low</span>
+    </div>
+    <div class="rr-item">
+      <span class="rr-swatch" style="background:#fbbf24"></span>
+      <span class="rr-label">Mid</span>
+    </div>
+    <div class="rr-item">
+      <span class="rr-swatch" style="background:#fde047"></span>
+      <span class="rr-label">High</span>
+    </div>
+    <div class="rr-item">
+      <span class="rr-swatch" style="background:#4ade80"></span>
+      <span class="rr-label">Best</span>
+    </div>
+  </div>
+</div>
+
 
       <p class="mt-4 text-xs sm:text-sm text-slate-300">
         💡 Tip: Use Highlight to show which handheld wins in each game and disable/enable handhelds for comparison.<br>
@@ -561,19 +633,21 @@
     © 2025 Ryan Retro. All rights reserved.
   </footer>
 
-  <!-- Sorting + highlight + mini mode + column toggles + mode toggles -->
+  <!-- Sorting + highlight + mini mode + column toggles + mode toggles + colorful mode -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       let activeMode = 'combined';
       const modeButtons = document.querySelectorAll('.mode-toggle');
       const tables = document.querySelectorAll('.rr-table[data-mode]');
       const toggleHighlightBtn = document.getElementById('toggleHighlight');
+      const toggleColorModeBtn = document.getElementById('toggleColorMode');
       const miniBtn = document.getElementById('toggleMiniMode');
       const benchCard = document.getElementById('benchCard');
       const deviceToggleButtons = document.querySelectorAll('.device-toggle');
 
       let highlightOn = false;
       let miniOn = false;
+      let colorModeOn = false;
 
       // Column visibility (0 = Game, 1–5 = devices; we only toggle 1–5)
       const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: true };
@@ -583,9 +657,9 @@
       }
 
       function clearHighlight() {
-        const active = getActiveTable();
-        if (!active) return;
-        active.querySelectorAll('td.best-cell').forEach(cell => cell.classList.remove('best-cell'));
+        tables.forEach(table => {
+          table.querySelectorAll('td.best-cell').forEach(cell => cell.classList.remove('best-cell'));
+        });
       }
 
       function applyHighlight() {
@@ -657,6 +731,10 @@
           clearHighlight();
           applyHighlight();
         }
+        if (colorModeOn) {
+          clearColorModeAllTables();
+          applyColorModeToActiveTable();
+        }
       }
 
       // Attach sorting handlers for EACH table
@@ -669,7 +747,91 @@
         });
       });
 
-      // Mode toggle
+      // ----- COLORFUL MODE HELPERS -----
+      function getVisibleDeviceColumns() {
+        return Object.keys(columnVisibility)
+          .map(idx => parseInt(idx, 10))
+          .filter(idx => columnVisibility[idx]);
+      }
+
+      function clearColorModeAllTables() {
+        tables.forEach(table => {
+          const tbody = table.querySelector('tbody');
+          tbody.querySelectorAll('tr').forEach(row => {
+            Array.from(row.children).forEach((cell, idx) => {
+              if (idx === 0) return; // skip game column
+              if (!cell.classList.contains('best-cell')) {
+                cell.style.backgroundColor = '';
+                cell.style.color = '';
+              }
+            });
+          });
+        });
+      }
+
+      function applyColorModeToTable(table) {
+        if (!table) return;
+        const visibleCols = getVisibleDeviceColumns();
+        if (!visibleCols.length) return;
+
+        const rows = table.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+          const entries = [];
+
+          // Collect numeric entries for visible device columns
+          visibleCols.forEach(colIndex => {
+            const cell = row.children[colIndex];
+            if (!cell) return;
+            if (window.getComputedStyle(cell).display === 'none') return;
+
+            const text = cell.textContent.trim();
+            const val = parseFloat(text);
+            if (!isNaN(val)) {
+              entries.push({ cell, val });
+            }
+          });
+
+          if (!entries.length) return;
+
+          // Unique sorted values so equal FPS share same rank & color
+          const uniqueVals = [...new Set(entries.map(e => e.val))].sort((a, b) => b - a);
+          const maxRankIndex = uniqueVals.length - 1;
+
+const palette = [
+  '#4ade80', // best - green
+  '#fde047', // 2nd - amber/gold
+  '#fbbf24', // mid - yellow
+  '#fb923c', // lower - orange
+  '#ef4444'  // worst - red
+];
+
+
+
+          entries.forEach(({ cell, val }) => {
+            const rankIndex = uniqueVals.indexOf(val);
+            const paletteIndex = Math.min(rankIndex, palette.length - 1);
+            const color = palette[paletteIndex];
+
+            // Don't override the explicit best-cell highlight
+            if (cell.classList.contains('best-cell')) {
+              cell.style.backgroundColor = '';
+              cell.style.color = '';
+              return;
+            }
+
+            cell.style.backgroundColor = color;
+            cell.style.color = '#0b051f'; // dark text, like device headers
+          });
+        });
+      }
+
+      function applyColorModeToActiveTable() {
+        const active = getActiveTable();
+        applyColorModeToTable(active);
+      }
+
+      // ----- MODE TOGGLE -----
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           const newMode = btn.getAttribute('data-mode');
@@ -703,6 +865,11 @@
           if (highlightOn) {
             applyHighlight();
           }
+
+          if (colorModeOn) {
+            clearColorModeAllTables();
+            applyColorModeToActiveTable();
+          }
         });
       });
 
@@ -711,13 +878,41 @@
         highlightOn = !highlightOn;
 
         if (highlightOn) {
+          clearHighlight();
           applyHighlight();
+          // Re-apply color mode so non-best cells keep gradient,
+          // while best cells stay with their special highlight.
+          if (colorModeOn) {
+            clearColorModeAllTables();
+            applyColorModeToActiveTable();
+          }
           toggleHighlightBtn.setAttribute('aria-pressed', 'true');
           toggleHighlightBtn.textContent = '💡 Highlight best per row: ON';
         } else {
           clearHighlight();
+          // Color mode stays on for non-best cells if enabled
+          if (colorModeOn) {
+            clearColorModeAllTables();
+            applyColorModeToActiveTable();
+          }
           toggleHighlightBtn.setAttribute('aria-pressed', 'false');
           toggleHighlightBtn.textContent = '💡 Highlight best per row: OFF';
+        }
+      });
+
+      // Colorful mode toggle
+      toggleColorModeBtn.addEventListener('click', () => {
+        colorModeOn = !colorModeOn;
+
+        if (colorModeOn) {
+          toggleColorModeBtn.setAttribute('aria-pressed', 'true');
+          toggleColorModeBtn.textContent = '🌈 Colorful ranking: ON';
+          clearColorModeAllTables();
+          applyColorModeToActiveTable();
+        } else {
+          toggleColorModeBtn.setAttribute('aria-pressed', 'false');
+          toggleColorModeBtn.textContent = '🌈 Colorful ranking: OFF';
+          clearColorModeAllTables();
         }
       });
 
@@ -759,6 +954,11 @@
           clearHighlight();
           applyHighlight();
         }
+
+        if (colorModeOn) {
+          clearColorModeAllTables();
+          applyColorModeToActiveTable();
+        }
       }
 
       deviceToggleButtons.forEach(btn => {
@@ -785,6 +985,8 @@
       // Initialize device buttons visual state (all ON)
       deviceToggleButtons.forEach(btn => btn.classList.add('on'));
     });
+    
+    
   </script>
 </body>
 </html>
