@@ -374,7 +374,7 @@
 
       <!-- Table wrapper -->
       <div class="relative overflow-x-auto custom-scrollbar rounded-2xl border border-slate-800/80 bg-[#050313]/90 shadow-xl shadow-black/60 p-2 sm:p-3">
-        <!-- Combined table (default active) -->
+        <!-- Combined table (ALL: Switch + Windows) -->
         <table class="rr-table text-center text-xs sm:text-sm" data-mode="combined">
           <thead class="font-extrabold">
             <tr class="text-slate-900">
@@ -404,18 +404,34 @@
             </tr>
           </thead>
           <tbody class="font-semibold text-slate-100">
-            <!-- For now, Combined = Switch-only. You can later add Windows rows here too. -->
+            <!-- Alphabetical: Switch + Windows -->
             <tr>
               <td class="px-3 py-2 text-left game-col">Captain Toad: Treasure Tracker</td>
               <td>45</td><td>75</td><td>80</td><td>155</td><td>75</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Cuphead</td>
+              <td>130</td><td>175</td><td>-</td><td>280</td><td>140</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Cyberpunk 2077</td>
+              <td>-</td><td>11</td><td>15</td><td>16</td><td>7</td>
             </tr>
             <tr>
               <td class="px-3 py-2 text-left game-col">Donut County</td>
               <td>38</td><td>80</td><td>76</td><td>156</td><td>75</td>
             </tr>
             <tr>
+              <td class="px-3 py-2 text-left game-col">Elden Ring</td>
+              <td>11</td><td>15</td><td>19</td><td>25</td><td>5</td>
+            </tr>
+            <tr>
               <td class="px-3 py-2 text-left game-col">FIFA 18</td>
               <td>60</td><td>73</td><td>86</td><td>150</td><td>82</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">GTA V</td>
+              <td>20</td><td>44</td><td>47</td><td>57</td><td>-</td>
             </tr>
             <tr>
               <td class="px-3 py-2 text-left game-col">Golf Story</td>
@@ -426,12 +442,36 @@
               <td>61</td><td>115</td><td>110</td><td>260</td><td>126</td>
             </tr>
             <tr>
-              <td class="px-3 py-2 text-left game-col">Pokémon Sword (Open Areas)</td>
-              <td>30</td><td>33</td><td>50</td><td>53</td><td>50</td>
+              <td class="px-3 py-2 text-left game-col">Hades 2</td>
+              <td>51</td><td>67</td><td>-</td><td>124</td><td>105</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Hollow Knight Silksong</td>
+              <td>80</td><td>120</td><td>-</td><td>190</td><td>122</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Megabonk</td>
+              <td>-</td><td>40</td><td>-</td><td>68</td><td>40</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Monster Boy and the Cursed Kingdom</td>
+              <td>115</td><td>100</td><td>160</td><td>165</td><td>120</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Need for Speed Rivals</td>
+              <td>-</td><td>30</td><td>30</td><td>30</td><td>30</td>
             </tr>
             <tr>
               <td class="px-3 py-2 text-left game-col">Pokémon Sword (In Battle)</td>
               <td>40</td><td>70</td><td>84</td><td>123</td><td>95</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Pokémon Sword (Open Areas)</td>
+              <td>30</td><td>33</td><td>50</td><td>53</td><td>50</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Skyrim</td>
+              <td>25</td><td>36</td><td>57</td><td>57</td><td>47</td>
             </tr>
             <tr>
               <td class="px-3 py-2 text-left game-col">Slay the Spire</td>
@@ -456,6 +496,14 @@
             <tr>
               <td class="px-3 py-2 text-left game-col">The Witcher 3</td>
               <td>14</td><td>30</td><td>42</td><td>35</td><td>41</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Tomb Raider</td>
+              <td>-</td><td>-</td><td>-</td><td>-</td><td>87</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Traveller’s Rest</td>
+              <td>-</td><td>40</td><td>30</td><td>50</td><td>40</td>
             </tr>
           </tbody>
         </table>
@@ -490,7 +538,7 @@
             </tr>
           </thead>
           <tbody class="font-semibold text-slate-100">
-            <!-- Same as combined for now -->
+            <!-- Same as before: Switch-only -->
             <tr>
               <td class="px-3 py-2 text-left game-col">Captain Toad: Treasure Tracker</td>
               <td>45</td><td>75</td><td>80</td><td>155</td><td>75</td>
@@ -546,7 +594,7 @@
           </tbody>
         </table>
 
-        <!-- Windows-only table (coming soon) -->
+        <!-- Windows-only table -->
         <table class="rr-table text-center text-xs sm:text-sm" data-mode="windows" style="display:none;">
           <thead class="font-extrabold">
             <tr class="text-slate-900">
@@ -576,12 +624,54 @@
             </tr>
           </thead>
           <tbody class="font-semibold text-slate-100">
+            <!-- Windows-only, alphabetical -->
             <tr>
-              <td class="px-3 py-6 text-left text-center game-col" colspan="6" style="text-align:center;">
-                <span class="font-bold text-slate-100 text-sm sm:text-base">
-                  Results coming soon.
-                </span>
-              </td>
+              <td class="px-3 py-2 text-left game-col">Cuphead</td>
+              <td>130</td><td>175</td><td>-</td><td>280</td><td>140</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Cyberpunk 2077</td>
+              <td>-</td><td>11</td><td>15</td><td>16</td><td>7</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Elden Ring</td>
+              <td>11</td><td>15</td><td>19</td><td>25</td><td>5</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">GTA V</td>
+              <td>20</td><td>44</td><td>47</td><td>57</td><td>-</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Hades 2</td>
+              <td>51</td><td>67</td><td>-</td><td>124</td><td>105</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Hollow Knight Silksong</td>
+              <td>80</td><td>120</td><td>-</td><td>190</td><td>122</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Megabonk</td>
+              <td>-</td><td>40</td><td>-</td><td>68</td><td>40</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Monster Boy and the Cursed Kingdom</td>
+              <td>115</td><td>100</td><td>160</td><td>165</td><td>120</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Need for Speed Rivals</td>
+              <td>-</td><td>30</td><td>30</td><td>30</td><td>30</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Skyrim</td>
+              <td>25</td><td>36</td><td>57</td><td>57</td><td>47</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Tomb Raider</td>
+              <td>-</td><td>-</td><td>-</td><td>-</td><td>87</td>
+            </tr>
+            <tr>
+              <td class="px-3 py-2 text-left game-col">Traveller’s Rest</td>
+              <td>-</td><td>40</td><td>30</td><td>50</td><td>40</td>
             </tr>
           </tbody>
         </table>
