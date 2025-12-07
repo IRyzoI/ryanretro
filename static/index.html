@@ -614,16 +614,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  const section = document.querySelector('#videos');
-  if ('IntersectionObserver' in window && section) {
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some(e => e.isIntersecting)) { loadVideos(); io.disconnect(); }
-    }, { rootMargin: '200px' });
-    io.observe(section);
-  } else {
-    loadVideos();
-  }
+    // Always load videos immediately
+  loadVideos();
 })();
+
 </script>
 
 
