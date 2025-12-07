@@ -92,10 +92,13 @@
                  class="group flex-grow bg-red-600 hover:bg-red-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
                 <i data-feather="youtube" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> VIDEOS
               </a>
-              <a href="#compatibility"
-                 class="group flex-grow bg-blue-600 hover:bg-blue-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="list" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> PLAY GAMES
-              </a>
+              <a id="review-or-compat-link"
+   href="#compatibility"
+   class="group flex-grow bg-blue-600 hover:bg-blue-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
+  <i data-feather="list" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
+  <span id="review-or-compat-label">PLAY GAMES</span>
+</a>
+
               <a href="/benchmarks"
    class="group flex-grow bg-purple-600 hover:bg-purple-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
   <i data-feather="bar-chart-2" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> BENCHMARKS
@@ -249,21 +252,24 @@ const DEVICE_CONFIG = {
 
 
     "Retroid Pocket G2": {
-    label: "Retroid Pocket G2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket g2",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
-    aliases: ["Retroid G2", "RP G2", "Retroid Pocket G2"],
-    variants: [
-      {
-        id: "g2g2",
-        label: "Snapdragon G2 Gen 2"
-      }
-    ]
-  },
+  label: "Retroid Pocket G2",
+  heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
+  affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
+  affiliateText: "PURCHASE",
+  youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
+  youtubeQuery: "retroid pocket g2",
+  videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
+  aliases: ["Retroid G2", "RP G2", "Retroid Pocket G2"],
+  variants: [
+    {
+      id: "g2g2",
+      label: "Snapdragon G2 Gen 2"
+    }
+  ],
+  reviewHref: "/static/rpg2review.html",   // 👈 NEW
+  reviewText: "REVIEW"                     // optional, defaults to "REVIEW" below anyway
+},
+
 
 
   "Odin 2 Portal": {
@@ -563,20 +569,47 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
-  feather.replace();
-
-  // Headline/hero/CTAs (no chipset text added to the header)
+    // Headline/hero/CTAs (no chipset text added to the header)
   document.title = `${DEVICE.label} Compatibility | Ryan Retro`;
   document.getElementById('device-heading').textContent = DEVICE.label;
 
   const hero = document.getElementById('hero-img');
-  hero.src = DEVICE.heroImg; hero.alt = DEVICE.label;
+  hero.src = DEVICE.heroImg;
+  hero.alt = DEVICE.label;
+
   const buyBtn = document.getElementById('affiliate-link');
   buyBtn.href = DEVICE.affiliateHref;
   buyBtn.querySelector('.btn-label').textContent = DEVICE.affiliateText;
+
   const videosLink = document.getElementById('videos-link');
   videosLink.href = DEVICE.videosLinkHref;
+
   document.getElementById('hidden-device').value = DEVICE.label;
+
+  // --- Review / Play Games button behaviour ---
+  const reviewBtn   = document.getElementById('review-or-compat-link');
+  const reviewLabel = document.getElementById('review-or-compat-label');
+  const reviewIcon  = reviewBtn ? reviewBtn.querySelector('[data-feather]') : null;
+
+  if (reviewBtn && reviewLabel && reviewIcon) {
+    if (DEVICE.reviewHref) {
+      // Devices with a written review (currently: RPG2)
+      reviewBtn.href = DEVICE.reviewHref;
+      reviewBtn.target = "_blank";             // optional: open review in new tab
+      reviewLabel.textContent = DEVICE.reviewText || "REVIEW";
+      reviewIcon.setAttribute('data-feather', 'file-text');
+    } else {
+      // Fallback: scroll to compatibility table
+      reviewBtn.href = "#compatibility";
+      reviewBtn.removeAttribute('target');
+      reviewLabel.textContent = "PLAY GAMES";
+      reviewIcon.setAttribute('data-feather', 'list');
+    }
+  }
+
+  // Run feather *after* we’ve set the icon types
+  feather.replace();
+
 
 /* --------------------------- Videos --------------------------- */
 async function fetchYouTubeVideos() {
