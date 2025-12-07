@@ -587,28 +587,38 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('hidden-device').value = DEVICE.label;
 
   // --- Review / Play Games button behaviour ---
-  const reviewBtn   = document.getElementById('review-or-compat-link');
-  const reviewLabel = document.getElementById('review-or-compat-label');
-  const reviewIcon  = reviewBtn ? reviewBtn.querySelector('[data-feather]') : null;
+const reviewBtn   = document.getElementById('review-or-compat-link');
+const reviewLabel = document.getElementById('review-or-compat-label');
+const reviewIcon  = reviewBtn ? reviewBtn.querySelector('[data-feather]') : null;
 
-  if (reviewBtn && reviewLabel && reviewIcon) {
-    if (DEVICE.reviewHref) {
-      // Devices with a written review (currently: RPG2)
-      reviewBtn.href = DEVICE.reviewHref;
-      reviewBtn.target = "_blank";             // optional: open review in new tab
-      reviewLabel.textContent = DEVICE.reviewText || "REVIEW";
-      reviewIcon.setAttribute('data-feather', 'file-text');
-    } else {
-      // Fallback: scroll to compatibility table
-      reviewBtn.href = "#compatibility";
-      reviewBtn.removeAttribute('target');
-      reviewLabel.textContent = "PLAY GAMES";
-      reviewIcon.setAttribute('data-feather', 'list');
-    }
+if (reviewBtn && reviewLabel && reviewIcon) {
+  if (DEVICE.reviewHref) {
+    // Devices with a written review (currently: RPG2)
+    reviewBtn.href = DEVICE.reviewHref;
+    reviewBtn.target = "_blank";
+    reviewLabel.textContent = DEVICE.reviewText || "REVIEW";
+    reviewIcon.setAttribute('data-feather', 'file-text');
+
+    // ⭐ Apply your signature yellow theme
+    reviewBtn.classList.remove('bg-blue-600','hover:bg-blue-700');
+    reviewBtn.classList.add('bg-yellow-400','hover:bg-yellow-500','text-black');
+
+  } else {
+    // Normal behaviour: scroll to compatibility
+    reviewBtn.href = "#compatibility";
+    reviewBtn.removeAttribute('target');
+    reviewLabel.textContent = "PLAY GAMES";
+    reviewIcon.setAttribute('data-feather', 'list');
+
+    // Reset to blue theme
+    reviewBtn.classList.remove('bg-yellow-400','hover:bg-yellow-500','text-black');
+    reviewBtn.classList.add('bg-blue-600','hover:bg-blue-700','text-white');
   }
+}
 
-  // Run feather *after* we’ve set the icon types
-  feather.replace();
+// Run feather AFTER icon swap
+feather.replace();
+
 
 
 /* --------------------------- Videos --------------------------- */
