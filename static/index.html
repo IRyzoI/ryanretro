@@ -511,23 +511,23 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-(function(){
+(function () {
   const grid = document.getElementById('latest-videos');
   if (!grid) return;
 
-  const LIMIT = 3; // how many to show
-  const CACHE_KEY = `rr_latest_videos_v1_${LIMIT}`; // include LIMIT in the key
-  const CACHE_MS  = 15 * 60 * 1000; // 15 minutes
+  const LIMIT = 3;
+  const CACHE_KEY = `rr_latest_videos_v1_${LIMIT}`;
+  const CACHE_MS = 15 * 60 * 1000; // 15 minutes
 
   const fmtTimeAgo = (iso) => {
-    const sec = Math.max(1, (Date.now() - new Date(iso).getTime())/1000);
+    const sec = Math.max(1, (Date.now() - new Date(iso).getTime()) / 1000);
     const units = [
-      ['year',31536000],['month',2592000],['week',604800],
-      ['day',86400],['hour',3600],['minute',60]
+      ['year', 31536000], ['month', 2592000], ['week', 604800],
+      ['day', 86400], ['hour', 3600], ['minute', 60]
     ];
     for (const [name, s] of units) {
       const v = Math.floor(sec / s);
-      if (v >= 1) return `${v} ${name}${v>1?'s':''} ago`;
+      if (v >= 1) return `${v} ${name}${v > 1 ? 's' : ''} ago`;
     }
     return 'Just now';
   };
@@ -535,11 +535,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const cardHTML = ({ id, title, thumb, publishedAt }, i) => `
     <a href="https://www.youtube.com/watch?v=${id}" target="_blank"
        class="bg-gray-800 rounded-lg overflow-hidden pixel-border block group"
-       data-video-id="${id}" data-aos="fade-up" data-aos-delay="${i*100}">
+       data-video-id="${id}">
       <div class="relative pb-[56.25%] bg-black">
         <img
           src="${thumb}"
-          alt="${title.replace(/"/g,'&quot;')}"
+          alt="${title.replace(/"/g, '&quot;')}"
           width="480" height="360"
           ${i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" fetchpriority="auto"'}
           decoding="async"
@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center opacity-90">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                  fill="currentColor" class="w-8 h-8 text-white ml-1">
-              <path d="M8 5v14l11-7z"/>
+              <path d="M8 5v14l11-7z" />
             </svg>
           </div>
         </div>
@@ -567,58 +567,66 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="col-span-full text-center">
         <p class="text-red-400 mb-2">Couldn’t load latest videos.</p>
         <p class="text-gray-400 mb-2 text-xs">${msg || ''}</p>
-        <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="text-yellow-400 underline">Open my channel</a>
+        <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank"
+           class="text-yellow-400 underline">Open my channel</a>
       </div>`;
   }
 
-  async function render(data){
-    grid.innerHTML = data.slice(0, LIMIT).map((d,i) => cardHTML(d,i)).join('');
-    if (window.AOS && typeof AOS.refreshHard === 'function') {
-      AOS.refreshHard();
-    } else if (window.AOS && typeof AOS.refresh === 'function') {
+  async function render(data) {
+    grid.innerHTML = data.slice(0, LIMIT).map((d, i) => cardHTML(d, i)).join('');
+    if (window.AOS && typeof AOS.refresh === 'function') {
       AOS.refresh();
     }
   }
 
-  async function loadVideos() {
+  async function loadVideos(forceFresh = false) {
     try {
-      // Try local cache first (15 min)
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        const { t, data } = JSON.parse(cached);
-        if (Date.now() - t < CACHE_MS && Array.isArray(data) && data.length) {
-          await render(data);
-          return;
+      if (!forceFresh) {
+        // Safely read cache – ignore if broken
+        try {
+          const cached = localStorage.getItem(CACHE_KEY);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (
+              parsed &&
+              Array.isArray(parsed.data) &&
+              parsed.data.length &&
+              Date.now() - parsed.t < CACHE_MS
+            ) {
+              await render(parsed.data);
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn('Ignoring bad cache for latest videos', e);
+          localStorage.removeItem(CACHE_KEY);
         }
       }
 
-      // 🔥 Cache-buster to avoid month-long HTTP caching
-      const cacheBuster = Date.now();
-      const res = await fetch(`/api/latest-videos?limit=${LIMIT}&t=${cacheBuster}`, {
-        cache: 'no-store'
-      });
-
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      console.log('Fetching /api/latest-videos…');
+      const res = await fetch('/api/latest-videos?limit=' + LIMIT, { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
 
       if (!Array.isArray(data) || !data.length) {
-        grid.innerHTML = `<p class="col-span-full text-center text-gray-400">No uploads found.</p>`;
+        grid.innerHTML =
+          '<p class="col-span-full text-center text-gray-400">No uploads found.</p>';
         return;
       }
 
       await render(data);
       localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data }));
     } catch (e) {
-      console.error('[latest-videos] error:', e);
+      console.error('Failed to load latest videos', e);
       showError(e.message);
     }
   }
 
-    // Always load videos immediately
+  // 🚀 EASY FIX: just load videos immediately when the script runs
   loadVideos();
 })();
-
 </script>
+
 
 
 <style>
