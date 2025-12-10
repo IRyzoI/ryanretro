@@ -764,7 +764,7 @@ def serve_guide(slug: str):
 <body class="bg-gray-900 text-white">
   <header class="hero-header py-10 md:py-14">
     <div class="container mx-auto px-4 relative z-10 text-center">
-      <a href="/static/index.html" class="inline-flex items-center justify-center mb-4">
+      <a href="/" class="inline-flex items-center justify-center mb-4">
         <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
              alt="Ryan Retro" class="w-20 h-20 rounded-full pixel-border bg-gray-900">
       </a>
@@ -776,7 +776,7 @@ def serve_guide(slug: str):
       {html}
     </article>
     <div class="max-w-3xl mx-auto mt-10">
-      <a href="/static/index.html#guides" class="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-bold">← Back to Retro Guides</a>
+      <a href="/#guides" class="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-bold">← Back to Retro Guides</a>
     </div>
   </main>
   <footer class="bg-black py-8 mt-16">
@@ -796,6 +796,28 @@ def serve_guide(slug: str):
         return FileResponse(idx_path, media_type="text/html")
 
     return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
+
+# --------------------------------------------------------------------------------------
+# Device Shortlinks (Vanity URLs)
+# --------------------------------------------------------------------------------------
+@app.get("/{device_slug}", response_class=FileResponse)
+def device_vanity_redirect(device_slug: str):
+    # If the user visits /rpg2, /rp5, etc., we serve the handheld.html page.
+    # The client-side JS in handheld.html will parse the path and load the correct device.
+    valid_slugs = {
+        "rpg2", "rp5", "rp6", "flip2", "odin3", "thor", 
+        "konkr", "classic", "portal", "odin2portal"
+    }
+    
+    if device_slug.lower() in valid_slugs:
+        return FileResponse(os.path.join(REPO_DIR, "static", "handheld.html"))
+    
+    # If it's not a known shortcut, we let FastAPI handle 404 or other routes naturally.
+    # However, since this is a catch-all for root level paths, we need to be careful.
+    # We return a 404 here manually if it's not matched, but FastAPI's router should 
+    # ideally skip this if it matches other defined routes first. 
+    # Since this is defined near the end, specific API routes take precedence.
+    return HTMLResponse("<h1>Page not found</h1>", status_code=404)
 
 @app.get("/", response_class=FileResponse)
 def root():
