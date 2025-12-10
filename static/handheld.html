@@ -56,7 +56,7 @@
 <body class="bg-gray-900 text-white">
   <header class="bg-black py-6">
     <div class="container mx-auto px-4">
-      <a href="/" class="flex items-center">
+      <a href="/static/index.html" class="flex items-center">
         <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro Logo" class="w-12 h-12 rounded-full mr-4">
         <span class="retro-font text-yellow-400 text-xl">RYAN RETRO</span>
       </a>
@@ -109,6 +109,7 @@
           </div>
         </div>
 
+        <!-- Videos -->
         <section id="videos-section" class="mb-12 island">
           <h2 class="retro-font text-2xl mb-6">Videos</h2>
           <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -116,9 +117,11 @@
           </div>
         </section>
 
+        <!-- Compatibility -->
         <div id="compatibility" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 island">
           <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
 
+          <!-- Chipset tabs (rendered dynamically only if device has >1 variants) -->
           <div id="variant-tabs" class="mb-4 hidden">
             <div class="inline-flex flex-wrap gap-2"></div>
           </div>
@@ -159,6 +162,7 @@
           <button id="next-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Next</button>
         </div>
 
+        <!-- Add Entry -->
         <div class="text-center mt-6">
           <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">
             ADD YOUR ENTRY
@@ -183,6 +187,8 @@
                 </select>
               </div>
             </div>
+
+            <!-- Chipset field will be injected here (only if >1 chipset) -->
 
             <div id="dynamic-fields" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"></div>
 
@@ -217,7 +223,7 @@ const DEVICE_CONFIG = {
   "Retroid Pocket 5": {
     label: "Retroid Pocket 5",
     heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
+    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
     affiliateText: "PURCHASE",
     youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
     youtubeQuery: "retroid pocket 5",
@@ -406,32 +412,7 @@ const DEVICE_CONFIG = {
 
 /* ---------- URL/device resolution ---------- */
 const urlParams = new URLSearchParams(location.search);
-
-// NEW: Check path for vanity URL slugs first
-const SLUG_MAP = {
-  "/rpg2": "Retroid Pocket G2",
-  "/rp5": "Retroid Pocket 5",
-  "/rp6": "Retroid Pocket 6",
-  "/flip2": "Retroid Pocket Flip 2",
-  "/odin3": "Odin 3",
-  "/thor": "AYN Thor",
-  "/konkr": "Ayaneo Konkr Pocket Fit",
-  "/classic": "Retroid Pocket Classic",
-  "/portal": "Odin 2 Portal",
-  "/odin2portal": "Odin 2 Portal"
-};
-
 function resolveDeviceFromUrl() {
-  // Check pathname first
-  const path = window.location.pathname.toLowerCase();
-  // Strip trailing slash if present for cleaner matching
-  const cleanPath = path.endsWith('/') && path.length > 1 ? path.slice(0, -1) : path;
-  
-  if (SLUG_MAP[cleanPath]) {
-      return SLUG_MAP[cleanPath];
-  }
-
-  // Fallback to query param
   const param = (urlParams.get("device") || "").trim().toLowerCase();
   if (!param) return "Retroid Pocket 5";
   for (const key of Object.keys(DEVICE_CONFIG)) {
