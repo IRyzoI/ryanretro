@@ -104,16 +104,12 @@ def _make_matcher(q: str, aliases: str):
     import re as _re
 
     phrases: List[str] = []
-    if q and q.strip():
+    if q:
         phrases.append(q.strip().lower())
     for ph in (aliases or "").split(","):
         ph = ph.strip().lower()
         if ph:
             phrases.append(ph)
-
-    # If no query provided, match everything (fix for homepage listing)
-    if not phrases:
-        return lambda title: True
 
     generic_tokens: set[str] = set()
     disamb_tokens: set[str] = set()
@@ -218,14 +214,9 @@ def _yt_api_search(channel_id: str, query: str, limit: int) -> List[Dict[str, st
             for it in items:
                 id_obj = it.get("id") or {}
                 vid = id_obj.get("videoId")
-                snippet = it.get("snippet") or {}
-                title = snippet.get("title") or ""
+                title = ((it.get("snippet") or {}).get("title")) or ""
                 if vid and title:
-                    out.append({
-                        "title": title, 
-                        "videoId": vid,
-                        "publishedAt": snippet.get("publishedAt") or ""
-                    })
+                    out.append({"title": title, "videoId": vid})
             page_token = data.get("nextPageToken")
             if not page_token:
                 break
@@ -260,10 +251,8 @@ def _piped_channel_videos(channel_id: str, pages: int = 6) -> List[Dict[str, str
         for s in streams:
             vid = s.get("videoId") or s.get("id")
             title = s.get("title") or ""
-            # Piped often has 'uploaded' (relative) or 'uploadedDate'
-            pub = s.get("uploadedDate") or s.get("uploaded") or ""
             if vid and title:
-                out.append({"title": title, "videoId": vid, "publishedAt": pub})
+                out.append({"title": title, "videoId": vid})
         nextpage = data.get("nextpage")
         if not nextpage:
             break
@@ -287,9 +276,8 @@ def _piped_search_channel(channel_id: str, query: str, pages: int = 2) -> List[D
         for s in items:
             vid = s.get("videoId") or s.get("id")
             title = s.get("title") or s.get("name") or ""
-            pub = s.get("uploadedDate") or s.get("uploaded") or ""
             if vid and title and vid not in seen:
-                out.append({"title": title, "videoId": vid, "publishedAt": pub})
+                out.append({"title": title, "videoId": vid})
                 seen.add(vid)
         if isinstance(data, dict):
             nextpage = data.get("nextpage")
@@ -333,7 +321,6 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
             phrases.append(ph)
             seen_lower.add(ph.lower())
 
-    # 1. Try Official API Uploads
     try:
         uploads = _yt_api_list_uploads(channel_id, pages=12) if YT_API_KEY else []
     except Exception as e:
@@ -344,8 +331,7 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
         print(f"[yt] uploads matched: {len(filtered)}")
         results.extend(filtered)
 
-    # 2. Try Official API Search (if filtered list is too small)
-    if len(results) < limit and YT_API_KEY and phrases:
+    if len(results) < limit and YT_API_KEY:
         try:
             for ph in phrases:
                 hits = _yt_api_search(channel_id, ph, limit=100)
@@ -357,16 +343,13 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
         except Exception as e:
             print(f"[yt] search error: {e}")
 
-    # 3. Try Piped Uploads (Robust Fallback)
     if len(results) < limit:
         try:
             items = _piped_channel_videos(channel_id, pages=6)
             filtered = [it for it in items if matcher(it["title"])]
             print(f"[piped] uploads matched: {len(filtered)}")
             results.extend(filtered)
-            
-            # Piped Search
-            if len(results) < limit and phrases:
+            if len(results) < limit:
                 for ph in phrases:
                     hits = _piped_search_channel(channel_id, ph, pages=2)
                     filtered = [it for it in hits if matcher(it["title"])]
@@ -377,7 +360,6 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
         except Exception as e:
             print(f"[piped] error: {e}")
 
-    # 4. Try RSS (Last Resort)
     if len(results) == 0:
         try:
             items = _rss_latest(channel_id)
@@ -387,16 +369,11 @@ def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dic
         except Exception as e:
             print(f"[rss] error: {e}")
 
-    # Deduplicate
     out, seen = [], set()
     for it in results:
         vid = it.get("videoId")
         if vid and vid not in seen:
-            out.append({
-                "title": it.get("title", ""),
-                "videoId": vid,
-                "publishedAt": it.get("publishedAt", "")
-            })
+            out.append({"title": it.get("title", ""), "videoId": vid})
             seen.add(vid)
 
     print(f"[final] unique matched: {len(out)} (returning {min(len(out), limit)})")
@@ -413,7 +390,6 @@ def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int =
 
     def _filter(items: List[Dict[str, str]] | None) -> List[Dict[str, str]]:
         items = items or []
-        if not search_phrases: return items # no filter
         return [v for v in items if any(p in (v.get("title", "").lower()) for p in search_phrases)]
 
     if not force:
@@ -425,10 +401,9 @@ def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int =
             if cached := _cache_read(key):
                 return _filter(cached)[:limit]
         try:
-            # Replaced manual logic with _fetch_videos for consistency
             fresh_videos = _fetch_videos(channel_id, q, aliases, limit)
             _cache_write(key, fresh_videos)
-            return fresh_videos
+            return _filter(fresh_videos)[:limit]
         except Exception as e:
             print(f"[yt] latest error, serving stale if present: {e}")
             if stale := _cache_read_any_age(key):
@@ -470,16 +445,20 @@ def latest_videos(
             if cached := _cache_read(key):
                 return _shape(cached)
         try:
-            # Use _fetch_videos to get robust fallback (API -> Piped -> RSS)
-            # Empty q/aliases means "fetch all uploads"
-            items = _fetch_videos(channel_id, q="", aliases="", limit=limit)
+            items = _yt_api_list_uploads(channel_id, pages=3)
             _cache_write(key, items)
             return _shape(items)
         except Exception as e:
-            print(f"[home latest] fetch error: {e}")
-            if stale := _cache_read_any_age(key):
-                return _shape(stale)
-            raise
+            print(f"[home latest] yt error: {e}")
+            try:
+                items = _rss_latest(channel_id)
+                _cache_write(key, items)
+                return _shape(items)
+            except Exception as e2:
+                print(f"[home latest] rss error: {e2}")
+                if stale := _cache_read_any_age(key):
+                    return _shape(stale)
+                raise
 
 # --------------------------------------------------------------------------------------
 # Storage paths (repo data + persistent volume)
@@ -785,7 +764,7 @@ def serve_guide(slug: str):
 <body class="bg-gray-900 text-white">
   <header class="hero-header py-10 md:py-14">
     <div class="container mx-auto px-4 relative z-10 text-center">
-      <a href="/" class="inline-flex items-center justify-center mb-4">
+      <a href="/static/index.html" class="inline-flex items-center justify-center mb-4">
         <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
              alt="Ryan Retro" class="w-20 h-20 rounded-full pixel-border bg-gray-900">
       </a>
@@ -797,7 +776,7 @@ def serve_guide(slug: str):
       {html}
     </article>
     <div class="max-w-3xl mx-auto mt-10">
-      <a href="/#guides" class="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-bold">← Back to Retro Guides</a>
+      <a href="/static/index.html#guides" class="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-bold">← Back to Retro Guides</a>
     </div>
   </main>
   <footer class="bg-black py-8 mt-16">
@@ -817,28 +796,6 @@ def serve_guide(slug: str):
         return FileResponse(idx_path, media_type="text/html")
 
     return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
-
-# --------------------------------------------------------------------------------------
-# Device Shortlinks (Vanity URLs)
-# --------------------------------------------------------------------------------------
-@app.get("/{device_slug}", response_class=FileResponse)
-def device_vanity_redirect(device_slug: str):
-    # If the user visits /rpg2, /rp5, etc., we serve the handheld.html page.
-    # The client-side JS in handheld.html will parse the path and load the correct device.
-    valid_slugs = {
-        "rpg2", "rp5", "rp6", "flip2", "odin3", "thor", 
-        "konkr", "classic", "portal", "odin2portal"
-    }
-    
-    if device_slug.lower() in valid_slugs:
-        return FileResponse(os.path.join(REPO_DIR, "static", "handheld.html"))
-    
-    # If it's not a known shortcut, we let FastAPI handle 404 or other routes naturally.
-    # However, since this is a catch-all for root level paths, we need to be careful.
-    # We return a 404 here manually if it's not matched, but FastAPI's router should 
-    # ideally skip this if it matches other defined routes first. 
-    # Since this is defined near the end, specific API routes take precedence.
-    return HTMLResponse("<h1>Page not found</h1>", status_code=404)
 
 @app.get("/", response_class=FileResponse)
 def root():
