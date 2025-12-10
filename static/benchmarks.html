@@ -99,6 +99,12 @@
       padding: 0.5rem 0.5rem;
       font-size: 0.7rem;
     }
+    /* Reduce vertical padding even more for header in mini mode */
+    .mini-mode .rr-table th.th-device {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+      vertical-align: middle;
+    }
     .mini-mode .chipset-label { display: none; }
     
     /* Remove bottom margin from device name in mini mode to save vertical space */
@@ -973,13 +979,19 @@
         const rows = table.querySelectorAll('tbody tr');
 
         rows.forEach(row => {
-          const gameName = row.children[0].innerText.trim();
+          // Use dataset.fullName if available (set by mini mode logic), otherwise innerText
+          const nameCell = row.children[0];
+          const gameName = nameCell.dataset.fullName || nameCell.innerText.trim();
+          
           const demanding = (
             gameName === 'Elden Ring' || 
             gameName === 'Cyberpunk 2077' || 
             gameName === 'Need for Speed Rivals' ||
             gameName === 'Pokémon Sword (Open Areas)' ||
-            gameName === 'Pokémon Sword (In Battle)'
+            gameName === 'Pokémon Sword (In Battle)' ||
+            gameName === 'The Legend of Zelda: Breath of the Wild' ||
+            gameName === 'The Legend of Zelda: Tears of the Kingdom' ||
+            gameName === 'The Witcher 3'
           );
           const threshold = demanding ? 30 : 60;
 
