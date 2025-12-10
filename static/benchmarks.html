@@ -60,7 +60,7 @@
       white-space: nowrap;
     }
 
-    /* NEW: vertical column dividers for all modes */
+    /* Vertical column dividers for all modes */
     .rr-table tbody tr td:not(:first-child) {
       border-left: 1px solid #374151;
     }
@@ -79,10 +79,18 @@
 
     /* Highlight best value cell */
     .rr-table td.best-cell {
-      background-color: rgba(74, 222, 128, 0.2) !important; /* Green tint */
+      background-color: rgba(74, 222, 128, 0.2) !important;
       color: #4ade80;
       font-weight: 700;
       border-left: 2px solid #4ade80;
+    }
+
+    /* Runs Great highlight */
+    .rr-table td.runs-great {
+      background-color: rgba(16, 185, 129, 0.18) !important;
+      box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.9);
+      color: #6ee7b7;
+      font-weight: 700;
     }
 
     /* Mini mode for mobile */
@@ -92,6 +100,9 @@
       font-size: 0.7rem;
     }
     .mini-mode .chipset-label { display: none; }
+    
+    /* Remove bottom margin from device name in mini mode to save vertical space */
+    .mini-mode .rr-table th span.mb-1 { margin-bottom: 0; }
 
     /* Toggle Button States */
     .toggle-btn.off { opacity: 0.5; filter: grayscale(100%); }
@@ -115,7 +126,8 @@
   </header>
 
   <main class="flex-grow py-10 md:py-14">
-    <div class="mx-auto px-4 w-[85%] max-w-[1900px]">
+    <!-- WIDER CONTAINER: now full-width with light padding -->
+    <div class="mx-auto w-full max-w-[1900px] px-2 sm:px-4">
       
       <div class="text-center mb-10" data-aos="fade-down">
         <h1 class="retro-font text-3xl md:text-5xl text-yellow-400 mb-4 text-shadow">BENCHMARKS</h1>
@@ -150,8 +162,9 @@
           <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="4">
             <span class="w-2 h-2 rounded-full bg-orange-400"></span> Konkr
           </button>
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="5">
-            <span class="w-2 h-2 rounded-full bg-pink-400"></span> Fold 7
+          <!-- FOLD 7 DISABLED BY DEFAULT -->
+          <button type="button" class="device-toggle toggle-btn off border border-gray-700 text-gray-600 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="5">
+            <span class="w-2 h-2 rounded-full" style="background-color: #374151;"></span> Fold 7
           </button>
           <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="6">
             <span class="w-2 h-2 rounded-full bg-purple-400"></span> Odin 3
@@ -168,6 +181,14 @@
           <button id="toggleColorMode" class="px-3 py-1.5 rounded border border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
             <i data-feather="bar-chart" class="w-3 h-3"></i> Ranking Mode
           </button>
+          <!-- Runs Great Button -->
+          <button id="toggleRunsGreat" class="px-3 py-1.5 rounded border border-green-400 text-green-300 hover:bg-green-400 hover:text-black transition text-xs font-bold flex items-center gap-2">
+            <i data-feather="check-circle" class="w-3 h-3"></i> Runs Great
+          </button>
+          <!-- NEW: Emoji Mode Button -->
+          <button id="toggleEmojiMode" class="px-3 py-1.5 rounded border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
+            <i data-feather="smile" class="w-3 h-3"></i> Emoji Mode
+          </button>
           <button id="toggleMiniMode" class="px-3 py-1.5 rounded border border-sky-500 text-sky-400 hover:bg-sky-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
             <i data-feather="smartphone" class="w-3 h-3"></i> Mini View
           </button>
@@ -175,7 +196,8 @@
       </div>
 
       <div id="benchCard" class="bg-gray-800 pixel-border rounded-lg overflow-hidden shadow-2xl" data-aos="fade-up" data-aos-delay="100">
-        <div class="overflow-x-auto custom-scrollbar">
+        <!-- WIDER SCROLL WRAPPER -->
+        <div class="overflow-x-auto custom-scrollbar w-full">
           
           <!-- Combined Table -->
           <table class="rr-table w-full text-left" data-mode="combined">
@@ -209,272 +231,244 @@
                 <th class="th-device device-col-7 sortable min-w-[140px] text-center border-l border-gray-800">
                   <span class="text-cyan-400 block mb-1">Steam Deck</span>
                   <span class="text-[12px] text-gray-500 font-sans chipset-label">AMD APU</span>
-                  <!-- Custom chip, no label -->
                 </th>
               </tr>
             </thead>
-            <!-- Added even:bg-gray-800/30 for alternating stripes -->
             <tbody class="text-sm font-mono text-gray-300 divide-y divide-gray-700 bg-gray-900">
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Captain Toad: Treasure Tracker</td>
-    <td class="text-center border-l border-gray-700">45</td>
-    <td class="text-center border-l border-gray-700">75</td>
-    <td class="text-center border-l border-gray-700">80</td>
-    <td class="text-center border-l border-gray-700">155</td>
-    <td class="text-center border-l border-gray-700">75</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Cuphead</td>
-    <td class="text-center border-l border-gray-700">130</td>
-    <td class="text-center border-l border-gray-700">175</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">280</td>
-    <td class="text-center border-l border-gray-700">140</td>
-    <td class="text-center border-l border-gray-700">318</td>
-    <td class="text-center border-l border-gray-700">60</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Cyberpunk 2077</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">11</td>
-    <td class="text-center border-l border-gray-700">15</td>
-    <td class="text-center border-l border-gray-700">16</td>
-    <td class="text-center border-l border-gray-700">7</td>
-    <td class="text-center border-l border-gray-700">14</td>
-    <td class="text-center border-l border-gray-700">30</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Donut County</td>
-    <td class="text-center border-l border-gray-700">38</td>
-    <td class="text-center border-l border-gray-700">80</td>
-    <td class="text-center border-l border-gray-700">76</td>
-    <td class="text-center border-l border-gray-700">156</td>
-    <td class="text-center border-l border-gray-700">75</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Elden Ring</td>
-    <td class="text-center border-l border-gray-700">11</td>
-    <td class="text-center border-l border-gray-700">15</td>
-    <td class="text-center border-l border-gray-700">19</td>
-    <td class="text-center border-l border-gray-700">25</td>
-    <td class="text-center border-l border-gray-700">5</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">40</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">FIFA 18</td>
-    <td class="text-center border-l border-gray-700">60</td>
-    <td class="text-center border-l border-gray-700">73</td>
-    <td class="text-center border-l border-gray-700">86</td>
-    <td class="text-center border-l border-gray-700">150</td>
-    <td class="text-center border-l border-gray-700">82</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">GTA V</td>
-    <td class="text-center border-l border-gray-700">20</td>
-    <td class="text-center border-l border-gray-700">44</td>
-    <td class="text-center border-l border-gray-700">47</td>
-    <td class="text-center border-l border-gray-700">57</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">67</td>
-    <td class="text-center border-l border-gray-700">76</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Golf Story</td>
-    <td class="text-center border-l border-gray-700">126</td>
-    <td class="text-center border-l border-gray-700">126</td>
-    <td class="text-center border-l border-gray-700">175</td>
-    <td class="text-center border-l border-gray-700">185</td>
-    <td class="text-center border-l border-gray-700">180</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Gris</td>
-    <td class="text-center border-l border-gray-700">61</td>
-    <td class="text-center border-l border-gray-700">115</td>
-    <td class="text-center border-l border-gray-700">110</td>
-    <td class="text-center border-l border-gray-700">260</td>
-    <td class="text-center border-l border-gray-700">126</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Hades 2</td>
-    <td class="text-center border-l border-gray-700">51</td>
-    <td class="text-center border-l border-gray-700">67</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">124</td>
-    <td class="text-center border-l border-gray-700">105</td>
-    <td class="text-center border-l border-gray-700">190</td>
-    <td class="text-center border-l border-gray-700">150</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Hollow Knight Silksong</td>
-    <td class="text-center border-l border-gray-700">80</td>
-    <td class="text-center border-l border-gray-700">120</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">190</td>
-    <td class="text-center border-l border-gray-700">122</td>
-    <td class="text-center border-l border-gray-700">220</td>
-    <td class="text-center border-l border-gray-700">250</td>
-  </tr>
-  <!-- MISSING BEFORE: Megabonk -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Megabonk</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">40</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">68</td>
-    <td class="text-center border-l border-gray-700">40</td>
-    <td class="text-center border-l border-gray-700">90</td>
-    <td class="text-center border-l border-gray-700">240</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Monster Boy and the Cursed Kingdom</td>
-    <td class="text-center border-l border-gray-700">115</td>
-    <td class="text-center border-l border-gray-700">100</td>
-    <td class="text-center border-l border-gray-700">160</td>
-    <td class="text-center border-l border-gray-700">165</td>
-    <td class="text-center border-l border-gray-700">120</td>
-    <td class="text-center border-l border-gray-700">220</td>
-    <td class="text-center border-l border-gray-700">250</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">30</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
-    <td class="text-center border-l border-gray-700">40</td>
-    <td class="text-center border-l border-gray-700">70</td>
-    <td class="text-center border-l border-gray-700">84</td>
-    <td class="text-center border-l border-gray-700">123</td>
-    <td class="text-center border-l border-gray-700">95</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">33</td>
-    <td class="text-center border-l border-gray-700">50</td>
-    <td class="text-center border-l border-gray-700">53</td>
-    <td class="text-center border-l border-gray-700">50</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
-    <td class="text-center border-l border-gray-700">25</td>
-    <td class="text-center border-l border-gray-700">36</td>
-    <td class="text-center border-l border-gray-700">57</td>
-    <td class="text-center border-l border-gray-700">57</td>
-    <td class="text-center border-l border-gray-700">47</td>
-    <td class="text-center border-l border-gray-700">57</td>
-    <td class="text-center border-l border-gray-700">60</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Slay the Spire</td>
-    <td class="text-center border-l border-gray-700">110</td>
-    <td class="text-center border-l border-gray-700">115</td>
-    <td class="text-center border-l border-gray-700">142</td>
-    <td class="text-center border-l border-gray-700">145</td>
-    <td class="text-center border-l border-gray-700">200</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <!-- MISSING BEFORE: Tennis in the Face -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Tennis in the Face</td>
-    <td class="text-center border-l border-gray-700">124</td>
-    <td class="text-center border-l border-gray-700">106</td>
-    <td class="text-center border-l border-gray-700">124</td>
-    <td class="text-center border-l border-gray-700">124</td>
-    <td class="text-center border-l border-gray-700">124</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Breath of the Wild</td>
-    <td class="text-center border-l border-gray-700">25</td>
-    <td class="text-center border-l border-gray-700">41</td>
-    <td class="text-center border-l border-gray-700">37</td>
-    <td class="text-center border-l border-gray-700">48</td>
-    <td class="text-center border-l border-gray-700">38</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Echoes of Wisdom</td>
-    <td class="text-center border-l border-gray-700">38</td>
-    <td class="text-center border-l border-gray-700">35</td>
-    <td class="text-center border-l border-gray-700">58</td>
-    <td class="text-center border-l border-gray-700">55</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Tears of the Kingdom</td>
-    <td class="text-center border-l border-gray-700">22</td>
-    <td class="text-center border-l border-gray-700">35</td>
-    <td class="text-center border-l border-gray-700">44</td>
-    <td class="text-center border-l border-gray-700">46</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
-    <td class="text-center border-l border-gray-700">14</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">42</td>
-    <td class="text-center border-l border-gray-700">35</td>
-    <td class="text-center border-l border-gray-700">41</td>
-    <td class="text-center border-l border-gray-700"></td>
-    <td class="text-center border-l border-gray-700"></td>
-  </tr>
-  <!-- MISSING BEFORE: Tomb Raider -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Tomb Raider</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">87</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">148</td>
-  </tr>
-  <!-- MISSING BEFORE: Traveller’s Rest -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Traveller’s Rest</td>
-    <td class="text-center border-l border-gray-700">-</td>
-    <td class="text-center border-l border-gray-700">40</td>
-    <td class="text-center border-l border-gray-700">30</td>
-    <td class="text-center border-l border-gray-700">50</td>
-    <td class="text-center border-l border-gray-700">40</td>
-    <td class="text-center border-l border-gray-700">70</td>
-    <td class="text-center border-l border-gray-700">78</td>
-  </tr>
-</tbody>
-
-
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Captain Toad: Treasure Tracker</td>
+                <td class="text-center">45</td>
+                <td class="text-center">75</td>
+                <td class="text-center">80</td>
+                <td class="text-center">155</td>
+                <td class="text-center">75</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Cuphead</td>
+                <td class="text-center">130</td>
+                <td class="text-center">175</td>
+                <td class="text-center">-</td>
+                <td class="text-center">280</td>
+                <td class="text-center">140</td>
+                <td class="text-center">318</td>
+                <td class="text-center">60</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Cyberpunk 2077</td>
+                <td class="text-center">-</td>
+                <td class="text-center">11</td>
+                <td class="text-center">15</td>
+                <td class="text-center">16</td>
+                <td class="text-center">7</td>
+                <td class="text-center">14</td>
+                <td class="text-center">30</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Donut County</td>
+                <td class="text-center">38</td>
+                <td class="text-center">80</td>
+                <td class="text-center">76</td>
+                <td class="text-center">156</td>
+                <td class="text-center">75</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Elden Ring</td>
+                <td class="text-center">11</td>
+                <td class="text-center">15</td>
+                <td class="text-center">19</td>
+                <td class="text-center">25</td>
+                <td class="text-center">5</td>
+                <td class="text-center">30</td>
+                <td class="text-center">40</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">FIFA 18</td>
+                <td class="text-center">60</td>
+                <td class="text-center">73</td>
+                <td class="text-center">86</td>
+                <td class="text-center">150</td>
+                <td class="text-center">82</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Golf Story</td>
+                <td class="text-center">126</td>
+                <td class="text-center">126</td>
+                <td class="text-center">175</td>
+                <td class="text-center">185</td>
+                <td class="text-center">180</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Gris</td>
+                <td class="text-center">61</td>
+                <td class="text-center">115</td>
+                <td class="text-center">110</td>
+                <td class="text-center">260</td>
+                <td class="text-center">126</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">GTA V</td>
+                <td class="text-center">20</td>
+                <td class="text-center">44</td>
+                <td class="text-center">47</td>
+                <td class="text-center">57</td>
+                <td class="text-center">-</td>
+                <td class="text-center">67</td>
+                <td class="text-center">76</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Hades 2</td>
+                <td class="text-center">51</td>
+                <td class="text-center">67</td>
+                <td class="text-center">-</td>
+                <td class="text-center">124</td>
+                <td class="text-center">105</td>
+                <td class="text-center">190</td>
+                <td class="text-center">150</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Hollow Knight Silksong</td>
+                <td class="text-center">80</td>
+                <td class="text-center">120</td>
+                <td class="text-center">-</td>
+                <td class="text-center">190</td>
+                <td class="text-center">122</td>
+                <td class="text-center">220</td>
+                <td class="text-center">250</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Megabonk</td>
+                <td class="text-center">-</td>
+                <td class="text-center">40</td>
+                <td class="text-center">-</td>
+                <td class="text-center">68</td>
+                <td class="text-center">40</td>
+                <td class="text-center">90</td>
+                <td class="text-center">240</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Monster Boy and the Cursed Kingdom</td>
+                <td class="text-center">115</td>
+                <td class="text-center">100</td>
+                <td class="text-center">160</td>
+                <td class="text-center">165</td>
+                <td class="text-center">120</td>
+                <td class="text-center">220</td>
+                <td class="text-center">250</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
+                <td class="text-center">-</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
+                <td class="text-center">40</td>
+                <td class="text-center">70</td>
+                <td class="text-center">84</td>
+                <td class="text-center">123</td>
+                <td class="text-center">95</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
+                <td class="text-center">30</td>
+                <td class="text-center">33</td>
+                <td class="text-center">50</td>
+                <td class="text-center">53</td>
+                <td class="text-center">50</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
+                <td class="text-center">25</td>
+                <td class="text-center">36</td>
+                <td class="text-center">57</td>
+                <td class="text-center">57</td>
+                <td class="text-center">47</td>
+                <td class="text-center">57</td>
+                <td class="text-center">60</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Slay the Spire</td>
+                <td class="text-center">110</td>
+                <td class="text-center">115</td>
+                <td class="text-center">142</td>
+                <td class="text-center">145</td>
+                <td class="text-center">200</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Tennis in the Face</td>
+                <td class="text-center">124</td>
+                <td class="text-center">106</td>
+                <td class="text-center">124</td>
+                <td class="text-center">124</td>
+                <td class="text-center">124</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Breath of the Wild</td>
+                <td class="text-center">25</td>
+                <td class="text-center">41</td>
+                <td class="text-center">37</td>
+                <td class="text-center">48</td>
+                <td class="text-center">38</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Echoes of Wisdom</td>
+                <td class="text-center">38</td>
+                <td class="text-center">35</td>
+                <td class="text-center">58</td>
+                <td class="text-center">55</td>
+                <td class="text-center">-</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Tears of the Kingdom</td>
+                <td class="text-center">22</td>
+                <td class="text-center">35</td>
+                <td class="text-center">44</td>
+                <td class="text-center">46</td>
+                <td class="text-center">-</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
+                <td class="text-center">14</td>
+                <td class="text-center">30</td>
+                <td class="text-center">42</td>
+                <td class="text-center">35</td>
+                <td class="text-center">41</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+            </tbody>
           </table>
 
-          <!-- Switch Only (Fixed Headers) -->
+          <!-- Switch Only -->
           <table class="rr-table w-full text-left" data-mode="switch" style="display:none;">
             <thead class="bg-black text-red-400 retro-font">
               <tr>
@@ -510,143 +504,140 @@
               </tr>
             </thead>
             <tbody class="text-sm font-mono text-gray-300 divide-y divide-gray-700 bg-gray-900">
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Captain Toad: Treasure Tracker</td>
-    <td class="text-center">45</td>
-    <td class="text-center">75</td>
-    <td class="text-center">80</td>
-    <td class="text-center">155</td>
-    <td class="text-center">75</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Donut County</td>
-    <td class="text-center">38</td>
-    <td class="text-center">80</td>
-    <td class="text-center">76</td>
-    <td class="text-center">156</td>
-    <td class="text-center">75</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">FIFA 18</td>
-    <td class="text-center">60</td>
-    <td class="text-center">73</td>
-    <td class="text-center">86</td>
-    <td class="text-center">150</td>
-    <td class="text-center">82</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Golf Story</td>
-    <td class="text-center">126</td>
-    <td class="text-center">126</td>
-    <td class="text-center">175</td>
-    <td class="text-center">185</td>
-    <td class="text-center">180</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Gris</td>
-    <td class="text-center">61</td>
-    <td class="text-center">115</td>
-    <td class="text-center">110</td>
-    <td class="text-center">260</td>
-    <td class="text-center">126</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
-    <td class="text-center">30</td>
-    <td class="text-center">33</td>
-    <td class="text-center">50</td>
-    <td class="text-center">53</td>
-    <td class="text-center">50</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
-    <td class="text-center">40</td>
-    <td class="text-center">70</td>
-    <td class="text-center">84</td>
-    <td class="text-center">123</td>
-    <td class="text-center">95</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <!-- MISSING BEFORE: Slay the Spire -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Slay the Spire</td>
-    <td class="text-center">110</td>
-    <td class="text-center">115</td>
-    <td class="text-center">142</td>
-    <td class="text-center">145</td>
-    <td class="text-center">200</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <!-- MISSING BEFORE: Tennis in the Face -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Tennis in the Face</td>
-    <td class="text-center">124</td>
-    <td class="text-center">106</td>
-    <td class="text-center">124</td>
-    <td class="text-center">124</td>
-    <td class="text-center">124</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Breath of the Wild</td>
-    <td class="text-center">25</td>
-    <td class="text-center">41</td>
-    <td class="text-center">37</td>
-    <td class="text-center">48</td>
-    <td class="text-center">38</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Echoes of Wisdom</td>
-    <td class="text-center">38</td>
-    <td class="text-center">35</td>
-    <td class="text-center">58</td>
-    <td class="text-center">55</td>
-    <td class="text-center">-</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Tears of the Kingdom</td>
-    <td class="text-center">22</td>
-    <td class="text-center">35</td>
-    <td class="text-center">44</td>
-    <td class="text-center">46</td>
-    <td class="text-center">-</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
-    <td class="text-center">14</td>
-    <td class="text-center">30</td>
-    <td class="text-center">42</td>
-    <td class="text-center">35</td>
-    <td class="text-center">41</td>
-    <td class="text-center"></td>
-    <td class="text-center"></td>
-  </tr>
-</tbody>
-
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Captain Toad: Treasure Tracker</td>
+                <td class="text-center">45</td>
+                <td class="text-center">75</td>
+                <td class="text-center">80</td>
+                <td class="text-center">155</td>
+                <td class="text-center">75</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Donut County</td>
+                <td class="text-center">38</td>
+                <td class="text-center">80</td>
+                <td class="text-center">76</td>
+                <td class="text-center">156</td>
+                <td class="text-center">75</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">FIFA 18</td>
+                <td class="text-center">60</td>
+                <td class="text-center">73</td>
+                <td class="text-center">86</td>
+                <td class="text-center">150</td>
+                <td class="text-center">82</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Golf Story</td>
+                <td class="text-center">126</td>
+                <td class="text-center">126</td>
+                <td class="text-center">175</td>
+                <td class="text-center">185</td>
+                <td class="text-center">180</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Gris</td>
+                <td class="text-center">61</td>
+                <td class="text-center">115</td>
+                <td class="text-center">110</td>
+                <td class="text-center">260</td>
+                <td class="text-center">126</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
+                <td class="text-center">30</td>
+                <td class="text-center">33</td>
+                <td class="text-center">50</td>
+                <td class="text-center">53</td>
+                <td class="text-center">50</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
+                <td class="text-center">40</td>
+                <td class="text-center">70</td>
+                <td class="text-center">84</td>
+                <td class="text-center">123</td>
+                <td class="text-center">95</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Slay the Spire</td>
+                <td class="text-center">110</td>
+                <td class="text-center">115</td>
+                <td class="text-center">142</td>
+                <td class="text-center">145</td>
+                <td class="text-center">200</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Tennis in the Face</td>
+                <td class="text-center">124</td>
+                <td class="text-center">106</td>
+                <td class="text-center">124</td>
+                <td class="text-center">124</td>
+                <td class="text-center">124</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Breath of the Wild</td>
+                <td class="text-center">25</td>
+                <td class="text-center">41</td>
+                <td class="text-center">37</td>
+                <td class="text-center">48</td>
+                <td class="text-center">38</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Echoes of Wisdom</td>
+                <td class="text-center">38</td>
+                <td class="text-center">35</td>
+                <td class="text-center">58</td>
+                <td class="text-center">55</td>
+                <td class="text-center">-</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Tears of the Kingdom</td>
+                <td class="text-center">22</td>
+                <td class="text-center">35</td>
+                <td class="text-center">44</td>
+                <td class="text-center">46</td>
+                <td class="text-center">-</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
+                <td class="text-center">14</td>
+                <td class="text-center">30</td>
+                <td class="text-center">42</td>
+                <td class="text-center">35</td>
+                <td class="text-center">41</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+              </tr>
+            </tbody>
           </table>
 
-          <!-- Windows Only (Fixed Headers) -->
+          <!-- Windows Only -->
           <table class="rr-table w-full text-left" data-mode="windows" style="display:none;">
             <thead class="bg-black text-blue-400 retro-font">
               <tr>
@@ -682,131 +673,127 @@
               </tr>
             </thead>
             <tbody class="text-sm font-mono text-gray-300 divide-y divide-gray-700 bg-gray-900">
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Cuphead</td>
-    <td class="text-center">130</td>
-    <td class="text-center">175</td>
-    <td class="text-center">-</td>
-    <td class="text-center">280</td>
-    <td class="text-center">140</td>
-    <td class="text-center">318</td>
-    <td class="text-center">60</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Cyberpunk 2077</td>
-    <td class="text-center">-</td>
-    <td class="text-center">11</td>
-    <td class="text-center">15</td>
-    <td class="text-center">16</td>
-    <td class="text-center">7</td>
-    <td class="text-center">14</td>
-    <td class="text-center">30</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Elden Ring</td>
-    <td class="text-center">11</td>
-    <td class="text-center">15</td>
-    <td class="text-center">19</td>
-    <td class="text-center">25</td>
-    <td class="text-center">5</td>
-    <td class="text-center">30</td>
-    <td class="text-center">40</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">GTA V</td>
-    <td class="text-center">20</td>
-    <td class="text-center">44</td>
-    <td class="text-center">47</td>
-    <td class="text-center">57</td>
-    <td class="text-center">-</td>
-    <td class="text-center">67</td>
-    <td class="text-center">76</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Hades 2</td>
-    <td class="text-center">51</td>
-    <td class="text-center">67</td>
-    <td class="text-center">-</td>
-    <td class="text-center">124</td>
-    <td class="text-center">105</td>
-    <td class="text-center">190</td>
-    <td class="text-center">150</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Hollow Knight Silksong</td>
-    <td class="text-center">80</td>
-    <td class="text-center">120</td>
-    <td class="text-center">-</td>
-    <td class="text-center">190</td>
-    <td class="text-center">122</td>
-    <td class="text-center">220</td>
-    <td class="text-center">250</td>
-  </tr>
-  <!-- MISSING BEFORE: Megabonk -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Megabonk</td>
-    <td class="text-center">-</td>
-    <td class="text-center">40</td>
-    <td class="text-center">-</td>
-    <td class="text-center">68</td>
-    <td class="text-center">40</td>
-    <td class="text-center">90</td>
-    <td class="text-center">240</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Monster Boy and the Cursed Kingdom</td>
-    <td class="text-center">115</td>
-    <td class="text-center">100</td>
-    <td class="text-center">160</td>
-    <td class="text-center">165</td>
-    <td class="text-center">120</td>
-    <td class="text-center">220</td>
-    <td class="text-center">250</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
-    <td class="text-center">-</td>
-    <td class="text-center">30</td>
-    <td class="text-center">30</td>
-    <td class="text-center">30</td>
-    <td class="text-center">30</td>
-    <td class="text-center">30</td>
-    <td class="text-center">30</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
-    <td class="text-center">25</td>
-    <td class="text-center">36</td>
-    <td class="text-center">57</td>
-    <td class="text-center">57</td>
-    <td class="text-center">47</td>
-    <td class="text-center">57</td>
-    <td class="text-center">60</td>
-  </tr>
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Tomb Raider</td>
-    <td class="text-center">-</td>
-    <td class="text-center">-</td>
-    <td class="text-center">-</td>
-    <td class="text-center">-</td>
-    <td class="text-center">87</td>
-    <td class="text-center">-</td>
-    <td class="text-center">148</td>
-  </tr>
-  <!-- MISSING BEFORE: Traveller’s Rest -->
-  <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-    <td class="font-bold text-white bg-gray-800/50">Traveller’s Rest</td>
-    <td class="text-center">-</td>
-    <td class="text-center">40</td>
-    <td class="text-center">30</td>
-    <td class="text-center">50</td>
-    <td class="text-center">40</td>
-    <td class="text-center">70</td>
-    <td class="text-center">78</td>
-  </tr>
-</tbody>
-
-
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Cuphead</td>
+                <td class="text-center">130</td>
+                <td class="text-center">175</td>
+                <td class="text-center">-</td>
+                <td class="text-center">280</td>
+                <td class="text-center">140</td>
+                <td class="text-center">318</td>
+                <td class="text-center">60</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Cyberpunk 2077</td>
+                <td class="text-center">-</td>
+                <td class="text-center">11</td>
+                <td class="text-center">15</td>
+                <td class="text-center">16</td>
+                <td class="text-center">7</td>
+                <td class="text-center">14</td>
+                <td class="text-center">30</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Elden Ring</td>
+                <td class="text-center">11</td>
+                <td class="text-center">15</td>
+                <td class="text-center">19</td>
+                <td class="text-center">25</td>
+                <td class="text-center">5</td>
+                <td class="text-center">30</td>
+                <td class="text-center">40</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">GTA V</td>
+                <td class="text-center">20</td>
+                <td class="text-center">44</td>
+                <td class="text-center">47</td>
+                <td class="text-center">57</td>
+                <td class="text-center">-</td>
+                <td class="text-center">67</td>
+                <td class="text-center">76</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Hades 2</td>
+                <td class="text-center">51</td>
+                <td class="text-center">67</td>
+                <td class="text-center">-</td>
+                <td class="text-center">124</td>
+                <td class="text-center">105</td>
+                <td class="text-center">190</td>
+                <td class="text-center">150</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Hollow Knight Silksong</td>
+                <td class="text-center">80</td>
+                <td class="text-center">120</td>
+                <td class="text-center">-</td>
+                <td class="text-center">190</td>
+                <td class="text-center">122</td>
+                <td class="text-center">220</td>
+                <td class="text-center">250</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Megabonk</td>
+                <td class="text-center">-</td>
+                <td class="text-center">40</td>
+                <td class="text-center">-</td>
+                <td class="text-center">68</td>
+                <td class="text-center">40</td>
+                <td class="text-center">90</td>
+                <td class="text-center">240</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Monster Boy and the Cursed Kingdom</td>
+                <td class="text-center">115</td>
+                <td class="text-center">100</td>
+                <td class="text-center">160</td>
+                <td class="text-center">165</td>
+                <td class="text-center">120</td>
+                <td class="text-center">220</td>
+                <td class="text-center">250</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
+                <td class="text-center">-</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+                <td class="text-center">30</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
+                <td class="text-center">25</td>
+                <td class="text-center">36</td>
+                <td class="text-center">57</td>
+                <td class="text-center">57</td>
+                <td class="text-center">47</td>
+                <td class="text-center">57</td>
+                <td class="text-center">60</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Tomb Raider</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+                <td class="text-center">87</td>
+                <td class="text-center">-</td>
+                <td class="text-center">148</td>
+              </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Traveller’s Rest</td>
+                <td class="text-center">-</td>
+                <td class="text-center">40</td>
+                <td class="text-center">30</td>
+                <td class="text-center">50</td>
+                <td class="text-center">40</td>
+                <td class="text-center">70</td>
+                <td class="text-center">78</td>
+              </tr>
+            </tbody>
           </table>
 
         </div>
@@ -850,8 +837,11 @@
       let activeMode = 'combined';
       let highlightOn = false;
       let colorModeOn = false;
+      let runsGreatOn = false;
+      let emojiModeOn = false; // Renamed from emoModeOn
       let miniModeOn = false;
-      const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true };
+      // FOLD 7 (index 5) is disabled by default
+      const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: false, 6: true, 7: true };
 
       // Selectors
       const tables = document.querySelectorAll('.rr-table');
@@ -859,10 +849,10 @@
       const deviceButtons = document.querySelectorAll('.device-toggle');
       const highlightBtn = document.getElementById('toggleHighlight');
       const colorBtn = document.getElementById('toggleColorMode');
+      const runsBtn = document.getElementById('toggleRunsGreat');
+      const emojiBtn = document.getElementById('toggleEmojiMode'); // Renamed button selector
       const miniBtn = document.getElementById('toggleMiniMode');
       const benchCard = document.getElementById('benchCard');
-
-      // --- Functions ---
 
       function getActiveTable() {
         return document.querySelector(`.rr-table[data-mode="${activeMode}"]`);
@@ -873,29 +863,42 @@
         getActiveTable().style.display = 'table';
       }
 
+      function clearEffects() {
+        document.querySelectorAll('.best-cell').forEach(el => el.classList.remove('best-cell'));
+        document.querySelectorAll('.runs-great').forEach(el => el.classList.remove('runs-great'));
+        document.querySelectorAll('.rr-table td').forEach(el => {
+          el.style.color = '';
+          el.style.fontWeight = '';
+          // Restore text if it was replaced by emotional mode
+          if (el.dataset.original) {
+            el.innerText = el.dataset.original;
+            delete el.dataset.original;
+          }
+        });
+      }
+
       function updateColumnVisibility() {
         tables.forEach(table => {
           const headRow = table.querySelector('thead tr');
           const bodyRows = table.querySelectorAll('tbody tr');
 
-          // Toggle Headers (Index 1-7 correspond to device columns)
           for (let i = DEVICE_COUNT; i >= 1; i--) {
             const th = headRow.children[i];
-            if(th) th.style.display = columnVisibility[i] ? '' : 'none';
+            if (th) th.style.display = columnVisibility[i] ? '' : 'none';
           }
 
-          // Toggle Cells
           bodyRows.forEach(row => {
             for (let i = DEVICE_COUNT; i >= 1; i--) {
               const td = row.children[i];
-              if(td) td.style.display = columnVisibility[i] ? '' : 'none';
+              if (td) td.style.display = columnVisibility[i] ? '' : 'none';
             }
           });
         });
         
-        // Re-apply effects
         if (highlightOn) applyHighlight();
         if (colorModeOn) applyColorMode();
+        if (runsGreatOn) applyRunsGreat();
+        if (emojiModeOn) applyEmojiMode(); // Renamed function call
       }
 
       function applyHighlight() {
@@ -907,7 +910,6 @@
           let maxVal = -Infinity;
           let cells = [];
 
-          // Find max
           for (let i = 1; i <= DEVICE_COUNT; i++) {
             if (!columnVisibility[i]) continue;
             const cell = row.children[i];
@@ -918,7 +920,6 @@
             }
           }
 
-          // Apply class
           if (maxVal > 0) {
             cells.forEach(cell => {
               if (parseFloat(cell.innerText) === maxVal) {
@@ -934,8 +935,6 @@
         const table = getActiveTable();
         const rows = table.querySelectorAll('tbody tr');
         
-        // Color scale: Red -> Yellow -> Green
-        // We'll normalize each row relative to itself to show relative performance
         rows.forEach(row => {
           let vals = [];
           for (let i = 1; i <= DEVICE_COUNT; i++) {
@@ -953,66 +952,165 @@
             if (!columnVisibility[i]) continue;
             const cell = row.children[i];
             const val = parseFloat(cell.innerText);
-            
             if (isNaN(val)) continue;
 
-            const t = (val - min) / range; // 0 -> 1
-            // Simple 3-stop gradient: red -> yellow -> green
+            const t = (val - min) / range;
             if (t < 0.33) {
-              cell.style.color = '#f87171'; // red-ish
+              cell.style.color = '#f87171';
             } else if (t < 0.66) {
-              cell.style.color = '#facc15'; // yellow-ish
+              cell.style.color = '#facc15';
             } else {
-              cell.style.color = '#4ade80'; // green-ish
+              cell.style.color = '#4ade80';
               cell.style.fontWeight = 'bold';
             }
           }
         });
       }
 
-      function clearEffects() {
-        document.querySelectorAll('.best-cell').forEach(el => el.classList.remove('best-cell'));
-        document.querySelectorAll('.rr-table td').forEach(el => {
-          el.style.color = '';
-          el.style.fontWeight = '';
+      function applyRunsGreat() {
+        clearEffects();
+        const table = getActiveTable();
+        const rows = table.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+          const gameName = row.children[0].innerText.trim();
+          const demanding = (
+            gameName === 'Elden Ring' || 
+            gameName === 'Cyberpunk 2077' || 
+            gameName === 'Need for Speed Rivals' ||
+            gameName === 'Pokémon Sword (Open Areas)' ||
+            gameName === 'Pokémon Sword (In Battle)'
+          );
+          const threshold = demanding ? 30 : 60;
+
+          for (let i = 1; i <= DEVICE_COUNT; i++) {
+            if (!columnVisibility[i]) continue;
+            const cell = row.children[i];
+            const val = parseFloat(cell.innerText);
+            if (!isNaN(val) && val >= threshold) {
+              cell.classList.add('runs-great');
+            }
+          }
         });
       }
 
-      // --- Event Listeners ---
+      function applyEmojiMode() {
+        clearEffects(); // Start with clean state
+        const table = getActiveTable();
+        const rows = table.querySelectorAll('tbody tr');
 
-      // Mode Toggles with Custom Colors
+        rows.forEach(row => {
+          // 1. Gather numerical values to find min/max
+          let vals = [];
+          for (let i = 1; i <= DEVICE_COUNT; i++) {
+            if (!columnVisibility[i]) continue;
+            const val = parseFloat(row.children[i].innerText);
+            if (!isNaN(val)) vals.push(val);
+          }
+
+          const minVal = vals.length > 0 ? Math.min(...vals) : null;
+          const maxVal = vals.length > 0 ? Math.max(...vals) : null;
+          const range = (maxVal !== null && minVal !== null) ? (maxVal - minVal) || 1 : 1;
+
+          // 2. Assign emojis
+          for (let i = 1; i <= DEVICE_COUNT; i++) {
+            if (!columnVisibility[i]) continue;
+            const cell = row.children[i];
+            const originalText = cell.innerText.trim();
+            const val = parseFloat(originalText);
+
+            // Save original for restoration
+            if (!cell.dataset.original) {
+              cell.dataset.original = originalText;
+            }
+
+            // Logic
+            if (originalText === '') {
+               // Leave blank
+            } else if (originalText === '-') {
+               cell.innerHTML = '<span class="text-2xl leading-none">💀</span>'; // Skull for crash/issue
+            } else if (!isNaN(val)) {
+               // Swapped order: Check Max first. If min == max (all equal), everyone is a winner 🏆
+               let emoji = '';
+               if (val === maxVal) {
+                 emoji = '🏆'; // Trophy for highest
+               } else if (val === minVal) {
+                 emoji = '💩'; // Poop for lowest
+               } else {
+                 // Calculate relative performance
+                 const t = (val - minVal) / range;
+                 if (t < 0.33) {
+                   emoji = '😐'; // Neutral (Low)
+                 } else if (t < 0.66) {
+                   emoji = '😊'; // Happy (Mid)
+                 } else {
+                   emoji = '😆'; // Very Happy (High)
+                 }
+               }
+               cell.innerHTML = `<span class="text-2xl leading-none">${emoji}</span>`;
+            }
+          }
+        });
+      }
+
+      function updateGameNamesForMiniMode() {
+        const rows = document.querySelectorAll('.rr-table tbody tr');
+        rows.forEach(row => {
+          const cell = row.children[0]; // First cell is the game name
+          
+          // Store original full name if not already stored
+          if (!cell.dataset.fullName) {
+            cell.dataset.fullName = cell.innerText.trim();
+          }
+
+          if (miniModeOn) {
+            const originalName = cell.dataset.fullName;
+            if (originalName === 'Monster Boy and the Cursed Kingdom') {
+              cell.innerText = 'Monster Boy';
+            } else if (originalName === 'Captain Toad: Treasure Tracker') {
+              cell.innerText = 'Captain Toad';
+            } else if (originalName.startsWith('The Legend of Zelda: ')) {
+              cell.innerText = originalName.replace('The Legend of Zelda: ', '');
+            }
+          } else {
+            // Restore full name
+            if (cell.dataset.fullName) {
+              cell.innerText = cell.dataset.fullName;
+            }
+          }
+        });
+      }
+
+      // Mode Toggles
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-          // 1. Reset all buttons to inactive Gray style
           modeButtons.forEach(b => {
             b.className = 'mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs bg-gray-700 text-gray-300 hover:bg-gray-600';
           });
 
-          // 2. Determine active colors based on the data-mode
           const mode = btn.dataset.mode;
           let activeClass = '';
 
           if (mode === 'combined') {
-            // Yellow for ALL
             activeClass = 'bg-yellow-400 text-black shadow-lg ring-2 ring-yellow-300';
           } else if (mode === 'switch') {
-            // Red for SWITCH
             activeClass = 'bg-red-600 text-white shadow-lg ring-2 ring-red-400';
           } else if (mode === 'windows') {
-            // Blue for WINDOWS
             activeClass = 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400';
           }
 
-          // 3. Apply the specific active styling
           btn.className = `mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs ${activeClass}`;
           
-          // 4. Update table logic
           activeMode = mode;
           updateTableVisibility();
           
-          // Re-trigger highlighting if active
-          if(highlightOn) applyHighlight();
-          if(colorModeOn) applyColorMode();
+          if (highlightOn) applyHighlight();
+          if (colorModeOn) applyColorMode();
+          if (runsGreatOn) applyRunsGreat();
+          if (emojiModeOn) applyEmojiMode();
+          
+          // Ensure name truncation persists across mode switches if mini mode is on
+          if (miniModeOn) updateGameNamesForMiniMode();
         });
       });
 
@@ -1025,12 +1123,11 @@
           if (isOn) {
             btn.classList.add('off', 'border-gray-700', 'text-gray-600');
             btn.classList.remove('on', 'border-gray-600', 'bg-gray-900');
-            btn.querySelector('span').style.backgroundColor = '#374151'; // gray dot
+            btn.querySelector('span').style.backgroundColor = '#374151';
             columnVisibility[idx] = false;
           } else {
             btn.classList.remove('off', 'border-gray-700', 'text-gray-600');
             btn.classList.add('on', 'border-gray-600', 'bg-gray-900');
-            // Restore dot color
             const colors = [
               '',
               'bg-green-500',
@@ -1041,7 +1138,7 @@
               'bg-purple-400',
               'bg-cyan-400'
             ];
-            btn.querySelector('span').style.backgroundColor = ''; // reset to class
+            btn.querySelector('span').style.backgroundColor = '';
             btn.querySelector('span').className = `w-2 h-2 rounded-full ${colors[idx]}`;
             columnVisibility[idx] = true;
           }
@@ -1052,11 +1149,18 @@
       // Highlight Button
       highlightBtn.addEventListener('click', () => {
         highlightOn = !highlightOn;
-        colorModeOn = false; // mutually exclusive for simplicity
+        colorModeOn = false;
+        runsGreatOn = false;
+        emojiModeOn = false; // Turn off emoji
         
-        // Reset Color Button visual state
         colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
         colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
+
+        runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
+        runsBtn.classList.add('border-green-400', 'text-green-300');
+
+        emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
+        emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
 
         if (highlightOn) {
           applyHighlight();
@@ -1073,10 +1177,17 @@
       colorBtn.addEventListener('click', () => {
         colorModeOn = !colorModeOn;
         highlightOn = false; 
+        runsGreatOn = false;
+        emojiModeOn = false;
 
-        // Reset Highlight Button
         highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
         highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
+
+        runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
+        runsBtn.classList.add('border-green-400', 'text-green-300');
+
+        emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
+        emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
 
         if (colorModeOn) {
           applyColorMode();
@@ -1086,6 +1197,62 @@
           clearEffects();
           colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
           colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
+        }
+      });
+
+      // Runs Great Button
+      runsBtn.addEventListener('click', () => {
+        runsGreatOn = !runsGreatOn;
+        highlightOn = false;
+        colorModeOn = false;
+        emojiModeOn = false;
+
+        highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
+        highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
+
+        colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
+        colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
+
+        emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
+        emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
+
+        if (runsGreatOn) {
+          applyRunsGreat();
+          runsBtn.classList.add('bg-green-500', 'text-black', 'shadow-lg');
+          runsBtn.classList.remove('border-green-400', 'text-green-300');
+        } else {
+          clearEffects();
+          runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
+          runsBtn.classList.add('border-green-400', 'text-green-300');
+        }
+      });
+
+      // Emoji Mode Button logic
+      emojiBtn.addEventListener('click', () => {
+        emojiModeOn = !emojiModeOn;
+        // Disable others
+        highlightOn = false;
+        colorModeOn = false;
+        runsGreatOn = false;
+
+        // Reset other buttons UI
+        highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
+        highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
+
+        colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
+        colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
+
+        runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
+        runsBtn.classList.add('border-green-400', 'text-green-300');
+
+        if (emojiModeOn) {
+          applyEmojiMode();
+          emojiBtn.classList.add('bg-yellow-500', 'text-black', 'shadow-lg');
+          emojiBtn.classList.remove('border-yellow-500', 'text-yellow-400');
+        } else {
+          clearEffects();
+          emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
+          emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
         }
       });
 
@@ -1101,6 +1268,7 @@
           miniBtn.classList.remove('bg-sky-500', 'text-black', 'shadow-lg');
           miniBtn.classList.add('border-sky-500', 'text-sky-400');
         }
+        updateGameNamesForMiniMode(); // Update text
       });
 
       // Sorting Logic
@@ -1112,17 +1280,17 @@
           const colIndex = Array.from(th.parentNode.children).indexOf(th);
           const isAsc = th.dataset.sortDir === 'asc';
           
-          // Reset icons
           table.querySelectorAll('th').forEach(h => h.removeAttribute('data-sort-dir'));
-          
-          // Toggle sort
           th.dataset.sortDir = isAsc ? 'desc' : 'asc';
           
           rowsArray.sort((a, b) => {
-            const valA = a.children[colIndex].innerText.trim();
-            const valB = b.children[colIndex].innerText.trim();
+            // Smart sorting: use dataset.original if present (Emo mode), else innerText
+            const cellA = a.children[colIndex];
+            const cellB = b.children[colIndex];
+
+            const valA = cellA.dataset.original || cellA.innerText.trim();
+            const valB = cellB.dataset.original || cellB.innerText.trim();
             
-            // Check if numeric
             const numA = parseFloat(valA);
             const numB = parseFloat(valB);
             
@@ -1136,6 +1304,15 @@
           tbody.append(...rowsArray);
         });
       });
+
+      // Auto-enable mini-mode on small screens
+      if (window.innerWidth < 768) {
+        miniModeOn = true;
+        benchCard.classList.add('mini-mode');
+        miniBtn.classList.add('bg-sky-500', 'text-black', 'shadow-lg');
+        miniBtn.classList.remove('border-sky-500', 'text-sky-400');
+        updateGameNamesForMiniMode();
+      }
 
       // Init
       updateTableVisibility();
