@@ -510,7 +510,8 @@
         "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg",
         "description": "Reliable storage for your ROM library.",
         "links": [
-          { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
+          { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" },
+          { "store": "Newegg", "url": "#", "price": 39.99, "currency": "$" }
         ]
       }
     ];
@@ -627,7 +628,14 @@
                 const template = document.getElementById('compactTemplate');
                 const clone = template.content.cloneNode(true);
                 
-                clone.querySelector('.c-thumb').src = item.image;
+                const thumb = clone.querySelector('.c-thumb');
+                thumb.src = item.image;
+                // NEW: Make thumb clickable
+                if (cheapestLink && cheapestLink.url) {
+                    thumb.style.cursor = 'pointer';
+                    thumb.onclick = () => window.open(cheapestLink.url, '_blank');
+                }
+
                 clone.querySelector('.c-title').textContent = item.name;
                 clone.querySelector('.c-cat').textContent = item.category;
                 clone.querySelector('.c-price').textContent = formatPrice(priceUSD);
@@ -664,6 +672,13 @@
 
                 const card = clone.querySelector('.product-card');
                 card.dataset.id = item.id;
+                
+                // NEW: Make image wrapper clickable
+                const imgWrapper = clone.querySelector('.card-img-wrapper');
+                if (cheapestLink && cheapestLink.url) {
+                    imgWrapper.style.cursor = 'pointer';
+                    imgWrapper.onclick = () => window.open(cheapestLink.url, '_blank');
+                }
 
                 // *** BADGE LOGIC & COLORS ***
                 if (item.badge) {
