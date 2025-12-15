@@ -21,7 +21,6 @@
       defer
       src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"
     ></script>
-    <!-- Chart.js for battery graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -348,14 +347,13 @@
   </head>
 
   <body class="bg-gray-900 text-white overflow-x-hidden">
-    <!-- TOP BAR -->
     <header
       class="bg-black/90 border-b border-gray-800 sticky top-0 z-40 backdrop-blur"
     >
       <div
         class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between"
       >
-        <a href="/static/index.html" class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3">
           <img
             src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
             alt="Ryan Retro Logo"
@@ -369,14 +367,14 @@
 
         <nav class="hidden sm:flex items-center gap-4 text-xs">
           <a
-            href="/static/index.html#games"
+            href="/#games"
             class="text-gray-300 hover:text-yellow-400 flex items-center gap-1"
           >
             <i data-feather="cpu" class="w-4 h-4"></i>
             <span>HANDHELDS</span>
           </a>
           <a
-            href="/static/index.html#videos"
+            href="/#videos"
             class="text-gray-300 hover:text-yellow-400 flex items-center gap-1"
           >
             <i data-feather="youtube" class="w-4 h-4"></i>
@@ -389,16 +387,21 @@
             <i data-feather="bar-chart-2" class="w-4 h-4"></i>
             <span>BENCHMARKS</span>
           </a>
+          <a
+            href="/store"
+            class="text-gray-300 hover:text-yellow-400 flex items-center gap-1"
+          >
+            <i data-feather="shopping-cart" class="w-4 h-4"></i>
+            <span>STORE</span>
+          </a>
         </nav>
       </div>
     </header>
 
-    <!-- HERO -->
     <section
       class="hero-header relative overflow-hidden py-10 md:py-14"
     >
       <div class="max-w-6xl mx-auto px-4 relative z-10 space-y-6">
-        <!-- FULL-WIDTH REVIEW TITLE BAR -->
         <div
           class="pixel-border bg-yellow-400 text-black retro-font text-[11px] md:text-sm px-4 py-3 text-center rounded-lg leading-tight"
         >
@@ -406,14 +409,11 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <!-- LEFT: Rating + Recommendation + Image -->
           <div data-aos="fade-right">
             <div class="flex flex-col gap-4">
-              <!-- Joined rating block -->
               <div
                 class="pixel-border rounded-lg overflow-hidden flex retro-font text-center text-[11px] md:text-xs"
               >
-                <!-- SCORE -->
                 <div
                   class="flex-1 bg-green-500 text-black py-4 px-3 flex flex-col items-center justify-center gap-1"
                 >
@@ -431,31 +431,26 @@
                   <span class="text-base md:text-xl leading-none">7/10</span>
                 </div>
 
-                <!-- RECOMMENDATION -->
-<div
-  class="flex-1 bg-yellow-400 text-black py-5 px-3 flex flex-col items-center justify-center gap-1 border-l-4 border-black/40"
->
-  <div class="flex items-center gap-2">
-  <i
-    data-feather="alert-octagon"
-    class="w-4 h-4 md:w-5 md:h-5"
-  ></i>
-  <span class="text-[9px] md:text-[11px] uppercase opacity-70">
-    Recommendation
-  </span>
-</div>
+                <div
+                  class="flex-1 bg-yellow-400 text-black py-5 px-3 flex flex-col items-center justify-center gap-1 border-l-4 border-black/40"
+                >
+                  <div class="flex items-center gap-2">
+                  <i
+                    data-feather="alert-octagon"
+                    class="w-4 h-4 md:w-5 md:h-5"
+                  ></i>
+                  <span class="text-[9px] md:text-[11px] uppercase opacity-70">
+                    Recommendation
+                  </span>
+                </div>
 
-<span class="text-sm md:text-lg leading-none text-center opacity-90">
-  Recommended
-</span>
+                <span class="text-sm md:text-lg leading-none text-center opacity-90">
+                  Recommended
+                </span>
 
-</div>
-
-
-
+                </div>
               </div>
 
-              <!-- Device image (clickable affiliate link) -->
               <a
                 href="https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT"
                 target="_blank"
@@ -472,7 +467,6 @@
             </div>
           </div>
 
-          <!-- RIGHT: Video -->
           <div data-aos="fade-left">
             <div class="rr-shot">
               <iframe
@@ -489,7 +483,6 @@
       </div>
     </section>
 
-    <!-- SECTION NAV -->
     <section class="border-b border-gray-800 bg-gray-950">
       <div class="max-w-6xl mx-auto px-4 py-3">
         <div
@@ -535,7 +528,6 @@
 
     <main class="py-10 md:py-14">
       <div class="max-w-6xl mx-auto px-4 space-y-10 md:space-y-12">
-        <!-- UNBOXING & HANDS-ON -->
         <section
           id="unboxing"
           class="bg-gray-800 pixel-border rounded-lg p-6 md:p-8"
@@ -562,7 +554,6 @@
           </p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            <!-- LEFT CARD: What you get in the box -->
             <div class="stat-card text-sm text-gray-300">
               <h3
                 class="font-semibold text-gray-100 text-sm md:text-base mb-2"
@@ -583,7 +574,6 @@
               </p>
             </div>
 
-            <!-- RIGHT CARD: Specs TLDR -->
             <div class="stat-card text-sm text-gray-300">
               <h3
                 class="font-semibold text-gray-100 text-sm md:text-base mb-3"
@@ -633,7 +623,6 @@
             </div>
           </div>
 
-          <!-- Paragraphs -->
           <p class="text-gray-200 text-sm md:text-base mt-6">
             The G2 is small, measuring in at just 19cm long, 7cm tall, 1.5cm
             deep, and weighing 280 grams. This small size allows it to just
@@ -683,7 +672,6 @@
           </p>
         </section>
 
-        <!-- GAMING PERFORMANCE -->
         <section
           id="gaming"
           class="bg-gray-800 pixel-border rounded-lg p-6 md:p-8"
@@ -709,9 +697,7 @@
             the RP5.
           </p>
 
-          <!-- INLINE GALLERY: RP5 vs RPG2 PERFORMANCE -->
-<div class="my-8">
-  <!-- Desktop / Large screens: side-by-side thumbnails -->
+          <div class="my-8">
   <div class="hidden md:flex gap-4 justify-center" data-gallery-desktop="g2-performance">
     <div class="w-1/3 max-w-xs">
       <img
@@ -736,12 +722,10 @@
     </div>
   </div>
 
-  <!-- Mobile: stacked swipeable gallery -->
   <div
     class="relative md:hidden h-52 max-w-sm mx-auto mt-2"
     data-gallery="g2-performance"
   >
-    <!-- Left arrow (tap = previous) -->
     <button
       type="button"
       data-arrow="prev"
@@ -750,7 +734,6 @@ class="absolute left-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-10
       ‹
     </button>
 
-    <!-- Right arrow (tap = next) -->
     <button
       type="button"
       data-arrow="next"
@@ -1014,7 +997,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             and Steam indie backlogs feels genuinely liberating.
           </p>
 
-          <!-- MINI BENCHMARKS SNAPSHOT -->
           <div class="stat-card mini-bench-card">
             <div
               class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3"
@@ -1109,20 +1091,17 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
           </div>
         </section>
 
-        <!-- BATTERY -->
         <section
           id="battery"
           class="bg-gray-800 pixel-border rounded-lg p-6 md:p-8 space-y-8"
           data-aos="fade-up"
         >
-          <!-- Title -->
           <div
             class="pixel-border bg-yellow-400 text-black retro-font text-[11px] md:text-sm px-4 py-3 w-full text-center rounded-lg leading-tight"
           >
             Section 3: Battery Life &amp; Charging
           </div>
 
-          <!-- Intro Paragraph -->
           <p class="text-gray-200 text-sm md:text-base">
             Below you can see the real-world battery life of the RPG2 in a
             variety of situations. I tested light and heavy Switch and PC games,
@@ -1138,7 +1117,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </span>
           </p>
 
-          <!-- Runtime Chart -->
           <div id="battery-runtime-card" class="stat-card">
             <div class="flex items-center justify-between mb-3">
               <h3
@@ -1157,7 +1135,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </div>
           </div>
 
-          <!-- Charging Paragraph -->
           <p class="text-gray-200 text-sm md:text-base">
             Below is a chart showing the wattage the RPG2 charges at. It took
             exactly 60 minutes to go from 0 to 90%, and 94 minutes to reach a
@@ -1169,7 +1146,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </span>
           </p>
 
-          <!-- Charging Curve -->
           <div id="battery-curve-card" class="stat-card">
             <div class="flex items-center justify-between mb-3">
               <h3
@@ -1190,7 +1166,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </div>
           </div>
 
-          <!-- Quick Stats -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div class="stat-card">
               <p class="text-xs uppercase text-gray-400 mb-1">
@@ -1229,7 +1204,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </div>
           </div>
 
-          <!-- Single Summary Paragraph -->
           <div
             class="stat-card text-sm md:text-base text-gray-200 leading-relaxed"
           >
@@ -1247,15 +1221,12 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
           </div>
         </section>
 
-        <!-- ACCESSORIES -->
-<section id="accessories" class="bg-gray-800 pixel-border rounded-lg p-6 md:p-8 space-y-8" data-aos="fade-up">
+        <section id="accessories" class="bg-gray-800 pixel-border rounded-lg p-6 md:p-8 space-y-8" data-aos="fade-up">
   
-  <!-- Title -->
   <div class="pixel-border bg-purple-500 text-white retro-font text-[11px] md:text-sm px-4 py-3 w-full text-center rounded-lg leading-tight">
     Section 4: Accessories
   </div>
 
-  <!-- Intro Paragraph -->
   <p class="text-gray-200 text-sm md:text-base">
     One area the RPG2 excels is accessories. Because it reuses the same shell as the very successful 
     and popular RP5, all of the same accessories work perfectly here. Over the past year we’ve seen 
@@ -1264,10 +1235,8 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
     or something more unique, you can dive straight into the huge library of RP5 accessories for your RPG2.
   </p>
 
-  <!-- Accessories Grid -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-300">
 
-    <!-- Dual Screen -->
     <div class="stat-card bg-gray-900/60">
       <div class="accessory-frame-square">
         <a
@@ -1293,7 +1262,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
       </p>
     </div>
 
-    <!-- Dock / Video Cable -->
     <div class="stat-card bg-gray-900/60">
       <div class="accessory-frame-square">
         <a
@@ -1329,7 +1297,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
 
     </div>
 
-    <!-- Case / Screen Protector -->
     <div class="stat-card bg-gray-900/60">
       <div class="accessory-frame-square">
         <a
@@ -1357,7 +1324,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
 
   </div>
 
-  <!-- Grip Recommendation (with image, full width) -->
   <div class="stat-card text-sm md:text-base text-gray-200 leading-relaxed bg-gray-900/60 md:flex md:items-start md:gap-5">
     <div class="accessory-frame-square md:max-w-xs md:flex-shrink-0">
       <a
@@ -1388,7 +1354,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
 </section>
 
 
-        <!-- CONCLUSION -->
         <section
           id="conclusion"
           class="bg-gray-800 pixel-border rounded-lg p-6 md:p-8"
@@ -1400,7 +1365,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             Section 5: Conclusion
           </div>
 
-          <!-- Conclusion paragraphs -->
           <div
             class="space-y-4 text-gray-200 text-sm md:text-base mb-6 leading-relaxed"
           >
@@ -1429,8 +1393,7 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
               the Ryan Retro logo. What more could you ask for?!
             </p>
 
-            <!-- RP5 / RPG2 / RP6 spec comparison image -->
-<div class="my-6 flex justify-center" data-aos="fade-up">
+            <div class="my-6 flex justify-center" data-aos="fade-up">
   <div
     class="pixel-border rounded-lg shadow-2xl overflow-hidden cursor-pointer max-w-4xl w-full bg-gray-900"
     onclick="openLightbox('/static/images/rp5-rpg2-rp6-specs.png')"
@@ -1485,9 +1448,7 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </p>
           </div>
 
-          <!-- Likes / Dislikes -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-8">
-            <!-- WHAT I LIKE -->
             <div class="stat-card">
               <h3
                 class="font-semibold text-green-400 mb-3 text-sm md:text-base"
@@ -1544,7 +1505,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
               </ul>
             </div>
 
-            <!-- WHAT COULD BE BETTER -->
             <div class="stat-card">
               <h3
                 class="font-semibold text-red-400 mb-3 text-sm md:text-base"
@@ -1594,11 +1554,9 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
             </div>
           </div>
 
-          <!-- CTA Buttons -->
           <div
             class="flex flex-col md:flex-row gap-4 md:gap-6 items-stretch md:items-center"
           >
-            <!-- Primary CTA -->
             <a
               href="https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT"
               target="_blank"
@@ -1615,9 +1573,8 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
               </span>
             </a>
 
-            <!-- Secondary CTA -->
             <a
-              href="/static/handheld.html?device=Retroid+Pocket+G2"
+              href="/handheld?device=Retroid+Pocket+G2"
               class="pixel-border pixel-btn bg-gray-800 hover:bg-gray-700 text-white px-6 md:px-8 py-5 md:py-5 rounded-lg retro-font text-[10px] md:text-xs flex-1 flex flex-col items-center justify-center text-center leading-normal"
             >
               <span class="flex items-center justify-center gap-2 mb-1">
@@ -2098,7 +2055,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
       }
     </script>
 
-    <!-- Small overlay tools panel (only visible in overlay mode) -->
     <div
       id="overlayTools"
       class="fixed bottom-4 right-4 z-50 hidden flex-col items-end gap-2 text-[10px] md:text-xs opacity-50 hover:opacity-100"
@@ -2132,8 +2088,7 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
         Replay curve
       </button>
     </div>
-    <!-- Lightbox Overlay -->
-<div id="lightboxOverlay"
+    <div id="lightboxOverlay"
   class="fixed inset-0 bg-black/90 z-[999] hidden items-center justify-center p-4">
   <img id="lightboxImage" class="max-h-full max-w-full rounded-xl shadow-xl" />
 </div>
