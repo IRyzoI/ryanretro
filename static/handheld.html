@@ -44,10 +44,10 @@
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
 
-    select.form-input.perf-perfect   { background-color: rgba(74, 222, 128, .10); }
-    select.form-input.perf-great     { background-color: rgba(56, 189, 248, .10); }
-    select.form-input.perf-playable  { background-color: rgba(251, 146, 60, .10); }
-    select.form-input.perf-unplayable{ background-color: rgba(248, 113, 113, .10); }
+    select.form-input.perf-perfect    { background-color: rgba(74, 222, 128, .10); }
+    select.form-input.perf-great      { background-color: rgba(56, 189, 248, .10); }
+    select.form-input.perf-playable   { background-color: rgba(251, 146, 60, .10); }
+    select.form-input.perf-unplayable { background-color: rgba(248, 113, 113, .10); }
 
     .island { content-visibility: auto; contain-intrinsic-size: 800px; }
   </style>
@@ -55,10 +55,14 @@
 
 <body class="bg-gray-900 text-white">
   <header class="bg-black py-6">
-    <div class="container mx-auto px-4">
-      <a href="/static/index.html" class="flex items-center">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <a href="/" class="flex items-center">
         <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro Logo" class="w-12 h-12 rounded-full mr-4">
         <span class="retro-font text-yellow-400 text-xl">RYAN RETRO</span>
+      </a>
+
+      <a href="/store" class="text-gray-300 hover:text-yellow-400 flex items-center gap-2 text-sm font-bold">
+        <i data-feather="shopping-cart" class="w-4 h-4"></i> STORE
       </a>
     </div>
   </header>
@@ -109,7 +113,6 @@
           </div>
         </div>
 
-        <!-- Videos -->
         <section id="videos-section" class="mb-12 island">
           <h2 class="retro-font text-2xl mb-6">Videos</h2>
           <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -117,20 +120,18 @@
           </div>
         </section>
 
-        <!-- Compatibility -->
         <div id="compatibility" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 island">
           <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
 
-          <!-- Chipset tabs (rendered dynamically only if device has >1 variants) -->
           <div id="variant-tabs" class="mb-4 hidden">
             <div class="inline-flex flex-wrap gap-2"></div>
           </div>
 
           <div id="system-buttons" class="mb-4 flex flex-wrap gap-2">
-            <button data-system="switch"   class="system-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">Switch</button>
-            <button data-system="ps2"      class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
-            <button data-system="ps3"      class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS3</button>
-            <button data-system="psvita"   class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS Vita</button>
+            <button data-system="switch"    class="system-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">Switch</button>
+            <button data-system="ps2"       class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
+            <button data-system="ps3"       class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS3</button>
+            <button data-system="psvita"    class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS Vita</button>
             <button data-system="winlator" class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Winlator</button>
             <button data-system="gamehub"  class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">GameHub</button>
             <button data-system="wiiu"     class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Wii U</button>
@@ -162,7 +163,6 @@
           <button id="next-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Next</button>
         </div>
 
-        <!-- Add Entry -->
         <div class="text-center mt-6">
           <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">
             ADD YOUR ENTRY
@@ -187,8 +187,6 @@
                 </select>
               </div>
             </div>
-
-            <!-- Chipset field will be injected here (only if >1 chipset) -->
 
             <div id="dynamic-fields" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"></div>
 
@@ -815,7 +813,7 @@ if (videosSection) {
       { key: 'driver',      label: 'Driver',      required: true }
     ],
     psvita: [
-      { key: 'game',          label: 'Game',          required: true },
+      { key: 'game',          label: 'Game',        required: true },
       { key: 'performance',   label: 'Performance',   required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
       { key: 'driver',        label: 'Driver',        required: true },
       { key: 'game title id', label: 'Game Title ID', required: true }
