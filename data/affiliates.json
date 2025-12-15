@@ -1,0 +1,204 @@
+[
+  {
+    "id": "trimui_brick_hammer",
+    "name": "TrimUI Brick Hammer",
+    "category": "Handhelds",
+    "badge": "Highly Recommended! 🏆",
+    "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
+    "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
+    "links": [
+      { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 94.99, "currency": "$" },
+      { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" },
+      { "store": "AliExpress", "url": "#", "price": 115.00, "currency": "$" }
+    ]
+  },
+{
+    "id": "trimui_brick",
+    "name": "TrimUI Brick",
+    "category": "Handhelds",
+    "badge": "Highly Recommended! 🏆", 
+    "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
+    "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
+    "links": [
+      { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJJv", "price": 84.99, "currency": "$" },
+      { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" },
+      { "store": "AliExpress", "url": "#", "price": 75.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rp6",
+    "name": "Retroid Pocket 6",
+    "category": "Handhelds",
+    "badge": "Pre-order 🔥",
+    "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686",
+    "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "steam_deck",
+    "name": "Steam Deck",
+    "category": "Handhelds",
+    "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg",
+    "description": "The standard for PC handheld gaming. Play your Steam library on the go.",
+    "links": [
+      { "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 499.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rp5",
+    "name": "Retroid Pocket 5",
+    "category": "Handhelds",
+    "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png",
+    "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" },
+      { "store": "Amazon", "url": "#", "price": 249.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rp_mini2",
+    "name": "Retroid Pocket Mini V2",
+    "category": "Handhelds",
+    "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824",
+    "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" },
+      { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rp_classic",
+    "name": "Retroid Pocket Classic",
+    "category": "Handhelds",
+    "image": "https://www.goretroid.com/cdn/shop/files/SKU_790b844f-6ba6-4834-8278-9fce3b994d27_1024x1024@2x.png?v=1754461254",
+    "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" },
+      { "store": "AliExpress", "url": "https://www.aliexpress.us/item/3256809185963397.html?pdp_npi=4%40dis%21USD%21US%20%24134.00%21US%20%24134.00%21%21%21134.00%21134.00%21%402151e6dc17657942648816965eb39b%2112000048900137989%21sh%21US%211614690223%21X&spm=a2g0o.store_pc_allItems_or_groupList.new_all_items_2007586173957.1005009372278149&gatewayAdapt=glo2usa", "price": 134.00, "currency": "$" },
+      { "store": "Amazon", "url": "https://amzn.to/3KLWx8M", "price": 149.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rp_flip2",
+    "name": "Retroid Pocket Flip 2",
+    "category": "Handhelds",
+    "image": "https://www.goretroid.com/cdn/shop/files/ice_blue_4b29c9c7-fcc1-4bb4-8a83-f8cf03b9cfd2_1024x1024@2x.jpg?v=1744886442",
+    "description": "The clamshell returns. Protect your screen on the go with Snapdragon 865 performance.",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4ovQKfP", "price": 256.80, "currency": "$" },
+      { "store": "Amazon", "url": "https://amzn.to/44rQFZ1", "price": 269.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rpg2",
+    "name": "Retroid Pocket G2 Handheld",
+    "category": "Handhelds",
+    "image": "https://www.goretroid.com/cdn/shop/files/723e012906c411dfa82d5fec119e5474_1024x1024@2x.jpg?v=1762132633",
+    "description": "Premium mid-range Android handheld with a 5.5-inch AMOLED screen and Snapdragon G2 Gen 2 power.",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3kUZAmH", "price": 224.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "anker_power",
+    "name": "Anker 25000mAh Power Bank",
+    "category": "Accessories",
+    "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg",
+    "description": "24,000mAh 140W fast charging. The gold standard for powering handhelds, phones or even laptops on long trips.",
+    "links": [
+      { "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }
+    ]
+  },
+  {
+    "id": "ugreen_power",
+    "name": "UGreen 25000mAh Power Bank",
+    "category": "Accessories",
+    "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg",
+    "description": "A cheaper alternative to the Anker 25000mAh power bank.",
+    "links": [
+      { "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3UhzSaN", "price": 75.79, "currency": "$" }
+    ]
+  },
+  {
+    "id": "ugreen_dock",
+    "name": "UGreen 9-in-1 Dock",
+    "category": "Accessories",
+    "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg",
+    "description": "4K@60Hz HDMI, Gigabit Ethernet, and PD charging. Perfect for handhelds like the Steam Deck and ROG Ally. Also works great with Android handhelds but they have to sit upside down.",
+    "links": [
+      { "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3RPVzzX", "price": 84.41, "currency": "$" }
+    ]
+  },
+  {
+    "id": "rp_ds_addon",
+    "name": "Retroid Dual Screen Add-on",
+    "category": "Accessories",
+    "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811",
+    "description": "Transform your RP5 or Mini into a DS powerhouse with this 5.5\" 1080p AMOLED secondary screen.",
+    "links": [
+      { "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "gamesir_g8p",
+    "name": "GameSir G8 Plus",
+    "category": "Accessories",
+    "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif",
+    "description": "The ultimate Bluetooth controller for Android, iOS, and Switch. Hall effect sticks & triggers.",
+    "links": [
+      { "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" },
+      { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4oCQWGv", "price": 79.99, "currency": "$" }
+    ]
+  },
+ {
+    "id": "odin3",
+    "name": "AYN Odin 3",
+    "category": "Handhelds",
+    "badge": "Pre-order 🔥",
+    "image": "https://www.ayntec.com/cdn/shop/files/d92e076f69cb1a6f81c9bab8cd8f57a2_f21bc7dc-1ec5-4a8c-a0fb-159aecd12d8c_1080x.jpg?v=1761054667",
+    "description": "The new standard. Snapdragon 8 Elite, 120Hz AMOLED, and massive 8000mAh battery.",
+    "links": [
+      { "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "odin2_portal",
+    "name": "AYN Odin2 Portal",
+    "category": "Handhelds",
+    "image": "https://www.ayntec.com/cdn/shop/files/8b9cc7c9808a81fc8db0eaf67a4d79d7_1080x.jpg?v=1737092883",
+    "description": "A stunning 7-inch OLED handheld with Snapdragon 8 Gen 2 performance.",
+    "links": [
+      { "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" },
+      { "store": "Amazon", "url": "https://amzn.to/3YxCgqw", "price": 459.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "ayn_thor",
+    "name": "AYN Thor",
+    "category": "Handhelds",
+    "badge": "Pre-order 🔥",
+    "image": "https://www.ayntec.com/cdn/shop/files/e50c1d352b31e3f4a65f1f0a706072c3_1080x.jpg?v=1755943485",
+    "description": "Dual-screen OLED clamshell design powered by the Snapdragon 8 Gen 2.",
+    "links": [
+      { "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }
+    ]
+  },
+  {
+    "id": "sd_card",
+    "name": "SanDisk Extreme 512GB",
+    "category": "Accessories",
+    "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg",
+    "description": "Reliable storage for your ROM library.",
+    "links": [
+      { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
+    ]
+  }
+]
