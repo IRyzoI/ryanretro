@@ -813,6 +813,11 @@ def benchmarks_page():
     benchmarks_path = os.path.join(REPO_DIR, "static", "benchmarks.html")
     return FileResponse(benchmarks_path)
 
+@app.get("/store", response_class=FileResponse)
+def store_page():
+    shop_path = os.path.join(REPO_DIR, "static", "shop.html")
+    return FileResponse(shop_path)
+
 
 #uncomment this section when updating CSVs
 
