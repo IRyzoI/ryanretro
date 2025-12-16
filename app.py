@@ -644,32 +644,26 @@ class DealSubmission(BaseModel):
 @app.post("/api/deals/submit")
 def post_deal(sub: DealSubmission):
     """
-    Appends a new deal to /data/deals.csv
+    Appends a new deal to deals_pending.csv (Hidden from public, for admin review)
     """
-    # 1. Define the file path
-    file_path = os.path.join(DATA_DIR, "deals.csv")
+    # CHANGED: Write to a separate pending file
+    file_path = os.path.join(DATA_DIR, "deals_pending.csv")
     
-    # 2. Prepare the data
     row = sub.model_dump()
     row["date_added"] = datetime.utcnow().strftime("%Y-%m-%d")
     
-    # 3. Define the columns (Header)
     fieldnames = ["item_name", "price", "currency", "store_name", "link", "notes", "date_added"]
     
-    # 4. Lock the file and write
-    # We reuse your existing _lock_for function to prevent collisions
     lock = _lock_for(file_path)
     with lock:
-        # Check if we need to write the header (if file is new/empty)
         write_header = not os.path.exists(file_path) or os.path.getsize(file_path) == 0
-        
         with open(file_path, "a", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             if write_header:
                 writer.writeheader()
             writer.writerow(row)
             
-    return {"ok": True, "deal": row}
+    return {"ok": True, "message": "Deal submitted for moderation"}
 
 @app.get("/api/deals")
 def get_deals():
