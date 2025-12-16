@@ -122,19 +122,27 @@
         @media (max-width: 768px) {
             .c-stores { display: none; }
             .c-price { display: none; }
+            .header-container { flex-direction: column; gap: 1rem; }
+            .header-actions { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
 <body class="bg-gray-900 text-white font-sans overflow-x-hidden pb-32">
 
 <header class="bg-gray-800 py-8 border-b-4 border-black">
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container">
         <a href="/" class="flex items-center gap-4 mb-4 md:mb-0">
             <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
                  class="w-16 h-16 rounded-full pixel-border bg-gray-900">
             <h1 class="retro-font text-2xl text-yellow-400">RYAN'S STORE</h1>
         </a>
-        <div class="flex gap-4">
+        <div class="flex gap-4 header-actions mt-4 md:mt-0">
+             <button id="openDealModalHeader"
+                class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
+                <i data-feather="tag" class="w-4 h-4"></i>
+                <span class="hidden sm:inline">POST DEAL</span>
+            </button>
+
             <a href="/" class="pixel-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-xs">
                 ← BACK HOME
             </a>
@@ -157,6 +165,7 @@
                 <button class="filter-btn active bg-yellow-400 text-black px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="all">ALL</button>
                 <button class="filter-btn bg-gray-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="Handhelds">HANDHELDS</button>
                 <button class="filter-btn bg-gray-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="Accessories">ACCESSORIES</button>
+                <button class="filter-btn bg-gray-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="Community">COMMUNITY</button>
             </div>
 
             <div class="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-end">
@@ -301,6 +310,75 @@
     </div>
 </div>
 
+<div id="dealModal" class="fixed inset-0 z-50 hidden">
+  <div id="dealModalBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-lg pixel-border w-full max-w-lg overflow-hidden relative">
+      <div class="p-6 border-b-4 border-black flex items-center justify-between">
+        <h2 class="retro-font text-sm text-yellow-400 uppercase">Post a Deal</h2>
+        <button id="closeDealModal" class="pixel-btn bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-black">
+          CLOSE
+        </button>
+      </div>
+
+      <form id="dealForm" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto no-scrollbar">
+        <input type="text" id="companyField" class="hidden" tabindex="-1" autocomplete="off" />
+
+        <div>
+          <label class="block text-xs text-gray-300 retro-font mb-2">PRODUCT NAME</label>
+          <input name="item_name" id="dealName" required
+            class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
+            placeholder="RETROID POCKET 5" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs text-gray-300 retro-font mb-2">PRICE (USD)</label>
+            <input name="price" id="dealPrice" type="number" step="0.01" min="0" required
+              class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
+              placeholder="199.00" />
+          </div>
+          <div>
+            <label class="block text-xs text-gray-300 retro-font mb-2">STORE</label>
+            <input name="store_name" id="dealStore" type="text" required
+               class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
+               placeholder="AMAZON, ALIEXPRESS..." />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-gray-300 retro-font mb-2">LINK</label>
+          <input name="link" id="dealLink" type="url" required
+            class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
+            placeholder="https://..." />
+        </div>
+
+        <div class="grid grid-cols-1 gap-4">
+          <div>
+            <label class="block text-xs text-gray-300 retro-font mb-2">NOTES (OPTIONAL)</label>
+            <input name="notes" id="dealNotes"
+              class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
+              placeholder="COUPON CODES, SHIPPING INFO..." />
+          </div>
+        </div>
+
+        <button id="dealSubmitBtn" type="submit"
+          class="w-full bg-yellow-400 hover:bg-yellow-300 text-black py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2">
+          <i data-feather="send" class="w-4 h-4"></i>
+          SUBMIT DEAL
+        </button>
+
+        <p class="text-gray-400 text-xs text-center">
+          Submissions are reviewed before appearing in the Community tab.
+        </p>
+
+        <div id="dealToast" class="hidden text-center text-xs retro-font py-2 rounded border-2 border-black"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <footer class="bg-black py-8 mt-20 border-t-4 border-gray-800">
     <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
         <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
@@ -309,8 +387,8 @@
 </footer>
 
 <script>
-    // --- EMBEDDED DATA START ---
-    const allProducts = [
+    // --- OFFICIAL DATA START ---
+    const officialProducts = [
       {
         "id": "trimui_brick_hammer",
         "name": "TrimUI Brick Hammer",
@@ -514,12 +592,12 @@
         ]
       }
     ];
-    // --- EMBEDDED DATA END ---
 
+    let allProducts = [...officialProducts]; // Initialize with official
     let traySet = new Set(); 
     let currentView = 'grid'; 
 
-    // --- CURRENCY CONFIG (UPDATED DEC 2025) ---
+    // --- CURRENCY CONFIG ---
     let currentCurrency = 'USD';
     
     const exchangeRates = {
@@ -539,6 +617,51 @@
         'CAD': 'C$',
         'AUD': 'A$'
     };
+
+    // --- FETCH COMMUNITY DEALS ---
+    async function loadCommunityDeals() {
+        try {
+            // This GET request fetches public deals (from deals.csv)
+            // Once you approve a deal by moving it from deals_pending.csv to deals.csv,
+            // it will appear here.
+            const res = await fetch('/api/deals');
+            if(!res.ok) throw new Error("Failed to fetch deals");
+            const data = await res.json();
+            
+            if(data.rows && data.rows.length > 0) {
+                const userDeals = data.rows.map((deal, index) => {
+                    // Create a product object compatible with your existing structure
+                    return {
+                        id: `community_${index}_${Date.now()}`,
+                        name: deal.item_name,
+                        category: "Community",
+                        badge: "User Deal 👤",
+                        // Placeholder image for user deals since API doesn't store image URL
+                        image: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png",
+                        description: deal.notes ? deal.notes : `Community found deal at ${deal.store_name}`,
+                        links: [
+                            { 
+                                store: deal.store_name, 
+                                url: deal.link, 
+                                price: parseFloat(deal.price), 
+                                currency: deal.currency || "$" 
+                            }
+                        ]
+                    };
+                });
+                // Merge official and approved user deals
+                allProducts = [...officialProducts, ...userDeals];
+            }
+        } catch(err) {
+            console.error("Could not load community deals:", err);
+            // Fallback to just official products if API fails
+            allProducts = [...officialProducts]; 
+        } finally {
+            // Render everything
+            renderProducts(allProducts);
+            populateBrands(allProducts);
+        }
+    }
 
     // --- HELPER FUNCTIONS ---
 
@@ -590,18 +713,11 @@
         });
     };
 
-    // NO FETCH NEEDED! Simply use the variable 'allProducts'
-    function loadShop() {
-        // Immediately render using the data defined above
-        renderProducts(allProducts);
-        populateBrands(allProducts);
-    }
-
     function renderProducts(products) {
         const grid = document.getElementById('productGrid');
         
         // Reset Grid Classes
-        grid.className = 'transition-all duration-300'; 
+        grid.className = 'transition-all duration-300 pb-10'; 
         if(currentView === 'compact') {
             grid.classList.add('view-compact');
         } else if (currentView === 'list') {
@@ -629,7 +745,6 @@
                 
                 const thumb = clone.querySelector('.c-thumb');
                 thumb.src = item.image;
-                // NEW: Make thumb clickable
                 if (cheapestLink && cheapestLink.url) {
                     thumb.style.cursor = 'pointer';
                     thumb.onclick = () => window.open(cheapestLink.url, '_blank');
@@ -672,7 +787,6 @@
                 const card = clone.querySelector('.product-card');
                 card.dataset.id = item.id;
                 
-                // NEW: Make image wrapper clickable
                 const imgWrapper = clone.querySelector('.card-img-wrapper');
                 if (cheapestLink && cheapestLink.url) {
                     imgWrapper.style.cursor = 'pointer';
@@ -684,11 +798,9 @@
                     const badge = document.createElement('div');
                     badge.className = 'product-badge';
                     
-                    // Strip emojis
                     const cleanText = item.badge.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim();
                     badge.textContent = cleanText;
                     
-                    // Apply Different Colors based on Text
                     const lowerText = cleanText.toLowerCase();
                     if (lowerText.includes('pre-order')) {
                         badge.style.backgroundColor = '#ea580c'; // ORANGE
@@ -696,6 +808,8 @@
                         badge.style.backgroundColor = '#dc2626'; // RED (Default)
                     } else if (lowerText.includes('value')) {
                         badge.style.backgroundColor = '#16a34a'; // GREEN
+                    } else if (lowerText.includes('user')) {
+                        badge.style.backgroundColor = '#8b5cf6'; // PURPLE
                     } else {
                         badge.style.backgroundColor = '#dc2626'; // Default Red
                     }
@@ -706,7 +820,6 @@
                 clone.querySelector('.product-img').src = item.image;
                 clone.querySelector('.product-title').textContent = item.name;
                 clone.querySelector('.product-desc').textContent = item.description;
-                // Category overlay removed from here
                 
                 const trayBtn = clone.querySelector('.tray-btn');
                 trayBtn.dataset.id = item.id; 
@@ -808,7 +921,6 @@
         countSpan.textContent = traySet.size;
 
         let total = 0;
-        let currencySym = currencySymbols[currentCurrency] || '$'; 
 
         traySet.forEach(id => {
             const item = allProducts.find(p => p.id === id);
@@ -907,6 +1019,7 @@
 
     function populateBrands(products) {
         const brandSelect = document.getElementById('brandFilter');
+        brandSelect.innerHTML = '<option value="all">BRANDS</option>'; // reset
         const brands = new Set();
         
         products.forEach(p => {
@@ -964,8 +1077,84 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         AOS.init();
-        loadShop();
+        // Load official deals + fetch approved community deals
+        loadCommunityDeals();
+    });
+
+    // --- MODAL LOGIC (UI) ---
+    const openBtn = document.getElementById("openDealModalHeader");
+    const modal = document.getElementById("dealModal");
+    const backdrop = document.getElementById("dealModalBackdrop");
+    const closeBtn = document.getElementById("closeDealModal");
+    const form = document.getElementById("dealForm");
+    const submitBtn = document.getElementById("dealSubmitBtn");
+    const toast = document.getElementById("dealToast");
+
+    const showModal = () => { modal.classList.remove("hidden"); };
+    const hideModal = () => { modal.classList.add("hidden"); };
+
+    openBtn?.addEventListener("click", showModal);
+    closeBtn?.addEventListener("click", hideModal);
+    backdrop?.addEventListener("click", hideModal);
+
+    function showToast(message, ok = true) {
+        toast.classList.remove("hidden");
+        toast.textContent = message;
+        toast.className =
+            "text-center text-xs retro-font py-2 rounded border-2 border-black " +
+            (ok ? "bg-green-600 text-white border-green-300" : "bg-red-700 text-white border-red-300");
+        setTimeout(() => toast.classList.add("hidden"), 2500);
+    }
+
+    // --- SUBMIT DEAL TO APP.PY ---
+    form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Honeypot check
+        const botField = document.getElementById("companyField");
+        if (botField && botField.value.trim() !== "") return;
+
+        // Build Payload matching DealSubmission in app.py
+        const payload = {
+            item_name: form.elements['item_name'].value.trim(),
+            price: Number(form.elements['price'].value),
+            currency: 'USD', // Defaulting to USD for now as per form
+            store_name: form.elements['store_name'].value.trim(),
+            link: form.elements['link'].value.trim(),
+            notes: form.elements['notes'].value.trim()
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.7";
+        submitBtn.innerText = "SENDING...";
+
+        try {
+            const res = await fetch('/api/deals/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("Server error");
+
+            form.reset();
+            // UPDATED MESSAGE: Reflects that it goes to the moderation queue
+            showToast("Deal submitted for review! 🕵️ It will appear if approved.", true);
+            setTimeout(hideModal, 2000);
+            
+            // We DO NOT reload loadCommunityDeals() here because the deal isn't public yet.
+
+        } catch (err) {
+            console.error(err);
+            showToast("Submit failed. Try again.", false);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = "1";
+            submitBtn.innerHTML = '<i data-feather="send" class="w-4 h-4"></i> SUBMIT DEAL';
+            feather.replace();
+        }
     });
 </script>
+
 </body>
 </html>
