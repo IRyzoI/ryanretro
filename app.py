@@ -632,6 +632,62 @@ def post_compat(sub: CompatSubmission):
 
     return {"ok": True, "row": full_row}
 
+class DealSubmission(BaseModel):
+    item_name: str = Field(..., min_length=1)
+    price: float
+    currency: str = "USD"
+    store_name: str
+    link: str
+    notes: Optional[str] = None
+    # We will auto-add 'date_added' in the endpoint
+
+@app.post("/api/deals/submit")
+def post_deal(sub: DealSubmission):
+    """
+    Appends a new deal to /data/deals.csv
+    """
+    # 1. Define the file path
+    file_path = os.path.join(DATA_DIR, "deals.csv")
+    
+    # 2. Prepare the data
+    row = sub.model_dump()
+    row["date_added"] = datetime.utcnow().strftime("%Y-%m-%d")
+    
+    # 3. Define the columns (Header)
+    fieldnames = ["item_name", "price", "currency", "store_name", "link", "notes", "date_added"]
+    
+    # 4. Lock the file and write
+    # We reuse your existing _lock_for function to prevent collisions
+    lock = _lock_for(file_path)
+    with lock:
+        # Check if we need to write the header (if file is new/empty)
+        write_header = not os.path.exists(file_path) or os.path.getsize(file_path) == 0
+        
+        with open(file_path, "a", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            if write_header:
+                writer.writeheader()
+            writer.writerow(row)
+            
+    return {"ok": True, "deal": row}
+
+@app.get("/api/deals")
+def get_deals():
+    file_path = os.path.join(DATA_DIR, "deals.csv")
+    if not os.path.exists(file_path):
+        return {"count": 0, "rows": []}
+        
+    rows = []
+    with open(file_path, "r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append(row)
+    
+    # Return newest first (reverse the list)
+    rows.reverse()
+    
+    return {"count": len(rows), "rows": rows}
+
 # --------------------------------------------------------------------------------------
 # Debug & Admin helpers
 # --------------------------------------------------------------------------------------
