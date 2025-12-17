@@ -1,320 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan Retro Shop - Best Deals & Gear</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-        .retro-font { font-family: 'Press Start 2P', cursive; }
-        .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-        .pixel-btn { transition: all 0.1s ease; }
-        .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
-        .cheapest-badge { animation: pulse-gold 2s infinite; }
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
-        }
-        
-        /* Tray Animation */
-        #tray { transition: transform 0.3s ease-in-out; }
-        .tray-hidden { transform: translateY(100%); }
-        .tray-visible { transform: translateY(0); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ryan Retro Shop - Best Deals on Handhelds, Accessories, and Retro Gear.">
+  <title>Ryan Retro Shop - Best Deals & Gear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
-        /* --- VIEW MODES CSS --- */
-        #productGrid.view-list { grid-template-columns: 1fr !important; }
-        #productGrid.view-list .product-card { flex-direction: row; height: auto; min-height: 200px; }
-        #productGrid.view-list .card-img-wrapper { width: 280px; height: auto; }
-        #productGrid.view-list .card-content { padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; }
-        @media (max-width: 768px) {
-            #productGrid.view-list .product-card { flex-direction: column; }
-            #productGrid.view-list .card-img-wrapper { width: 100%; height: 200px; }
-        }
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+    .retro-font { font-family: 'Press Start 2P', cursive; }
+    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
+    .pixel-btn { transition: all 0.1s ease; }
+    .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+    .cheapest-badge { animation: pulse-gold 2s infinite; }
+    @keyframes pulse-gold {
+      0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+    }
 
-        #productGrid.view-compact {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 0 !important;
-            border: 4px solid #000;
-            background: #1f2937;
-        }
-        
-        .compact-row {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid #374151;
-            transition: background 0.1s;
-            height: 60px;
-        }
-        .compact-row:hover { background-color: #374151; }
-        .compact-row:last-child { border-bottom: none; }
+    /* Tray Animation */
+    #tray { transition: transform 0.3s ease-in-out; }
+    .tray-hidden { transform: translateY(100%); }
+    .tray-visible { transform: translateY(0); }
 
-        .c-thumb { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; border: 2px solid #000; }
-        .c-info { flex-grow: 1; margin-left: 1rem; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
-        .c-title { font-weight: bold; font-size: 0.875rem; color: #fff; line-height: 1.2; }
-        .c-cat { font-size: 0.65rem; color: #9ca3af; text-transform: uppercase; margin-top: 2px; }
-        
-        /* Store Buttons Container */
-        .c-stores { display: flex; gap: 8px; margin: 0 1.5rem; }
-        .store-icon-btn {
-            display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px;
-            border-radius: 4px;
-            color: #fff;
-            transition: all 0.2s;
-            opacity: 0.2; /* Default disabled state */
-            pointer-events: none;
-            background: #374151;
-        }
-        .store-icon-btn.active { opacity: 1; pointer-events: auto; }
-        .store-icon-btn.active:hover { transform: scale(1.1); }
-        
-        /* Custom styling for the dropdowns */
-        .retro-select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
-        }
+    /* --- VIEW MODES CSS --- */
+    #productGrid.view-list { grid-template-columns: 1fr !important; }
+    #productGrid.view-list .product-card { flex-direction: row; height: auto; min-height: 200px; }
+    #productGrid.view-list .card-img-wrapper { width: 280px; height: auto; }
+    #productGrid.view-list .card-content { padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; }
+    @media (max-width: 768px) {
+      #productGrid.view-list .product-card { flex-direction: column; }
+      #productGrid.view-list .card-img-wrapper { width: 100%; height: 200px; }
+    }
 
-        .retro-select:focus {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-        }
-        
-        /* Scrollbar Hiding */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    #productGrid.view-compact {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+      border: 4px solid #000;
+      background: #1f2937;
+    }
 
-        /* Brand Colors */
-        .store-brand.active { background: #3B82F6; }
-        .store-ali.active { background: #EF4444; }
-        .store-amz.active { background: #F59E0B; color: black; }
+    .compact-row {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #374151;
+      transition: background 0.1s;
+      height: 60px;
+    }
+    .compact-row:hover { background-color: #374151; }
+    .compact-row:last-child { border-bottom: none; }
 
-        .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: #4ade80; margin-right: 1.5rem; width: 80px; text-align: right; }
-        .c-actions { display: flex; gap: 0.5rem; align-items: center; border-left: 1px solid #4b5563; padding-left: 1rem; }
+    .c-thumb { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; border: 2px solid #000; }
+    .c-info { flex-grow: 1; margin-left: 1rem; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+    .c-title { font-weight: bold; font-size: 0.875rem; color: #fff; line-height: 1.2; }
+    .c-cat { font-size: 0.65rem; color: #9ca3af; text-transform: uppercase; margin-top: 2px; }
 
-        /* Badge Styles */
-        .product-card { position: relative; }
-        .product-badge {
-            position: absolute;
-            bottom: 0; right: 0; 
-            background-color: #991b1b; 
-            color: white;
-            padding: 4px 8px; 
-            border-top-left-radius: 6px;
-            font-family: 'Press Start 2P', cursive; 
-            font-size: 0.5rem; 
-            line-height: 1.4; 
-            box-shadow: -2px -2px 0 rgba(0,0,0,0.3);
-            z-index: 20; 
-            text-transform: uppercase; 
-            border-left: 2px solid white;
-            border-top: 2px solid white;
-        }
+    /* Store Buttons Container */
+    .c-stores { display: flex; gap: 8px; margin: 0 1.5rem; }
+    .store-icon-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 4px;
+      color: #fff;
+      transition: all 0.2s;
+      opacity: 0.2; /* Default disabled state */
+      pointer-events: none;
+      background: #374151;
+    }
+    .store-icon-btn.active { opacity: 1; pointer-events: auto; }
+    .store-icon-btn.active:hover { transform: scale(1.1); }
 
-        @media (max-width: 768px) {
-            .c-stores { display: none; }
-            .c-price { display: none; }
-            .header-container { flex-direction: column; gap: 1rem; }
-            .header-actions { width: 100%; justify-content: space-between; }
-        }
-    </style>
+    /* Custom styling for the dropdowns */
+    .retro-select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    }
+
+    .retro-select:focus {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    }
+
+    /* Ensure no native arrow appears (keeps only the feather chevron) */
+    select.retro-select::-ms-expand { display: none; }
+
+    /* Scrollbar Hiding */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Brand Colors */
+    .store-brand.active { background: #3B82F6; }
+    .store-ali.active { background: #EF4444; }
+    .store-amz.active { background: #F59E0B; color: black; }
+
+    .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: #4ade80; margin-right: 1.5rem; width: 80px; text-align: right; }
+    .c-actions { display: flex; gap: 0.5rem; align-items: center; border-left: 1px solid #4b5563; padding-left: 1rem; }
+
+    /* Badge Styles */
+    .product-card { position: relative; }
+    .product-badge {
+      position: absolute;
+      bottom: 0; right: 0;
+      background-color: #991b1b;
+      color: white;
+      padding: 4px 8px;
+      border-top-left-radius: 6px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.5rem;
+      line-height: 1.4;
+      box-shadow: -2px -2px 0 rgba(0,0,0,0.3);
+      z-index: 20;
+      text-transform: uppercase;
+      border-left: 2px solid white;
+      border-top: 2px solid white;
+    }
+
+    /* Store Custom Dropdown */
+    .store-dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 0.5rem;
+        width: 200px;
+        background-color: #1f2937;
+        border: 4px solid #000;
+        z-index: 60;
+        box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+    }
+    .store-dropdown-menu.open { display: block; }
+    .store-checkbox-row {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        border-bottom: 2px solid #374151;
+    }
+    .store-checkbox-row:last-child { border-bottom: none; }
+    .store-checkbox-row:hover { background-color: #374151; }
+    .store-checkbox {
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #fff;
+        background: transparent;
+        margin-right: 12px;
+        position: relative;
+        cursor: pointer;
+    }
+    .store-checkbox:checked { background: #fbbf24; border-color: #fbbf24; }
+    .store-checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        top: -4px; left: 1px;
+        color: #000;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    /* Filter Responsiveness */
+    #currencyFilter { min-width: 140px; }
+    #brandFilter { min-width: 150px; }
+    #sortFilter { min-width: 170px; }
+    #categoryFilter { min-width: 180px; }
+    #storeFilterBtn { min-width: 140px; justify-content: space-between; }
+
+    @media (min-width: 768px) {
+      .filter-select-wrap { width: auto !important; }
+      .filter-select { width: auto !important; }
+    }
+
+    @media (max-width: 768px) {
+      .c-stores { display: none; }
+      /* Fix: Show price on mobile */
+      .c-price { display: block; margin-right: 0.5rem; width: auto; font-size: 0.55rem; }
+      .header-container { flex-direction: column; gap: 0.25rem; }
+      .header-actions { width: 100%; justify-content: center; flex-wrap: wrap; }
+      /* Wrap filters properly on mobile */
+      .filters-row { flex-wrap: wrap; }
+      .filter-select-wrap { width: 100%; }
+      #storeFilterBtn { width: 100%; }
+      .view-btn-container { width: 100%; justify-content: center; }
+    }
+  </style>
 </head>
+
 <body class="bg-gray-900 text-white font-sans overflow-x-hidden pb-32">
 
-<header class="bg-gray-800 py-8 border-b-4 border-black">
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container">
-        <a href="/" class="flex items-center gap-4 mb-4 md:mb-0">
-            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
-                 class="w-16 h-16 rounded-full pixel-border bg-gray-900">
-            <h1 class="retro-font text-2xl text-yellow-400">RYAN'S STORE</h1>
-        </a>
-        <div class="flex gap-4 header-actions mt-4 md:mt-0">
-             <button id="openDealModalHeader"
-                class="px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
-                <i data-feather="tag" class="w-4 h-4"></i>
-                <span class="hidden sm:inline">POST DEAL</span>
-            </button>
+<header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container relative">
+    
+    <a href="/" class="flex items-center gap-3 md:gap-4 mb-2 md:mb-0">
+      <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+           class="w-10 h-10 md:w-16 md:h-16 rounded-full pixel-border bg-gray-900">
+      <h1 class="retro-font text-lg md:text-2xl text-yellow-400">RYAN'S STORE</h1>
+    </a>
 
-            <a href="/" class="pixel-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-xs">
-                ← BACK HOME
-            </a>
-        </div>
+    <button id="openDealModalHeader"
+            class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+      <i data-feather="tag" class="w-4 h-4 md:w-5 md:h-5"></i>
+      <span>POST DEAL</span>
+    </button>
+
+    <div class="order-3 md:order-3 flex items-center justify-center gap-2 border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
+      <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
+        SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
+      </span>
+
+      <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+         class="px-3 py-2 bg-[#f96854] hover:bg-[#e05d4b] text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg>
+        <span>PATREON</span>
+      </a>
+
+      <a href="https://ko-fi.com/ryanretro" target="_blank" rel="noopener noreferrer"
+         class="px-3 py-2 bg-[#13C3FF] hover:bg-[#0da4d6] text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.879-4.597h-.034c-4.826 0-7.661 2.785-7.661 2.785S8.354 4.352 3.528 4.352c-.02.004-4.106.512-4.879 4.597-.034.18-.052.368-.052.557 0 2.85 2.532 5.922 6.34 9.576l6.653 6.32c.209.198.539.198.748 0l6.653-6.32c3.808-3.654 6.34-6.726 6.34-9.576 0-.19-.018-.378-.052-.557z"/></svg>
+        <span>KO-FI</span>
+      </a>
     </div>
+
+  </div>
 </header>
 
 <section class="py-8 container mx-auto px-4">
-    <div class="bg-gray-800 p-6 rounded-lg pixel-border flex flex-col gap-6">
-        
-        <div class="w-full relative">
-            <i data-feather="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-            <input type="text" id="searchInput" placeholder="SEARCH GEAR..." 
-                   class="w-full bg-gray-900 border-4 border-black text-white text-center px-4 py-4 rounded focus:outline-none focus:border-yellow-400 retro-font text-sm uppercase shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-        </div>
-        
-        <div class="w-full flex flex-col xl:flex-row items-center justify-between gap-6 xl:gap-0">
-            
-            <div class="flex flex-nowrap gap-2 justify-start md:justify-center w-full xl:w-auto overflow-x-auto no-scrollbar" id="filterContainer">
-                <button class="filter-btn active bg-yellow-400 text-black px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="all">ALL</button>
-                <button class="filter-btn bg-gray-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="Handhelds">HANDHELDS</button>
-                <button class="filter-btn bg-gray-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="Accessories">ACCESSORIES</button>
-                <button class="filter-btn bg-gray-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs border-2 border-black whitespace-nowrap" data-cat="Community">COMMUNITY</button>
-            </div>
+  <div class="bg-gray-800 p-6 rounded-lg pixel-border flex flex-col gap-6">
 
-            <div class="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-end">
-    
-                <div class="relative w-1/3 md:w-auto">
-                    <select id="currencyFilter" class="retro-select appearance-none w-full md:w-32 bg-gray-900 text-yellow-400 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400">
-                        <option value="USD">USD $</option>
-                        <option value="EUR">EUR €</option>
-                        <option value="GBP">GBP £</option>
-                        <option value="KRW">KRW ₩</option>
-                        <option value="CAD">CAD $</option>
-                        <option value="AUD">AUD $</option>
-                    </select>
-                    <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
-                </div>
-
-                <div class="relative w-1/3 md:w-auto">
-                    <select id="brandFilter" class="retro-select appearance-none w-full md:w-40 bg-gray-900 text-white pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400">
-                        <option value="all">BRANDS</option>
-                    </select>
-                    <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
-                </div>
-                
-                <div class="relative w-1/3 md:w-auto">
-                    <select id="sortFilter" class="retro-select appearance-none w-full md:w-48 bg-gray-900 text-white pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400">
-                        <option value="default">SORT: NEW</option>
-                        <option value="price-asc">PRICE: LOW ⬆</option>
-                        <option value="price-desc">PRICE: HIGH ⬇</option>
-                    </select>
-                    <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
-                </div>
-            </div>
-
-            <div class="flex bg-gray-900 rounded border-4 border-black p-1 shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-                <button class="view-btn p-2 hover:bg-gray-700 rounded text-yellow-400" data-view="grid" title="Grid View">
-                    <i data-feather="grid" class="w-5 h-5"></i>
-                </button>
-                <button class="view-btn p-2 hover:bg-gray-700 rounded text-gray-400" data-view="list" title="Card List">
-                    <i data-feather="list" class="w-5 h-5"></i>
-                </button>
-                <button class="view-btn p-2 hover:bg-gray-700 rounded text-gray-400" data-view="compact" title="Compact List">
-                    <i data-feather="align-justify" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </div>
+    <div class="w-full relative">
+      <i data-feather="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+      <input type="text" id="searchInput" placeholder="SEARCH GEAR..."
+             class="w-full bg-gray-900 border-4 border-black text-white text-center px-4 py-4 rounded focus:outline-none focus:border-yellow-400 retro-font text-sm uppercase shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
     </div>
+
+    <div class="w-full flex flex-col xl:flex-row items-center justify-between gap-4 filters-row">
+
+      <div class="flex flex-wrap gap-2 w-full xl:w-auto justify-center xl:justify-start">
+
+        <div class="relative filter-select-wrap">
+          <select id="categoryFilter" class="filter-select retro-select appearance-none bg-yellow-400 text-black font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-white w-full">
+            <option value="all">CATEGORY</option>
+            <option value="Handhelds">HANDHELDS</option>
+            <option value="Accessories">ACCESSORIES</option>
+          </select>
+          <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-black pointer-events-none"></i>
+        </div>
+
+        <div class="relative filter-select-wrap" id="storeFilterWidget">
+            <button id="storeFilterBtn" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2 w-full">
+                <span>STORES</span>
+                <i data-feather="chevron-down" class="w-4 h-4"></i>
+            </button>
+            
+            <div id="storeFilterMenu" class="store-dropdown-menu rounded">
+                <label class="store-checkbox-row">
+                    <input type="checkbox" class="store-checkbox" value="official">
+                    <span class="retro-font text-[9px] uppercase">Official</span>
+                </label>
+                <label class="store-checkbox-row">
+                    <input type="checkbox" class="store-checkbox" value="aliexpress">
+                    <span class="retro-font text-[9px] uppercase">AliExpress</span>
+                </label>
+                <label class="store-checkbox-row">
+                    <input type="checkbox" class="store-checkbox" value="amazon">
+                    <span class="retro-font text-[9px] uppercase">Amazon</span>
+                </label>
+                <label class="store-checkbox-row">
+                    <input type="checkbox" class="store-checkbox" value="powkiddy">
+                    <span class="retro-font text-[9px] uppercase">Powkiddy</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="relative filter-select-wrap">
+          <select id="brandFilter" class="filter-select retro-select appearance-none bg-gray-900 text-white pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400 w-full">
+            <option value="all">BRANDS: ALL</option>
+          </select>
+          <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2 w-full xl:w-auto justify-center xl:justify-end">
+        
+        <div class="relative filter-select-wrap">
+          <select id="currencyFilter" class="filter-select retro-select appearance-none bg-gray-900 text-yellow-400 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400 w-full">
+            <option value="USD">USD $</option>
+            <option value="EUR">EUR €</option>
+            <option value="GBP">GBP £</option>
+            <option value="KRW">KRW ₩</option>
+            <option value="CAD">CAD $</option>
+            <option value="AUD">AUD $</option>
+          </select>
+          <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
+        </div>
+
+        <div class="relative filter-select-wrap">
+          <select id="sortFilter" class="filter-select retro-select appearance-none bg-gray-900 text-white pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400 w-full">
+            <option value="default">SORT: NEW</option>
+            <option value="price-asc">PRICE: LOW ⬆</option>
+            <option value="price-desc">PRICE: HIGH ⬇</option>
+          </select>
+          <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
+        </div>
+
+        <div class="flex bg-gray-900 rounded border-2 border-black p-1 shadow-[4px_4px_0_0_rgba(0,0,0,0.5)] view-btn-container items-center">
+          <button class="view-btn py-1.5 px-2 hover:bg-gray-700 rounded text-yellow-400" data-view="grid" title="Grid View">
+            <i data-feather="grid" class="w-5 h-5"></i>
+          </button>
+          <button class="view-btn py-1.5 px-2 hover:bg-gray-700 rounded text-gray-400" data-view="list" title="Card List">
+            <i data-feather="list" class="w-5 h-5"></i>
+          </button>
+          <button class="view-btn py-1.5 px-2 hover:bg-gray-700 rounded text-gray-400" data-view="compact" title="Compact List">
+            <i data-feather="align-justify" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
 <section class="container mx-auto px-4 min-h-[50vh]">
-    <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-300">
-        <div class="col-span-full text-center text-gray-500 retro-font py-20">Loading Gear...</div>
-    </div>
+  <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-300">
+    <div class="col-span-full text-center text-gray-500 retro-font py-20">Loading Gear...</div>
+  </div>
 </section>
 
 <template id="productTemplate">
-    <div class="product-card bg-gray-800 rounded-lg overflow-hidden pixel-border flex flex-col h-full" data-aos="fade-up">
-        <div class="relative h-56 bg-black group card-img-wrapper shrink-0">
-            <img src="" alt="" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 product-img">
-            <div class="in-tray-indicator absolute inset-0 border-4 border-yellow-400 hidden pointer-events-none z-10 bg-yellow-400/10"></div>
-        </div>
-
-        <div class="p-6 flex-1 flex flex-col card-content">
-            <div class="flex justify-between items-start">
-                <h3 class="retro-font text-lg text-white mb-2 leading-tight product-title">Product Name</h3>
-            </div>
-            
-            <p class="text-gray-400 text-sm mb-6 flex-1 product-desc">Description goes here.</p>
-            
-            <button class="tray-btn w-full mb-4 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded pixel-btn retro-font text-[10px] flex items-center justify-center gap-2 transition-colors">
-                <i data-feather="plus" class="w-4 h-4"></i>
-                <span class="tray-btn-text">ADD TO TRAY</span>
-            </button>
-
-            <div class="space-y-3 product-links"></div>
-        </div>
+  <div class="product-card bg-gray-800 rounded-lg overflow-hidden pixel-border flex flex-col h-full" data-aos="fade-up">
+    <div class="relative h-56 bg-black group card-img-wrapper shrink-0">
+      <img src="" alt="" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 product-img">
+      <div class="in-tray-indicator absolute inset-0 border-4 border-yellow-400 hidden pointer-events-none z-10 bg-yellow-400/10"></div>
+      <div class="product-badge hidden"></div>
     </div>
+
+    <div class="p-6 flex-1 flex flex-col card-content">
+      <div class="flex justify-between items-start">
+        <h3 class="retro-font text-lg text-white mb-2 leading-tight product-title">Product Name</h3>
+      </div>
+
+      <p class="text-gray-400 text-sm mb-6 flex-1 product-desc">Description goes here.</p>
+
+      <button class="tray-btn w-full mb-4 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded pixel-btn retro-font text-[10px] flex items-center justify-center gap-2 transition-colors">
+        <i data-feather="plus" class="w-4 h-4"></i>
+        <span class="tray-btn-text">ADD TO TRAY</span>
+      </button>
+
+      <div class="space-y-3 product-links"></div>
+    </div>
+  </div>
 </template>
 
 <template id="compactTemplate">
-    <div class="compact-row group">
-        <img src="" class="c-thumb" alt="Product">
-        
-        <div class="c-info">
-            <div class="c-title truncate pr-2">Product Name</div>
-            <div class="c-cat">Category</div>
-        </div>
-
-        <div class="c-stores">
-            <a href="#" target="_blank" class="store-icon-btn store-brand" title="Official Store">
-                <i data-feather="globe" class="w-4 h-4"></i>
-            </a>
-            <a href="#" target="_blank" class="store-icon-btn store-ali" title="AliExpress">
-                <i data-feather="package" class="w-4 h-4"></i>
-            </a>
-            <a href="#" target="_blank" class="store-icon-btn store-amz" title="Amazon">
-                <i data-feather="shopping-cart" class="w-4 h-4"></i>
-            </a>
-        </div>
-
-        <div class="c-price">$0.00</div>
-
-        <div class="c-actions">
-            <button class="c-tray-btn bg-gray-700 hover:bg-yellow-400 hover:text-black text-gray-300 p-2 rounded transition-colors" title="Add to Tray">
-                <i data-feather="plus" class="w-4 h-4"></i>
-            </button>
-        </div>
+  <div class="compact-row group">
+    <img src="" class="c-thumb" alt="Product">
+    <div class="c-info">
+      <div class="c-title truncate pr-2">Product Name</div>
+      <div class="c-cat">Category</div>
     </div>
+
+    <div class="c-stores">
+      <a href="#" target="_blank" rel="noopener noreferrer" class="store-icon-btn store-brand" title="Official Store">
+        <i data-feather="globe" class="w-4 h-4"></i>
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer" class="store-icon-btn store-ali" title="AliExpress">
+        <i data-feather="package" class="w-4 h-4"></i>
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer" class="store-icon-btn store-amz" title="Amazon">
+        <i data-feather="shopping-cart" class="w-4 h-4"></i>
+      </a>
+    </div>
+
+    <div class="c-price">$0.00</div>
+
+    <div class="c-actions">
+      <button class="c-tray-btn bg-gray-700 hover:bg-yellow-400 hover:text-black text-gray-300 p-2 rounded transition-colors" title="Add to Tray">
+        <i data-feather="plus" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
 </template>
 
 <div id="tray" class="fixed bottom-0 left-0 right-0 z-50 tray-hidden">
-    <div class="bg-black/95 border-t-2 border-yellow-400 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex flex-wrap items-center justify-between mb-3 border-b border-gray-700 pb-2 gap-4">
-                
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-2">
-                        <div class="retro-font text-xs text-yellow-400">YOUR TRAY</div>
-                        <div class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded">
-                            <span id="trayCount" class="text-white font-bold">0</span> items
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400 uppercase tracking-wide">Est. Total:</span>
-                        <span id="trayTotal" class="retro-font text-sm text-green-400">$0.00</span>
-                    </div>
-                </div>
+  <div class="bg-black/95 border-t-2 border-yellow-400 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex flex-wrap items-center justify-between mb-3 border-b border-gray-700 pb-2 gap-4">
 
-                <div class="flex gap-2">
-                    <button id="openTrayLinks" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded pixel-btn text-[10px] font-bold flex items-center gap-2">
-                        <i data-feather="external-link" class="w-3 h-3"></i> OPEN ALL
-                    </button>
-                    <button id="clearTray" class="bg-gray-800 hover:bg-red-900 text-gray-300 px-3 py-1.5 rounded pixel-btn text-[10px]">
-                        CLEAR
-                    </button>
-                </div>
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <div class="retro-font text-xs text-yellow-400">YOUR TRAY</div>
+            <div class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded">
+              <span id="trayCount" class="text-white font-bold">0</span> items
             </div>
+          </div>
 
-            <div id="trayItems" class="flex gap-3 overflow-x-auto pb-2" style="scrollbar-width: thin; scrollbar-color: #4b5563 #000000;">
-                </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400 uppercase tracking-wide">Est. Total:</span>
+            <span id="trayTotal" class="retro-font text-sm text-green-400">$0.00</span>
+          </div>
         </div>
+
+        <div class="flex gap-2">
+          <button id="openTrayLinks" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded pixel-btn text-[10px] font-bold flex items-center gap-2">
+            <i data-feather="external-link" class="w-3 h-3"></i> OPEN ALL
+          </button>
+          <button id="clearTray" class="bg-gray-800 hover:bg-red-900 text-gray-300 px-3 py-1.5 rounded pixel-btn text-[10px]">
+            CLEAR
+          </button>
+        </div>
+      </div>
+
+      <div id="trayItems" class="flex gap-3 overflow-x-auto pb-2" style="scrollbar-width: thin; scrollbar-color: #4b5563 #000000;"></div>
     </div>
+  </div>
 </div>
 
 <div id="dealModal" class="fixed inset-0 z-50 hidden">
   <div id="dealModalBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
 
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-gray-800 rounded-lg pixel-border w-full max-w-lg overflow-hidden relative">
+    <div class="bg-gray-800 rounded-lg pixel-border w-full max-w-3xl xl:max-w-4xl overflow-hidden relative">
       <div class="p-6 border-b-4 border-black flex items-center justify-between">
         <h2 class="retro-font text-sm text-yellow-400 uppercase">Post a Deal</h2>
         <button id="closeDealModal" class="pixel-btn bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-black">
@@ -328,49 +442,67 @@
         <div>
           <label class="block text-xs text-gray-300 retro-font mb-2">PRODUCT NAME</label>
           <input name="item_name" id="dealName" required
-            class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
-            placeholder="RETROID POCKET 5" />
+                 class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
+                 placeholder="RETROID POCKET 5" />
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label class="block text-xs text-gray-300 retro-font mb-2">PRICE (USD)</label>
-            <input name="price" id="dealPrice" type="number" step="0.01" min="0" required
-              class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
-              placeholder="199.00" />
+            <label class="block text-xs text-gray-300 retro-font mb-2">PRICE</label>
+            <input name="original_price" id="dealPrice" type="number" step="0.01" min="0" required
+                   class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
+                   placeholder="199.00" />
+            <div id="usdPreview" class="text-xs text-gray-400 mt-2"></div>
           </div>
+
+          <div>
+            <label class="block text-xs text-gray-300 retro-font mb-2">CURRENCY</label>
+            <div class="relative">
+              <select name="original_currency" id="dealCurrency"
+                      class="w-full retro-select appearance-none bg-gray-900 border-4 border-black text-yellow-400 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase cursor-pointer focus:outline-none focus:border-yellow-400">
+                <option value="USD">USD $</option>
+                <option value="EUR">EUR €</option>
+                <option value="GBP">GBP £</option>
+                <option value="KRW">KRW ₩</option>
+                <option value="CAD">CAD $</option>
+                <option value="AUD">AUD $</option>
+              </select>
+              <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
+            </div>
+          </div>
+
           <div>
             <label class="block text-xs text-gray-300 retro-font mb-2">STORE</label>
             <input name="store_name" id="dealStore" type="text" required
-               class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
-               placeholder="AMAZON, ALIEXPRESS..." />
+                   class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
+                   placeholder="AMAZON, ALIEXPRESS..." />
           </div>
         </div>
 
         <div>
           <label class="block text-xs text-gray-300 retro-font mb-2">LINK</label>
           <input name="link" id="dealLink" type="url" required
-            class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
-            placeholder="https://..." />
+                 class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
+                 placeholder="https://..." />
         </div>
 
         <div class="grid grid-cols-1 gap-4">
           <div>
             <label class="block text-xs text-gray-300 retro-font mb-2">NOTES (OPTIONAL)</label>
             <input name="notes" id="dealNotes"
-              class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
-              placeholder="COUPON CODES, SHIPPING INFO..." />
+                   class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
+                   placeholder="COUPON CODES, SHIPPING INFO..." />
           </div>
         </div>
 
         <button id="dealSubmitBtn" type="submit"
-          class="w-full bg-yellow-400 hover:bg-yellow-300 text-black py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2">
+                class="w-full bg-yellow-400 hover:bg-yellow-300 text-black py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2">
           <i data-feather="send" class="w-4 h-4"></i>
           SUBMIT DEAL
         </button>
 
         <p class="text-gray-400 text-xs text-center">
-          Submissions are reviewed before appearing in the Community tab.
+          Submissions are reviewed before appearing on the main deals page.
         </p>
 
         <div id="dealToast" class="hidden text-center text-xs retro-font py-2 rounded border-2 border-black"></div>
@@ -380,780 +512,954 @@
 </div>
 
 <footer class="bg-black py-8 mt-20 border-t-4 border-gray-800">
-    <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
-        <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
-        <p class="mt-2">© 2025 Ryan Retro</p>
-    </div>
+  <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
+    <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
+    <p class="mt-2">© 2025 Ryan Retro</p>
+  </div>
 </footer>
 
 <script>
-    // --- OFFICIAL DATA START ---
-    const officialProducts = [
-      {
-        "id": "trimui_brick_hammer",
-        "name": "TrimUI Brick Hammer",
-        "category": "Handhelds",
-        "badge": "Highly Recommended! 🏆",
-        "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
-        "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
-        "links": [
-          { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 94.99, "currency": "$" },
-          { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" },
-          { "store": "AliExpress", "url": "#", "price": 115.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "trimui_brick",
-        "name": "TrimUI Brick",
-        "category": "Handhelds",
-        "badge": "Best Value 🎁",
-        "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
-        "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
-        "links": [
-          { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJJv", "price": 84.99, "currency": "$" },
-          { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" },
-          { "store": "AliExpress", "url": "#", "price": 75.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rp6",
-        "name": "Retroid Pocket 6",
-        "category": "Handhelds",
-        "badge": "Pre-order 🔥",
-        "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686",
-        "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "steam_deck",
-        "name": "Steam Deck",
-        "category": "Handhelds",
-        "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg",
-        "description": "The standard for PC handheld gaming. Play your Steam library on the go.",
-        "links": [
-          { "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 469.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rp5",
-        "name": "Retroid Pocket 5",
-        "category": "Handhelds",
-        "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png",
-        "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" },
-          { "store": "Amazon", "url": "#", "price": 249.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rp_mini2",
-        "name": "Retroid Pocket Mini V2",
-        "category": "Handhelds",
-        "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824",
-        "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" },
-          { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rp_classic",
-        "name": "Retroid Pocket Classic",
-        "category": "Handhelds",
-        "image": "https://www.goretroid.com/cdn/shop/files/SKU_790b844f-6ba6-4834-8278-9fce3b994d27_1024x1024@2x.png?v=1754461254",
-        "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" },
-          { "store": "AliExpress", "url": "https://www.aliexpress.us/item/3256809185963397.html?pdp_npi=4%40dis%21USD%21US%20%24134.00%21US%20%24134.00%21%21%21134.00%21134.00%21%402151e6dc17657942648816965eb39b%2112000048900137989%21sh%21US%211614690223%21X&spm=a2g0o.store_pc_allItems_or_groupList.new_all_items_2007586173957.1005009372278149&gatewayAdapt=glo2usa", "price": 134.00, "currency": "$" },
-          { "store": "Amazon", "url": "https://amzn.to/3KLWx8M", "price": 149.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rp_flip2",
-        "name": "Retroid Pocket Flip 2",
-        "category": "Handhelds",
-        "image": "https://www.goretroid.com/cdn/shop/files/ice_blue_4b29c9c7-fcc1-4bb4-8a83-f8cf03b9cfd2_1024x1024@2x.jpg?v=1744886442",
-        "description": "The clamshell returns. Protect your screen on the go with Snapdragon 865 performance.",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4ovQKfP", "price": 256.80, "currency": "$" },
-          { "store": "Amazon", "url": "https://amzn.to/44rQFZ1", "price": 269.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rpg2",
-        "name": "Retroid Pocket G2 Handheld",
-        "category": "Handhelds",
-        "image": "https://www.goretroid.com/cdn/shop/files/723e012906c411dfa82d5fec119e5474_1024x1024@2x.jpg?v=1762132633",
-        "description": "Premium mid-range Android handheld with a 5.5-inch AMOLED screen and Snapdragon G2 Gen 2 power.",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3kUZAmH", "price": 224.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "anker_power",
-        "name": "Anker 25000mAh Power Bank",
-        "category": "Accessories",
-        "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg",
-        "description": "24,000mAh 140W fast charging. The gold standard for powering handhelds, phones or even laptops on long trips.",
-        "links": [
-          { "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }
-        ]
-      },
-      {
-        "id": "ugreen_power",
-        "name": "UGreen 25000mAh Power Bank",
-        "category": "Accessories",
-        "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg",
-        "description": "A cheaper alternative to the Anker 25000mAh power bank.",
-        "links": [
-          { "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3UhzSaN", "price": 75.79, "currency": "$" }
-        ]
-      },
-      {
-        "id": "ugreen_dock",
-        "name": "UGreen 9-in-1 Dock",
-        "category": "Accessories",
-        "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg",
-        "description": "4K@60Hz HDMI, Gigabit Ethernet, and PD charging. Perfect for handhelds like the Steam Deck and ROG Ally. Also works great with Android handhelds but they have to sit upside down.",
-        "links": [
-          { "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3RPVzzX", "price": 84.41, "currency": "$" }
-        ]
-      },
-      {
-        "id": "rp_ds_addon",
-        "name": "Retroid Dual Screen Add-on",
-        "category": "Accessories",
-        "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811",
-        "description": "Transform your RP5 or Mini into a DS powerhouse with this 5.5\" 1080p AMOLED secondary screen.",
-        "links": [
-          { "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "gamesir_g8p",
-        "name": "GameSir G8 Plus",
-        "category": "Accessories",
-        "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif",
-        "description": "The ultimate Bluetooth controller for Android, iOS, and Switch. Hall effect sticks & triggers.",
-        "links": [
-          { "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" },
-          { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4oCQWGv", "price": 79.99, "currency": "$" }
-        ]
-      },
-      {
-        "id": "odin3",
-        "name": "AYN Odin 3",
-        "category": "Handhelds",
-        "badge": "Pre-order 🔥",
-        "image": "https://www.ayntec.com/cdn/shop/files/d92e076f69cb1a6f81c9bab8cd8f57a2_f21bc7dc-1ec5-4a8c-a0fb-159aecd12d8c_1080x.jpg?v=1761054667",
-        "description": "The new standard. Snapdragon 8 Elite, 120Hz AMOLED, and massive 8000mAh battery.",
-        "links": [
-          { "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "odin2_portal",
-        "name": "AYN Odin2 Portal",
-        "category": "Handhelds",
-        "image": "https://www.ayntec.com/cdn/shop/files/8b9cc7c9808a81fc8db0eaf67a4d79d7_1080x.jpg?v=1737092883",
-        "description": "A stunning 7-inch OLED handheld with Snapdragon 8 Gen 2 performance.",
-        "links": [
-          { "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" },
-          { "store": "Amazon", "url": "https://amzn.to/3YxCgqw", "price": 459.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "ayn_thor",
-        "name": "AYN Thor",
-        "category": "Handhelds",
-        "badge": "Pre-order 🔥",
-        "image": "https://www.ayntec.com/cdn/shop/files/e50c1d352b31e3f4a65f1f0a706072c3_1080x.jpg?v=1755943485",
-        "description": "Dual-screen OLED clamshell design powered by the Snapdragon 8 Gen 2.",
-        "links": [
-          { "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }
-        ]
-      },
-      {
-        "id": "sd_card",
-        "name": "SanDisk Extreme 512GB",
-        "category": "Accessories",
-        "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg",
-        "description": "Reliable storage for your ROM library.",
-        "links": [
-          { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
-        ]
-      }
-    ];
+  // --- OFFICIAL DATA START ---
+  const officialProducts = [
+    {
+      "id": "trimui_brick_hammer",
+      "name": "TrimUI Brick Hammer",
+      "category": "Handhelds",
+      "badge": "Highly Recommended! 🏆",
+      "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
+      "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
+      "links": [
+        { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 94.99, "currency": "$" },
+        { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" },
+        { "store": "AliExpress", "url": "#", "price": 115.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "trimui_brick",
+      "name": "TrimUI Brick",
+      "category": "Handhelds",
+      "badge": "Best Value 🎁",
+      "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
+      "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
+      "links": [
+        { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJJv", "price": 84.99, "currency": "$" },
+        { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" },
+        { "store": "AliExpress", "url": "#", "price": 75.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rp6",
+      "name": "Retroid Pocket 6",
+      "category": "Handhelds",
+      "badge": "Pre-order 🔥",
+      "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686",
+      "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "steam_deck",
+      "name": "Steam Deck",
+      "category": "Handhelds",
+      "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg",
+      "description": "The standard for PC handheld gaming. Play your Steam library on the go.",
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 469.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rp5",
+      "name": "Retroid Pocket 5",
+      "category": "Handhelds",
+      "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png",
+      "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" },
+        { "store": "Amazon", "url": "#", "price": 249.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rp_mini2",
+      "name": "Retroid Pocket Mini V2",
+      "category": "Handhelds",
+      "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824",
+      "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" },
+        { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rp_classic",
+      "name": "Retroid Pocket Classic",
+      "category": "Handhelds",
+      "image": "https://www.goretroid.com/cdn/shop/files/SKU_790b844f-6ba6-4834-8278-9fce3b994d27_1024x1024@2x.png?v=1754461254",
+      "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" },
+        { "store": "AliExpress", "url": "https://www.aliexpress.us/item/3256809185963397.html?pdp_npi=4%40dis%21USD%21US%20%24134.00%21US%20%24134.00%21%21%21134.00%21134.00%21%402151e6dc17657942648816965eb39b%2112000048900137989%21sh%21US%211614690223%21X&spm=a2g0o.store_pc_allItems_or_groupList.new_all_items_2007586173957.1005009372278149&gatewayAdapt=glo2usa", "price": 134.00, "currency": "$" },
+        { "store": "Amazon", "url": "https://amzn.to/3KLWx8M", "price": 149.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rp_flip2",
+      "name": "Retroid Pocket Flip 2",
+      "category": "Handhelds",
+      "image": "https://www.goretroid.com/cdn/shop/files/ice_blue_4b29c9c7-fcc1-4bb4-8a83-f8cf03b9cfd2_1024x1024@2x.jpg?v=1744886442",
+      "description": "The clamshell returns. Protect your screen on the go with Snapdragon 865 performance.",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4ovQKfP", "price": 256.80, "currency": "$" },
+        { "store": "Amazon", "url": "https://amzn.to/44rQFZ1", "price": 269.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rpg2",
+      "name": "Retroid Pocket G2 Handheld",
+      "category": "Handhelds",
+      "image": "https://www.goretroid.com/cdn/shop/files/723e012906c411dfa82d5fec119e5474_1024x1024@2x.jpg?v=1762132633",
+      "description": "Premium mid-range Android handheld with a 5.5-inch AMOLED screen and Snapdragon G2 Gen 2 power.",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3kUZAmH", "price": 224.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "anker_power",
+      "name": "Anker 25000mAh Power Bank",
+      "category": "Accessories",
+      "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg",
+      "description": "24,000mAh 140W fast charging. The gold standard for powering handhelds, phones or even laptops on long trips.",
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }
+      ]
+    },
+    {
+      "id": "ugreen_power",
+      "name": "UGreen 25000mAh Power Bank",
+      "category": "Accessories",
+      "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg",
+      "description": "A cheaper alternative to the Anker 25000mAh power bank.",
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3UhzSaN", "price": 75.79, "currency": "$" }
+      ]
+    },
+    {
+      "id": "ugreen_dock",
+      "name": "UGreen 9-in-1 Dock",
+      "category": "Accessories",
+      "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg",
+      "description": "4K@60Hz HDMI, Gigabit Ethernet, and PD charging. Perfect for handhelds like the Steam Deck and ROG Ally. Also works great with Android handhelds but they have to sit upside down.",
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3RPVzzX", "price": 84.41, "currency": "$" }
+      ]
+    },
+    {
+      "id": "rp_ds_addon",
+      "name": "Retroid Dual Screen Add-on",
+      "category": "Accessories",
+      "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811",
+      "description": "Transform your RP5 or Mini into a DS powerhouse with this 5.5\" 1080p AMOLED secondary screen.",
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "gamesir_g8p",
+      "name": "GameSir G8 Plus",
+      "category": "Accessories",
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif",
+      "description": "The ultimate Bluetooth controller for Android, iOS, and Switch. Hall effect sticks & triggers.",
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4oCQWGv", "price": 79.99, "currency": "$" }
+      ]
+    },
+    {
+      "id": "odin3",
+      "name": "AYN Odin 3",
+      "category": "Handhelds",
+      "badge": "Pre-order 🔥",
+      "image": "https://www.ayntec.com/cdn/shop/files/d92e076f69cb1a6f81c9bab8cd8f57a2_f21bc7dc-1ec5-4a8c-a0fb-159aecd12d8c_1080x.jpg?v=1761054667",
+      "description": "The new standard. Snapdragon 8 Elite, 120Hz AMOLED, and massive 8000mAh battery.",
+      "links": [
+        { "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "odin2_portal",
+      "name": "AYN Odin2 Portal",
+      "category": "Handhelds",
+      "image": "https://www.ayntec.com/cdn/shop/files/8b9cc7c9808a81fc8db0eaf67a4d79d7_1080x.jpg?v=1737092883",
+      "description": "A stunning 7-inch OLED handheld with Snapdragon 8 Gen 2 performance.",
+      "links": [
+        { "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" },
+        { "store": "Amazon", "url": "https://amzn.to/3YxCgqw", "price": 459.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "ayn_thor",
+      "name": "AYN Thor",
+      "category": "Handhelds",
+      "badge": "Pre-order 🔥",
+      "image": "https://www.ayntec.com/cdn/shop/files/e50c1d352b31e3f4a65f1f0a706072c3_1080x.jpg?v=1755943485",
+      "description": "Dual-screen OLED clamshell design powered by the Snapdragon 8 Gen 2.",
+      "links": [
+        { "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }
+      ]
+    },
+    {
+      "id": "sd_card",
+      "name": "SanDisk Extreme 512GB",
+      "category": "Accessories",
+      "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg",
+      "description": "Reliable storage for your ROM library.",
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
+      ]
+    }
+  ];
 
-    let allProducts = [...officialProducts]; // Initialize with official
-    let traySet = new Set(); 
-    let currentView = 'grid'; 
+  // Deep copy base
+  let allProducts = JSON.parse(JSON.stringify(officialProducts));
+  let traySet = new Set(); // product.id
+  let currentView = 'grid';
+  let currentCurrency = 'USD';
+  let currentCategory = 'all';
+  let currentBrand = 'all';
+  let currentSort = 'default';
+  let currentSearch = '';
+  let storeFilters = new Set(); // Stores enabled
 
-    // --- CURRENCY CONFIG ---
-    let currentCurrency = 'USD';
-    
-    const exchangeRates = {
-        'USD': 1.0,
-        'EUR': 0.85,  
-        'GBP': 0.75,  
-        'KRW': 1465,  
-        'CAD': 1.38,  
-        'AUD': 1.50   
-    };
+  // Currency config: assumes stored base prices are USD (your current data is USD)
+  const exchangeRates = {
+    USD: 1,
+    EUR: 0.92,
+    GBP: 0.78,
+    KRW: 1375,
+    CAD: 1.36,
+    AUD: 1.52
+  };
 
-    const currencySymbols = {
-        'USD': '$',
-        'EUR': '€',
-        'GBP': '£',
-        'KRW': '₩',
-        'CAD': 'C$',
-        'AUD': 'A$'
-    };
+  const currencySymbols = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    KRW: '₩',
+    CAD: '$',
+    AUD: '$'
+  };
 
-    // --- FETCH COMMUNITY DEALS ---
-    async function loadCommunityDeals() {
-        try {
-            // This GET request fetches public deals (from deals.csv)
-            // Once you approve a deal by moving it from deals_pending.csv to deals.csv,
-            // it will appear here.
-            const res = await fetch('/api/deals');
-            if(!res.ok) throw new Error("Failed to fetch deals");
-            const data = await res.json();
+  function convertFromUSD(usdPrice, targetCurrency) {
+    const rate = exchangeRates[targetCurrency] || 1;
+    if (targetCurrency === 'USD') return usdPrice;
+    // Here rates are 1 USD = X currency
+    return usdPrice * rate;
+  }
+
+  function convertToUSD(amount, fromCurrency) {
+    if (!amount || amount <= 0) return 0;
+    if (!fromCurrency || fromCurrency === 'USD') return amount;
+    const rate = exchangeRates[fromCurrency];
+    if (!rate) return amount;
+    return amount / rate;
+  }
+
+  function formatPrice(amount, currencyCode) {
+    const sym = currencySymbols[currencyCode] || '$';
+    if (currencyCode === 'KRW') {
+      return `${sym}${Math.round(amount).toLocaleString()}`;
+    }
+    return `${sym}${Number(amount).toFixed(2)}`;
+  }
+
+  function normalizeStoreName(store) {
+    return (store || '').trim().toLowerCase();
+  }
+
+  function isValidUrl(u) {
+    try { new URL(u); return true; } catch { return false; }
+  }
+
+  function findLinkByStore(links, storeName) {
+    const s = normalizeStoreName(storeName);
+    return links.find(l => normalizeStoreName(l.store) === s);
+  }
+
+  function getCheapestLink(product) {
+    const links = product.links || [];
+    const valid = links.filter(l => typeof l.price === 'number' && isFinite(l.price) && l.price > 0 && isValidUrl(l.url) && l.url !== '#');
+    if (valid.length === 0) return null;
+    valid.sort((a,b) => a.price - b.price);
+    return valid[0];
+  }
+
+  function getCheapestPrice(product) {
+    const link = getCheapestLink(product);
+    return link ? link.price : null;
+  }
+
+  function getUniqueBrands(products) {
+    const set = new Set();
+    products.forEach(p => {
+      const name = (p.name || '').trim();
+      if (!name) return;
+      const first = name.split(' ')[0].toUpperCase();
+      if (first) set.add(first);
+    });
+    return Array.from(set).sort((a,b)=>a.localeCompare(b));
+  }
+
+  function populateBrands(products) {
+    const brandFilter = document.getElementById('brandFilter');
+    if (!brandFilter) return;
+    const brands = getUniqueBrands(products);
+    brandFilter.innerHTML = `<option value="all">BRANDS: ALL</option>`;
+    brands.forEach(b => {
+      const opt = document.createElement('option');
+      const displayText = b === 'AYN' ? 'AYN' : b; 
+      opt.value = b;
+      opt.textContent = `BRAND: ${displayText}`;
+      brandFilter.appendChild(opt);
+    });
+  }
+
+  function matchesFilters(product) {
+    // 1. Category Filter
+    if (currentCategory !== 'all' && product.category !== currentCategory) return false;
+
+    // 2. Brand Filter
+    if (currentBrand !== 'all') {
+      const first = (product.name || '').split(' ')[0]?.toUpperCase();
+      if (first !== currentBrand) return false;
+    }
+
+    // 3. Search Filter
+    if (currentSearch) {
+      const q = currentSearch.toLowerCase();
+      const hay = `${product.name||''} ${product.description||''} ${product.category||''}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+
+    // 4. Store Filter (Custom)
+    if (storeFilters.size > 0) {
+        // If specific stores are selected, product must have a link from at least one of them
+        const hasStore = (product.links || []).some(link => {
+            const sName = normalizeStoreName(link.store);
+            // Basic matching logic
+            if (storeFilters.has('official')) {
+                if (sName.includes('official') || sName.includes('goretroid') || sName.includes('ayntec') || sName.includes('trimu')) return true;
+            }
+            if (storeFilters.has('aliexpress') && (sName.includes('aliexpress') || sName.includes('ali'))) return true;
+            if (storeFilters.has('amazon') && (sName.includes('amazon') || sName === 'amz')) return true;
+            if (storeFilters.has('powkiddy') && sName.includes('powkiddy')) return true;
             
-            if(data.rows && data.rows.length > 0) {
-                const userDeals = data.rows.map((deal, index) => {
-                    // Create a product object compatible with your existing structure
-                    return {
-                        id: `community_${index}_${Date.now()}`,
-                        name: deal.item_name,
-                        category: "Community",
-                        badge: "User Deal 👤",
-                        // Placeholder image for user deals since API doesn't store image URL
-                        image: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png",
-                        description: deal.notes ? deal.notes : `Community found deal at ${deal.store_name}`,
-                        links: [
-                            { 
-                                store: deal.store_name, 
-                                url: deal.link, 
-                                price: parseFloat(deal.price), 
-                                currency: deal.currency || "$" 
-                            }
-                        ]
-                    };
-                });
-                // Merge official and approved user deals
-                allProducts = [...officialProducts, ...userDeals];
-            }
-        } catch(err) {
-            console.error("Could not load community deals:", err);
-            // Fallback to just official products if API fails
-            allProducts = [...officialProducts]; 
-        } finally {
-            // Render everything
-            renderProducts(allProducts);
-            populateBrands(allProducts);
-        }
+            // Check for exact normalized matches as fallback
+            return storeFilters.has(sName);
+        });
+        if (!hasStore) return false;
     }
 
-    // --- HELPER FUNCTIONS ---
+    return true;
+  }
 
-    const getCheapestPrice = (item) => {
-        let min = Infinity;
-        if(!item.links || item.links.length === 0) return 0;
-
-        item.links.forEach(l => {
-            if (l.price && l.price > 0 && l.price < min) {
-                min = l.price;
-            }
-        });
-        return min === Infinity ? 0 : min;
-    };
-
-    const formatPrice = (priceInUSD) => {
-        if (!priceInUSD) return 'N/A';
-        
-        const rate = exchangeRates[currentCurrency] || 1;
-        const converted = priceInUSD * rate;
-        const symbol = currencySymbols[currentCurrency] || '$';
-
-        if (currentCurrency === 'KRW' || currentCurrency === 'JPY') {
-            return `${symbol}${Math.floor(converted).toLocaleString()}`;
-        }
-        
-        return `${symbol}${converted.toFixed(2)}`;
-    };
-    
-    const getCheapestLink = (item) => {
-        let min = Infinity;
-        let bestLink = null;
-        if(!item.links || item.links.length === 0) return null;
-
-        item.links.forEach(l => {
-            if (l.price && l.price > 0 && l.price < min) {
-                min = l.price;
-                bestLink = l;
-            }
-        });
-        return bestLink || item.links[0];
-    };
-
-    const findLinkByStore = (item, keywords) => {
-        if (!item.links) return null;
-        return item.links.find(l => {
-            const storeName = l.store.toLowerCase();
-            return keywords.some(k => storeName.includes(k));
-        });
-    };
-
-    function renderProducts(products) {
-        const grid = document.getElementById('productGrid');
-        
-        // Reset Grid Classes
-        grid.className = 'transition-all duration-300 pb-10'; 
-        if(currentView === 'compact') {
-            grid.classList.add('view-compact');
-        } else if (currentView === 'list') {
-            grid.classList.add('grid', 'gap-8', 'view-list', 'grid-cols-1');
-        } else {
-            grid.classList.add('grid', 'gap-8', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
-        }
-
-        grid.innerHTML = '';
-
-        if(products.length === 0) {
-            grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font p-10">No items found.</div>';
-            return;
-        }
-
-        products.forEach(item => {
-            const isInTray = traySet.has(item.id);
-            const cheapestLink = getCheapestLink(item);
-            const priceUSD = cheapestLink ? cheapestLink.price : 0;
-            
-            // --- RENDER COMPACT ROW ---
-            if(currentView === 'compact') {
-                const template = document.getElementById('compactTemplate');
-                const clone = template.content.cloneNode(true);
-                
-                const thumb = clone.querySelector('.c-thumb');
-                thumb.src = item.image;
-                if (cheapestLink && cheapestLink.url) {
-                    thumb.style.cursor = 'pointer';
-                    thumb.onclick = () => window.open(cheapestLink.url, '_blank');
-                }
-
-                clone.querySelector('.c-title').textContent = item.name;
-                clone.querySelector('.c-cat').textContent = item.category;
-                clone.querySelector('.c-price').textContent = formatPrice(priceUSD);
-                
-                const brandLink = findLinkByStore(item, ['official', 'brand', 'anbernic', 'retroid', 'powkiddy']);
-                const aliLink = findLinkByStore(item, ['ali', 'express']);
-                const amzLink = findLinkByStore(item, ['amazon']);
-
-                const setupStoreBtn = (selector, linkObj) => {
-                    const btn = clone.querySelector(selector);
-                    if(linkObj) {
-                        btn.href = linkObj.url;
-                        btn.classList.add('active');
-                    }
-                };
-
-                setupStoreBtn('.store-brand', brandLink);
-                setupStoreBtn('.store-ali', aliLink);
-                setupStoreBtn('.store-amz', amzLink);
-
-                const trayBtn = clone.querySelector('.c-tray-btn');
-                trayBtn.dataset.id = item.id; 
-                updateCompactTrayBtn(isInTray, trayBtn);
-
-                trayBtn.addEventListener('click', () => toggleTray(item.id));
-
-                grid.appendChild(clone);
-            } 
-            
-            // --- RENDER STANDARD CARD ---
-            else {
-                const template = document.getElementById('productTemplate');
-                const clone = template.content.cloneNode(true);
-
-                const card = clone.querySelector('.product-card');
-                card.dataset.id = item.id;
-                
-                const imgWrapper = clone.querySelector('.card-img-wrapper');
-                if (cheapestLink && cheapestLink.url) {
-                    imgWrapper.style.cursor = 'pointer';
-                    imgWrapper.onclick = () => window.open(cheapestLink.url, '_blank');
-                }
-
-                // *** BADGE LOGIC & COLORS ***
-                if (item.badge) {
-                    const badge = document.createElement('div');
-                    badge.className = 'product-badge';
-                    
-                    const cleanText = item.badge.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '').trim();
-                    badge.textContent = cleanText;
-                    
-                    const lowerText = cleanText.toLowerCase();
-                    if (lowerText.includes('pre-order')) {
-                        badge.style.backgroundColor = '#ea580c'; // ORANGE
-                    } else if (lowerText.includes('recommended')) {
-                        badge.style.backgroundColor = '#dc2626'; // RED (Default)
-                    } else if (lowerText.includes('value')) {
-                        badge.style.backgroundColor = '#16a34a'; // GREEN
-                    } else if (lowerText.includes('user')) {
-                        badge.style.backgroundColor = '#8b5cf6'; // PURPLE
-                    } else {
-                        badge.style.backgroundColor = '#dc2626'; // Default Red
-                    }
-
-                    clone.querySelector('.card-img-wrapper').appendChild(badge);
-                }
-
-                clone.querySelector('.product-img').src = item.image;
-                clone.querySelector('.product-title').textContent = item.name;
-                clone.querySelector('.product-desc').textContent = item.description;
-                
-                const trayBtn = clone.querySelector('.tray-btn');
-                trayBtn.dataset.id = item.id; 
-
-                const trayText = clone.querySelector('.tray-btn-text');
-                const indicator = clone.querySelector('.in-tray-indicator');
-
-                updateCardTrayBtn(isInTray, trayBtn, trayText, indicator);
-
-                trayBtn.addEventListener('click', () => toggleTray(item.id));
-
-                const linksContainer = clone.querySelector('.product-links');
-                item.links.forEach(link => {
-                    const isCheapest = link === cheapestLink;
-                    const btn = document.createElement('a');
-                    btn.href = link.url;
-                    btn.target = "_blank";
-                    btn.className = `block w-full px-4 text-sm py-3 rounded pixel-btn flex items-center justify-between font-bold ${isCheapest ? 'bg-green-600 hover:bg-green-500 text-white border-2 border-green-400 cheapest-badge' : 'bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600'}`;
-                    btn.innerHTML = `
-                        <span class="flex items-center gap-2 truncate">
-                            ${getStoreIcon(link.store)} 
-                            ${link.store}
-                        </span>
-                        <div class="text-right ml-2">
-                            ${isCheapest ? '<span class="text-[9px] bg-yellow-400 text-black px-1 rounded block w-max ml-auto mb-1">BEST</span>' : ''}
-                            <span>${formatPrice(link.price)}</span>
-                        </div>`;
-                    linksContainer.appendChild(btn);
-                });
-
-                grid.appendChild(clone);
-            }
-        });
-        
-        feather.replace();
-        if(currentView !== 'compact') AOS.refresh(); 
+  function sortProducts(products) {
+    const out = [...products];
+    if (currentSort === 'price-asc' || currentSort === 'price-desc') {
+      out.sort((a,b) => {
+        const ap = getCheapestPrice(a);
+        const bp = getCheapestPrice(b);
+        const aval = (ap == null) ? Infinity : ap;
+        const bval = (bp == null) ? Infinity : bp;
+        return currentSort === 'price-asc' ? (aval - bval) : (bval - aval);
+      });
+      return out;
     }
 
-    // --- TRAY AND UI LOGIC ---
-    function toggleTray(id) {
-        if (traySet.has(id)) traySet.delete(id);
-        else traySet.add(id);
-        
-        updateTrayUI();
+    // default: keep array order (official list order, then appended)
+    return out;
+  }
 
-        const isInTray = traySet.has(id);
-        
-        const compactBtns = document.querySelectorAll(`.c-tray-btn[data-id="${id}"]`);
-        compactBtns.forEach(btn => {
-            updateCompactTrayBtn(isInTray, btn);
-            feather.replace();
-        });
-
-        const cardBtns = document.querySelectorAll(`.tray-btn[data-id="${id}"]`);
-        cardBtns.forEach(btn => {
-            const textSpan = btn.querySelector('.tray-btn-text');
-            const card = btn.closest('.product-card');
-            const indicator = card ? card.querySelector('.in-tray-indicator') : null;
-            
-            updateCardTrayBtn(isInTray, btn, textSpan, indicator);
-            feather.replace();
-        });
-    }
-
-    function updateCardTrayBtn(active, btn, textSpan, indicator) {
-        if (active) {
-            btn.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-white');
-            btn.classList.add('bg-yellow-400', 'hover:bg-yellow-300', 'text-black');
-            if(textSpan) textSpan.textContent = 'IN TRAY';
-            btn.querySelector('i').setAttribute('data-feather', 'check');
-            if(indicator) indicator.classList.remove('hidden');
-        } else {
-            btn.classList.add('bg-gray-700', 'hover:bg-gray-600', 'text-white');
-            btn.classList.remove('bg-yellow-400', 'hover:bg-yellow-300', 'text-black');
-            if(textSpan) textSpan.textContent = 'ADD TO TRAY';
-            btn.querySelector('i').setAttribute('data-feather', 'plus');
-            if(indicator) indicator.classList.add('hidden');
-        }
-    }
-
-    function updateCompactTrayBtn(active, btn) {
-        if (active) {
-            btn.classList.remove('bg-gray-700', 'text-gray-300');
-            btn.classList.add('bg-yellow-400', 'text-black');
-            btn.querySelector('i').setAttribute('data-feather', 'check');
-        } else {
-            btn.classList.add('bg-gray-700', 'text-gray-300');
-            btn.classList.remove('bg-yellow-400', 'text-black');
-            btn.querySelector('i').setAttribute('data-feather', 'plus');
-        }
-    }
-
-    function updateTrayUI() {
-        const tray = document.getElementById('tray');
-        const list = document.getElementById('trayItems');
-        const countSpan = document.getElementById('trayCount');
-        const totalSpan = document.getElementById('trayTotal');
-        
-        countSpan.textContent = traySet.size;
-
-        let total = 0;
-
-        traySet.forEach(id => {
-            const item = allProducts.find(p => p.id === id);
-            if(item) {
-                total += getCheapestPrice(item);
-            }
-        });
-        
-        totalSpan.textContent = formatPrice(total);
-
-        if (traySet.size > 0) {
-            tray.classList.remove('tray-hidden');
-            tray.classList.add('tray-visible');
-        } else {
-            tray.classList.remove('tray-visible');
-            tray.classList.add('tray-hidden');
-        }
-
-        list.innerHTML = '';
-        traySet.forEach(id => {
-            const item = allProducts.find(p => p.id === id);
-            if (!item) return;
-
-            const div = document.createElement('div');
-            div.className = 'flex-shrink-0 w-48 bg-black/40 border border-gray-600 rounded p-2 flex gap-2 items-center relative group';
-            div.innerHTML = `
-                <img src="${item.image}" class="w-10 h-10 object-cover rounded bg-black">
-                <div class="overflow-hidden">
-                    <div class="truncate text-xs font-bold text-gray-200">${item.name}</div>
-                    <div class="text-[10px] text-green-400 font-mono">${formatPrice(getCheapestPrice(item))}</div>
-                </div>
-                <button onclick="removeItem('${item.id}')" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 hover:scale-110 transition-transform shadow-md">
-                    <i data-feather="x" class="w-3 h-3"></i>
-                </button>
-            `;
-            list.appendChild(div);
-        });
-        feather.replace();
-    }
-
-    window.removeItem = (id) => {
-        toggleTray(id);
-    };
+  function setView(view) {
+    currentView = view;
+    const productGrid = document.getElementById('productGrid');
+    productGrid.classList.remove('view-list', 'view-compact');
+    if (view === 'list') productGrid.classList.add('view-list');
+    if (view === 'compact') productGrid.classList.add('view-compact');
 
     document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const mode = e.currentTarget.getAttribute('data-view');
-            currentView = mode;
-            
-            document.querySelectorAll('.view-btn').forEach(b => {
-                b.classList.remove('text-yellow-400');
-                b.classList.add('text-gray-400');
-            });
-            e.currentTarget.classList.add('text-yellow-400');
-            e.currentTarget.classList.remove('text-gray-400');
-            
-            applyFilters();
-        });
+      btn.classList.remove('text-yellow-400');
+      btn.classList.add('text-gray-400');
+      if (btn.dataset.view === view) {
+        btn.classList.add('text-yellow-400');
+        btn.classList.remove('text-gray-400');
+      }
     });
 
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
-    document.getElementById('brandFilter').addEventListener('change', applyFilters);
-    document.getElementById('sortFilter').addEventListener('change', applyFilters);
-    
-    document.getElementById('currencyFilter').addEventListener('change', (e) => {
-        currentCurrency = e.target.value;
-        updateTrayUI();
-        applyFilters(); 
+    renderProducts(getFilteredProducts());
+  }
+
+  function getFilteredProducts() {
+    const filtered = allProducts.filter(matchesFilters);
+    return sortProducts(filtered);
+  }
+
+  function buildLinkRow(link, isCheapest, productName) {
+    // If link is missing, empty, or just '#', do not render the button at all
+    if (!link.url || link.url === '#') return '';
+
+    const store = link.store || 'Store';
+    const priceUSD = link.price;
+    const displayPrice = formatPrice(convertFromUSD(priceUSD, currentCurrency), currentCurrency);
+
+    const cheapestClass = isCheapest ? 'cheapest-badge ring-2 ring-yellow-400' : '';
+    const storeLower = normalizeStoreName(store);
+
+    let bg = 'bg-gray-900 hover:bg-gray-700';
+    if (storeLower.includes('official') || storeLower.includes('goretroid') || storeLower.includes('ayntec') || storeLower.includes('trimu')) bg = 'bg-blue-600 hover:bg-blue-500';
+    if (storeLower.includes('aliexpress') || storeLower.includes('ali')) bg = 'bg-red-600 hover:bg-red-500';
+    if (storeLower.includes('amazon') || storeLower === 'amz') bg = 'bg-yellow-500 hover:bg-yellow-400 text-black';
+
+    return `
+      <a href="${link.url}" target="_blank" rel="noopener"
+         class="${bg} ${cheapestClass} w-full px-4 py-3 rounded pixel-btn border-2 border-black flex items-center justify-between gap-3">
+        <span class="retro-font text-[10px] uppercase truncate">${store}</span>
+        <span class="retro-font text-[10px] ${storeLower.includes('amazon') ? 'text-black' : 'text-white'}">${displayPrice}</span>
+      </a>
+    `;
+  }
+
+  function renderGridCard(product) {
+    const tpl = document.getElementById('productTemplate');
+    const node = tpl.content.firstElementChild.cloneNode(true);
+
+    node.dataset.pid = product.id;
+
+    const img = node.querySelector('.product-img');
+    img.src = product.image || '';
+    img.alt = product.name || '';
+
+    node.querySelector('.product-title').textContent = product.name || '';
+    node.querySelector('.product-desc').textContent = product.description || '';
+
+    const badgeEl = node.querySelector('.product-badge');
+    if (product.badge) {
+      badgeEl.textContent = product.badge;
+      badgeEl.classList.remove('hidden');
+    } else {
+      badgeEl.classList.add('hidden');
+    }
+
+    const trayBtn = node.querySelector('.tray-btn');
+    const trayBtnText = node.querySelector('.tray-btn-text');
+    const trayIndicator = node.querySelector('.in-tray-indicator');
+
+    function syncTrayUI() {
+      const inTray = traySet.has(product.id);
+      trayBtnText.textContent = inTray ? 'IN TRAY' : 'ADD TO TRAY';
+      trayIndicator.classList.toggle('hidden', !inTray);
+      trayBtn.classList.toggle('bg-yellow-400', inTray);
+      trayBtn.classList.toggle('text-black', inTray);
+      trayBtn.classList.toggle('bg-gray-700', !inTray);
+      trayBtn.classList.toggle('text-white', !inTray);
+    }
+    syncTrayUI();
+
+    trayBtn.addEventListener('click', () => {
+      toggleTray(product.id);
+      syncTrayUI();
+      refreshTrayBar();
+      highlightTrayItems();
     });
 
-    document.getElementById('openTrayLinks').addEventListener('click', () => {
-        let opened = 0;
-        traySet.forEach(id => {
-            const item = allProducts.find(p => p.id === id);
-            const link = getCheapestLink(item);
-            if(link) {
-                setTimeout(() => window.open(link.url, '_blank'), opened * 300);
-                opened++;
+    const linksWrap = node.querySelector('.product-links');
+    const cheapest = getCheapestLink(product);
+    (product.links || []).forEach(l => {
+      const isCheapest = cheapest && l.url === cheapest.url && l.store === cheapest.store && l.price === cheapest.price;
+      linksWrap.insertAdjacentHTML('beforeend', buildLinkRow(l, !!isCheapest, product.name));
+    });
+
+    return node;
+  }
+
+  function renderCompactRow(product) {
+    const tpl = document.getElementById('compactTemplate');
+    const row = tpl.content.firstElementChild.cloneNode(true);
+    row.dataset.pid = product.id;
+
+    row.querySelector('.c-thumb').src = product.image || '';
+    row.querySelector('.c-thumb').alt = product.name || '';
+    row.querySelector('.c-title').textContent = product.name || '';
+    row.querySelector('.c-cat').textContent = product.category || '';
+
+    const cheapestUsd = getCheapestPrice(product);
+    row.querySelector('.c-price').textContent = cheapestUsd == null
+      ? '—'
+      : formatPrice(convertFromUSD(cheapestUsd, currentCurrency), currentCurrency);
+
+    // store icons: try to link Official/Ali/Amazon if present
+    const links = product.links || [];
+
+    const official = links.find(l => normalizeStoreName(l.store).includes('official') || normalizeStoreName(l.store).includes('goretroid') || normalizeStoreName(l.store).includes('ayntec') || normalizeStoreName(l.store).includes('trimu'));
+    const ali = links.find(l => normalizeStoreName(l.store).includes('ali'));
+    const amz = links.find(l => normalizeStoreName(l.store).includes('amazon') || normalizeStoreName(l.store) === 'amz');
+
+    const btnOfficial = row.querySelector('.store-brand');
+    const btnAli = row.querySelector('.store-ali');
+    const btnAmz = row.querySelector('.store-amz');
+
+    function setStoreBtn(btn, link) {
+      if (link && link.url && link.url !== '#') {
+        btn.href = link.url;
+        btn.classList.add('active');
+        btn.style.display = ''; // Revert to CSS (flex) to show
+      } else {
+        btn.href = '#';
+        btn.classList.remove('active');
+        btn.style.display = 'none'; // Hide completely
+      }
+    }
+    setStoreBtn(btnOfficial, official);
+    setStoreBtn(btnAli, ali);
+    setStoreBtn(btnAmz, amz);
+
+    const cTrayBtn = row.querySelector('.c-tray-btn');
+    function syncTray() {
+      const inTray = traySet.has(product.id);
+      cTrayBtn.classList.toggle('bg-yellow-400', inTray);
+      cTrayBtn.classList.toggle('text-black', inTray);
+      cTrayBtn.classList.toggle('bg-gray-700', !inTray);
+      cTrayBtn.classList.toggle('text-gray-300', !inTray);
+    }
+    syncTray();
+
+    cTrayBtn.addEventListener('click', () => {
+      toggleTray(product.id);
+      syncTray();
+      refreshTrayBar();
+      highlightTrayItems();
+    });
+
+    return row;
+  }
+
+  function renderProducts(products) {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = '';
+
+    if (!products || products.length === 0) {
+      grid.innerHTML = `<div class="col-span-full text-center text-gray-500 retro-font py-20">No results.</div>`;
+      feather.replace();
+      return;
+    }
+
+    if (currentView === 'compact') {
+      products.forEach(p => {
+        grid.appendChild(renderCompactRow(p));
+      });
+      feather.replace();
+      return;
+    }
+
+    products.forEach(p => {
+      grid.appendChild(renderGridCard(p));
+    });
+
+    // Re-init AOS for new nodes
+    AOS.refreshHard();
+    feather.replace();
+  }
+
+  function toggleTray(productId) {
+    if (traySet.has(productId)) traySet.delete(productId);
+    else traySet.add(productId);
+    saveTray();
+  }
+
+  function saveTray() {
+    try { localStorage.setItem('ryan_tray', JSON.stringify([...traySet])); } catch {}
+  }
+
+  function loadTray() {
+    try {
+      const raw = localStorage.getItem('ryan_tray');
+      if (!raw) return;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) traySet = new Set(arr);
+    } catch {}
+  }
+
+  function getProductById(pid) {
+    return allProducts.find(p => p.id === pid);
+  }
+
+  function refreshTrayBar() {
+    const tray = document.getElementById('tray');
+    const trayCount = document.getElementById('trayCount');
+    const trayTotal = document.getElementById('trayTotal');
+    const trayItems = document.getElementById('trayItems');
+
+    const ids = [...traySet];
+    trayCount.textContent = ids.length.toString();
+
+    trayItems.innerHTML = '';
+
+    let totalUsd = 0;
+
+    ids.forEach(pid => {
+      const p = getProductById(pid);
+      if (!p) return;
+      const cheapest = getCheapestLink(p);
+      if (cheapest && typeof cheapest.price === 'number') totalUsd += cheapest.price;
+
+      const chip = document.createElement('div');
+      chip.className = 'flex items-center gap-2 bg-gray-800 px-3 py-2 rounded border-2 border-black min-w-[220px]';
+      chip.innerHTML = `
+        <img src="${p.image || ''}" class="w-10 h-10 rounded border-2 border-black object-cover" alt="">
+        <div class="min-w-0 flex-1">
+          <div class="retro-font text-[10px] uppercase truncate">${p.name || ''}</div>
+          <div class="text-[10px] text-gray-400 truncate">${cheapest ? (cheapest.store + ' • ' + formatPrice(convertFromUSD(cheapest.price, currentCurrency), currentCurrency)) : 'No price'}</div>
+        </div>
+        <button class="remove-tray bg-gray-900 hover:bg-red-900 text-gray-200 px-2 py-2 rounded border-2 border-black" title="Remove">
+          <i data-feather="x" class="w-4 h-4"></i>
+        </button>
+      `;
+      chip.querySelector('.remove-tray').addEventListener('click', () => {
+        traySet.delete(pid);
+        saveTray();
+        refreshTrayBar();
+        highlightTrayItems();
+        renderProducts(getFilteredProducts());
+      });
+
+      trayItems.appendChild(chip);
+    });
+
+    const displayTotal = formatPrice(convertFromUSD(totalUsd, currentCurrency), currentCurrency);
+    trayTotal.textContent = displayTotal;
+
+    if (ids.length > 0) {
+      tray.classList.remove('tray-hidden');
+      tray.classList.add('tray-visible');
+    } else {
+      tray.classList.add('tray-hidden');
+      tray.classList.remove('tray-visible');
+    }
+
+    feather.replace();
+  }
+
+  function highlightTrayItems() {
+    document.querySelectorAll('[data-pid]').forEach(el => {
+      const pid = el.dataset.pid;
+      const inTray = traySet.has(pid);
+      const indicator = el.querySelector('.in-tray-indicator');
+      if (indicator) indicator.classList.toggle('hidden', !inTray);
+    });
+  }
+
+  // --- FETCH COMMUNITY DEALS ---
+  async function loadCommunityDeals() {
+    // Reset to official base to avoid duplicates on re-renders
+    allProducts = JSON.parse(JSON.stringify(officialProducts));
+
+    try {
+      const res = await fetch('/api/deals');
+      if(!res.ok) throw new Error("Failed to fetch deals");
+      const data = await res.json();
+
+      if (data.rows && data.rows.length > 0) {
+        data.rows.forEach((deal, index) => {
+          const cleanName = (deal.item_name || '').trim();
+          if (!cleanName) return;
+
+          // Your backend should return USD price in deal.price (string/number)
+          const priceUsd = parseFloat(deal.price_usd ?? deal.price ?? 0);
+          if (!isFinite(priceUsd) || priceUsd <= 0) return;
+
+          const newLink = {
+            store: (deal.store_name || 'Store').trim(),
+            url: (deal.link || '').trim(),
+            price: priceUsd,
+            currency: "$"
+          };
+
+          if (!newLink.url) return;
+
+          // 1) Try to find existing product (case-insensitive exact name match)
+          const existingProduct = allProducts.find(p => (p.name || '').trim().toLowerCase() === cleanName.toLowerCase());
+
+          if (existingProduct) {
+            // QOL: dedupe by URL (prevents duplicates)
+            const already = (existingProduct.links || []).some(l => (l.url || '').trim() === newLink.url);
+            if (!already) {
+              existingProduct.links.push(newLink);
             }
+          } else {
+            // Smart categorization based on keywords
+            let category = "Handhelds";
+            const lowerName = cleanName.toLowerCase();
+            if (
+              lowerName.includes("case") || lowerName.includes("card") || lowerName.includes("dock") ||
+              lowerName.includes("controller") || lowerName.includes("grip") || lowerName.includes("screen") ||
+              lowerName.includes("sd") || lowerName.includes("charger") || lowerName.includes("cable") || lowerName.includes("power")
+            ) {
+              category = "Accessories";
+            }
+
+            const newProduct = {
+              id: `community_${index}_${Date.now()}`,
+              name: cleanName,
+              category: category,
+              // NOTE: you said you don't want a community indicator — so no badge here.
+              image: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png",
+              description: deal.notes ? deal.notes : `Deal at ${deal.store_name || 'a store'}`,
+              links: [newLink]
+            };
+
+            allProducts.push(newProduct);
+          }
         });
-    });
+      }
+    } catch (err) {
+      console.error("Could not load community deals:", err);
+      // fallback: official list only
+    } finally {
+      populateBrands(allProducts);
+      renderProducts(getFilteredProducts());
+      refreshTrayBar();
+    }
+  }
 
-    document.getElementById('clearTray').addEventListener('click', () => {
-        traySet.clear();
-        updateTrayUI();
-        applyFilters();
-    });
+  // ---------------------------
+  // Modal logic
+  // ---------------------------
+  const dealModal = document.getElementById('dealModal');
+  const openDealModalHeader = document.getElementById('openDealModalHeader');
+  const closeDealModal = document.getElementById('closeDealModal');
+  const dealModalBackdrop = document.getElementById('dealModalBackdrop');
 
-    function getStoreIcon(storeName) {
-        const name = storeName.toLowerCase();
-        if(name.includes('amazon')) return '<i data-feather="shopping-cart" class="w-4 h-4"></i>';
-        if(name.includes('ali')) return '<i data-feather="package" class="w-4 h-4"></i>';
-        if(name.includes('official')) return '<i data-feather="globe" class="w-4 h-4"></i>';
-        return '<i data-feather="external-link" class="w-4 h-4"></i>';
+  function openDealModal() {
+    dealModal.classList.remove('hidden');
+    setTimeout(() => document.getElementById('dealName')?.focus(), 50);
+  }
+  function closeDealModalFn() {
+    dealModal.classList.add('hidden');
+  }
+
+  openDealModalHeader.addEventListener('click', openDealModal);
+  closeDealModal.addEventListener('click', closeDealModalFn);
+  dealModalBackdrop.addEventListener('click', closeDealModalFn);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !dealModal.classList.contains('hidden')) closeDealModalFn();
+  });
+
+  // USD preview for modal
+  const dealPriceEl = document.getElementById('dealPrice');
+  const dealCurrencyEl = document.getElementById('dealCurrency');
+  const usdPreviewEl = document.getElementById('usdPreview');
+
+  function updateUsdPreview() {
+    const amount = parseFloat(dealPriceEl.value || '0');
+    const cur = dealCurrencyEl.value;
+    if (!amount || amount <= 0) {
+      usdPreviewEl.textContent = '';
+      return;
+    }
+    const usd = convertToUSD(amount, cur);
+    usdPreviewEl.textContent = `≈ USD $${usd.toFixed(2)}`;
+  }
+  dealPriceEl.addEventListener('input', updateUsdPreview);
+  dealCurrencyEl.addEventListener('change', updateUsdPreview);
+
+  // Submit deal
+  const dealForm = document.getElementById('dealForm');
+  const dealToast = document.getElementById('dealToast');
+  const dealSubmitBtn = document.getElementById('dealSubmitBtn');
+
+  function showDealToast(msg, type='good') {
+    dealToast.classList.remove('hidden');
+    dealToast.classList.remove('bg-green-600','bg-red-700','bg-yellow-600','text-white','text-black');
+    if (type === 'good') dealToast.classList.add('bg-green-600','text-white');
+    if (type === 'bad') dealToast.classList.add('bg-red-700','text-white');
+    if (type === 'warn') dealToast.classList.add('bg-yellow-600','text-black');
+    dealToast.textContent = msg;
+  }
+
+  dealForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // honeypot
+    const company = document.getElementById('companyField').value.trim();
+    if (company) return;
+
+    const itemName = document.getElementById('dealName').value.trim();
+    const storeName = document.getElementById('dealStore').value.trim();
+    const link = document.getElementById('dealLink').value.trim();
+    const notes = document.getElementById('dealNotes').value.trim();
+
+    const originalPrice = parseFloat(document.getElementById('dealPrice').value || '0');
+    const originalCurrency = document.getElementById('dealCurrency').value;
+
+    if (!itemName || !storeName || !link || !originalPrice || originalPrice <= 0) {
+      showDealToast('PLEASE FILL ALL REQUIRED FIELDS', 'warn');
+      return;
     }
 
-    function populateBrands(products) {
-        const brandSelect = document.getElementById('brandFilter');
-        brandSelect.innerHTML = '<option value="all">BRANDS</option>'; // reset
-        const brands = new Set();
+    const priceUsd = Number(convertToUSD(originalPrice, originalCurrency).toFixed(2));
+
+    dealSubmitBtn.disabled = true;
+    dealSubmitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+    showDealToast('SUBMITTING...', 'warn');
+
+    try {
+      const res = await fetch('/api/submit-deal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          item_name: itemName,
+          store_name: storeName,
+          link: link,
+          notes: notes,
+          // force USD storage
+          price_usd: priceUsd,
+          currency: 'USD',
+          original_price: Number(originalPrice.toFixed(2)),
+          original_currency: originalCurrency,
+          submitted_at: new Date().toISOString()
+        })
+      });
+
+      if (!res.ok) {
+        const t = await res.text().catch(()=> '');
+        throw new Error(t || `Request failed: ${res.status}`);
+      }
+
+      showDealToast('SUBMITTED! THANK YOU ❤️', 'good');
+
+      dealForm.reset();
+      usdPreviewEl.textContent = '';
+      setTimeout(() => {
+        closeDealModalFn();
+        dealToast.classList.add('hidden');
+      }, 600);
+
+      // Refresh list so new deal can merge in immediately
+      await loadCommunityDeals();
+    } catch (err) {
+      console.error(err);
+      showDealToast('FAILED. CHECK SERVER/ENDPOINT.', 'bad');
+    } finally {
+      dealSubmitBtn.disabled = false;
+      dealSubmitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+    }
+  });
+
+  // ---------------------------
+  // Filters / Search / Sort / Currency
+  // ---------------------------
+  
+  // Category Select Logic
+  document.getElementById('categoryFilter').addEventListener('change', (e) => {
+    currentCategory = e.target.value;
+    renderProducts(getFilteredProducts());
+  });
+
+  // Store Custom Dropdown Logic
+  const storeFilterWidget = document.getElementById('storeFilterWidget');
+  const storeFilterBtn = document.getElementById('storeFilterBtn');
+  const storeFilterMenu = document.getElementById('storeFilterMenu');
+  const storeCheckboxes = document.querySelectorAll('.store-checkbox');
+
+  storeFilterBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    storeFilterMenu.classList.toggle('open');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!storeFilterWidget.contains(e.target)) {
+        storeFilterMenu.classList.remove('open');
+    }
+  });
+
+  storeCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+        storeFilters.clear();
+        storeCheckboxes.forEach(box => {
+            if (box.checked) storeFilters.add(box.value);
+        });
         
-        products.forEach(p => {
-            const brand = p.name.split(' ')[0]; 
-            brands.add(brand);
-        });
+        // Update button text to reflect selection
+        const count = storeFilters.size;
+        const btnText = storeFilterBtn.querySelector('span');
+        btnText.textContent = count > 0 ? `STORES (${count})` : 'STORES';
 
-        const sortedBrands = Array.from(brands).sort();
-
-        sortedBrands.forEach(brand => {
-            const option = document.createElement('option');
-            option.value = brand;
-            option.textContent = brand.toUpperCase();
-            brandSelect.appendChild(option);
-        });
-    }
-
-    function applyFilters() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        const activeCat = document.querySelector('.filter-btn.bg-yellow-400').dataset.cat;
-        const selectedBrand = document.getElementById('brandFilter').value;
-        const sortMode = document.getElementById('sortFilter').value;
-
-        let filtered = allProducts.filter(p => {
-            const matchesCat = activeCat === 'all' || p.category === activeCat;
-            const matchesSearch = p.name.toLowerCase().includes(term) || p.description.toLowerCase().includes(term);
-            
-            const brand = p.name.split(' ')[0];
-            const matchesBrand = selectedBrand === 'all' || brand === selectedBrand;
-
-            return matchesCat && matchesSearch && matchesBrand;
-        });
-
-        if (sortMode === 'price-asc') {
-            filtered.sort((a, b) => getCheapestPrice(a) - getCheapestPrice(b));
-        } else if (sortMode === 'price-desc') {
-            filtered.sort((a, b) => getCheapestPrice(b) - getCheapestPrice(a));
-        }
-
-        renderProducts(filtered);
-    }
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('bg-yellow-400', 'text-black');
-                b.classList.add('bg-gray-700', 'text-white');
-            });
-            e.target.classList.remove('bg-gray-700', 'text-white');
-            e.target.classList.add('bg-yellow-400', 'text-black');
-
-            applyFilters();
-        });
+        renderProducts(getFilteredProducts());
     });
+  });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        AOS.init();
-        // Load official deals + fetch approved community deals
-        loadCommunityDeals();
+
+  document.getElementById('currencyFilter').addEventListener('change', (e) => {
+    currentCurrency = e.target.value;
+    renderProducts(getFilteredProducts());
+    refreshTrayBar();
+  });
+
+  document.getElementById('brandFilter').addEventListener('change', (e) => {
+    currentBrand = e.target.value;
+    renderProducts(getFilteredProducts());
+  });
+
+  document.getElementById('sortFilter').addEventListener('change', (e) => {
+    currentSort = e.target.value;
+    renderProducts(getFilteredProducts());
+  });
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    currentSearch = (e.target.value || '').trim();
+    renderProducts(getFilteredProducts());
+  });
+
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => setView(btn.dataset.view));
+  });
+
+  // Tray actions
+  document.getElementById('clearTray').addEventListener('click', () => {
+    traySet.clear();
+    saveTray();
+    refreshTrayBar();
+    renderProducts(getFilteredProducts());
+  });
+
+  document.getElementById('openTrayLinks').addEventListener('click', () => {
+    const ids = [...traySet];
+    const urls = [];
+    ids.forEach(pid => {
+      const p = getProductById(pid);
+      if (!p) return;
+      const cheapest = getCheapestLink(p);
+      if (cheapest && cheapest.url && cheapest.url !== '#') urls.push(cheapest.url);
     });
+    urls.slice(0, 10).forEach(u => window.open(u, '_blank', 'noopener'));
+  });
 
-    // --- MODAL LOGIC (UI) ---
-    const openBtn = document.getElementById("openDealModalHeader");
-    const modal = document.getElementById("dealModal");
-    const backdrop = document.getElementById("dealModalBackdrop");
-    const closeBtn = document.getElementById("closeDealModal");
-    const form = document.getElementById("dealForm");
-    const submitBtn = document.getElementById("dealSubmitBtn");
-    const toast = document.getElementById("dealToast");
+  // ---------------------------
+  // Init
+  // ---------------------------
+  document.addEventListener('DOMContentLoaded', () => {
+    AOS.init({ once: true, duration: 450, easing: 'ease-out' });
+    feather.replace();
 
-    const showModal = () => { modal.classList.remove("hidden"); };
-    const hideModal = () => { modal.classList.add("hidden"); };
-
-    openBtn?.addEventListener("click", showModal);
-    closeBtn?.addEventListener("click", hideModal);
-    backdrop?.addEventListener("click", hideModal);
-
-    function showToast(message, ok = true) {
-        toast.classList.remove("hidden");
-        toast.textContent = message;
-        toast.className =
-            "text-center text-xs retro-font py-2 rounded border-2 border-black " +
-            (ok ? "bg-green-600 text-white border-green-300" : "bg-red-700 text-white border-red-300");
-        setTimeout(() => toast.classList.add("hidden"), 2500);
-    }
-
-    // --- SUBMIT DEAL TO APP.PY ---
-    form?.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        // Honeypot check
-        const botField = document.getElementById("companyField");
-        if (botField && botField.value.trim() !== "") return;
-
-        // Build Payload matching DealSubmission in app.py
-        const payload = {
-            item_name: form.elements['item_name'].value.trim(),
-            price: Number(form.elements['price'].value),
-            currency: 'USD', // Defaulting to USD for now as per form
-            store_name: form.elements['store_name'].value.trim(),
-            link: form.elements['link'].value.trim(),
-            notes: form.elements['notes'].value.trim()
-        };
-
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = "0.7";
-        submitBtn.innerText = "SENDING...";
-
-        try {
-            const res = await fetch('/api/deals/submit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!res.ok) throw new Error("Server error");
-
-            form.reset();
-            // UPDATED MESSAGE: Reflects that it goes to the moderation queue
-            showToast("Deal submitted for review! 🕵️ It will appear if approved.", true);
-            setTimeout(hideModal, 2000);
-            
-            // We DO NOT reload loadCommunityDeals() here because the deal isn't public yet.
-
-        } catch (err) {
-            console.error(err);
-            showToast("Submit failed. Try again.", false);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = "1";
-            submitBtn.innerHTML = '<i data-feather="send" class="w-4 h-4"></i> SUBMIT DEAL';
-            feather.replace();
-        }
-    });
+    loadTray();
+    loadCommunityDeals();
+    setView('grid');
+  });
 </script>
 
 </body>
