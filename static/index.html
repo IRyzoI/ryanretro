@@ -11,16 +11,15 @@
     <link rel="preconnect" href="https://huggingface.co" crossorigin>
     <link rel="dns-prefetch" href="//huggingface.co">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-<link rel="icon" href="/static/favicon.ico">
-
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="icon" href="/static/favicon.ico">
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-        /* Prevent sideways dragging on mobile */
+        /* Prevent sideways dragging on mobile but allow intentional scrolling */
         html, body { max-width: 100%; overflow-x: hidden; }
 
         .retro-font {
@@ -78,16 +77,14 @@
           );
           pointer-events:none;
         }
-        .hero-header img{
-          /* Shadow removed from global CSS to prevent double shadow on the new complex logo structure */
-        }
+
         /* START: New Scrollbar Styles */
         .custom-scrollbar::-webkit-scrollbar {
             height: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #1f2937;
-            border-radius: 10px;
+            border-radius: 0px; 
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #4b5563;
@@ -97,6 +94,33 @@
             background: #6b7280;
         }
         /* END: New Scrollbar Styles */
+
+        /* Marquee Styles for Infinite Scroll */
+        .marquee-container {
+            width: 100%;
+            overflow-x: auto; /* Allow manual scrolling */
+            position: relative;
+            /* Optional: Add a fade mask on edges for a smoother look */
+            mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+        }
+        
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            /* No CSS animation here, handled by JS for control */
+        }
+
+        .device-item {
+            /* Flex item behavior */
+            flex-shrink: 0;
+            width: 16rem; /* w-64 */
+            margin-right: 1.5rem; /* Space between items */
+            transition: transform 0.3s ease;
+        }
+        .device-item:hover {
+            transform: translateY(-5px);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white font-sans overflow-x-hidden">
@@ -189,69 +213,67 @@
       <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm whitespace-nowrap" data-filter="ayn">AYN</button>
       <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm whitespace-nowrap" data-filter="ayaneo">AYANEO</button>
     </div>
-
-    <div class="relative">
-      <div class="devices-container custom-scrollbar overflow-x-auto whitespace-nowrap pb-4">
-
-<a href="/static/handheld.html?device=Retroid%20Pocket%206"
-   class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border relative"
-   data-aos="fade-up"
-   data-brand="retroid">
-
-  <div class="relative">
-    <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314"
-         alt="Retroid Pocket 6"
-         class="w-full h-48 object-cover">
-
-    <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 rounded retro-font shadow-md">
-      NEW
-    </span>
   </div>
 
-  <div class="p-6">
-    <div class="flex items-center mb-2">
-      <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-    </div>
-    <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">
-      Retroid Pocket 6
-    </h3>
-    <p class="text-gray-400 text-sm mb-4 whitespace-normal device-desc">
-      The powerful successor to the RP5. Highly recommended!
-    </p>
-  </div>
-</a>
+  <!-- Marquee Container -->
+  <div class="marquee-container custom-scrollbar">
+      <div class="marquee-track py-4">
 
+        <a href="/static/handheld.html?device=Retroid%20Pocket%206"
+           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border relative"
+           data-brand="retroid">
 
+          <div class="relative">
+            <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314"
+                 alt="Retroid Pocket 6"
+                 class="w-full h-48 object-cover">
+
+            <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 rounded retro-font shadow-md">
+              NEW
+            </span>
+          </div>
+
+          <div class="p-6">
+            <div class="flex items-center mb-2">
+              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">
+              Retroid Pocket 6
+            </h3>
+            <p class="text-gray-400 text-sm mb-4 whitespace-normal device-desc">
+              The powerful successor to the RP5. Highly recommended!
+            </p>
+          </div>
+        </a>
 
         <a href="/static/handheld.html?device=Retroid%20Pocket%20G2"
-   class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border relative"
-   data-aos="fade-up"
-   data-brand="retroid">
+           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border relative"
+           data-brand="retroid">
 
-  <div class="relative">
-    <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135"
-         alt="Retroid Pocket G2"
-         class="w-full h-48 object-cover">
+          <div class="relative">
+            <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135"
+                 alt="Retroid Pocket G2"
+                 class="w-full h-48 object-cover">
 
-    <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 rounded retro-font shadow-md">
-      NEW
-    </span>
-  </div>
+            <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 rounded retro-font shadow-md">
+              NEW
+            </span>
+          </div>
 
-  <div class="p-6">
-    <div class="flex items-center mb-2">
-      <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-    </div>
-    <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">
-      Retroid Pocket G2
-    </h3>
-    <p class="text-gray-400 text-sm mb-4 whitespace-normal device-desc">
-      Snapdragon G2 Gen 2 RP5. The RP5 Pro.
-    </p>
-  </div>
-</a>
+          <div class="p-6">
+            <div class="flex items-center mb-2">
+              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
+            </div>
+            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">
+              Retroid Pocket G2
+            </h3>
+            <p class="text-gray-400 text-sm mb-4 whitespace-normal device-desc">
+              Snapdragon G2 Gen 2 RP5. The RP5 Pro.
+            </p>
+          </div>
+        </a>
 
-<a href="/static/handheld.html?device=Retroid%20Pocket%205" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-brand="retroid">
+        <a href="/static/handheld.html?device=Retroid%20Pocket%205" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" alt="Retroid Pocket 5" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex items-center mb-2">
@@ -262,7 +284,7 @@
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=Odin%202%20Portal" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="100" data-brand="ayn">
+        <a href="/static/handheld.html?device=Odin%202%20Portal" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" alt="AYN Odin 2 Portal" class="w-full h-48 object-cover object-bottom">
           <div class="p-6">
             <div class="flex items-center mb-2">
@@ -273,7 +295,7 @@
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=Odin%203" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="200" data-brand="ayn">
+        <a href="/static/handheld.html?device=Odin%203" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" alt="AYN Odin 3" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex items-center mb-2">
@@ -285,8 +307,8 @@
         </a>
 
         <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit"
-           class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border"
-           data-aos="fade-up" data-aos-delay="250" data-brand="ayaneo">
+           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border"
+           data-brand="ayaneo">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" alt="AYANEO Konkr Pocket Fit" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex items-center mb-2">
@@ -297,7 +319,7 @@
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="400" data-brand="retroid">
+        <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/fliip%2043.png" alt="Retroid Pocket Flip 2" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex items-center mb-2">
@@ -308,7 +330,7 @@
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=AYN%20Thor" class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border" data-aos="fade-up" data-aos-delay="500" data-brand="ayn">
+        <a href="/static/handheld.html?device=AYN%20Thor" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/aynthorwhite.png" alt="AYN Thor" class="w-full h-48 object-cover">
           <div class="p-6">
             <div class="flex items-center mb-2">
@@ -320,8 +342,8 @@
         </a>
 
         <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic"
-           class="group device-item inline-block w-64 mx-2 bg-gray-900 rounded-lg overflow-hidden pixel-border"
-           data-aos="fade-up" data-brand="retroid">
+           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border"
+           data-brand="retroid">
           <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20pkm.png"
                alt="Retroid Pocket Classic" class="w-full h-48 object-cover">
           <div class="p-6">
@@ -333,7 +355,6 @@
           </div>
         </a>
       </div>
-    </div>
   </div>
 </section>
 
@@ -495,9 +516,59 @@ document.addEventListener('DOMContentLoaded', function() {
   AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
   feather.replace();
 
+  // --- Infinite Scroll Setup ---
+  const marqueeTrack = document.querySelector('.marquee-track');
+  const container = document.querySelector('.marquee-container');
+  
+  if(marqueeTrack && container) {
+      // 1. Clone content for infinite loop illusion
+      // We clone multiple times to ensure that even if the list is filtered down to 1 item,
+      // the repeated set spans the full screen width to allow scrolling.
+      const content = marqueeTrack.innerHTML;
+      const CLONES = 16; // Create 16 copies total (original + 15 clones)
+      
+      let newHTML = content;
+      for(let i = 0; i < CLONES - 1; i++) {
+          newHTML += content;
+      }
+      marqueeTrack.innerHTML = newHTML;
+      
+      // 2. Setup Auto Scroll using JS instead of CSS
+      let scrollSpeed = 0.5; // pixels per frame
+      let isPaused = false;
+      
+      function autoScroll() {
+          if(!isPaused) {
+              container.scrollLeft += scrollSpeed;
+          }
+          
+          // Infinite Loop Reset
+          // We use track.scrollWidth / CLONES because the track contains exactly CLONES sets of items
+          // Use a small buffer to prevent visual glitches if width calculation is fractional
+          const singleSetWidth = marqueeTrack.scrollWidth / CLONES;
+          
+          if (container.scrollLeft >= singleSetWidth) {
+              // Seamlessly jump back to 0
+              container.scrollLeft -= singleSetWidth;
+          }
+          
+          requestAnimationFrame(autoScroll);
+      }
+      
+      // Start loop
+      autoScroll();
+      
+      // 3. Interaction Handlers - Pause on hover or touch
+      container.addEventListener('mouseenter', () => isPaused = true);
+      container.addEventListener('mouseleave', () => isPaused = false);
+      container.addEventListener('touchstart', () => isPaused = true);
+      container.addEventListener('touchend', () => setTimeout(() => isPaused = false, 2000)); // Resume after a delay
+  }
+
+  // --- Filtering Logic ---
   const filterButtons = document.querySelectorAll('.filter-btn');
-  const deviceItems   = document.querySelectorAll('.device-item');
-  const container     = document.querySelector('.devices-container');
+  // Re-select items after duplication to ensure we control all copies
+  const deviceItems = document.querySelectorAll('.device-item');
 
   // Base (inactive) classes every button should have
   const BASE = ['bg-gray-700','hover:bg-gray-600','text-white'];
@@ -535,14 +606,16 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.remove(...BASE);
       this.classList.add(...activeClasses);
 
-      // 3) Filter the items
+      // 3) Filter the items (including duplicated clones)
       deviceItems.forEach(item => {
         const brand = item.getAttribute('data-brand').toLowerCase();
-        item.style.display = (filter === 'all' || brand === filter) ? 'inline-block' : 'none';
+        // Use Flex display toggling
+        if (filter === 'all' || brand === filter) {
+             item.style.display = 'block';
+        } else {
+             item.style.display = 'none';
+        }
       });
-
-      // 4) Snap back to start of the scroller
-      container.scrollLeft = 0;
     });
   });
 
@@ -668,21 +741,5 @@ document.addEventListener('DOMContentLoaded', function() {
   loadVideos();
 })();
 </script>
-
-<style>
-  .devices-container {
-      scroll-behavior: smooth;
-      white-space: nowrap;
-      max-width: 100%;
-  }
-  .device-item {
-      display: inline-block;
-      vertical-align: top;
-      transition: transform 0.3s ease;
-  }
-  .device-item:hover {
-      transform: translateY(-5px);
-  }
-</style>
 </body>
 </html>
