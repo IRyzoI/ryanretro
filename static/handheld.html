@@ -111,8 +111,11 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div class="md:col-span-2" data-aos="fade-right">
-            <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border h-full flex items-center justify-center p-4">
-              <img id="hero-img" src="" alt="Device" class="w-full h-auto object-contain" decoding="async" fetchpriority="high">
+            <!-- UPDATED: Hero Image Container with Link -->
+            <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border h-full p-4 relative group hover:border-gray-500 transition-colors duration-300">
+               <a id="hero-link" href="#" target="_blank" class="flex w-full h-full items-center justify-center">
+                  <img id="hero-img" src="" alt="Device" class="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105" decoding="async" fetchpriority="high">
+               </a>
             </div>
           </div>
 
@@ -484,7 +487,7 @@ const esc = s => (s == null ? '' : String(s)
 function ymdKey(s){
   // Accept YYYY-MM-DD, YYYY/MM/DD, YYYY.M.D, etc.
   const m = (s || '').trim().match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
-  if (!m) return -Infinity;             // empty/invalid dates sink to the bottom
+  if (!m) return -Infinity;              // empty/invalid dates sink to the bottom
   const y = +m[1], mo = +m[2], d = +m[3];
   return y * 10000 + mo * 100 + d;        // sortable numeric key
 }
@@ -620,6 +623,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const hero = document.getElementById('hero-img');
   hero.src = DEVICE.heroImg;
   hero.alt = DEVICE.label;
+  
+  // UPDATED: Set the hero image link to match the purchase link
+  const heroLink = document.getElementById('hero-link');
+  if (heroLink) heroLink.href = DEVICE.affiliateHref;
 
   const buyBtn = document.getElementById('affiliate-link');
   buyBtn.href = DEVICE.affiliateHref;
@@ -644,7 +651,8 @@ if (reviewBtn && reviewLabel && reviewIcon) {
     reviewIcon.setAttribute('data-feather', 'file-text');
 
     // ⭐ Apply your signature yellow theme
-    reviewBtn.classList.remove('bg-blue-600','hover:bg-blue-700');
+    // UPDATED: Explicitly remove text-white to allow text-black to work properly
+    reviewBtn.classList.remove('bg-blue-600','hover:bg-blue-700','text-white');
     reviewBtn.classList.add('bg-yellow-400','hover:bg-yellow-500','text-black');
 
   } else {
@@ -655,6 +663,7 @@ if (reviewBtn && reviewLabel && reviewIcon) {
     reviewIcon.setAttribute('data-feather', 'list');
 
     // Reset to blue theme
+    // UPDATED: Ensure text-white is added back for blue button
     reviewBtn.classList.remove('bg-yellow-400','hover:bg-yellow-500','text-black');
     reviewBtn.classList.add('bg-blue-600','hover:bg-blue-700','text-white');
   }
@@ -1086,9 +1095,19 @@ nextBtn?.addEventListener('click', () => {
     html += '<tr>';
     for (const col of config.columns) {
       const raw = row[col.key] ?? '';
-      const display = (col.key === 'date added' || col.key === 'date')
-        ? normalizeDateDisplay(raw)
-        : raw;
+      
+      // UPDATED: Logic to handle Display Formatting
+      let display = raw;
+      
+      if (col.key === 'date added' || col.key === 'date') {
+        display = normalizeDateDisplay(raw);
+      } else if (col.key === 'notes') {
+        // UPDATED: Logic to blank out empty notes
+        const t = (raw || '').trim();
+        if (t === '-' || t === "'-" || t === '') display = '';
+        else display = raw;
+      }
+      
       const cls = col.isStatus ? `p-3 font-bold ${perfClass[raw] || ''}` : 'p-3';
       html += `<td class="${cls}">${esc(display)}</td>`;
     }
@@ -1229,7 +1248,7 @@ function setActiveSystemBtn(systemId){
     if (!formWrap.classList.contains('hidden')) {
       document.getElementById('hidden-device').value = DEVICE.label;
       formSystemSelect.value = currentSystemId;
-      ensureChipsetField();                                 // inject Chipset picker only if >1 chipset
+      ensureChipsetField();                                         // inject Chipset picker only if >1 chipset
       await refreshFormForSystem(formSystemSelect.value); // build system fields
 
       // If there's a single chipset, we still store it silently on submit
