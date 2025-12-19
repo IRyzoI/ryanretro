@@ -28,6 +28,12 @@
             50% { box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 20px rgba(255, 255, 255, 0.2); }
         }
         .animate-logo-glow { animation: logo-pulse-glow 3s infinite ease-in-out; }
+        
+        /* Stop the outer pulse on hover so it doesn't conflict with the inner heart pulse */
+        .group:hover .animate-logo-glow {
+            animation: none;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 10px rgba(255, 255, 255, 0.3);
+        }
 
         .hero-header { background: #111827; position: relative; }
         .hero-header::before {
@@ -57,8 +63,9 @@
         .marquee-container {
             width: 100%; position: relative;
             padding-bottom: 12px;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
+            /* Fade mask for smooth edges */
+            mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
         }
         .marquee-track { display: flex; width: max-content; }
 
@@ -98,6 +105,35 @@
         }
         #achievement-popup.show {
             bottom: 30px;
+        }
+
+        /* Flip Card 3D Styles */
+        .flip-card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            top: 0;
+            left: 0;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
         }
     </style>
 </head>
@@ -139,9 +175,15 @@
             </div>
         </div>
 
-        <!-- Logo (Rolls left, staying balanced with the sliding box) -->
-        <div class="animate-logo-glow w-32 h-32 rounded-full pixel-border bg-gray-900 relative z-20 flex items-center justify-center overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:-translate-x-8 sm:group-hover:-translate-x-10 group-hover:rotate-[-360deg] cursor-pointer">
-            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="w-full h-full object-cover">
+        <!-- Logo (Pulse and Heart Reveal Animation from Page 2) -->
+        <div class="animate-logo-glow w-32 h-32 rounded-full pixel-border bg-yellow-400 relative z-20 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:scale-110 cursor-pointer">
+            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
+                 alt="Ryan Retro" 
+                 class="absolute w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:opacity-0 group-hover:rotate-180">
+            
+            <div class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-in-out opacity-0 scale-50 -rotate-180 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0">
+               <i data-feather="star" class="w-14 h-14 text-black fill-black animate-[pulse_1s_ease-in-out_infinite]"></i>
+            </div>
         </div>
       </div>
 
@@ -173,7 +215,7 @@
     <div class="flex items-center justify-center gap-4 mb-8" data-aos="fade-down">
         <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 text-center">PLAY RETRO GAMES</h2>
         <!-- Target play button for 5-click secret -->
-        <button id="device-trigger" class="play-trigger pixel-btn bg-yellow-400 text-black border-2 border-black rounded animate-mini-flash" onclick="toggleMarquee('device-marquee')" title="Toggle Scroll">
+        <button id="device-trigger" class="play-trigger pixel-btn bg-yellow-400 text-black border-2 border-black rounded" onclick="toggleMarquee('device-marquee')" title="Pause/Resume Scroll">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
     </div>
@@ -267,7 +309,7 @@
   <div class="container mx-auto px-4 text-center">
     <div class="flex items-center justify-center gap-4 mb-12" data-aos="fade-down">
         <h2 class="retro-font text-3xl md:text-4xl text-yellow-400">LATEST VIDEOS</h2>
-        <button id="video-trigger" class="play-trigger pixel-btn bg-red-600 text-white border-2 border-black rounded animate-mini-flash" onclick="toggleMarquee('video-marquee')" title="Toggle Scroll">
+        <button id="video-trigger" class="play-trigger pixel-btn bg-red-600 text-white border-2 border-black rounded" onclick="toggleMarquee('video-marquee')" title="Pause/Resume Scroll">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
     </div>
@@ -288,21 +330,21 @@
   <div class="container mx-auto px-4">
     <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">RETRO GUIDES</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <a href="/guides/steam-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
+      <a href="/guides/steam-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block" data-aos="fade-up" data-aos-delay="0">
         <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-48 object-cover" alt="Steam Guide">
         <div class="p-6">
           <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
           <h3 class="text-xl font-bold mt-2">Steam on Android</h3>
         </div>
       </a>
-      <a href="/guides/switch-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
+      <a href="/guides/switch-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block" data-aos="fade-up" data-aos-delay="100">
         <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-48 object-cover" alt="Switch Guide">
         <div class="p-6">
           <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
           <h3 class="text-xl font-bold mt-2">Switch on Android</h3>
         </div>
       </a>
-      <a href="/guides/ps3-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
+      <a href="/guides/ps3-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block" data-aos="fade-up" data-aos-delay="200">
         <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-48 object-cover" alt="PS3 Guide">
         <div class="p-6">
           <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
@@ -317,7 +359,49 @@
   <div class="container mx-auto px-4">
     <div class="flex flex-col md:flex-row items-center gap-10">
       <div class="md:w-1/2" data-aos="fade-right">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="rounded-lg pixel-border w-full max-md:mx-auto">
+        <!-- FLIP CARD INTERACTION -->
+        <div class="flip-card w-full aspect-square max-w-[400px] mx-auto" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner h-full">
+                <!-- FRONT: Logo -->
+                <div class="flip-card-front">
+                    <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="rounded-lg pixel-border w-full h-full object-cover bg-gray-800">
+                    <div class="absolute bottom-4 right-4 bg-black/70 text-yellow-400 text-[10px] retro-font px-2 py-1 rounded border border-yellow-400 animate-pulse pointer-events-none">
+                        CLICK ME
+                    </div>
+                </div>
+                
+                <!-- BACK: TCG Style Message -->
+                <div class="flip-card-back rounded-lg pixel-border bg-gray-800 border-[6px] border-[#b8860b] p-6 flex flex-col justify-between relative overflow-hidden">
+                    <!-- Card shine effect -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pointer-events-none"></div>
+                    
+                    <!-- Header -->
+                    <div class="flex justify-between items-center border-b-2 border-[#b8860b] pb-2 mb-2">
+                        <span class="retro-font text-xs text-yellow-400">RYAN</span>
+                        <div class="flex gap-1">
+                            <i data-feather="star" class="w-3 h-3 text-yellow-400 fill-yellow-400"></i>
+                            <i data-feather="star" class="w-3 h-3 text-yellow-400 fill-yellow-400"></i>
+                            <i data-feather="star" class="w-3 h-3 text-yellow-400 fill-yellow-400"></i>
+                            <i data-feather="star" class="w-3 h-3 text-yellow-400 fill-yellow-400"></i>
+                            <i data-feather="star" class="w-3 h-3 text-yellow-400 fill-yellow-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card Description/Lore -->
+                    <div class="bg-gray-900/50 border-2 border-gray-600 p-4 rounded flex-grow flex items-center justify-center">
+                        <p class="text-gray-200 text-xs sm:text-sm leading-relaxed font-serif italic text-center">
+                            I truly appreciate everyone who takes the time to watch my youtube videos and visit my website. This is such a wholesome community and you make it lovely to continue to upload videos. Sometimes I'm very tired after work and want to just take a rest but knowing so many awesome people will come to see my videos and leave nice comments encourages me to always keep going and creating more, even when I'm tired. I hope everyone reading this finds something useful from my content and I hope you stay happy and healthy.
+                        </p>
+                    </div>
+
+                    <!-- Footer Stats -->
+                    <div class="mt-2 pt-2 border-t-2 border-[#b8860b] flex justify-between text-[10px] retro-font text-yellow-400">
+                        <span>ATK/∞</span>
+                        <span>DEF/∞</span>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
       <div class="md:w-1/2" data-aos="fade-left">
         <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-6">ABOUT RYAN RETRO</h2>
@@ -357,69 +441,80 @@
 </footer>
 
 <script>
+// State management for Marquees
 const activeMarquees = new Map();
 let deviceTriggerClicks = 0;
 
+// Initialize Infinite Auto-Scroll Marquee (Restored Animation)
 function initMarquee(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
     const track = container.querySelector('.marquee-track');
     if(!track) return;
 
+    // Clone content for infinite loop (Logic from Page 2)
+    const content = track.innerHTML;
+    // We clone enough times to fill a wide screen multiple times over
+    const CLONES = 8; 
+    let newHTML = content;
+    for(let i = 0; i < CLONES - 1; i++) {
+        newHTML += content;
+    }
+    track.innerHTML = newHTML;
+
+    // Initial state
     activeMarquees.set(containerId, {
-        isPaused: false,
-        isActive: false,
+        isPaused: true, // Start paused
+        manuallyPaused: true, // Start manually paused
         scrollSpeed: 0.8,
         container: container,
         track: track,
-        offset: 0 
+        clones: CLONES
     });
 
+    // Interaction Handlers (Pause on hover)
     container.addEventListener('mouseenter', () => {
         const state = activeMarquees.get(containerId);
-        if(state) state.isPaused = true;
+        if(state && !state.manuallyPaused) state.isPaused = true;
     });
     container.addEventListener('mouseleave', () => {
         const state = activeMarquees.get(containerId);
-        if(state) state.isPaused = false;
+        // Only resume if not manually paused by the button
+        if(state && !state.manuallyPaused) state.isPaused = false;
     });
-    container.addEventListener('mousedown', () => {
-        const state = activeMarquees.get(containerId);
-        if(state) state.isPaused = true;
-    });
-
+    
+    // Ensure loop starts only once
     if (!window.marqueeLoopStarted) {
         window.marqueeLoopStarted = true;
         requestAnimationFrame(globalAnimate);
     }
 }
 
+// Global Animation Loop for Auto-Scrolling
 function globalAnimate() {
     activeMarquees.forEach((state, id) => {
-        if (state.isActive && !state.isPaused) {
-            const visibleChildren = Array.from(state.track.children).filter(child => child.style.display !== 'none');
+        if (!state.isPaused) {
+            state.container.scrollLeft += state.scrollSpeed;
             
-            if (visibleChildren.length > 1) {
-                state.container.scrollLeft += state.scrollSpeed;
-                
-                const firstChild = visibleChildren[0];
-                const itemWidth = firstChild.offsetWidth + parseFloat(getComputedStyle(firstChild).marginRight);
-                
-                if (state.container.scrollLeft >= itemWidth) {
-                    state.track.appendChild(firstChild);
-                    state.container.scrollLeft -= itemWidth;
-                }
+            // Infinite Loop Reset Logic
+            // Calculate width of one set of items
+            const singleSetWidth = state.track.scrollWidth / state.clones;
+            
+            if (state.container.scrollLeft >= singleSetWidth) {
+                // Seamlessly jump back to 0
+                state.container.scrollLeft -= singleSetWidth;
             }
         }
     });
     requestAnimationFrame(globalAnimate);
 }
 
+// Button handler (Modified to be Pause/Resume instead of Start/Stop)
 function toggleMarquee(id) {
     const state = activeMarquees.get(id);
     if (!state) return;
 
-    // Secret logic for device-marquee trigger
+    // Secret logic for device-marquee trigger (Preserved from Page 1)
     if (id === 'device-marquee') {
         deviceTriggerClicks++;
         if (deviceTriggerClicks === 5) {
@@ -427,17 +522,22 @@ function toggleMarquee(id) {
         }
     }
 
-    state.isActive = !state.isActive;
+    // Toggle Pause State
+    state.manuallyPaused = !state.manuallyPaused;
+    state.isPaused = state.manuallyPaused;
     
+    // Update Button UI
     const triggerId = id.replace('-marquee', '-trigger');
     const trigger = document.getElementById(triggerId);
     if(trigger) {
-        if(state.isActive) {
+        if(!state.manuallyPaused) {
+            // Running state (Active)
             trigger.classList.add('active');
-            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; 
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Pause Icon
         } else {
+            // Paused state (Inactive)
             trigger.classList.remove('active');
-            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play Icon
         }
     }
 }
@@ -445,7 +545,6 @@ function toggleMarquee(id) {
 function showAchievement() {
     const popup = document.getElementById('achievement-popup');
     popup.classList.add('show');
-    // Hide after 6 seconds
     setTimeout(() => {
         popup.classList.remove('show');
     }, 6000);
@@ -462,26 +561,42 @@ document.addEventListener('DOMContentLoaded', function() {
   initMarquee('device-marquee');
 
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const items = document.querySelectorAll('.device-item');
-  const ACTIVE_MAP = { all: 'bg-white text-black', retroid: 'bg-red-600', ayn: 'bg-blue-600', ayaneo: 'bg-indigo-600' };
+  // Re-select items after cloning in initMarquee
+  // Note: We need to wait for initMarquee to run, but since it's synchronous above, it's fine.
+  // However, items are now duplicated. We must target ALL of them.
+  
+  const ACTIVE_MAP = { 
+      all: 'bg-white text-black', 
+      retroid: 'bg-red-600 text-white', 
+      ayn: 'bg-blue-600 text-white', 
+      ayaneo: 'bg-indigo-600 text-white' 
+  };
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
+      const allItems = document.querySelectorAll('.device-item'); // Select all cloned items
       
+      // Reset all buttons to inactive base
       filterBtns.forEach(b => b.className = 'filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm');
-      btn.className += ` ${ACTIVE_MAP[filter] || 'bg-white text-black'}`;
       
-      items.forEach(item => {
+      // Apply active style (We replace the class entirely to avoid conflict with bg-gray-700)
+      btn.className = `filter-btn px-4 py-2 rounded retro-font text-sm ${ACTIVE_MAP[filter] || 'bg-white text-black'}`;
+      
+      allItems.forEach(item => {
           item.style.display = (filter === 'all' || item.dataset.brand === filter) ? 'block' : 'none';
       });
 
+      // Reset scroll to 0 to prevent visual gaps when filtering
       const state = activeMarquees.get('device-marquee');
       if (state) {
           state.container.scrollLeft = 0; 
       }
     });
   });
+
+  // Initialize 'all' as active
+  document.querySelector('.filter-btn[data-filter="all"]').click();
 
   async function loadVideos() {
     const track = document.getElementById('latest-videos-track');
@@ -492,7 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
         track.innerHTML = data.map(v => `
           <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="video-item bg-gray-800 rounded-lg overflow-hidden pixel-border block group">
             <div class="relative pb-[56.25%] bg-black">
-              <img src="${v.thumb}" class="absolute h-full w-full object-cover" alt="${(v.title || '').replace(/"/g,'&quot;')}">
+              <img src="${v.thumb}" class="absolute h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]" alt="${(v.title || '').replace(/"/g,'&quot;')}">
               <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 transition-opacity">
                   <i data-feather="play" class="text-white w-12 h-12"></i>
               </div>
