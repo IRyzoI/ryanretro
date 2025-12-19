@@ -141,22 +141,18 @@
         <span>STORE</span>
       </a>
 
-      <!-- SUPPORT ME GROUP -->
-      <div class="order-3 md:order-3 flex items-center justify-center gap-2 border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
+      <!-- SUPPORT ME (SINGLE PATREON FOCUS) -->
+      <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
         <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
           SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
         </span>
 
         <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-3 py-2 bg-[#f96854] hover:bg-[#e05d4b] text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg>
-          <span>PATREON</span>
-        </a>
-
-        <a href="https://ko-fi.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-3 py-2 bg-[#13C3FF] hover:bg-[#0da4d6] text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.879-4.597h-.034c-4.826 0-7.661 2.785-7.661 2.785S8.354 4.352 3.528 4.352c-.02.004-4.106.512-4.879 4.597-.034.18-.052.368-.052.557 0 2.85 2.532 5.922 6.34 9.576l6.653 6.32c.209.198.539.198.748 0l6.653-6.32c3.808-3.654 6.34-6.726 6.34-9.576 0-.19-.018-.378-.052-.557z"/></svg>
-          <span>KO-FI</span>
+           class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+          </svg>
+          <span class="tracking-tight">BECOME A PATRON</span>
         </a>
       </div>
 
@@ -698,7 +694,7 @@
       let highlightOn = false;
       let colorModeOn = false;
       let runsGreatOn = false;
-      let emojiModeOn = false; // Renamed from emoModeOn
+      let emojiModeOn = false; 
       let miniModeOn = false;
       // FOLD 7 (index 5) is disabled by default
       const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: false, 6: true, 7: true };
@@ -710,7 +706,7 @@
       const highlightBtn = document.getElementById('toggleHighlight');
       const colorBtn = document.getElementById('toggleColorMode');
       const runsBtn = document.getElementById('toggleRunsGreat');
-      const emojiBtn = document.getElementById('toggleEmojiMode'); // Renamed button selector
+      const emojiBtn = document.getElementById('toggleEmojiMode'); 
       const miniBtn = document.getElementById('toggleMiniMode');
       const benchCard = document.getElementById('benchCard');
 
@@ -729,10 +725,8 @@
         document.querySelectorAll('.rr-table td').forEach(el => {
           el.style.color = '';
           el.style.fontWeight = '';
-          // Restore text if it was replaced by emotional mode
           if (el.dataset.original) {
-            el.innerHTML = el.dataset.original; // changed innerText to innerHTML to handle possible HTML in data-original
-            // Check if it's just text to be safe, but data-original stores the initial text content usually
+            el.innerHTML = el.dataset.original; 
             if(!el.dataset.original.includes('<')) el.innerText = el.dataset.original;
             delete el.dataset.original;
           }
@@ -760,7 +754,7 @@
         if (highlightOn) applyHighlight();
         if (colorModeOn) applyColorMode();
         if (runsGreatOn) applyRunsGreat();
-        if (emojiModeOn) applyEmojiMode(); // Renamed function call
+        if (emojiModeOn) applyEmojiMode(); 
       }
 
       function applyHighlight() {
@@ -835,7 +829,6 @@
         const rows = table.querySelectorAll('tbody tr');
 
         rows.forEach(row => {
-          // Use dataset.fullName if available (set by mini mode logic), otherwise innerText
           const nameCell = row.children[0];
           const gameName = nameCell.dataset.fullName || nameCell.innerText.trim();
           
@@ -863,12 +856,11 @@
       }
 
       function applyEmojiMode() {
-        clearEffects(); // Start with clean state
+        clearEffects(); 
         const table = getActiveTable();
         const rows = table.querySelectorAll('tbody tr');
 
         rows.forEach(row => {
-          // 1. Gather numerical values to find min/max
           let vals = [];
           for (let i = 1; i <= DEVICE_COUNT; i++) {
             if (!columnVisibility[i]) continue;
@@ -880,41 +872,35 @@
           const maxVal = vals.length > 0 ? Math.max(...vals) : null;
           const range = (maxVal !== null && minVal !== null) ? (maxVal - minVal) || 1 : 1;
 
-          // 2. Assign emojis
           for (let i = 1; i <= DEVICE_COUNT; i++) {
             if (!columnVisibility[i]) continue;
             const cell = row.children[i];
             const originalText = cell.innerText.trim();
             const val = parseFloat(originalText);
 
-            // Save original for restoration
             if (!cell.dataset.original) {
               cell.dataset.original = originalText;
             }
 
-            // Logic
             if (originalText === '') {
-               // Leave blank
             } else if (originalText === '-') {
-               cell.innerHTML = '<span class="text-2xl leading-none">💀</span>'; // Skull for crash/issue
+               cell.innerHTML = '<span class="text-2xl leading-none">💀</span>'; 
             } else if (originalText.toLowerCase() === 'untested') {
-               cell.innerHTML = '<span class="text-2xl leading-none">🤡</span>'; // Clown for untested
+               cell.innerHTML = '<span class="text-2xl leading-none">🤡</span>'; 
             } else if (!isNaN(val)) {
-               // Swapped order: Check Max first. If min == max (all equal), everyone is a winner 🏆
                let emoji = '';
                if (val === maxVal) {
-                 emoji = '🏆'; // Trophy for highest
+                 emoji = '🏆'; 
                } else if (val === minVal) {
-                 emoji = '💩'; // Poop for lowest
+                 emoji = '💩'; 
                } else {
-                 // Calculate relative performance
                  const t = (val - minVal) / range;
                  if (t < 0.33) {
-                   emoji = '😐'; // Neutral (Low)
+                   emoji = '😐'; 
                  } else if (t < 0.66) {
-                   emoji = '😊'; // Happy (Mid)
+                   emoji = '😊'; 
                  } else {
-                   emoji = '😆'; // Very Happy (High)
+                   emoji = '😆'; 
                  }
                }
                cell.innerHTML = `<span class="text-2xl leading-none">${emoji}</span>`;
@@ -926,9 +912,7 @@
       function updateGameNamesForMiniMode() {
         const rows = document.querySelectorAll('.rr-table tbody tr');
         rows.forEach(row => {
-          const cell = row.children[0]; // First cell is the game name
-          
-          // Store original full name if not already stored
+          const cell = row.children[0]; 
           if (!cell.dataset.fullName) {
             cell.dataset.fullName = cell.innerText.trim();
           }
@@ -943,7 +927,6 @@
               cell.innerText = originalName.replace('The Legend of Zelda: ', '');
             }
           } else {
-            // Restore full name
             if (cell.dataset.fullName) {
               cell.innerText = cell.dataset.fullName;
             }
@@ -979,7 +962,6 @@
           if (runsGreatOn) applyRunsGreat();
           if (emojiModeOn) applyEmojiMode();
           
-          // Ensure name truncation persists across mode switches if mini mode is on
           if (miniModeOn) updateGameNamesForMiniMode();
         });
       });
@@ -998,16 +980,7 @@
           } else {
             btn.classList.remove('off', 'border-gray-700', 'text-gray-600');
             btn.classList.add('on', 'border-gray-600', 'bg-gray-900');
-            const colors = [
-              '',
-              'bg-green-500',
-              'bg-yellow-400',
-              'bg-blue-400',
-              'bg-orange-400',
-              'bg-pink-400',
-              'bg-purple-400',
-              'bg-cyan-400'
-            ];
+            const colors = ['', 'bg-green-500', 'bg-yellow-400', 'bg-blue-400', 'bg-orange-400', 'bg-pink-400', 'bg-purple-400', 'bg-cyan-400'];
             btn.querySelector('span').style.backgroundColor = '';
             btn.querySelector('span').className = `w-2 h-2 rounded-full ${colors[idx]}`;
             columnVisibility[idx] = true;
@@ -1021,14 +994,12 @@
         highlightOn = !highlightOn;
         colorModeOn = false;
         runsGreatOn = false;
-        emojiModeOn = false; // Turn off emoji
+        emojiModeOn = false; 
         
         colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
         colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
-
         runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
         runsBtn.classList.add('border-green-400', 'text-green-300');
-
         emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
         emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
 
@@ -1043,7 +1014,7 @@
         }
       });
 
-      // Heatmap / Color Button
+      // Ranking Mode
       colorBtn.addEventListener('click', () => {
         colorModeOn = !colorModeOn;
         highlightOn = false; 
@@ -1052,10 +1023,8 @@
 
         highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
         highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
-
         runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
         runsBtn.classList.add('border-green-400', 'text-green-300');
-
         emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
         emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
 
@@ -1079,10 +1048,8 @@
 
         highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
         highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
-
         colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
         colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
-
         emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
         emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
 
@@ -1097,21 +1064,17 @@
         }
       });
 
-      // Emoji Mode Button logic
+      // Emoji Mode
       emojiBtn.addEventListener('click', () => {
         emojiModeOn = !emojiModeOn;
-        // Disable others
         highlightOn = false;
         colorModeOn = false;
         runsGreatOn = false;
 
-        // Reset other buttons UI
         highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
         highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
-
         colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
         colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
-
         runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
         runsBtn.classList.add('border-green-400', 'text-green-300');
 
@@ -1138,10 +1101,10 @@
           miniBtn.classList.remove('bg-sky-500', 'text-black', 'shadow-lg');
           miniBtn.classList.add('border-sky-500', 'text-sky-400');
         }
-        updateGameNamesForMiniMode(); // Update text
+        updateGameNamesForMiniMode(); 
       });
 
-      // Sorting Logic
+      // Sorting
       document.querySelectorAll('th.sortable').forEach(th => {
         th.addEventListener('click', function() {
           const table = th.closest('table');
@@ -1154,28 +1117,22 @@
           th.dataset.sortDir = isAsc ? 'desc' : 'asc';
           
           rowsArray.sort((a, b) => {
-            // Smart sorting: use dataset.original if present (Emo mode), else innerText
             const cellA = a.children[colIndex];
             const cellB = b.children[colIndex];
-
             const valA = cellA.dataset.original || cellA.innerText.trim();
             const valB = cellB.dataset.original || cellB.innerText.trim();
-            
             const numA = parseFloat(valA);
             const numB = parseFloat(valB);
-            
             if (!isNaN(numA) && !isNaN(numB)) {
               return isAsc ? numB - numA : numA - numB;
             } else {
               return isAsc ? valB.localeCompare(valA) : valA.localeCompare(valB);
             }
           });
-          
           tbody.append(...rowsArray);
         });
       });
 
-      // Auto-enable mini-mode on small screens
       if (window.innerWidth < 768) {
         miniModeOn = true;
         benchCard.classList.add('mini-mode');
@@ -1184,7 +1141,6 @@
         updateGameNamesForMiniMode();
       }
 
-      // Init
       updateTableVisibility();
       updateColumnVisibility();
     });
