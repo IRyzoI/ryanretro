@@ -10,193 +10,118 @@
     <link rel="dns-prefetch" href="//i.ytimg.com">
     <link rel="preconnect" href="https://huggingface.co" crossorigin>
     <link rel="dns-prefetch" href="//huggingface.co">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-    <link rel="icon" href="/static/favicon.ico">
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-        /* Prevent sideways dragging on mobile but allow intentional scrolling */
-        html, body { max-width: 100%; overflow-x: hidden; }
+        html, body { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
 
-        .retro-font {
-            font-family: 'Press Start 2P', cursive;
-        }
-        .pixel-border {
-            border: 4px solid #000;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
-        }
-        .pixel-btn {
-            transition: all 0.2s ease;
-        }
-        .pixel-btn:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
-        }
-        
-        /* Interactive Logo Glow Animation */
+        .retro-font { font-family: 'Press Start 2P', cursive; }
+        .pixel-border { border: 4px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+        .pixel-btn { transition: all 0.2s ease; cursor: pointer; }
+        .pixel-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+
         @keyframes logo-pulse-glow {
             0%, 100% { box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 0 rgba(255, 255, 255, 0); }
             50% { box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 20px rgba(255, 255, 255, 0.2); }
         }
-        .animate-logo-glow {
-            animation: logo-pulse-glow 3s infinite ease-in-out;
-        }
-        /* Stop the pulse on hover so it doesn't conflict with the transform */
-        .group:hover .animate-logo-glow {
-            animation: none;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 10px rgba(255, 255, 255, 0.3);
+        .animate-logo-glow { animation: logo-pulse-glow 3s infinite ease-in-out; }
+
+        .hero-header { background: #111827; position: relative; }
+        .hero-header::before {
+          content:""; position:absolute; inset:0;
+          background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+          background-size: 24px 24px; opacity:.35; pointer-events:none;
         }
 
-        /* Clean, theme-aligned hero */
-        .hero-header{
-          background: #111827;
+        /* Beautiful Custom Scrollbars */
+        .custom-scrollbar {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #fbbf24 #1f2937;
         }
-        .hero-header::before{
-          content:"";
-          position:absolute; inset:0;
-          background-image:
-            linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-          background-size: 24px 24px;
-          background-position: center;
-          pointer-events:none;
-          opacity:.35;
+        .video-scrollbar {
+            scrollbar-color: #ef4444 #1f2937;
         }
-        .hero-header::after{
-          content:"";
-          position:absolute; inset:0;
-          background: radial-gradient(
-            80% 60% at 50% 30%,
-            rgba(0,0,0,0) 0%,
-            rgba(0,0,0,.35) 55%,
-            rgba(0,0,0,.55) 100%
-          );
-          pointer-events:none;
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 10px; margin: 0 20px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { 
+            background: #fbbf24; 
+            border: 2px solid #1f2937;
+            border-radius: 10px; 
         }
+        .video-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; }
 
-        /* START: New Scrollbar Styles */
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1f2937;
-            border-radius: 0px; 
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #4b5563;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #6b7280;
-        }
-        /* END: New Scrollbar Styles */
-
-        /* Marquee Styles for Infinite Scroll */
         .marquee-container {
-            width: 100%;
-            overflow-x: auto; /* Allow manual scrolling */
-            position: relative;
-            /* Optional: Add a fade mask on edges for a smoother look */
-            mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+            width: 100%; position: relative;
+            padding-bottom: 12px;
+            /* Added horizontal padding from edges */
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
-        
-        .marquee-track {
-            display: flex;
-            width: max-content;
-            /* No CSS animation here, handled by JS for control */
-        }
+        .marquee-track { display: flex; width: max-content; }
 
-        .device-item {
-            /* Flex item behavior */
-            flex-shrink: 0;
-            width: 16rem; /* w-64 */
-            margin-right: 1.5rem; /* Space between items */
-            transition: transform 0.3s ease;
+        .device-item, .video-item {
+            flex-shrink: 0; width: 18rem; margin-right: 1.5rem; transition: transform 0.3s ease;
         }
-        .device-item:hover {
-            transform: translateY(-5px);
+        .device-item:hover, .video-item:hover { transform: translateY(-5px); }
+
+        .play-trigger {
+            display: flex; align-items: center; justify-content: center;
+            width: 42px; height: 42px; transition: all 0.2s;
         }
+        .play-trigger svg { width: 20px; height: 20px; fill: currentColor; }
+        .play-trigger.active { background: #4ade80 !important; color: black !important; border-color: black !important; }
+
+        @keyframes mini-flash {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .animate-mini-flash:not(.active) { animation: mini-flash 1.5s infinite ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-900 text-white font-sans overflow-x-hidden">
-<header class="hero-header relative overflow-hidden py-10 md:py-14">
-  <div class="container mx-auto px-4 relative z-10">
+
+<header class="hero-header py-10 md:py-14">
+  <div class="container mx-auto px-4 relative z-10 text-center">
     <div class="flex flex-col items-center" data-aos="fade-down">
-      
-      <div class="group relative flex items-center justify-center mb-4 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-x-16">
-        
-        <div class="absolute left-1/2 top-1/2 -translate-y-1/2 h-28 bg-gray-800 border-4 border-black flex items-center pr-3 rounded-r-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] w-0 opacity-0 overflow-hidden group-hover:w-[220px] group-hover:opacity-100 z-0 pl-20 shadow-[8px_8px_0_rgba(0,0,0,0.3)]">
-            
-            <div class="flex flex-col justify-center relative z-10 w-full py-1">
-                <div class="flex items-center gap-1 mb-2 retro-font text-[8px] text-white uppercase whitespace-nowrap pl-1">
-                    <span>Support Me</span>
-                    <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
+      <div class="group relative flex items-center justify-center mb-6 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-x-20 sm:hover:-translate-x-28">
+        <div class="absolute left-1/2 top-1/2 -translate-y-1/2 h-44 bg-indigo-900 border-4 border-black flex items-center pr-8 rounded-r-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] w-0 opacity-0 overflow-hidden group-hover:w-[320px] group-hover:opacity-100 z-0 pl-24 shadow-[12px_12px_0_rgba(0,0,0,0.5)]">
+            <div class="flex flex-col justify-center w-full">
+                <div class="flex items-center gap-3 mb-4 retro-font text-[10px] text-yellow-400 uppercase whitespace-nowrap">
+                    <span>Support Ryan</span>
+                    <i data-feather="heart" class="w-6 h-6 text-fuchsia-400 fill-fuchsia-400 animate-pulse"></i>
                 </div>
-
-                <div class="flex flex-col gap-2 w-full">
-                    <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-                       class="px-2 py-1.5 bg-[#f96854] hover:bg-[#e05d4b] text-white rounded pixel-btn retro-font text-[8px] uppercase border-2 border-black flex items-center justify-center gap-2 whitespace-nowrap w-full">
-                      <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg>
-                      <span>PATREON</span>
-                    </a>
-
-                    <a href="https://ko-fi.com/ryanretro" target="_blank" rel="noopener noreferrer"
-                       class="px-2 py-1.5 bg-[#13C3FF] hover:bg-[#0da4d6] text-white rounded pixel-btn retro-font text-[8px] uppercase border-2 border-black flex items-center justify-center gap-2 whitespace-nowrap w-full">
-                      <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.879-4.597h-.034c-4.826 0-7.661 2.785-7.661 2.785S8.354 4.352 3.528 4.352c-.02.004-4.106.512-4.879 4.597-.034.18-.052.368-.052.557 0 2.85 2.532 5.922 6.34 9.576l6.653 6.32c.209.198.539.198.748 0l6.653-6.32c3.808-3.654 6.34-6.726 6.34-9.576 0-.19-.018-.378-.052-.557z"/></svg>
-                      <span>KO-FI</span>
-                    </a>
-                </div>
+                <a href="https://patreon.com/ryanretro" target="_blank" class="px-5 py-4 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] border-4 border-black flex items-center justify-center gap-3 shadow-[6px_6px_0_rgba(0,0,0,0.3)]">
+                  <svg class="w-5 h-5 fill-black" viewBox="0 0 24 24"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg>
+                  <span>JOIN PATREON</span>
+                </a>
             </div>
-
         </div>
-
-        <div class="animate-logo-glow w-32 h-32 rounded-full pixel-border bg-gray-900 relative z-20 flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110 cursor-pointer overflow-hidden">
-            
-            <img 
-               src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
-               alt="Ryan Retro" 
-               class="absolute w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:opacity-0 group-hover:rotate-180"
-            >
-
-            <div class="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-in-out opacity-0 scale-50 -rotate-180 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0">
-               <i data-feather="heart" class="w-14 h-14 text-red-500 fill-red-500 animate-[pulse_1s_ease-in-out_infinite]"></i>
+        <div class="animate-logo-glow w-32 h-32 rounded-full pixel-border bg-gray-900 relative z-20 flex items-center justify-center overflow-hidden">
+            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="absolute w-full h-full object-cover transition-all duration-500 group-hover:opacity-0 group-hover:rotate-180">
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 scale-50 -rotate-180 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0 bg-indigo-700">
+               <i data-feather="heart" class="w-16 h-16 text-white fill-fuchsia-400 animate-pulse"></i>
             </div>
         </div>
       </div>
 
-      <h1 class="retro-font text-4xl md:text-6xl text-yellow-400 mb-3 text-center">
-        RYAN RETRO
-      </h1>
+      <h1 class="retro-font text-4xl md:text-6xl text-yellow-400 mb-3">RYAN RETRO</h1>
 
       <div class="grid grid-cols-2 sm:flex sm:flex-wrap justify-center items-stretch gap-3 w-full max-w-lg sm:max-w-none">
-        
-        <a href="#videos"
-           class="group bg-red-600 hover:bg-red-700 text-white px-3 py-3 md:px-6 md:py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center w-full sm:w-auto h-full">
-          <i data-feather="youtube" class="mr-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:scale-110"></i>
-          WATCH VIDEOS
+        <a href="#videos" class="group bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center">
+          <i data-feather="youtube" class="mr-2 w-5 h-5"></i> WATCH VIDEOS
         </a>
-
-        <a href="/benchmarks"
-           class="group bg-blue-600 hover:bg-blue-700 text-white px-3 py-3 md:px-6 md:py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center w-full sm:w-auto h-full">
-          <i data-feather="bar-chart-2" class="mr-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:scale-110"></i>
-          BENCHMARKS
+        <a href="/benchmarks" class="group bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center">
+          <i data-feather="bar-chart-2" class="mr-2 w-5 h-5"></i> BENCHMARKS
         </a>
-
-        <a href="#games"
-           class="group bg-green-600 hover:bg-green-700 text-white px-3 py-3 md:px-6 md:py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center w-full sm:w-auto h-full">
-          <i data-feather="list" class="mr-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:scale-110"></i>
-          PLAY GAMES
+        <a href="#games" class="group bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center">
+          <i data-feather="list" class="mr-2 w-5 h-5"></i> PLAY GAMES
         </a>
-
-        <a href="/store"
-           class="group bg-purple-600 hover:bg-purple-700 text-white px-3 py-3 md:px-6 md:py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center w-full sm:w-auto h-full">
-          <i data-feather="shopping-cart" class="mr-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:scale-110"></i>
-          STORE
+        <a href="/store" class="group bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded pixel-btn retro-font text-[10px] md:text-sm flex items-center justify-center">
+          <i data-feather="shopping-cart" class="mr-2 w-5 h-5"></i> STORE
         </a>
       </div>
     </div>
@@ -205,153 +130,92 @@
 
 <section id="games" class="py-16 bg-gray-800">
   <div class="container mx-auto px-4">
-    <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-8 text-center" data-aos="fade-down">PLAY RETRO GAMES</h2>
-
-    <div class="flex flex-wrap justify-center gap-2 px-2 mb-8 w-full">
-      <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm whitespace-nowrap" data-filter="all">ALL</button>
-      <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm whitespace-nowrap" data-filter="retroid">RETROID</button>
-      <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm whitespace-nowrap" data-filter="ayn">AYN</button>
-      <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded retro-font text-sm whitespace-nowrap" data-filter="ayaneo">AYANEO</button>
+    <div class="flex items-center justify-center gap-4 mb-8" data-aos="fade-down">
+        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 text-center">PLAY RETRO GAMES</h2>
+        <button id="device-trigger" class="play-trigger pixel-btn bg-yellow-400 text-black border-2 border-black rounded animate-mini-flash" onclick="toggleMarquee('device-marquee')" title="Toggle Scroll">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+    </div>
+    
+    <div class="flex flex-wrap justify-center items-center gap-2 mb-12">
+      <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="all">ALL</button>
+      <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="retroid">RETROID</button>
+      <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="ayn">AYN</button>
+      <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="ayaneo">AYANEO</button>
     </div>
   </div>
 
-  <!-- Marquee Container -->
-  <div class="marquee-container custom-scrollbar">
+  <div class="marquee-container custom-scrollbar" id="device-marquee">
       <div class="marquee-track py-4">
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%206"
-           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border relative"
-           data-brand="retroid">
-
-          <div class="relative">
-            <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314"
-                 alt="Retroid Pocket 6"
-                 class="w-full h-48 object-cover">
-
-            <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 rounded retro-font shadow-md">
-              NEW
-            </span>
-          </div>
-
+        <a href="/static/handheld.html?device=Retroid%20Pocket%206" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
+          <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314" class="w-full h-48 object-cover" alt="RP6">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">
-              Retroid Pocket 6
-            </h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal device-desc">
-              The powerful successor to the RP5. Highly recommended!
-            </p>
+            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
+            <h3 class="text-xl font-bold mt-2">Retroid Pocket 6</h3>
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20G2"
-           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border relative"
-           data-brand="retroid">
-
-          <div class="relative">
-            <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135"
-                 alt="Retroid Pocket G2"
-                 class="w-full h-48 object-cover">
-
-            <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[10px] font-bold px-2 py-1 rounded retro-font shadow-md">
-              NEW
-            </span>
-          </div>
-
+        <a href="/static/handheld.html?device=Retroid%20Pocket%20G2" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
+          <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135" class="w-full h-48 object-cover" alt="RPG2">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">
-              Retroid Pocket G2
-            </h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal device-desc">
-              Snapdragon G2 Gen 2 RP5. The RP5 Pro.
-            </p>
+            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
+            <h3 class="text-xl font-bold mt-2">Retroid Pocket G2</h3>
           </div>
         </a>
 
         <a href="/static/handheld.html?device=Retroid%20Pocket%205" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" alt="Retroid Pocket 5" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" class="w-full h-48 object-cover" alt="RP5">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Retroid Pocket 5</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Powerful retro handheld with Snapdragon 865</p>
+            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
+            <h3 class="text-xl font-bold mt-2">Retroid Pocket 5</h3>
           </div>
         </a>
 
         <a href="/static/handheld.html?device=Odin%202%20Portal" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" alt="AYN Odin 2 Portal" class="w-full h-48 object-cover object-bottom">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" class="w-full h-48 object-cover" alt="O2P">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">AYN Odin 2 Portal</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Premium 7" Android handheld with excellent compatibility</p>
+            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
+            <h3 class="text-xl font-bold mt-2">Odin 2 Portal</h3>
           </div>
         </a>
 
         <a href="/static/handheld.html?device=Odin%203" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" alt="AYN Odin 3" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" class="w-full h-48 object-cover" alt="Odin 3">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">AYN Odin 3</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Snapdragon 8 Elite Android gaming powerhouse</p>
+            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
+            <h3 class="text-xl font-bold mt-2">Odin 3</h3>
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit"
-           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border"
-           data-brand="ayaneo">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" alt="AYANEO Konkr Pocket Fit" class="w-full h-48 object-cover">
+        <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayaneo">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" class="w-full h-48 object-cover" alt="Konkr">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-indigo-500 text-black text-xs px-2 py-1 rounded retro-font">AYANEO</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Konkr Pocket Fit</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">High power handheld from Ayaneo's budget brand Konkr</p>
+            <span class="bg-indigo-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYANEO</span>
+            <h3 class="text-xl font-bold mt-2">Konkr Pocket Fit</h3>
           </div>
         </a>
 
         <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/fliip%2043.png" alt="Retroid Pocket Flip 2" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/fliip%2043.png" class="w-full h-48 object-cover" alt="Flip 2">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Retroid Pocket Flip 2</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Clamshell design with powerful specs</p>
+            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
+            <h3 class="text-xl font-bold mt-2">Pocket Flip 2</h3>
           </div>
         </a>
 
         <a href="/static/handheld.html?device=AYN%20Thor" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/aynthorwhite.png" alt="AYN Thor" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/aynthorwhite.png" class="w-full h-48 object-cover" alt="Thor">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-blue-500 text-black text-xs px-2 py-1 rounded retro-font">AYN</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">AYN Thor</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Dual-screen 8 Gen 2 Android gaming device</p>
+            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
+            <h3 class="text-xl font-bold mt-2">AYN Thor</h3>
           </div>
         </a>
 
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic"
-           class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border"
-           data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20pkm.png"
-               alt="Retroid Pocket Classic" class="w-full h-48 object-cover">
+        <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20pkm.png" class="w-full h-48 object-cover" alt="Classic">
           <div class="p-6">
-            <div class="flex items-center mb-2">
-              <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font">RETROID</span>
-            </div>
-            <h3 class="text-xl font-bold mb-2 transition-colors group-hover:text-yellow-300">Retroid Pocket Classic</h3>
-            <p class="text-gray-400 text-sm mb-4 whitespace-normal">Retro-first handheld with classic form factor</p>
+            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
+            <h3 class="text-xl font-bold mt-2">Pocket Classic</h3>
           </div>
         </a>
       </div>
@@ -359,91 +223,49 @@
 </section>
 
 <section id="videos" class="py-16 bg-gray-900">
-  <div class="container mx-auto px-4">
-    <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">LATEST VIDEOS</h2>
-    <div id="latest-videos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <p class="col-span-full text-center text-gray-400">Loading latest videos…</p>
+  <div class="container mx-auto px-4 text-center">
+    <div class="flex items-center justify-center gap-4 mb-12" data-aos="fade-down">
+        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400">LATEST VIDEOS</h2>
+        <button id="video-trigger" class="play-trigger pixel-btn bg-red-600 text-white border-2 border-black rounded animate-mini-flash" onclick="toggleMarquee('video-marquee')" title="Toggle Scroll">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
     </div>
+  </div>
 
-    <div class="text-center mt-12">
-      <a id="view-all-videos"
-         href="https://www.youtube.com/@RyanRetro/videos"
-         target="_blank"
-         class="inline-block bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded pixel-btn retro-font">
-        VIEW ALL VIDEOS
-      </a>
-    </div>
+  <div class="marquee-container custom-scrollbar video-scrollbar" id="video-marquee">
+      <div id="latest-videos-track" class="marquee-track py-4">
+        <p class="w-full text-center text-gray-400 py-10">Loading latest videos…</p>
+      </div>
+  </div>
+
+  <div class="text-center mt-12">
+    <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="inline-block bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded pixel-btn retro-font">VIEW ALL VIDEOS</a>
   </div>
 </section>
 
 <section id="guides" class="py-16 bg-gray-800">
   <div class="container mx-auto px-4">
     <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">RETRO GUIDES</h2>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <a href="/guides/steam-android"
-         class="bg-gray-900 rounded-lg overflow-hidden pixel-border block"
-         data-aos="fade-up" data-aos-delay="0">
-        <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg"
-             alt="Play Steam Games on Android | Full Guide"
-             class="w-full h-48 object-cover">
+      <a href="/guides/steam-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
+        <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-48 object-cover" alt="Steam Guide">
         <div class="p-6">
-          <div class="flex items-center mb-2">
-            <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANDROID</span>
-            <span class="text-gray-500 text-xs ml-2">Full guide</span>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Play Steam Games on Android</h3>
-          <p class="text-gray-400 text-sm mb-4 whitespace-normal">
-            Stream (or run) your Steam library on Android—setup, tips, and gotchas.
-          </p>
-          <span class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-            READ GUIDE
-            <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
-          </span>
+          <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
+          <h3 class="text-xl font-bold mt-2">Steam on Android</h3>
         </div>
       </a>
-
-      <a href="/guides/switch-android"
-         class="bg-gray-900 rounded-lg overflow-hidden pixel-border block"
-         data-aos="fade-up" data-aos-delay="100">
-        <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png"
-             alt="Play Nintendo Switch Games on Android | Full Guide"
-             class="w-full h-48 object-cover">
+      <a href="/guides/switch-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
+        <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-48 object-cover" alt="Switch Guide">
         <div class="p-6">
-          <div class="flex items-center mb-2">
-            <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANDROID</span>
-            <span class="text-gray-500 text-xs ml-2">Full guide</span>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Play Nintendo Switch Games on Android</h3>
-          <p class="text-gray-400 text-sm mb-4 whitespace-normal">
-            Everything you need to get Switch titles running smoothly on Android.
-          </p>
-          <span class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-            READ GUIDE
-            <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
-          </span>
+          <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
+          <h3 class="text-xl font-bold mt-2">Switch on Android</h3>
         </div>
       </a>
-
-      <a href="/guides/ps3-android"
-         class="bg-gray-900 rounded-lg overflow-hidden pixel-border block"
-         data-aos="fade-up" data-aos-delay="200">
-        <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg"
-             alt="Play PS3 Games on Android | Full Guide"
-             class="w-full h-48 object-cover">
+      <a href="/guides/ps3-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
+        <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-48 object-cover" alt="PS3 Guide">
         <div class="p-6">
-          <div class="flex items-center mb-2">
-            <span class="bg-green-500 text-black text-xs px-2 py-1 rounded retro-font">ANDROID</span>
-            <span class="text-gray-500 text-xs ml-2">Full guide</span>
-          </div>
-          <h3 class="text-xl font-bold mb-2">Play PS3 Games on Android</h3>
-          <p class="text-gray-400 text-sm mb-4 whitespace-normal">
-            Set up, configure, and optimize PS3 gameplay on Android devices.
-          </p>
-          <span class="text-yellow-400 hover:text-yellow-300 text-sm font-bold flex items-center">
-            READ GUIDE
-            <i data-feather="arrow-right" class="ml-1 w-4 h-4"></i>
-          </span>
+          <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
+          <h3 class="text-xl font-bold mt-2">PS3 on Android</h3>
         </div>
       </a>
     </div>
@@ -452,37 +274,27 @@
 
 <section class="py-16 bg-gray-900">
   <div class="container mx-auto px-4">
-    <div class="flex flex-col md:flex-row items-center">
-      <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8" data-aos="fade-right">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="rounded-lg pixel-border w-full">
+    <div class="flex flex-col md:flex-row items-center gap-10">
+      <div class="md:w-1/2" data-aos="fade-right">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="rounded-lg pixel-border w-full max-md:mx-auto">
       </div>
       <div class="md:w-1/2" data-aos="fade-left">
         <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-6">ABOUT RYAN RETRO</h2>
-        <p class="text-gray-300 mb-4">HELLO everyone and welcome back to the Ryan Retro WEBSITE! I created this website as a resource for anyone who enjoys the same retro gaming handhelds I do.</p>
-        <p class="text-gray-300 mb-6">I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid. As I grow older, gaming remains a great way to relax and relieve stress. It's something that gives us new joy while also connecting with nostalgic memories. I hope you enjoy your time here and check out my YouTube, Discord etc to connect more.</p>
-        <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 w-full">
+        <p class="text-gray-300 mb-4 leading-relaxed">HELLO everyone and welcome back to the Ryan Retro WEBSITE! I created this website as a resource for anyone who enjoys the same retro gaming handhelds I do.</p>
+        <p class="text-gray-300 mb-8 leading-relaxed">I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid. Gaming connects us to nostalgic memories while bringing new joy.</p>
 
-          <a href="https://patreon.com/ryanretro"
-             target="_blank"
-             class="flex-1 w-full sm:w-auto text-center bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
-            <i data-feather="star" class="mr-2"></i> PATREON
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <a href="https://patreon.com/ryanretro" target="_blank" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
+            <i data-feather="star" class="mr-2 w-4 h-4"></i> PATREON
           </a>
-
-          <a href="https://ko-fi.com/ryanretro"
-             target="_blank"
-             class="flex-1 w-full sm:w-auto text-center bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
-            <i data-feather="coffee" class="mr-2"></i> KO-FI
+          <a href="https://ko-fi.com/ryanretro" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
+            <i data-feather="coffee" class="mr-2 w-4 h-4"></i> KO-FI
           </a>
-
-          <a href="https://discord.gg/USNwF4N4VH"
-             target="_blank"
-             class="flex-1 w-full sm:w-auto text-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
-            <i data-feather="message-circle" class="mr-2"></i> DISCORD
+          <a href="https://discord.gg/USNwF4N4VH" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
+            <i data-feather="message-circle" class="mr-2 w-4 h-4"></i> DISCORD
           </a>
-          <a href="https://www.youtube.com/@RyanRetro?sub_confirmation=1"
-             target="_blank"
-             class="flex-1 w-full sm:w-auto text-center bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-sm flex items-center justify-center">
-            <i data-feather="youtube" class="mr-2"></i> SUBSCRIBE
+          <a href="https://www.youtube.com/@RyanRetro?sub_confirmation=1" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
+            <i data-feather="youtube" class="mr-2 w-4 h-4"></i> SUBSCRIBE
           </a>
         </div>
       </div>
@@ -491,255 +303,155 @@
 </section>
 
 <footer class="bg-black py-12">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-col items-center text-center">
-      <div class="flex items-center justify-center">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-             alt="Ryan Retro Logo" class="w-12 h-12 rounded-full mr-4">
-        <h3 class="retro-font text-xl text-yellow-400">RYAN RETRO</h3>
-      </div>
-
-      <a href="mailto:rowdyrake@gmail.com?subject=Business%20Enquiry%20from%20Website"
-         class="mt-3 inline-flex items-center text-gray-300 hover:text-yellow-400">
-        <i data-feather="mail" class="w-5 h-5 mr-2"></i>
-        Business enquiries: <span class="ml-1 underline">rowdyrake@gmail.com</span>
-      </a>
-
-      <p class="text-gray-500 text-sm mt-2">© 2025 Ryan Retro. All rights reserved.</p>
-
+  <div class="container mx-auto px-4 text-center">
+    <div class="flex items-center justify-center mb-4">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Logo" class="w-10 h-10 rounded-full mr-3">
+        <h3 class="retro-font text-lg text-yellow-400">RYAN RETRO</h3>
     </div>
+    <a href="mailto:rowdyrake@gmail.com" class="text-gray-400 hover:text-yellow-400 text-sm flex items-center justify-center">
+      <i data-feather="mail" class="w-4 h-4 mr-2"></i> rowdyrake@gmail.com
+    </a>
+    <p class="text-gray-600 text-[10px] mt-4 uppercase">© 2025 Ryan Retro. Stay Gamer.</p>
   </div>
 </footer>
 
 <script>
+const activeMarquees = new Map();
+
+/**
+ * Node Rotation Marquee Engine
+ * Instead of cloning DOM nodes, we rotate existing ones 
+ * when they scroll out of bounds.
+ */
+function initMarquee(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const track = container.querySelector('.marquee-track');
+    if(!track) return;
+
+    activeMarquees.set(containerId, {
+        isPaused: false,
+        isActive: false,
+        scrollSpeed: 0.8,
+        container: container,
+        track: track,
+        offset: 0 
+    });
+
+    container.addEventListener('mouseenter', () => {
+        const state = activeMarquees.get(containerId);
+        if(state) state.isPaused = true;
+    });
+    container.addEventListener('mouseleave', () => {
+        const state = activeMarquees.get(containerId);
+        if(state) state.isPaused = false;
+    });
+    container.addEventListener('mousedown', () => {
+        const state = activeMarquees.get(containerId);
+        if(state) state.isPaused = true;
+    });
+
+    if (!window.marqueeLoopStarted) {
+        window.marqueeLoopStarted = true;
+        requestAnimationFrame(globalAnimate);
+    }
+}
+
+function globalAnimate() {
+    activeMarquees.forEach((state, id) => {
+        if (state.isActive && !state.isPaused) {
+            const visibleChildren = Array.from(state.track.children).filter(child => child.style.display !== 'none');
+            
+            if (visibleChildren.length > 1) {
+                state.container.scrollLeft += state.scrollSpeed;
+                
+                const firstChild = visibleChildren[0];
+                const itemWidth = firstChild.offsetWidth + parseFloat(getComputedStyle(firstChild).marginRight);
+                
+                if (state.container.scrollLeft >= itemWidth) {
+                    state.track.appendChild(firstChild);
+                    state.container.scrollLeft -= itemWidth;
+                }
+            }
+        }
+    });
+    requestAnimationFrame(globalAnimate);
+}
+
+function toggleMarquee(id) {
+    const state = activeMarquees.get(id);
+    if (!state) return;
+
+    state.isActive = !state.isActive;
+    
+    const triggerId = id.replace('-marquee', '-trigger');
+    const trigger = document.getElementById(triggerId);
+    if(trigger) {
+        if(state.isActive) {
+            trigger.classList.add('active');
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; 
+        } else {
+            trigger.classList.remove('active');
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+  AOS.init({ duration: 800, once: true });
   feather.replace();
 
-  // --- Infinite Scroll Setup ---
-  const marqueeTrack = document.querySelector('.marquee-track');
-  const container = document.querySelector('.marquee-container');
-  
-  if(marqueeTrack && container) {
-      // 1. Clone content for infinite loop illusion
-      // We clone multiple times to ensure that even if the list is filtered down to 1 item,
-      // the repeated set spans the full screen width to allow scrolling.
-      const content = marqueeTrack.innerHTML;
-      const CLONES = 16; // Create 16 copies total (original + 15 clones)
+  initMarquee('device-marquee');
+
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const items = document.querySelectorAll('.device-item');
+  const ACTIVE_MAP = { all: 'bg-white text-black', retroid: 'bg-red-600', ayn: 'bg-blue-600', ayaneo: 'bg-indigo-600' };
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
       
-      let newHTML = content;
-      for(let i = 0; i < CLONES - 1; i++) {
-          newHTML += content;
-      }
-      marqueeTrack.innerHTML = newHTML;
+      filterBtns.forEach(b => b.className = 'filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm');
+      btn.className += ` ${ACTIVE_MAP[filter] || 'bg-white text-black'}`;
       
-      // 2. Setup Auto Scroll using JS instead of CSS
-      let scrollSpeed = 0.5; // pixels per frame
-      let isPaused = false;
-      
-      function autoScroll() {
-          if(!isPaused) {
-              container.scrollLeft += scrollSpeed;
-          }
-          
-          // Infinite Loop Reset
-          // We use track.scrollWidth / CLONES because the track contains exactly CLONES sets of items
-          // Use a small buffer to prevent visual glitches if width calculation is fractional
-          const singleSetWidth = marqueeTrack.scrollWidth / CLONES;
-          
-          if (container.scrollLeft >= singleSetWidth) {
-              // Seamlessly jump back to 0
-              container.scrollLeft -= singleSetWidth;
-          }
-          
-          requestAnimationFrame(autoScroll);
-      }
-      
-      // Start loop
-      autoScroll();
-      
-      // 3. Interaction Handlers - Pause on hover or touch
-      container.addEventListener('mouseenter', () => isPaused = true);
-      container.addEventListener('mouseleave', () => isPaused = false);
-      container.addEventListener('touchstart', () => isPaused = true);
-      container.addEventListener('touchend', () => setTimeout(() => isPaused = false, 2000)); // Resume after a delay
-  }
-
-  // --- Filtering Logic ---
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  // Re-select items after duplication to ensure we control all copies
-  const deviceItems = document.querySelectorAll('.device-item');
-
-  // Base (inactive) classes every button should have
-  const BASE = ['bg-gray-700','hover:bg-gray-600','text-white'];
-
-  // Active styles per filter
-  const ACTIVE = {
-    all:       ['bg-white','hover:bg-gray-200','text-gray-900'],
-    retroid:   ['bg-red-600','hover:bg-red-600','text-white'],
-    ayn:       ['bg-blue-600','hover:bg-blue-600','text-white'],
-    ayaneo:    ['bg-indigo-600','hover:bg-indigo-600','text-white'],
-  };
-
-  // All classes we might add as "active" (so we can remove reliably)
-  const ALL_ACTIVE_CLASSES = Object.values(ACTIVE).flat();
-
-  // Initialize: make every button neutral
-  filterButtons.forEach(btn => {
-    btn.classList.remove(...ALL_ACTIVE_CLASSES, 'text-gray-900'); // clear any old active
-    BASE.forEach(c => btn.classList.add(c));                      // add neutral look
-  });
-
-  // Click handler
-  filterButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const filter = this.getAttribute('data-filter').toLowerCase();
-
-      // 1) Reset everyone to base
-      filterButtons.forEach(btn => {
-        btn.classList.remove(...ALL_ACTIVE_CLASSES, 'text-white', 'text-gray-900');
-        BASE.forEach(c => btn.classList.add(c));
+      items.forEach(item => {
+          item.style.display = (filter === 'all' || item.dataset.brand === filter) ? 'block' : 'none';
       });
 
-      // 2) Apply active style to the clicked one
-      const activeClasses = ACTIVE[filter] || ACTIVE.all;
-      this.classList.remove(...BASE);
-      this.classList.add(...activeClasses);
-
-      // 3) Filter the items (including duplicated clones)
-      deviceItems.forEach(item => {
-        const brand = item.getAttribute('data-brand').toLowerCase();
-        // Use Flex display toggling
-        if (filter === 'all' || brand === filter) {
-             item.style.display = 'block';
-        } else {
-             item.style.display = 'none';
-        }
-      });
+      const state = activeMarquees.get('device-marquee');
+      if (state) {
+          state.container.scrollLeft = 0; 
+      }
     });
   });
 
-  // OPTIONAL: make "ALL" active on load so UI isn't empty
-  const defaultBtn = document.querySelector('.filter-btn[data-filter="all"]');
-  if (defaultBtn) defaultBtn.click();
-});
-</script>
-
-<script>
-(function () {
-  const grid = document.getElementById('latest-videos');
-  if (!grid) return;
-
-  const LIMIT = 3;
-  const CACHE_KEY = `rr_latest_videos_v1_${LIMIT}`;
-  const CACHE_MS = 15 * 60 * 1000; // 15 minutes
-
-  const fmtTimeAgo = (iso) => {
-    const sec = Math.max(1, (Date.now() - new Date(iso).getTime()) / 1000);
-    const units = [
-      ['year', 31536000], ['month', 2592000], ['week', 604800],
-      ['day', 86400], ['hour', 3600], ['minute', 60]
-    ];
-    for (const [name, s] of units) {
-      const v = Math.floor(sec / s);
-      if (v >= 1) return `${v} ${name}${v > 1 ? 's' : ''} ago`;
-    }
-    return 'Just now';
-  };
-
-  const cardHTML = ({ id, title, thumb, publishedAt }, i) => `
-    <a href="https://www.youtube.com/watch?v=${id}" target="_blank"
-       class="bg-gray-800 rounded-lg overflow-hidden pixel-border block group"
-       data-video-id="${id}" data-aos="fade-up" data-aos-delay="${i * 100}">
-      <div class="relative pb-[56.25%] bg-black">
-        <img
-          src="${thumb}"
-          alt="${title.replace(/"/g, '&quot;')}"
-          width="480" height="360"
-          ${i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" fetchpriority="auto"'}
-          decoding="async"
-          class="absolute h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center opacity-90">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 fill="currentColor" class="w-8 h-8 text-white ml-1">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="p-4">
-        <h3 class="text-lg md:text-xl font-bold mb-2 line-clamp-2">${title}</h3>
-        <div class="flex justify-between text-gray-500 text-xs">
-          <span>${publishedAt ? fmtTimeAgo(publishedAt) : ''}</span>
-          <span></span>
-        </div>
-      </div>
-    </a>`;
-
-  function showError(msg) {
-    grid.innerHTML = `
-      <div class="col-span-full text-center">
-        <p class="text-red-400 mb-2">Couldn’t load latest videos.</p>
-        <p class="text-gray-400 mb-2 text-xs">${msg || ''}</p>
-        <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank"
-           class="text-yellow-400 underline">Open my channel</a>
-      </div>`;
-  }
-
-  async function render(data) {
-    grid.innerHTML = data.slice(0, LIMIT).map((d, i) => cardHTML(d, i)).join('');
-    if (window.AOS && typeof AOS.refresh === 'function') {
-      AOS.refresh();
-    }
-  }
-
-  async function loadVideos(forceFresh = false) {
+  async function loadVideos() {
+    const track = document.getElementById('latest-videos-track');
     try {
-      if (!forceFresh) {
-        // Safely read cache – ignore if broken
-        try {
-          const cached = localStorage.getItem(CACHE_KEY);
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            if (
-              parsed &&
-              Array.isArray(parsed.data) &&
-              parsed.data.length &&
-              Date.now() - parsed.t < CACHE_MS
-            ) {
-              await render(parsed.data);
-              return;
-            }
-          }
-        } catch (e) {
-          console.warn('Ignoring bad cache for latest videos', e);
-          localStorage.removeItem(CACHE_KEY);
-        }
-      }
-
-      console.log('Fetching /api/latest-videos…');
-      const res = await fetch('/api/latest-videos?limit=' + LIMIT, { cache: 'no-store' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const res = await fetch('/api/latest-videos?limit=10');
       const data = await res.json();
-
-      if (!Array.isArray(data) || !data.length) {
-        grid.innerHTML =
-          '<p class="col-span-full text-center text-gray-400">No uploads found.</p>';
-        return;
+      if (data && data.length) {
+        track.innerHTML = data.map(v => `
+          <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="video-item bg-gray-800 rounded-lg overflow-hidden pixel-border block group">
+            <div class="relative pb-[56.25%] bg-black">
+              <img src="${v.thumb}" class="absolute h-full w-full object-cover" alt="${(v.title || '').replace(/"/g,'&quot;')}">
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 transition-opacity">
+                  <i data-feather="play" class="text-white w-12 h-12"></i>
+              </div>
+            </div>
+            <div class="p-4 h-20 bg-gray-900">
+              <h3 class="font-bold text-xs line-clamp-2">${v.title}</h3>
+            </div>
+          </a>`).join('');
+        feather.replace();
+        initMarquee('video-marquee');
       }
-
-      await render(data);
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), data }));
-    } catch (e) {
-      console.error('Failed to load latest videos', e);
-      showError(e.message);
+    } catch(e) {
+      track.innerHTML = '<p class="text-center w-full py-10 text-gray-400">Visit YouTube for updates</p>';
     }
   }
-
-  // 🚀 EASY FIX: just load videos immediately when the script runs
   loadVideos();
-})();
+});
 </script>
 </body>
 </html>
