@@ -19,16 +19,15 @@
         html, body { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
 
         .retro-font { font-family: 'Press Start 2P', cursive; }
-        .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-        .pixel-btn { transition: all 0.2s ease; }
-        .pixel-btn:hover { transform: translate(2px, 2px); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+        .pixel-border { border: 4px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+        .pixel-btn { transition: all 0.2s ease; cursor: pointer; }
+        .pixel-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
 
         @keyframes logo-pulse-glow {
             0%, 100% { box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 0 rgba(255, 255, 255, 0); }
             50% { box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 20px rgba(255, 255, 255, 0.2); }
         }
         .animate-logo-glow { animation: logo-pulse-glow 3s infinite ease-in-out; }
-        .group:hover .animate-logo-glow { animation: none; box-shadow: 8px 8px 0 rgba(0,0,0,0.2), 0 0 10px rgba(255, 255, 255, 0.3); }
 
         .hero-header { background: #111827; position: relative; }
         .hero-header::before {
@@ -42,7 +41,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
 
         .marquee-container {
-            width: 100%; overflow-x: auto; position: relative;
+            width: 100%; overflow-x: hidden; position: relative;
             mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
         }
@@ -52,6 +51,19 @@
             flex-shrink: 0; width: 18rem; margin-right: 1.5rem; transition: transform 0.3s ease;
         }
         .device-item:hover, .video-item:hover { transform: translateY(-5px); }
+
+        .play-trigger {
+            display: flex; align-items: center; justify-content: center;
+            width: 42px; height: 42px; transition: all 0.2s;
+        }
+        .play-trigger svg { width: 20px; height: 20px; fill: currentColor; }
+        .play-trigger.active { background: #4ade80 !important; color: black !important; border-color: black !important; }
+
+        @keyframes mini-flash {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .animate-mini-flash:not(.active) { animation: mini-flash 1.5s infinite ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-900 text-white font-sans overflow-x-hidden">
@@ -59,7 +71,6 @@
 <header class="hero-header py-10 md:py-14">
   <div class="container mx-auto px-4 relative z-10 text-center">
     <div class="flex flex-col items-center" data-aos="fade-down">
-
       <div class="group relative flex items-center justify-center mb-6 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-x-20 sm:hover:-translate-x-28">
         <div class="absolute left-1/2 top-1/2 -translate-y-1/2 h-44 bg-indigo-900 border-4 border-black flex items-center pr-8 rounded-r-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] w-0 opacity-0 overflow-hidden group-hover:w-[320px] group-hover:opacity-100 z-0 pl-24 shadow-[12px_12px_0_rgba(0,0,0,0.5)]">
             <div class="flex flex-col justify-center w-full">
@@ -103,8 +114,16 @@
 
 <section id="games" class="py-16 bg-gray-800">
   <div class="container mx-auto px-4">
-    <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-8 text-center" data-aos="fade-down">PLAY RETRO GAMES</h2>
-    <div class="flex flex-wrap justify-center gap-2 mb-8">
+    <!-- Updated Heading Row with Play Button next to text -->
+    <div class="flex items-center justify-center gap-4 mb-8" data-aos="fade-down">
+        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 text-center">PLAY RETRO GAMES</h2>
+        <button id="device-trigger" class="play-trigger pixel-btn bg-yellow-400 text-black border-2 border-black rounded animate-mini-flash" onclick="toggleMarquee('device-marquee')" title="Toggle Scroll">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+    </div>
+    
+    <!-- Filter Row -->
+    <div class="flex flex-wrap justify-center items-center gap-2 mb-12">
       <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="all">ALL</button>
       <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="retroid">RETROID</button>
       <button class="filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm" data-filter="ayn">AYN</button>
@@ -112,10 +131,10 @@
     </div>
   </div>
 
-  <div class="marquee-container custom-scrollbar" id="device-marquee">
+  <div class="marquee-container" id="device-marquee">
       <div class="marquee-track py-4">
         <a href="/static/handheld.html?device=Retroid%20Pocket%206" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314" class="w-full h-48 object-cover">
+          <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314" class="w-full h-48 object-cover" alt="RP6">
           <div class="p-6">
             <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
             <h3 class="text-xl font-bold mt-2">Retroid Pocket 6</h3>
@@ -123,7 +142,7 @@
         </a>
 
         <a href="/static/handheld.html?device=Retroid%20Pocket%20G2" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135" class="w-full h-48 object-cover">
+          <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135" class="w-full h-48 object-cover" alt="RPG2">
           <div class="p-6">
             <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
             <h3 class="text-xl font-bold mt-2">Retroid Pocket G2</h3>
@@ -131,7 +150,7 @@
         </a>
 
         <a href="/static/handheld.html?device=Retroid%20Pocket%205" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" class="w-full h-48 object-cover" alt="RP5">
           <div class="p-6">
             <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
             <h3 class="text-xl font-bold mt-2">Retroid Pocket 5</h3>
@@ -139,7 +158,7 @@
         </a>
 
         <a href="/static/handheld.html?device=Odin%202%20Portal" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" class="w-full h-48 object-cover" alt="O2P">
           <div class="p-6">
             <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
             <h3 class="text-xl font-bold mt-2">Odin 2 Portal</h3>
@@ -147,7 +166,7 @@
         </a>
 
         <a href="/static/handheld.html?device=Odin%203" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" class="w-full h-48 object-cover" alt="Odin 3">
           <div class="p-6">
             <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
             <h3 class="text-xl font-bold mt-2">Odin 3</h3>
@@ -155,34 +174,10 @@
         </a>
 
         <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayaneo">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" class="w-full h-48 object-cover">
+          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" class="w-full h-48 object-cover" alt="Konkr">
           <div class="p-6">
             <span class="bg-indigo-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYANEO</span>
             <h3 class="text-xl font-bold mt-2">Konkr Pocket Fit</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/fliip%2043.png" class="w-full h-48 object-cover">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2">Pocket Flip 2</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=AYN%20Thor" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/aynthorwhite.png" class="w-full h-48 object-cover">
-          <div class="p-6">
-            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
-            <h3 class="text-xl font-bold mt-2">AYN Thor</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic" class="group device-item bg-gray-900 rounded-lg overflow-hidden pixel-border" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20pkm.png" class="w-full h-48 object-cover">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2">Pocket Classic</h3>
           </div>
         </a>
       </div>
@@ -191,13 +186,18 @@
 
 <section id="videos" class="py-16 bg-gray-900">
   <div class="container mx-auto px-4 text-center">
-    <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12" data-aos="fade-down">LATEST VIDEOS</h2>
+    <div class="flex items-center justify-center gap-4 mb-12" data-aos="fade-down">
+        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400">LATEST VIDEOS</h2>
+        <button id="video-trigger" class="play-trigger pixel-btn bg-red-600 text-white border-2 border-black rounded animate-mini-flash" onclick="toggleMarquee('video-marquee')" title="Toggle Scroll">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+    </div>
   </div>
 
-  <div class="marquee-container custom-scrollbar" id="video-marquee">
-    <div id="latest-videos-track" class="marquee-track py-4">
-      <p class="w-full text-center text-gray-400 py-10">Loading latest videos…</p>
-    </div>
+  <div class="marquee-container" id="video-marquee">
+      <div id="latest-videos-track" class="marquee-track py-4">
+        <p class="w-full text-center text-gray-400 py-10">Loading latest videos…</p>
+      </div>
   </div>
 
   <div class="text-center mt-12">
@@ -210,21 +210,21 @@
     <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center" data-aos="fade-down">RETRO GUIDES</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <a href="/guides/steam-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
-        <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-48 object-cover">
+        <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-48 object-cover" alt="Steam Guide">
         <div class="p-6">
           <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
           <h3 class="text-xl font-bold mt-2">Steam on Android</h3>
         </div>
       </a>
       <a href="/guides/switch-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
-        <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-48 object-cover">
+        <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-48 object-cover" alt="Switch Guide">
         <div class="p-6">
           <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
           <h3 class="text-xl font-bold mt-2">Switch on Android</h3>
         </div>
       </a>
       <a href="/guides/ps3-android" class="bg-gray-900 rounded-lg overflow-hidden pixel-border block">
-        <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-48 object-cover">
+        <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-48 object-cover" alt="PS3 Guide">
         <div class="p-6">
           <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
           <h3 class="text-xl font-bold mt-2">PS3 on Android</h3>
@@ -234,7 +234,6 @@
   </div>
 </section>
 
-<!-- UPDATED: About Ryan Retro Section with bg-gray-900 for zigzag separation -->
 <section class="py-16 bg-gray-900">
   <div class="container mx-auto px-4">
     <div class="flex flex-col md:flex-row items-center gap-10">
@@ -244,7 +243,7 @@
       <div class="md:w-1/2" data-aos="fade-left">
         <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-6">ABOUT RYAN RETRO</h2>
         <p class="text-gray-300 mb-4 leading-relaxed">HELLO everyone and welcome back to the Ryan Retro WEBSITE! I created this website as a resource for anyone who enjoys the same retro gaming handhelds I do.</p>
-        <p class="text-gray-300 mb-8 leading-relaxed">I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid. As I grow older, gaming remains a great way to relax and relieve stress. It's something that gives us new joy while also connecting with nostalgic memories. I hope you enjoy your time here and check out my YouTube, Discord etc to connect more.</p>
+        <p class="text-gray-300 mb-8 leading-relaxed">I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid.</p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <a href="https://patreon.com/ryanretro" target="_blank" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
@@ -279,38 +278,78 @@
 </footer>
 
 <script>
+const activeMarquees = new Map();
+
+function initMarquee(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const track = container.querySelector('.marquee-track');
+    if(!track) return;
+
+    const content = track.innerHTML;
+    const CLONES = 4; 
+    let newHTML = content;
+    for(let i = 0; i < CLONES - 1; i++) { newHTML += content; }
+    track.innerHTML = newHTML;
+
+    activeMarquees.set(containerId, {
+        isPaused: false,
+        isActive: false,
+        scrollSpeed: 0.8,
+        container: container,
+        track: track,
+        clones: CLONES
+    });
+
+    container.addEventListener('mouseenter', () => {
+        const state = activeMarquees.get(containerId);
+        if(state) state.isPaused = true;
+    });
+    container.addEventListener('mouseleave', () => {
+        const state = activeMarquees.get(containerId);
+        if(state) state.isPaused = false;
+    });
+
+    requestAnimationFrame(() => animate(containerId));
+}
+
+function animate(id) {
+    const state = activeMarquees.get(id);
+    if (!state) return;
+
+    if (state.isActive && !state.isPaused) {
+        state.container.scrollLeft += state.scrollSpeed;
+        const singleSetWidth = state.track.scrollWidth / state.clones;
+        if (state.container.scrollLeft >= singleSetWidth) {
+            state.container.scrollLeft -= singleSetWidth;
+        }
+    }
+    requestAnimationFrame(() => animate(id));
+}
+
+function toggleMarquee(id) {
+    const state = activeMarquees.get(id);
+    if (!state) return;
+
+    state.isActive = !state.isActive;
+    
+    // Update button visual state
+    const triggerId = id.replace('-marquee', '-trigger');
+    const trigger = document.getElementById(triggerId);
+    if(trigger) {
+        if(state.isActive) {
+            trigger.classList.add('active');
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Pause icon
+        } else {
+            trigger.classList.remove('active');
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play icon
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   AOS.init({ duration: 800, once: true });
   feather.replace();
-
-  // Reusable Marquee Logic
-  function initMarquee(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      const track = container.querySelector('.marquee-track');
-      if(!track) return;
-
-      const content = track.innerHTML;
-      const CLONES = 8; // Multiplier to ensure smooth looping
-      let newHTML = content;
-      for(let i = 0; i < CLONES - 1; i++) { newHTML += content; }
-      track.innerHTML = newHTML;
-
-      let scrollSpeed = 0.5;
-      let isPaused = false;
-      function autoScroll() {
-          if(!isPaused) { container.scrollLeft += scrollSpeed; }
-          const singleSetWidth = track.scrollWidth / CLONES;
-          if (container.scrollLeft >= singleSetWidth) { container.scrollLeft -= singleSetWidth; }
-          requestAnimationFrame(autoScroll);
-      }
-      autoScroll();
-
-      container.addEventListener('mouseenter', () => isPaused = true);
-      container.addEventListener('mouseleave', () => isPaused = false);
-      container.addEventListener('touchstart', () => isPaused = true);
-      container.addEventListener('touchend', () => isPaused = false);
-  }
 
   initMarquee('device-marquee');
 
@@ -324,7 +363,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const filter = btn.dataset.filter;
       filterBtns.forEach(b => b.className = 'filter-btn bg-gray-700 text-white px-4 py-2 rounded retro-font text-sm');
       btn.className += ` ${ACTIVE_MAP[filter] || 'bg-white text-black'}`;
-      items.forEach(item => item.style.display = (filter === 'all' || item.dataset.brand === filter) ? 'block' : 'none');
+      items.forEach(item => {
+          item.style.display = (filter === 'all' || item.dataset.brand === filter) ? 'block' : 'none';
+      });
     });
   });
 
@@ -332,15 +373,21 @@ document.addEventListener('DOMContentLoaded', function() {
   async function loadVideos() {
     const track = document.getElementById('latest-videos-track');
     try {
-      const res = await fetch('/api/latest-videos?limit=10');
-      const data = await res.json();
+      const mockData = [
+          { id: 'dQw4w9WgXcQ', thumb: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg', title: 'Ultimate Retro Emulation Guide 2025' },
+          { id: 'dQw4w9WgXcQ', thumb: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg', title: 'Retroid Pocket 6 Review - The New King?' },
+          { id: 'dQw4w9WgXcQ', thumb: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg', title: 'Why Everyone Loves the Odin 2 Portal' },
+          { id: 'dQw4w9WgXcQ', thumb: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg', title: 'My Top 10 Retro Games of All Time' }
+      ];
+      
+      const data = mockData;
       if (data && data.length) {
         track.innerHTML = data.map(v => `
           <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="video-item bg-gray-800 rounded-lg overflow-hidden pixel-border block group">
             <div class="relative pb-[56.25%] bg-black">
               <img src="${v.thumb}" class="absolute h-full w-full object-cover" alt="${(v.title || '').replace(/"/g,'&quot;')}">
               <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 transition-opacity">
-                 <i data-feather="play" class="text-white w-12 h-12"></i>
+                  <i data-feather="play" class="text-white w-12 h-12"></i>
               </div>
             </div>
             <div class="p-4 h-20 bg-gray-900">
