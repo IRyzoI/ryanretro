@@ -56,6 +56,9 @@
 
     .island { content-visibility: auto; contain-intrinsic-size: 800px; }
 
+    /* Active filter state */
+    .filter-active { outline: 2px solid white; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
     /* Header Responsive Fixes */
     @media (max-width: 768px) {
       .header-container { flex-direction: column; gap: 0.25rem; }
@@ -168,11 +171,11 @@
           </div>
 
           <div id="perf-filters" class="mb-3 flex flex-wrap gap-2 text-xs">
-            <button data-perf=""            class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600">All</button>
-            <button data-perf="Perfect"     class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-perfect font-bold">Perfect</button>
-            <button data-perf="Great"       class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-great font-bold">Great</button>
-            <button data-perf="Playable"    class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-playable font-bold">Playable</button>
-            <button data-perf="Unplayable" class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-unplayable font-bold">Unplayable</button>
+            <button data-perf=""            class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 border border-transparent filter-active">All</button>
+            <button data-perf="Perfect"     class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-perfect font-bold border border-transparent">Perfect</button>
+            <button data-perf="Great"       class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-great font-bold border border-transparent">Great</button>
+            <button data-perf="Playable"    class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-playable font-bold border border-transparent">Playable</button>
+            <button data-perf="Unplayable" class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-unplayable font-bold border border-transparent">Unplayable</button>
           </div>
 
           <div class="mb-6 flex flex-col md:flex-row gap-4">
@@ -210,7 +213,7 @@
           </button>
         </div>
 
-        <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden" data-aos="fade-up">
+        <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden mt-8" data-aos="fade-up">
           <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
 
           <form id="compatibility-form">
@@ -922,6 +925,96 @@ if (videosSection) {
     sortColumn = th.dataset.sort;
     applySearchAndSort();
   });
+
+  /* --------------------------- FIXED: Performance Filters --------------------------- */
+  document.getElementById('perf-filters')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    
+    // 1. Update filter state
+    perfFilter = btn.dataset.perf;
+    
+    // 2. Update visuals
+    const allBtns = document.getElementById('perf-filters').querySelectorAll('button');
+    allBtns.forEach(b => {
+        if (b.dataset.perf === perfFilter) {
+            b.classList.add('filter-active');
+        } else {
+            b.classList.remove('filter-active');
+        }
+    });
+
+    // 3. Re-run search
+    applySearchAndSort();
+  });
+
+  /* --------------------------- FIXED: Add Entry Logic --------------------------- */
+  function updateFormFields(sysId) {
+    const container = document.getElementById('dynamic-fields');
+    container.innerHTML = '';
+    
+    const config = FORM_CONFIG[sysId] || [];
+    config.forEach(field => {
+        const div = document.createElement('div');
+        const req = field.required ? 'required' : '';
+        const star = field.required ? '*' : '';
+        
+        let inputHtml = '';
+        
+        if (field.type === 'select') {
+            const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+            const cls = field.key === 'performance' ? 'form-input perf-perfect font-bold' : 'form-input';
+            
+            inputHtml = `
+                <select name="${field.key}" class="${cls}" ${req}>
+                    ${options}
+                </select>
+            `;
+        } else {
+            inputHtml = `
+                <input type="text" name="${field.key}" class="form-input" ${req}>
+            `;
+        }
+        
+        div.innerHTML = `
+            <label class="block mb-2 font-bold capitalize">${field.label} ${star}</label>
+            ${inputHtml}
+        `;
+        container.appendChild(div);
+    });
+
+    // Re-bind color changes for performance selects
+    colorizePerformanceSelects(container);
+    // Ensure chipset field exists
+    ensureChipsetField();
+    
+    // Update hidden system input
+    document.getElementById('hidden-system').value = sysId;
+  }
+
+  // Open Form
+  document.getElementById('add-entry-btn')?.addEventListener('click', () => {
+    const formContainer = document.getElementById('add-entry-form-container');
+    formContainer.classList.remove('hidden');
+    // Initialize form with current system
+    const currentSys = document.getElementById('form-system-select').value || currentSystemId;
+    document.getElementById('form-system-select').value = currentSys;
+    updateFormFields(currentSys);
+    
+    // Scroll to form
+    formContainer.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Close Form
+  document.getElementById('cancel-btn')?.addEventListener('click', () => {
+    document.getElementById('add-entry-form-container').classList.add('hidden');
+  });
+
+  // Change fields when system changes in form
+  document.getElementById('form-system-select')?.addEventListener('change', (e) => {
+    updateFormFields(e.target.value);
+  });
+
 
   setActiveSystemBtn(currentSystemId);
   loadSystemData(currentSystemId);
