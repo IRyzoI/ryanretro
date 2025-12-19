@@ -353,7 +353,7 @@
 
   <body class="bg-gray-900 text-white overflow-x-hidden flex flex-col min-h-screen">
     
-    <!-- NEW HEADER STYLE -->
+    <!-- HEADER -->
     <header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container relative md:gap-8">
         
@@ -371,22 +371,18 @@
           <span>STORE</span>
         </a>
 
-        <!-- SUPPORT ME GROUP -->
-        <div class="order-3 md:order-3 flex items-center justify-center gap-2 border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
+        <!-- SUPPORT ME (SINGLE PATREON FOCUS) -->
+        <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
           <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
             SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
           </span>
 
           <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-             class="px-3 py-2 bg-[#f96854] hover:bg-[#e05d4b] text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg>
-            <span>PATREON</span>
-          </a>
-
-          <a href="https://ko-fi.com/ryanretro" target="_blank" rel="noopener noreferrer"
-             class="px-3 py-2 bg-[#13C3FF] hover:bg-[#0da4d6] text-white rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.879-4.597h-.034c-4.826 0-7.661 2.785-7.661 2.785S8.354 4.352 3.528 4.352c-.02.004-4.106.512-4.879 4.597-.034.18-.052.368-.052.557 0 2.85 2.532 5.922 6.34 9.576l6.653 6.32c.209.198.539.198.748 0l6.653-6.32c3.808-3.654 6.34-6.726 6.34-9.576 0-.19-.018-.378-.052-.557z"/></svg>
-            <span>KO-FI</span>
+             class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+            </svg>
+            <span class="tracking-tight">BECOME A PATRON</span>
           </a>
         </div>
 
@@ -754,230 +750,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
     />
   </div>
 </div>
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const mobileGallery = document.querySelector('[data-gallery="g2-performance"]');
-    const stackItems = mobileGallery ? Array.from(mobileGallery.querySelectorAll(".stack-item")) : [];
-
-    const desktopThumbs = document.querySelectorAll(
-      '[data-gallery-desktop="g2-performance"] img'
-    );
-
-    const lightbox = document.getElementById("lightboxOverlay");
-    const lightboxImg = document.getElementById("lightboxImage");
-    const lightboxPrev = document.getElementById("lightboxPrev");
-    const lightboxNext = document.getElementById("lightboxNext");
-
-    // Master list of image sources (same order for mobile + desktop)
-    const allSources =
-      stackItems.length > 0
-        ? stackItems.map((img) => img.src)
-        : Array.from(desktopThumbs).map((img) => img.src);
-
-    let current = 0;
-    let touchStartX = 0;
-
-    function applyPositions() {
-      if (!stackItems.length) return;
-
-      stackItems.forEach((item, index) => {
-        const pos = (index - current + stackItems.length) % stackItems.length;
-
-        if (pos === 0) {
-          // Center / front image
-          item.style.transform = "translateX(0px) scale(1)";
-          item.style.zIndex = "30";
-          item.style.opacity = "1";
-        } else if (pos === 1) {
-          // Right / behind
-          item.style.transform = "translateX(14px) scale(0.9)";
-          item.style.zIndex = "20";
-          item.style.opacity = "0.85";
-        } else {
-          // Left / behind
-          item.style.transform = "translateX(-14px) scale(0.9)";
-          item.style.zIndex = "10";
-          item.style.opacity = "0.85";
-        }
-      });
-    }
-
-    function updateLightbox() {
-      if (!lightboxImg || !allSources.length) return;
-      lightboxImg.src = allSources[current];
-    }
-
-  window.openLightbox = function (src = null) {
-  if (!lightbox) return;
-
-  // If a custom image source is provided, override the lightbox image
-  if (src) {
-    if (lightboxImg) {
-      lightboxImg.src = src;
-    }
-  } else {
-    // Existing behaviour for the stacked gallery
-    updateLightbox();
-  }
-
-  lightbox.classList.remove("hidden");
-  lightbox.classList.add("flex");
-};
-
-
-    function closeLightbox() {
-      if (!lightbox) return;
-      lightbox.classList.add("hidden");
-      lightbox.classList.remove("flex");
-    }
-
-    function next() {
-      if (!allSources.length) return;
-      current = (current + 1) % allSources.length;
-      applyPositions();
-      if (lightbox && !lightbox.classList.contains("hidden")) {
-        updateLightbox();
-      }
-    }
-
-    function prev() {
-      if (!allSources.length) return;
-      current = (current - 1 + allSources.length) % allSources.length;
-      applyPositions();
-      if (lightbox && !lightbox.classList.contains("hidden")) {
-        updateLightbox();
-      }
-    }
-
-    // --- Mobile stacked gallery setup ---
-    if (mobileGallery && stackItems.length) {
-      // Initial layout
-      applyPositions();
-
-      // Tap front image → open lightbox
-      stackItems.forEach((item) => {
-        item.addEventListener("click", (e) => {
-          e.stopPropagation();
-          // Only open lightbox if this card is at the front
-          if (item.style.zIndex === "30") {
-            openLightbox();
-          } else {
-            // If not front, just move to next
-            next();
-          }
-        });
-      });
-
-      // Tap empty space in gallery to go next
-      mobileGallery.addEventListener("click", (e) => {
-        if (e.target === mobileGallery) {
-          next();
-        }
-      });
-
-      // Arrows inside the stacked gallery (prev/next)
-      const leftArrow = mobileGallery.querySelector('[data-arrow="prev"]');
-      const rightArrow = mobileGallery.querySelector('[data-arrow="next"]');
-
-      if (leftArrow) {
-        leftArrow.addEventListener("click", (e) => {
-          e.stopPropagation();
-          prev();
-        });
-      }
-
-      if (rightArrow) {
-        rightArrow.addEventListener("click", (e) => {
-          e.stopPropagation();
-          next();
-        });
-      }
-
-      // Basic swipe handling
-      mobileGallery.addEventListener(
-        "touchstart",
-        (e) => {
-          touchStartX = e.touches[0].clientX;
-        },
-        { passive: true }
-      );
-
-      mobileGallery.addEventListener("touchend", (e) => {
-        const touchEndX = e.changedTouches[0].clientX;
-        const deltaX = touchEndX - touchStartX;
-
-        if (Math.abs(deltaX) < 30) {
-          // Small movement = treat as tap on background → next
-          next();
-          return;
-        }
-
-        if (deltaX < 0) {
-          // Swipe left -> next
-          next();
-        } else {
-          // Swipe right -> prev
-          prev();
-        }
-      });
-    }
-
-    // --- Desktop thumbs: click to open lightbox ---
-    if (desktopThumbs.length && lightbox) {
-      desktopThumbs.forEach((img, index) => {
-        img.addEventListener("click", () => {
-          current = index;
-          openLightbox();
-        });
-      });
-    }
-
-    // --- Lightbox controls ---
-    if (lightbox) {
-      // Click backdrop to close
-      lightbox.addEventListener("click", () => {
-        closeLightbox();
-      });
-
-      // Prevent clicks on image itself from closing
-      if (lightboxImg) {
-        lightboxImg.addEventListener("click", (e) => {
-          e.stopPropagation();
-        });
-      }
-
-      // Arrow buttons inside the lightbox
-      if (lightboxPrev) {
-        lightboxPrev.addEventListener("click", (e) => {
-          e.stopPropagation();
-          prev();
-        });
-      }
-
-      if (lightboxNext) {
-        lightboxNext.addEventListener("click", (e) => {
-          e.stopPropagation();
-          next();
-        });
-      }
-
-      // Optional: keyboard navigation on desktop
-      document.addEventListener("keydown", (e) => {
-        if (lightbox.classList.contains("hidden")) return;
-        if (e.key === "ArrowRight") next();
-        if (e.key === "ArrowLeft") prev();
-        if (e.key === "Escape") closeLightbox();
-      });
-    }
-  });
-</script>
-
-
-
-
-
 
           <p class="text-gray-200 text-sm md:text-base mb-4">
             The Retroid Pocket G2 can play almost anything you could reasonably
@@ -1401,9 +1173,6 @@ class="absolute right-2 top-1/2 -translate-y-1/2 z-40 opacity-70 hover:opacity-1
     />
   </div>
 </div>
-
-
-
 
             <p>
               So then what is the point of the RPG2 existing and why did I even
