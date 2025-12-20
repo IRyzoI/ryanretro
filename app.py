@@ -115,15 +115,18 @@ def _lock_for(key: str) -> threading.Lock:
 # --------------------------------------------------------------------------------------
 def _get_game_password() -> str:
     if not os.path.exists(GAME_PASS_FILE):
-        with open(GAME_PASS_FILE, "w", encoding="utf-8") as f:
-            f.write("retro")
+        with _lock_for(GAME_PASS_FILE):
+            with open(GAME_PASS_FILE, "w", encoding="utf-8") as f:
+                f.write("retro")
         return "retro"
+    
     with open(GAME_PASS_FILE, "r", encoding="utf-8") as f:
         return f.read().strip()
 
 def _set_game_password(new_pass: str):
-    with open(GAME_PASS_FILE, "w", encoding="utf-8") as f:
-        f.write(new_pass.strip())
+    with _lock_for(GAME_PASS_FILE):
+        with open(GAME_PASS_FILE, "w", encoding="utf-8") as f:
+            f.write(new_pass.strip())
 
 def _load_chat() -> List[Dict]:
     if not os.path.exists(CHAT_FILE):
@@ -523,7 +526,6 @@ def post_compat(sub: CompatSubmission):
     if "rom_region" in row: row["rom region"] = row.pop("rom_region")
     if "winlator_version" in row: row["winlator version"] = row.pop("winlator_version")
     if "dx_wrapper" in row: row["dx wrapper"] = row.pop("dx_wrapper")
-    # ... (other aliases handled by Pydantic 'by_alias' mostly, but manual safety check)
     
     row["system"] = system
     row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")
@@ -579,6 +581,7 @@ def admin_seed_data(request: Request, force: int = 0, token: str = ""):
 # Page Routes & Static
 # --------------------------------------------------------------------------------------
 @app.get("/gameoftheweek", response_class=FileResponse)
+@app.get("/gotw", response_class=FileResponse)
 def game_of_the_week_page():
     p = os.path.join(REPO_DIR, "static", "gameoftheweek.html")
     return FileResponse(p) if os.path.exists(p) else HTMLResponse("<h1>Not Found</h1>", 404)
@@ -590,7 +593,6 @@ def serve_guide(slug: str):
         return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
     with open(md_path, "r", encoding="utf-8") as f: content = f.read()
     html = markdown.markdown(content, extensions=["fenced_code", "tables"])
-    # (Simplified HTML wrapper for brevity, but you can paste your full template here if desired)
     return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>{slug}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     </head><body class="bg-gray-900 text-white p-8"><article class="prose prose-invert mx-auto">{html}</article></body></html>"""
