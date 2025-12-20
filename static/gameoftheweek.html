@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of the Week | Ryan Retro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+        
+        body { font-family: 'Roboto', sans-serif; }
+        .retro-font { font-family: 'Press Start 2P', cursive; }
+        
+        .pixel-border {
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+        }
+        
+        .pixel-btn {
+            transition: all 0.2s ease;
+        }
+        .pixel-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+        }
+
+        .hero-header {
+            background: #111827;
+            position: relative;
+        }
+        .hero-header::before {
+            content: "";
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none; opacity: .35;
+        }
+        
+        /* CRT Scanline effect */
+        .scanlines {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanlines::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        
+        /* Flip Button Styles */
+        .flip-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 40px; 
+            margin-top: auto;
+        }
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flip-container.flipped .flip-inner {
+            transform: rotateX(180deg);
+        }
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem; 
+        }
+        .flip-front { z-index: 2; }
+        .flip-back {
+            transform: rotateX(180deg);
+            background-color: #dc2626; 
+            color: white;
+            font-size: 0.65rem; 
+            border: 1px solid #991b1b;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .carousel-slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            animation: fadeIn 0.5s;
+        }
+        .carousel-slide.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Chat Scroll */
+        .chat-scroll::-webkit-scrollbar { width: 8px; }
+        .chat-scroll::-webkit-scrollbar-track { background: #1f2937; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        .chat-scroll::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white overflow-x-hidden">
+
+<div id="app">
+  <header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative gap-4 md:gap-8">
+      
+      <a href="/" class="flex items-center gap-3 md:gap-4 mb-2 md:mb-0">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+             class="w-10 h-10 md:w-16 md:h-16 rounded-full pixel-border bg-gray-900" alt="Ryan Retro Logo">
+        <h1 class="retro-font text-lg md:text-2xl text-yellow-400">RYAN RETRO</h1>
+      </a>
+
+      <a href="/store"
+          class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+        <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
+        <span>STORE</span>
+      </a>
+
+      <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative group w-full md:w-auto mt-5 md:mt-0">
+        <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
+          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
+        </span>
+
+        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+            class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
+          <span class="tracking-tight">BECOME A PATRON</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 md:py-12">
+    
+    <div class="text-center mb-12" data-aos="fade-down">
+        <span class="bg-red-600 text-white px-3 py-1 rounded retro-font text-xs mb-4 inline-block pixel-border">
+            SEASON 1 • WEEK 43
+        </span>
+        <h1 class="retro-font text-3xl md:text-5xl text-yellow-400 mt-2 text-shadow tracking-tight leading-normal">
+            GAME OF THE WEEK
+        </h1>
+        <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-sm md:text-base">
+            Every week we play a retro classic together. Join the community, vote for the next title, and share your high scores!
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+        
+        <div class="lg:col-span-3 order-2 lg:order-1 flex flex-col justify-start" data-aos="fade-right" data-aos-delay="100">
+            <div class="bg-gray-800 p-6 rounded-lg pixel-border text-center opacity-70 hover:opacity-100 transition-opacity duration-300 border border-gray-700 hover:border-gray-500 h-full flex flex-col">
+                <h3 class="retro-font text-[10px] text-gray-400 mb-4 tracking-widest">LAST WEEK</h3>
+                
+                <div class="relative w-3/4 mx-auto aspect-[3/4] mb-4 bg-black rounded overflow-hidden shadow-lg group">
+                    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png')] bg-cover bg-center blur-sm opacity-50 scale-110"></div>
+                    <img src="https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png" 
+                         alt="Last Week Game" class="relative z-10 w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-20 pointer-events-none"></div>
+                </div>
+                
+                <h4 class="retro-font text-sm text-white mb-1">Zelda: Minish Cap</h4>
+                <p class="text-xs text-gray-500 mb-4">GBA • 2004</p>
+                
+                <div class="flip-container mt-auto" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-300 text-xs retro-font">
+                            VIEW ARCHIVE
+                        </div>
+                        <div class="flip-back retro-font">
+                            BUTTON UNDER CONSTRUCTION 🚧
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="lg:col-span-6 order-1 lg:order-2" data-aos="zoom-in">
+            <div class="bg-gray-800 rounded-xl pixel-border overflow-hidden relative border-t-4 border-yellow-500 shadow-[0_0_50px_-12px_rgba(234,179,8,0.2)]">
+                <div class="absolute inset-0 bg-[url('https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png')] bg-cover bg-center opacity-10 blur-md pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/95 to-gray-900 pointer-events-none"></div>
+
+                <div class="p-6 md:p-8 relative z-10 flex flex-col md:flex-row lg:flex-col xl:flex-row items-center gap-8 h-full">
+                    
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 flex-shrink-0">
+                        <div class="mx-auto w-48 md:w-64 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
+                            <div class="pixel-border rounded-lg overflow-hidden scanlines bg-black">
+                                <img src="https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png" 
+                                     alt="Monster Boy and the Cursed Kingdom" class="w-full h-auto block">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 text-center md:text-left lg:text-center xl:text-left flex flex-col justify-center">
+                        <h2 class="retro-font text-xl md:text-2xl text-white mb-4 leading-snug">
+                            MONSTER BOY AND THE CURSED KINGDOM
+                        </h2>
+                        
+                        <div class="flex flex-wrap justify-center md:justify-start lg:justify-center xl:justify-start gap-2 mb-6">
+                            <span class="bg-blue-900/50 text-blue-200 border border-blue-800 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">MODERN RETRO</span>
+                            <span class="bg-purple-900/50 text-purple-200 border border-purple-800 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">ACTION ADVENTURE</span>
+                            <span class="bg-gray-800 text-gray-400 border border-gray-700 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">2018</span>
+                        </div>
+
+                        <div class="flex justify-center md:justify-start lg:justify-center xl:justify-start gap-4 mb-8 text-gray-400">
+                            <div class="group relative cursor-pointer hover:text-red-500 transition-colors">
+                                <i data-feather="tv" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-blue-500 transition-colors">
+                                <i data-feather="monitor" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">PS4 / PS5</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-green-500 transition-colors">
+                                <i data-feather="box" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Xbox</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-cyan-400 transition-colors">
+                                <i data-feather="hard-drive" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows PC</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-orange-500 transition-colors">
+                                <i data-feather="wifi" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Stadia</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/60 p-4 rounded-lg border border-gray-700 mb-6 backdrop-blur-sm w-full">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-[10px] font-bold text-red-400 uppercase tracking-widest flex items-center">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                                    Time Remaining
+                                </span>
+                                <span id="timer-text" class="retro-font text-yellow-400 text-xs tabular-nums">--:--:--</span>
+                            </div>
+                            
+                            <div class="w-full bg-gray-900 h-6 rounded-full border border-gray-600 relative overflow-hidden">
+                                <div id="progress-bar" class="h-full bg-gradient-to-r from-red-600 to-yellow-500 w-0 transition-all duration-1000 ease-linear relative">
+                                    <div class="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjIHFBmlpYWIDphIkCVAAAddQj/6W1NQQAAAABJRU5ErkJggg==')] opacity-20"></div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-[10px] text-gray-500 mt-2 text-right">Next game: Monday 00:00 GMT</p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-center md:justify-start lg:justify-center xl:justify-start gap-4 w-full">
+                            <a href="https://en.wikipedia.org/wiki/Monster_Boy_and_the_Cursed_Kingdom" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center flex-1 sm:flex-none">
+                                <i data-feather="info" class="mr-2 w-4 h-4"></i> INFO
+                            </a>
+                            <a href="#discussion" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center flex-1 sm:flex-none">
+                                <i data-feather="message-square" class="mr-2 w-4 h-4"></i> DISCUSS
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-3 order-3 flex flex-col justify-start" data-aos="fade-left" data-aos-delay="200">
+            <div class="bg-gray-800 p-6 rounded-lg pixel-border text-center border border-gray-700 flex flex-col h-full relative group/card">
+                <h3 class="retro-font text-[10px] text-blue-400 mb-4 tracking-widest">VOTE: NEXT WEEK</h3>
+                
+                <div id="vote-carousel" class="flex-grow w-full relative mb-4">
+    
+    <div class="carousel-slide active" data-game="Golf Story">
+        <a href="https://en.wikipedia.org/wiki/Golf_Story" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://m.media-amazon.com/images/M/MV5BYjI2Y2JhZDMtMDRhZC00YjZmLWE2MTctYjFiY2M4MmVlNTQ3XkEyXkFqcGc@._V1_.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">GOLF STORY</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Sports/RPG • 2017</p>
+        
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Megabonk">
+        <a href="https://en.wikipedia.org/wiki/Megabonk" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzG2QDyhRyjx7n2O4eYEh5-_QC__Id9eFe3EH4dta4lcvO7O8KILuEyDt0soUyvA2bYiwNJg&s=10" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">MEGABONK</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Roguelike • 2025</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows, Linux</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Gris">
+        <a href="https://en.wikipedia.org/wiki/Gris" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://image.api.playstation.com/vulcan/ap/rnd/202211/1801/PMjvy3y1p6gkPsBwCUuaFnfv.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">GRIS</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Platformer • 2018</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows, macOS</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-blue-500 transition-colors">
+                <i data-feather="monitor" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">PS4 / PS5</span>
+            </div>
+             <div class="group/icon relative cursor-pointer hover:text-green-500 transition-colors">
+                <i data-feather="box" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Xbox One / X / S</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-purple-400 transition-colors">
+                <i data-feather="smartphone" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">iOS, Android</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Mega Man X">
+        <a href="https://en.wikipedia.org/wiki/Mega_Man_X_%28video_game%29" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg group cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png" 
+                 class="relative z-10 w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font z-20">MEGA MAN X</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Action • 1993</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Super NES</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">MS-DOS, Windows</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-purple-400 transition-colors">
+                <i data-feather="smartphone" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Android, iOS</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Sonic the Hedgehog 2">
+        <a href="https://en.wikipedia.org/wiki/Sonic_the_Hedgehog_2" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Sonic_2_US_Cover.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">SONIC 2</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Platformer • 1992</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-gray-300 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Sega Genesis, Arcade</span>
+            </div>
+             <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="layers" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Switch, 3DS</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-purple-400 transition-colors">
+                <i data-feather="smartphone" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Android, iOS</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-blue-400 transition-colors">
+                <i data-feather="monitor" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Apple TV</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="absolute top-1/2 left-0 -translate-y-1/2 -ml-2 bg-black/50 hover:bg-black text-white p-1 rounded-full border border-gray-600 z-10" onclick="window.changeSlide(-1)">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+    </button>
+    <button class="absolute top-1/2 right-0 -translate-y-1/2 -mr-2 bg-black/50 hover:bg-black text-white p-1 rounded-full border border-gray-600 z-10" onclick="window.changeSlide(1)">
+        <i data-feather="chevron-right" class="w-4 h-4"></i>
+    </button>
+
+</div>
+
+                <div class="bg-orange-900/20 border border-orange-500/30 p-4 rounded mt-auto">
+                    <p class="text-[10px] text-orange-200 mb-3 leading-relaxed">
+                        Patrons vote on next week's game!
+                    </p>
+                    <a href="https://patreon.com/ryanretro" target="_blank" 
+                       class="block w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded pixel-btn retro-font text-[10px] flex items-center justify-center">
+                        <i data-feather="check-circle" class="mr-2 w-3 h-3"></i> VOTE FOR THIS
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <section id="discussion" class="max-w-4xl mx-auto mt-20">
+        <div class="flex items-center gap-4 mb-8">
+            <h2 class="retro-font text-xl md:text-2xl text-yellow-400">COMMUNITY CHAT</h2>
+            <div class="h-1 flex-grow bg-gray-800 rounded"></div>
+        </div>
+
+        <div v-if="!isAuthenticated" class="relative bg-gray-800 rounded-lg pixel-border overflow-hidden p-12 text-center">
+            <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-yellow-500">
+                <i data-feather="lock" class="w-8 h-8 text-yellow-500"></i>
+            </div>
+            <h3 class="retro-font text-lg text-white mb-2">ACCESS REQUIRED</h3>
+            <p class="text-gray-400 mb-6 text-sm">Enter the weekly password found on Patreon.</p>
+            
+            <form @submit.prevent="login" class="max-w-xs mx-auto">
+                <input type="password" v-model="passwordInput" placeholder="Password..." 
+                       class="w-full bg-gray-900 border-2 border-gray-600 text-white p-3 rounded mb-4 focus:border-yellow-400 outline-none font-mono text-center">
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs">
+                    UNLOCK CHAT
+                </button>
+                <p v-if="authError" class="text-red-500 text-xs mt-2 retro-font">INVALID PASSWORD</p>
+            </form>
+        </div>
+
+        <div v-else class="bg-gray-800 rounded-lg pixel-border overflow-hidden flex flex-col h-[600px]">
+            <div v-if="isAdmin" class="bg-red-900/50 p-2 text-center text-xs text-red-200 border-b border-red-800 retro-font">
+                ADMIN MODE ACTIVE - YOU CAN DELETE MESSAGES
+            </div>
+
+            <div id="chat-box" class="flex-1 overflow-y-auto p-6 space-y-4 chat-scroll bg-gray-900">
+                <div v-if="loading" class="text-center text-gray-500 py-10 retro-font text-xs animate-pulse">LOADING MESSAGES...</div>
+                <div v-if="!loading && messages.length === 0" class="text-center text-gray-600 py-10">No messages yet. Be the first!</div>
+
+                <div v-for="msg in messages" :key="msg.id" class="group flex gap-4 animate-fadeIn">
+                    <div class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-lg font-bold border-2"
+                         :class="msg.is_admin ? 'bg-red-900 border-red-500 text-red-200' : 'bg-blue-900 border-blue-500 text-blue-200'">
+                        {{ msg.user.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <span class="font-bold text-sm" :class="msg.is_admin ? 'text-red-400' : 'text-blue-400'">{{ msg.user }}</span>
+                            <span v-if="msg.is_admin" class="bg-red-600 text-white text-[8px] px-1 rounded retro-font">ADMIN</span>
+                            <span class="text-[10px] text-gray-600">{{ formatDate(msg.timestamp) }}</span>
+                            <button v-if="isAdmin" @click="deleteMessage(msg.id)" class="ml-auto text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i data-feather="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{{ msg.text }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-gray-800 border-t border-gray-700">
+                <form @submit.prevent="sendMessage" class="flex gap-4">
+                    <div class="w-1/4">
+                        <input v-model="username" type="text" placeholder="Name" maxlength="15" required
+                               class="w-full bg-gray-900 border border-gray-600 rounded p-3 text-white focus:border-blue-500 outline-none text-sm">
+                    </div>
+                    <div class="flex-1">
+                        <input v-model="newMessage" type="text" placeholder="Type a message..." required
+                               class="w-full bg-gray-900 border border-gray-600 rounded p-3 text-white focus:border-blue-500 outline-none text-sm">
+                    </div>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded pixel-btn retro-font text-xs">
+                        SEND
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-black py-12 border-t-4 border-gray-800 mt-20">
+    <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+      © 2025 Ryan Retro. Keep Gaming.
+    </div>
+  </footer>
+</div>
+
+<script>
+    // Global Carousel Helpers (Vanilla JS Logic)
+    let currentSlide = 0;
+    
+    // Explicitly attach to window so HTML onclicks work
+    window.changeSlide = function(direction) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if(!slides.length) return;
+        const totalSlides = slides.length;
+        
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
+        
+        // Refresh icons in the new slide if needed
+        setTimeout(() => { if(window.feather) feather.replace(); }, 50);
+    }
+
+    // Initialize Vue App
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                isAuthenticated: false,
+                passwordInput: '',
+                authError: false,
+                token: '',
+                isAdmin: false,
+                messages: [],
+                username: '',
+                newMessage: '',
+                loading: false,
+                pollInterval: null
+            }
+        },
+        mounted() {
+            // Initialize Animation Library
+            if(window.AOS) AOS.init({ duration: 800, once: true });
+            
+            // Initialize Feather Icons
+            if(window.feather) feather.replace();
+
+            // Initialize Custom Logic (Timer & Carousel Swipe)
+            this.initTimer();
+            this.initCarouselSwipe();
+
+            // Restore Chat Session
+            const savedToken = localStorage.getItem('chatToken');
+            if (savedToken) {
+                this.token = savedToken;
+                this.checkAuth();
+            }
+            const savedUser = localStorage.getItem('chatUser');
+            if(savedUser) this.username = savedUser;
+        },
+        methods: {
+            initTimer() {
+                const timerText = document.getElementById('timer-text');
+                const progressBar = document.getElementById('progress-bar');
+                if(!timerText || !progressBar) return;
+
+                const update = () => {
+                    const now = new Date();
+                    const prevMonday = new Date(now);
+                    const day = prevMonday.getUTCDay(); 
+                    const diff = prevMonday.getUTCDate() - day + (day === 0 ? -6 : 1); 
+                    prevMonday.setUTCDate(diff);
+                    prevMonday.setUTCHours(0,0,0,0);
+
+                    if (prevMonday > now) prevMonday.setUTCDate(prevMonday.getUTCDate() - 7);
+                    
+                    const nextMonday = new Date(prevMonday);
+                    nextMonday.setUTCDate(prevMonday.getUTCDate() + 7);
+
+                    const totalDuration = nextMonday - prevMonday;
+                    const timeElapsed = now - prevMonday;
+                    const timeRemaining = nextMonday - now;
+
+                    if (timeRemaining <= 0) {
+                        timerText.innerText = "STARTING SOON...";
+                        progressBar.style.width = "100%";
+                        return;
+                    }
+
+                    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                    
+                    const pad = (n) => n < 10 ? '0'+n : n;
+                    timerText.innerText = `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+                    const pct = Math.min(100, Math.max(0, (timeElapsed / totalDuration) * 100));
+                    progressBar.style.width = `${pct}%`;
+                }
+                update();
+                setInterval(update, 1000); 
+            },
+            initCarouselSwipe() {
+                const container = document.getElementById('vote-carousel');
+                if(!container) return;
+                let touchstartX = 0;
+                let touchendX = 0;
+
+                container.addEventListener('touchstart', e => {
+                    touchstartX = e.changedTouches[0].screenX;
+                });
+
+                container.addEventListener('touchend', e => {
+                    touchendX = e.changedTouches[0].screenX;
+                    if (touchendX < touchstartX - 50) window.changeSlide(1);
+                    if (touchendX > touchstartX + 50) window.changeSlide(-1);
+                });
+            },
+            async checkAuth() {
+                try {
+                    const res = await fetch('/api/chat/messages', { headers: { 'x-auth': this.token } });
+                    if (res.ok) {
+                        const data = await res.json();
+                        this.isAuthenticated = true;
+                        this.isAdmin = data.is_admin;
+                        this.messages = data.messages;
+                        this.startPolling();
+                    } else {
+                        localStorage.removeItem('chatToken');
+                    }
+                } catch(e) { console.error(e); }
+            },
+            async login() {
+                this.authError = false;
+                this.token = this.passwordInput;
+                try {
+                    const res = await fetch('/api/chat/messages', { headers: { 'x-auth': this.token } });
+                    if (res.ok) {
+                        const data = await res.json();
+                        this.isAuthenticated = true;
+                        this.isAdmin = data.is_admin;
+                        this.messages = data.messages;
+                        localStorage.setItem('chatToken', this.token);
+                        this.startPolling();
+                        setTimeout(() => feather.replace(), 100);
+                    } else {
+                        this.authError = true;
+                    }
+                } catch (e) { this.authError = true; }
+            },
+            async sendMessage() {
+                if (!this.newMessage.trim() || !this.username.trim()) return;
+                
+                // --- MODERATION FILTERS ---
+                
+                // 1. Check for impersonation (only allow if isAdmin is true)
+                const lowerUser = this.username.toLowerCase().trim();
+                const restrictedNames = ['ryan retro', 'ryanretro', 'admin', 'administrator', 'mod'];
+                
+                if (restrictedNames.includes(lowerUser) && !this.isAdmin) {
+                    alert("⚠️ That username is reserved for the channel owner.");
+                    return;
+                }
+
+                // 2. Check for profanity
+                const badWords = ['fuck', 'shit', 'bitch', 'ass', 'damn', 'crap', 'bastard', 'dick', 'piss', 'cunt']; // Basic filter list
+                const lowerMsg = this.newMessage.toLowerCase();
+                
+                const foundBadWord = badWords.find(word => lowerMsg.includes(word));
+                if (foundBadWord) {
+                    alert("⚠️ Please keep the chat clean! No profanity allowed.");
+                    return;
+                }
+                // ---------------------------
+
+                localStorage.setItem('chatUser', this.username);
+                try {
+                    const payload = { user: this.username, text: this.newMessage };
+                    const res = await fetch('/api/chat/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'x-auth': this.token },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        this.newMessage = '';
+                        this.fetchMessages();
+                    }
+                } catch(e) { console.error(e); }
+            },
+            async fetchMessages() {
+                try {
+                    const res = await fetch('/api/chat/messages', { headers: { 'x-auth': this.token } });
+                    if (res.ok) {
+                        const data = await res.json();
+                        this.messages = data.messages;
+                        setTimeout(() => {
+                            const box = document.getElementById('chat-box');
+                            if(box) box.scrollTop = box.scrollHeight;
+                            feather.replace();
+                        }, 50);
+                    }
+                } catch(e) { console.error(e); }
+            },
+            async deleteMessage(id) {
+                if(!confirm("Delete this message?")) return;
+                try {
+                    await fetch(`/api/chat/${id}`, { method: 'DELETE', headers: { 'x-auth': this.token } });
+                    this.fetchMessages();
+                } catch(e) { console.error(e); }
+            },
+            startPolling() {
+                if (this.pollInterval) clearInterval(this.pollInterval);
+                this.pollInterval = setInterval(this.fetchMessages, 3000);
+            },
+            formatDate(isoStr) {
+                return new Date(isoStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
