@@ -269,7 +269,6 @@
       <span>POST DEAL</span>
     </button>
 
-    <!-- SUPPORT ME (SINGLE PATREON FOCUS) -->
     <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
       <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
         SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
@@ -683,7 +682,21 @@
   function renderGridCard(p) {
     const node = document.getElementById('productTemplate').content.firstElementChild.cloneNode(true);
     node.dataset.pid = p.id;
+    
+    // IMAGE & CLICK LOGIC
     node.querySelector('.product-img').src = p.image;
+    
+    // --- START NEW LOGIC: CLICK IMAGE FOR CHEAPEST LINK ---
+    const imgWrapper = node.querySelector('.card-img-wrapper');
+    const cheapestLink = getCheapestLink(p);
+    
+    if (cheapestLink) {
+        imgWrapper.style.cursor = 'pointer';
+        imgWrapper.setAttribute('title', `Open cheapest deal ($${cheapestLink.price})`);
+        imgWrapper.onclick = () => window.open(cheapestLink.url, '_blank');
+    }
+    // --- END NEW LOGIC ---
+
     node.querySelector('.product-title').textContent = p.name;
     node.querySelector('.product-desc').textContent = p.description;
     const badge = node.querySelector('.product-badge');
@@ -712,7 +725,18 @@
 
   function renderListRow(p) {
     const row = document.getElementById('listTemplate').content.firstElementChild.cloneNode(true);
-    row.querySelector('.c-thumb').src = p.image;
+    
+    const img = row.querySelector('.c-thumb');
+    img.src = p.image;
+    
+    // --- START NEW LOGIC: CLICK THUMBNAIL FOR CHEAPEST LINK ---
+    const cheapestLink = getCheapestLink(p);
+    if(cheapestLink) {
+        img.style.cursor = 'pointer';
+        img.onclick = () => window.open(cheapestLink.url, '_blank');
+    }
+    // --- END NEW LOGIC ---
+
     row.querySelector('.c-title').textContent = p.name;
     row.querySelector('.c-cat').textContent = p.category;
     const cheapest = getCheapestLink(p);
