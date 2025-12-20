@@ -6,7 +6,6 @@ import json
 import shutil
 import hashlib
 import threading
-import uuid
 import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
 from datetime import datetime
@@ -41,7 +40,7 @@ YT_API_KEY = os.getenv("YT_API_KEY")
 DEFAULT_CHANNEL_ID = os.getenv("YT_CHANNEL_ID") or "UCh9GxjM-FNuSWv7xqn3UKVw"
 UA = {"User-Agent": "RyanRetro/1.0"}
 
-# This token works for both Debug tools and Chat Admin
+# This token works for both Debug tools and Admin
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 
 CACHE_DIR = "cache"
@@ -67,10 +66,6 @@ DEFAULT_DATA_DIR = os.path.join(REPO_DIR, "data")
 # If DATA_DIR is set in env (Railway), use it. Otherwise use local repo folder (Mac).
 DATA_DIR = os.getenv("DATA_DIR", os.path.join(REPO_DIR, "data"))
 os.makedirs(DATA_DIR, exist_ok=True)
-
-# Chat Files
-CHAT_FILE = os.path.join(DATA_DIR, "chat_history.json")
-GAME_PASS_FILE = os.path.join(DATA_DIR, "game_password.txt")
 
 # --------------------------------------------------------------------------------------
 # Caching Logic
@@ -111,101 +106,6 @@ def _lock_for(key: str) -> threading.Lock:
     return _locks[key]
 
 # --------------------------------------------------------------------------------------
-# Chat Logic
-# --------------------------------------------------------------------------------------
-def _get_game_password() -> str:
-    if not os.path.exists(GAME_PASS_FILE):
-        with _lock_for(GAME_PASS_FILE):
-            with open(GAME_PASS_FILE, "w", encoding="utf-8") as f:
-                f.write("retro")
-        return "retro"
-    
-    with open(GAME_PASS_FILE, "r", encoding="utf-8") as f:
-        return f.read().strip()
-
-def _set_game_password(new_pass: str):
-    with _lock_for(GAME_PASS_FILE):
-        with open(GAME_PASS_FILE, "w", encoding="utf-8") as f:
-            f.write(new_pass.strip())
-
-def _load_chat() -> List[Dict]:
-    if not os.path.exists(CHAT_FILE):
-        return []
-    try:
-        with open(CHAT_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return []
-
-def _save_chat(messages: List[Dict]):
-    with open(CHAT_FILE, "w", encoding="utf-8") as f:
-        json.dump(messages, f, ensure_ascii=False, indent=2)
-
-class ChatMessage(BaseModel):
-    user: str = Field(..., min_length=1, max_length=20)
-    text: str = Field(..., min_length=1, max_length=500)
-
-class PasswordUpdate(BaseModel):
-    password: str
-
-@app.get("/api/chat/messages")
-def get_messages(x_auth: str = Header(None)):
-    current_pass = _get_game_password()
-    is_admin = (ADMIN_TOKEN and x_auth == ADMIN_TOKEN)
-    is_user = (x_auth == current_pass)
-
-    if not (is_admin or is_user):
-        raise HTTPException(status_code=401, detail="Invalid password")
-
-    messages = _load_chat()
-    return {"messages": messages[-100:], "is_admin": is_admin}
-
-@app.post("/api/chat/send")
-def send_message(msg: ChatMessage, x_auth: str = Header(None)):
-    current_pass = _get_game_password()
-    is_admin = (ADMIN_TOKEN and x_auth == ADMIN_TOKEN)
-    is_user = (x_auth == current_pass)
-
-    if not (is_admin or is_user):
-        raise HTTPException(status_code=401, detail="Invalid password")
-
-    new_msg = {
-        "id": str(uuid.uuid4()),
-        "user": msg.user,
-        "text": msg.text,
-        "timestamp": datetime.utcnow().isoformat(),
-        "is_admin": is_admin
-    }
-
-    with _lock_for("chat_history"):
-        chat = _load_chat()
-        chat.append(new_msg)
-        if len(chat) > 500:
-            chat = chat[-500:]
-        _save_chat(chat)
-
-    return {"ok": True, "message": new_msg}
-
-@app.delete("/api/chat/{msg_id}")
-def delete_message(msg_id: str, x_auth: str = Header(None)):
-    if not ADMIN_TOKEN or x_auth != ADMIN_TOKEN:
-        raise HTTPException(status_code=403, detail="Admin only")
-
-    with _lock_for("chat_history"):
-        chat = _load_chat()
-        chat = [m for m in chat if m["id"] != msg_id]
-        _save_chat(chat)
-
-    return {"ok": True}
-
-@app.post("/api/admin/game-password")
-def update_game_password(body: PasswordUpdate, x_auth: str = Header(None)):
-    if not ADMIN_TOKEN or x_auth != ADMIN_TOKEN:
-        raise HTTPException(status_code=403, detail="Admin only")
-    _set_game_password(body.password)
-    return {"ok": True, "new_password": body.password}
-
-# --------------------------------------------------------------------------------------
 # YouTube Helpers
 # --------------------------------------------------------------------------------------
 def _make_matcher(q: str, aliases: str):
@@ -215,6 +115,10 @@ def _make_matcher(q: str, aliases: str):
     for ph in (aliases or "").split(","):
         ph = ph.strip().lower()
         if ph: phrases.append(ph)
+
+    # FIX 1: If no query/aliases provided, return a matcher that accepts everything.
+    if not phrases:
+        return lambda title: True
 
     generic_tokens, disamb_tokens = set(), set()
     def _tokenize(s):
@@ -401,8 +305,12 @@ def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int =
     key = f"{CACHE_VERSION}:yt-api:{channel_id}|q={q.strip().lower()}"
     
     search_phrases = [p.strip().lower() for p in ([q] + aliases.split(',')) if p.strip()]
+    
+    # FIX 2: If no search phrases, return everything. Don't filter out results.
     def _filter(items):
-        return [v for v in (items or []) if any(p in v.get("title","").lower() for p in search_phrases)]
+        if not items: return []
+        if not search_phrases: return items
+        return [v for v in items if any(p in v.get("title","").lower() for p in search_phrases)]
 
     if not force:
         cached = _cache_read(key)
