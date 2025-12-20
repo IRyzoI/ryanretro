@@ -199,13 +199,11 @@
         </div>
 
         <!-- Logo (Pulse and Heart Reveal Animation) -->
-        <!-- CHANGED: Replaced bg-yellow-400 with bg-gray-900 on the parent container to prevent flash on load -->
         <div class="animate-logo-glow w-32 h-32 rounded-full pixel-border bg-gray-900 relative z-20 flex items-center justify-center overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 group-hover:-translate-x-12 cursor-pointer">
             <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
                  alt="Ryan Retro" 
                  class="absolute w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:opacity-0 group-hover:rotate-180">
             
-            <!-- CHANGED: Moved bg-yellow-400 here. It now only appears when the hover opacity transition occurs. -->
             <div class="absolute inset-0 bg-yellow-400 flex flex-col items-center justify-center transition-all duration-500 ease-in-out opacity-0 scale-50 -rotate-180 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0">
                <i data-feather="star" class="w-14 h-14 text-black fill-black animate-[pulse_1s_ease-in-out_infinite]"></i>
             </div>
@@ -342,7 +340,7 @@
 
   <div class="marquee-container custom-scrollbar video-scrollbar" id="video-marquee">
       <div id="latest-videos-track" class="marquee-track py-4">
-        <p class="w-full text-center text-gray-400 py-10">Loading latest videos…</p>
+        <p class="w-full text-center text-gray-400 py-10">Loading latest videos...</p>
       </div>
   </div>
 
@@ -416,9 +414,9 @@
                     </div>
 
                     <!-- Card Description/Lore -->
-                    <!-- REDUCED PADDING, REMOVED ITALICS, ADJUSTED FONT SIZE -->
-                    <div class="bg-black/70 border-2 border-yellow-400/50 p-2 rounded flex-grow flex items-center justify-center relative z-10 backdrop-blur-sm">
-                        <p class="text-white text-[9px] sm:text-[11px] leading-snug font-sans text-center drop-shadow-md">
+                    <!-- UPDATED: Increased mobile font size to text-xs to fill vertical space better -->
+                    <div class="bg-black/70 border-2 border-yellow-400/50 p-3 rounded flex-grow flex items-center justify-center relative z-10 backdrop-blur-sm">
+                        <p class="text-white text-xs sm:text-sm md:text-sm leading-relaxed font-sans text-center drop-shadow-md w-full">
                             I truly appreciate everyone who takes the time to watch my youtube videos and visit my website. This is such a wholesome community and you make it lovely to continue to upload videos. Sometimes I'm very tired after work and want to just take a rest but knowing so many awesome people will come to see my videos and leave nice comments encourages me to always keep going and creating more, even when I'm tired. I hope everyone reading this finds something useful from my content and I hope you stay happy and healthy.
                         </p>
                     </div>
