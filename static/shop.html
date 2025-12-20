@@ -713,7 +713,7 @@
       if(s.includes('ali')) bg = 'bg-red-600';
       if(s.includes('amazon')) bg = 'bg-yellow-500 text-black';
       if(s.includes('powkiddy')) bg = 'bg-[#008c69]';
-      const label = (s.includes('powkiddy') && p.name.includes('TrimUI Brick')) ? 'POWKIDDY [RYAN]' : l.store;
+      const label = (s.includes('powkiddy') && p.name.includes('TrimUI Brick')) ? 'POWKIDDY CODE: [RYAN]' : l.store;
       linksW.insertAdjacentHTML('beforeend', `<a href="${l.url}" target="_blank" class="${bg} ${cheapest && l.url === cheapest.url ? 'ring-2 ring-yellow-400' : ''} w-full px-4 py-3 rounded pixel-btn border-2 border-black flex items-center justify-between"><span class="retro-font text-[9px] uppercase">${label}</span><span class="retro-font text-[9px]">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span></a>`);
     });
 
