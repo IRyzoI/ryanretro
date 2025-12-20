@@ -29,33 +29,27 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True, # Set to True to support the new Auth headers if needed
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # --------------------------------------------------------------------------------------
-# Config & Paths
+# Config
 # --------------------------------------------------------------------------------------
 YT_API_KEY = os.getenv("YT_API_KEY")
 DEFAULT_CHANNEL_ID = os.getenv("YT_CHANNEL_ID") or "UCh9GxjM-FNuSWv7xqn3UKVw"
 UA = {"User-Agent": "RyanRetro/1.0"}
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "admin123")
+
+# This token works for both Debug tools and Chat Admin
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 
 CACHE_DIR = "cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
 CACHE_TTL_SECONDS = 24 * 3600
 CACHE_VERSION = "v5"
 
-REPO_DIR = os.path.dirname(__file__)
-DEFAULT_DATA_DIR = os.path.join(REPO_DIR, "data")      # Repo-synced CSVs
-DATA_DIR = os.getenv("DATA_DIR", "/data")             # Persistent volume (e.g. Railway)
-os.makedirs(DATA_DIR, exist_ok=True)
-
-# Chat & Password Storage
-CHAT_FILE = os.path.join(DATA_DIR, "chat_history.json")
-GAME_PASS_FILE = os.path.join(DATA_DIR, "game_password.txt")
-
+# Piped mirrors
 PIPED_BASES = [
     "https://pipedapi.kavin.rocks/api/v1",
     "https://piped.video/api/v1",
@@ -65,13 +59,22 @@ PIPED_BASES = [
 _locks: Dict[str, threading.Lock] = {}
 
 # --------------------------------------------------------------------------------------
-# Utility Helpers
+# Storage Paths (Smart Logic for Mac vs Railway)
 # --------------------------------------------------------------------------------------
-def _lock_for(key: str) -> threading.Lock:
-    if key not in _locks:
-        _locks[key] = threading.Lock()
-    return _locks[key]
+REPO_DIR = os.path.dirname(__file__)
+DEFAULT_DATA_DIR = os.path.join(REPO_DIR, "data")
 
+# If DATA_DIR is set in env (Railway), use it. Otherwise use local repo folder (Mac).
+DATA_DIR = os.getenv("DATA_DIR", os.path.join(REPO_DIR, "data"))
+os.makedirs(DATA_DIR, exist_ok=True)
+
+# Chat Files
+CHAT_FILE = os.path.join(DATA_DIR, "chat_history.json")
+GAME_PASS_FILE = os.path.join(DATA_DIR, "game_password.txt")
+
+# --------------------------------------------------------------------------------------
+# Caching Logic
+# --------------------------------------------------------------------------------------
 def _cache_file(key: str) -> str:
     h = hashlib.sha1(key.encode("utf-8")).hexdigest()
     return os.path.join(CACHE_DIR, f"{h}.json")
@@ -83,7 +86,7 @@ def _cache_read(key: str, ttl: int = CACHE_TTL_SECONDS):
         if time.time() - st.st_mtime <= ttl:
             with open(path, "r", encoding="utf-8") as f:
                 return json.load(f)
-    except Exception:
+    except (FileNotFoundError, Exception):
         pass
     return None
 
@@ -102,8 +105,13 @@ def _cache_write(key: str, data):
         json.dump(data, f, ensure_ascii=False)
     os.replace(tmp, path)
 
+def _lock_for(key: str) -> threading.Lock:
+    if key not in _locks:
+        _locks[key] = threading.Lock()
+    return _locks[key]
+
 # --------------------------------------------------------------------------------------
-# Chat & Password Logic
+# Chat Logic
 # --------------------------------------------------------------------------------------
 def _get_game_password() -> str:
     if not os.path.exists(GAME_PASS_FILE):
@@ -118,26 +126,98 @@ def _set_game_password(new_pass: str):
         f.write(new_pass.strip())
 
 def _load_chat() -> List[Dict]:
-    if not os.path.exists(CHAT_FILE): return []
+    if not os.path.exists(CHAT_FILE):
+        return []
     try:
         with open(CHAT_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception: return []
+    except Exception:
+        return []
 
 def _save_chat(messages: List[Dict]):
     with open(CHAT_FILE, "w", encoding="utf-8") as f:
         json.dump(messages, f, ensure_ascii=False, indent=2)
 
+class ChatMessage(BaseModel):
+    user: str = Field(..., min_length=1, max_length=20)
+    text: str = Field(..., min_length=1, max_length=500)
+
+class PasswordUpdate(BaseModel):
+    password: str
+
+@app.get("/api/chat/messages")
+def get_messages(x_auth: str = Header(None)):
+    current_pass = _get_game_password()
+    is_admin = (ADMIN_TOKEN and x_auth == ADMIN_TOKEN)
+    is_user = (x_auth == current_pass)
+
+    if not (is_admin or is_user):
+        raise HTTPException(status_code=401, detail="Invalid password")
+
+    messages = _load_chat()
+    return {"messages": messages[-100:], "is_admin": is_admin}
+
+@app.post("/api/chat/send")
+def send_message(msg: ChatMessage, x_auth: str = Header(None)):
+    current_pass = _get_game_password()
+    is_admin = (ADMIN_TOKEN and x_auth == ADMIN_TOKEN)
+    is_user = (x_auth == current_pass)
+
+    if not (is_admin or is_user):
+        raise HTTPException(status_code=401, detail="Invalid password")
+
+    new_msg = {
+        "id": str(uuid.uuid4()),
+        "user": msg.user,
+        "text": msg.text,
+        "timestamp": datetime.utcnow().isoformat(),
+        "is_admin": is_admin
+    }
+
+    with _lock_for("chat_history"):
+        chat = _load_chat()
+        chat.append(new_msg)
+        if len(chat) > 500:
+            chat = chat[-500:]
+        _save_chat(chat)
+
+    return {"ok": True, "message": new_msg}
+
+@app.delete("/api/chat/{msg_id}")
+def delete_message(msg_id: str, x_auth: str = Header(None)):
+    if not ADMIN_TOKEN or x_auth != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Admin only")
+
+    with _lock_for("chat_history"):
+        chat = _load_chat()
+        chat = [m for m in chat if m["id"] != msg_id]
+        _save_chat(chat)
+
+    return {"ok": True}
+
+@app.post("/api/admin/game-password")
+def update_game_password(body: PasswordUpdate, x_auth: str = Header(None)):
+    if not ADMIN_TOKEN or x_auth != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Admin only")
+    _set_game_password(body.password)
+    return {"ok": True, "new_password": body.password}
+
 # --------------------------------------------------------------------------------------
-# YouTube Data Fetchers (Core Logic)
+# YouTube Helpers
 # --------------------------------------------------------------------------------------
 def _make_matcher(q: str, aliases: str):
-    phrases = [p.strip().lower() for p in [q] + (aliases or "").split(",") if p.strip()]
+    import re as _re
+    phrases = []
+    if q: phrases.append(q.strip().lower())
+    for ph in (aliases or "").split(","):
+        ph = ph.strip().lower()
+        if ph: phrases.append(ph)
+
     generic_tokens, disamb_tokens = set(), set()
-    
-    def _tokenize(s: str):
-        for t in re.findall(r"[a-z0-9]+", s.lower()):
-            if t.isdigit() or len(t) >= 2: yield t
+    def _tokenize(s):
+        for t in _re.findall(r"[a-z0-9]+", s.lower()):
+            if t.isdigit(): yield t
+            elif len(t) >= 2: yield t
 
     for ph in phrases:
         for t in _tokenize(ph):
@@ -146,7 +226,7 @@ def _make_matcher(q: str, aliases: str):
 
     def match(title: str) -> bool:
         tl = (title or "").lower()
-        if any(ph in tl for ph in phrases): return True
+        if any(ph and ph in tl for ph in phrases): return True
         gen_hits = sum(1 for t in generic_tokens if t in tl)
         if gen_hits >= 2:
             return (not disamb_tokens) or any(t in tl for t in disamb_tokens)
@@ -156,60 +236,68 @@ def _make_matcher(q: str, aliases: str):
 def _yt_api_list_uploads(channel_id: str, pages: int = 12) -> List[Dict[str, str]]:
     if not YT_API_KEY: return []
     with httpx.Client(timeout=10.0, headers=UA) as client:
-        r = client.get("https://www.googleapis.com/youtube/v3/channels", 
-                       params={"part": "contentDetails", "id": channel_id, "key": YT_API_KEY})
-        r.raise_for_status()
-        items = r.json().get("items", [])
-        if not items: return []
-        uploads_id = items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
-        out, token, page_count = [], None, 0
-        while page_count < max(1, pages):
-            params = {"part": "snippet", "playlistId": uploads_id, "maxResults": 50, "key": YT_API_KEY}
-            if token: params["pageToken"] = token
-            rr = client.get("https://www.googleapis.com/youtube/v3/playlistItems", params=params)
-            rr.raise_for_status()
-            data = rr.json()
-            for it in data.get("items", []):
-                sn = it.get("snippet", {})
-                vid = sn.get("resourceId", {}).get("videoId")
-                if vid: out.append({"title": sn.get("title", ""), "videoId": vid, "publishedAt": sn.get("publishedAt", "")})
-            token = data.get("nextPageToken")
-            page_count += 1
-            if not token: break
-        return out
+        try:
+            r = client.get("https://www.googleapis.com/youtube/v3/channels",
+                params={"part": "contentDetails", "id": channel_id, "key": YT_API_KEY})
+            r.raise_for_status()
+            items = r.json().get("items", [])
+            if not items: return []
+            uploads_id = items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
+            
+            out, token, page_count = [], None, 0
+            while page_count < max(1, pages):
+                params = {"part": "snippet", "playlistId": uploads_id, "maxResults": 50, "key": YT_API_KEY}
+                if token: params["pageToken"] = token
+                rr = client.get("https://www.googleapis.com/youtube/v3/playlistItems", params=params)
+                rr.raise_for_status()
+                data = rr.json()
+                for it in data.get("items", []):
+                    sn = it.get("snippet") or {}
+                    vid = sn.get("resourceId", {}).get("videoId")
+                    if vid:
+                        out.append({"title": sn.get("title", ""), "videoId": vid, "publishedAt": sn.get("publishedAt", "")})
+                token = data.get("nextPageToken")
+                page_count += 1
+                if not token: break
+            return out
+        except Exception as e:
+            print(f"[yt] api error: {e}")
+            return []
 
 def _yt_api_search(channel_id: str, query: str, limit: int) -> List[Dict[str, str]]:
     if not YT_API_KEY: return []
-    out, page_token, pages = [], None, 0
+    out, pages, page_token = [], 0, None
     with httpx.Client(timeout=10.0, headers=UA) as client:
         while len(out) < max(limit, 50) and pages < 5:
             params = {"part": "snippet", "channelId": channel_id, "q": query, "order": "date", "type": "video", "maxResults": 50, "key": YT_API_KEY}
             if page_token: params["pageToken"] = page_token
-            r = client.get("https://www.googleapis.com/youtube/v3/search", params=params)
-            r.raise_for_status()
-            data = r.json()
-            for it in data.get("items", []):
-                vid = it.get("id", {}).get("videoId")
-                if vid: out.append({"title": it.get("snippet", {}).get("title", ""), "videoId": vid})
-            page_token = data.get("nextPageToken")
-            if not page_token: break
-            pages += 1
+            try:
+                r = client.get("https://www.googleapis.com/youtube/v3/search", params=params)
+                r.raise_for_status()
+                data = r.json()
+                for it in data.get("items", []):
+                    vid = it.get("id", {}).get("videoId")
+                    if vid: out.append({"title": it.get("snippet", {}).get("title", ""), "videoId": vid})
+                page_token = data.get("nextPageToken")
+                if not page_token: break
+                pages += 1
+            except Exception:
+                break
     return out
 
-def _piped_get(path: str, params: Dict[str, Any] | None = None):
+def _piped_get(path: str, params=None):
     import random
-    bases = list(PIPED_BASES)
-    random.shuffle(bases)
-    for base in bases:
+    random.shuffle(PIPED_BASES)
+    for base in PIPED_BASES:
         try:
             with httpx.Client(timeout=6.0, headers=UA) as client:
                 r = client.get(base + path, params=params)
-                r.raise_for_status()
-                return r.json()
-        except Exception: continue
+            r.raise_for_status()
+            return r.json()
+        except: continue
     return None
 
-def _piped_channel_videos(channel_id: str, pages: int = 6) -> List[Dict[str, str]]:
+def _piped_channel_videos(channel_id: str, pages: int = 6):
     out, nextpage = [], None
     for _ in range(max(1, pages)):
         p = {"nextpage": nextpage} if nextpage else None
@@ -223,12 +311,12 @@ def _piped_channel_videos(channel_id: str, pages: int = 6) -> List[Dict[str, str
         if not nextpage: break
     return out
 
-def _piped_search_channel(channel_id: str, query: str, pages: int = 2) -> List[Dict[str, str]]:
+def _piped_search_channel(channel_id: str, query: str, pages: int = 2):
     out, seen, nextpage = [], set(), None
     for _ in range(max(1, pages)):
-        params = {"q": query, "channelId": channel_id, "region": "US"}
-        if nextpage: params["nextpage"] = nextpage
-        data = _piped_get("/search", params=params)
+        p = {"q": query, "channelId": channel_id, "region": "US"}
+        if nextpage: p["nextpage"] = nextpage
+        data = _piped_get("/search", params=p)
         if not data: break
         items = data.get("items") if isinstance(data, dict) else data
         if not items: break
@@ -243,73 +331,137 @@ def _piped_search_channel(channel_id: str, query: str, pages: int = 2) -> List[D
         else: break
     return out
 
-def _rss_latest(channel_id: str) -> List[Dict[str, str]]:
-    rss = f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}"
-    with httpx.Client(timeout=6.0, headers=UA) as client:
-        r = client.get(rss)
+def _rss_latest(channel_id: str):
+    try:
+        with httpx.Client(timeout=6.0, headers=UA) as client:
+            r = client.get(f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}")
         r.raise_for_status()
         root = ET.fromstring(r.text)
         ns = {"atom": "http://www.w3.org/2005/Atom", "yt": "http://www.youtube.com/xml/schemas/2015"}
         out = []
         for entry in root.findall("atom:entry", ns):
-            title = (entry.findtext("atom:title", default="", namespaces=ns) or "").strip()
-            vid = entry.findtext("yt:videoId", default="", namespaces=ns)
-            pub = entry.findtext("atom:published", namespaces=ns) or entry.findtext("atom:updated", namespaces=ns)
-            if vid: out.append({"title": title, "videoId": vid, "publishedAt": pub or ""})
+            out.append({
+                "title": (entry.findtext("atom:title", default="", namespaces=ns) or "").strip(),
+                "videoId": entry.findtext("yt:videoId", default="", namespaces=ns),
+                "publishedAt": entry.findtext("atom:published", default="", namespaces=ns) or ""
+            })
         return out
+    except Exception as e:
+        print(f"[rss] error: {e}")
+        return []
 
-def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int) -> List[Dict[str, str]]:
+def _fetch_videos(channel_id: str, q: str, aliases: str, limit: int):
     matcher = _make_matcher(q, aliases)
     results = []
-    phrases = [p.strip() for p in [q] + (aliases or "").split(",") if p.strip()]
+    
+    # 1. API Uploads
+    try:
+        if YT_API_KEY:
+            uploads = _yt_api_list_uploads(channel_id)
+            results.extend([it for it in uploads if matcher(it["title"])])
+    except: pass
 
-    # 1. Try API uploads
-    try: uploads = _yt_api_list_uploads(channel_id) if YT_API_KEY else []
-    except Exception: uploads = []
-    results.extend([it for it in uploads if matcher(it["title"])])
-
-    # 2. Try API Search
+    # 2. API Search
     if len(results) < limit and YT_API_KEY:
         try:
+            phrases = [p.strip() for p in ([q] + aliases.split(",")) if p.strip()]
             for ph in phrases:
-                hits = _yt_api_search(channel_id, ph, limit=100)
+                hits = _yt_api_search(channel_id, ph, 100)
                 results.extend([it for it in hits if matcher(it["title"])])
                 if len(results) >= limit * 2: break
-        except Exception: pass
+        except: pass
 
-    # 3. Fallback Piped
+    # 3. Piped / RSS Fallback
     if len(results) < limit:
         try:
             items = _piped_channel_videos(channel_id)
             results.extend([it for it in items if matcher(it["title"])])
-            if len(results) < limit:
-                for ph in phrases:
-                    hits = _piped_search_channel(channel_id, ph)
-                    results.extend([it for it in hits if matcher(it["title"])])
-        except Exception: pass
+        except: pass
+        if len(results) == 0:
+            items = _rss_latest(channel_id)
+            results.extend([it for it in items if matcher(it["title"])])
 
-    # 4. Final Fallback RSS
-    if not results:
-        try: results.extend([it for it in _rss_latest(channel_id) if matcher(it["title"])])
-        except Exception: pass
-
+    # Dedupe
     out, seen = [], set()
     for it in results:
         vid = it.get("videoId")
         if vid and vid not in seen:
-            out.append({"title": it.get("title", ""), "videoId": vid})
+            out.append(it)
             seen.add(vid)
     return out[:limit]
 
 # --------------------------------------------------------------------------------------
-# Models
+# YouTube Endpoints
 # --------------------------------------------------------------------------------------
-class ChatMessage(BaseModel):
-    user: str = Field(..., min_length=1, max_length=20)
-    text: str = Field(..., min_length=1, max_length=500)
+@app.get("/api/youtube/latest")
+def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int = 18, force: int = 0):
+    key = f"{CACHE_VERSION}:yt-api:{channel_id}|q={q.strip().lower()}"
+    
+    search_phrases = [p.strip().lower() for p in ([q] + aliases.split(',')) if p.strip()]
+    def _filter(items):
+        return [v for v in (items or []) if any(p in v.get("title","").lower() for p in search_phrases)]
 
-class PasswordUpdate(BaseModel):
-    password: str
+    if not force:
+        cached = _cache_read(key)
+        if cached: return _filter(cached)[:limit]
+
+    with _lock_for(key):
+        if not force:
+            cached = _cache_read(key)
+            if cached: return _filter(cached)[:limit]
+        try:
+            fresh = _fetch_videos(channel_id, q, aliases, limit)
+            _cache_write(key, fresh)
+            return _filter(fresh)[:limit]
+        except Exception:
+            stale = _cache_read_any_age(key)
+            if stale: return _filter(stale)[:limit]
+            raise
+
+@app.get("/api/latest-videos")
+def latest_videos(response: Response, channel_id: str = DEFAULT_CHANNEL_ID, limit: int = 3, force: int = 0):
+    key = f"{CACHE_VERSION}:home-latest:{channel_id}"
+    
+    def _shape(items):
+        data = [{
+            "id": it["videoId"],
+            "title": it.get("title", ""),
+            "thumb": f"https://i.ytimg.com/vi/{it['videoId']}/hqdefault.jpg",
+            "publishedAt": it.get("publishedAt", "")
+        } for it in (items or [])][:limit]
+        response.headers["Cache-Control"] = "no-store" if force else f"public, max-age={CACHE_TTL_SECONDS}"
+        return data
+
+    if not force:
+        cached = _cache_read(key)
+        if cached: return _shape(cached)
+
+    with _lock_for(key):
+        if not force:
+            cached = _cache_read(key)
+            if cached: return _shape(cached)
+        try:
+            items = _yt_api_list_uploads(channel_id, pages=3)
+            _cache_write(key, items)
+            return _shape(items)
+        except:
+            items = _rss_latest(channel_id)
+            _cache_write(key, items)
+            return _shape(items)
+
+# --------------------------------------------------------------------------------------
+# Compatibility Data
+# --------------------------------------------------------------------------------------
+SYSTEM_CSVS = {
+    "switch": "switch.csv",
+    "ps2": "ps2.csv",
+    "ps3": "ps3.csv",
+    "psvita": "psvita.csv",
+    "winlator": "winlator.csv",
+    "gamehub": "gamehub.csv",
+    "wiiu": "wiiu.csv",
+}
+REQUIRED_COLS = {"device", "chipset", "system", "date added"}
 
 class CompatSubmission(BaseModel):
     device: str = Field(..., min_length=1)
@@ -330,142 +482,119 @@ class CompatSubmission(BaseModel):
     game_title_id: Optional[str] = Field(None, alias="game title id")
     notes: Optional[str] = None
 
-class DealSubmission(BaseModel):
-    item_name: str = Field(..., min_length=1)
-    price: float
-    currency: str = "USD"
-    store_name: str
-    link: str
-    notes: Optional[str] = None
+def _find_csv_path(system_name: str) -> str | None:
+    filename = f"{system_name}.csv"
+    p1 = os.path.join(DATA_DIR, filename)
+    if os.path.exists(p1): return p1
+    p2 = os.path.join(DEFAULT_DATA_DIR, filename)
+    if os.path.exists(p2): return p2
+    return None
 
-# --------------------------------------------------------------------------------------
-# API Endpoints
-# --------------------------------------------------------------------------------------
+def _list_csvs(folder: str) -> List[str]:
+    if not os.path.isdir(folder): return []
+    return sorted([n for n in os.listdir(folder) if n.lower().endswith(".csv")])
 
-# --- YouTube ---
-@app.get("/api/youtube/latest")
-def youtube_latest(channel_id: str, q: str = "", aliases: str = "", limit: int = 18, force: int = 0):
-    search_phrases = [p.strip().lower() for p in ([q] + aliases.split(',')) if p.strip()]
-    key = f"{CACHE_VERSION}:yt-api:{channel_id}|q={q.strip().lower()}"
-    def _filter(items):
-        return [v for v in (items or []) if any(p in (v.get("title", "").lower()) for p in search_phrases)]
-    if not force:
-        if cached := _cache_read(key): return _filter(cached)[:limit]
-    with _lock_for(key):
-        try:
-            fresh = _fetch_videos(channel_id, q, aliases, limit)
-            _cache_write(key, fresh)
-            return _filter(fresh)[:limit]
-        except Exception:
-            if stale := _cache_read_any_age(key): return _filter(stale)[:limit]
-            raise
-
-@app.get("/api/latest-videos")
-def latest_videos(response: Response, channel_id: str = DEFAULT_CHANNEL_ID, limit: int = 3, force: int = 0):
-    key = f"{CACHE_VERSION}:home-latest:{channel_id}"
-    def _shape(items):
-        data = [{"id": it["videoId"], "title": it.get("title", ""), "thumb": f"https://i.ytimg.com/vi/{it['videoId']}/hqdefault.jpg", "publishedAt": it.get("publishedAt", "")} for it in (items or [])][:limit]
-        response.headers["Cache-Control"] = "no-store" if force else f"public, max-age={CACHE_TTL_SECONDS}"
-        return data
-    if not force:
-        if cached := _cache_read(key): return _shape(cached)
-    with _lock_for(key):
-        try:
-            items = _yt_api_list_uploads(channel_id, pages=3)
-            _cache_write(key, items)
-            return _shape(items)
-        except Exception:
-            try:
-                items = _rss_latest(channel_id)
-                _cache_write(key, items)
-                return _shape(items)
-            except Exception:
-                return _shape(_cache_read_any_age(key))
-
-# --- Chat & Auth ---
-@app.get("/api/chat/messages")
-def get_messages(x_auth: str = Header(None)):
-    if not (x_auth == ADMIN_TOKEN or x_auth == _get_game_password()):
-        raise HTTPException(status_code=401, detail="Invalid password")
-    return {"messages": _load_chat()[-100:], "is_admin": (x_auth == ADMIN_TOKEN)}
-
-@app.post("/api/chat/send")
-def send_message(msg: ChatMessage, x_auth: str = Header(None)):
-    is_admin = (x_auth == ADMIN_TOKEN)
-    if not (is_admin or x_auth == _get_game_password()):
-        raise HTTPException(status_code=401, detail="Invalid password")
-    new_msg = {"id": str(uuid.uuid4()), "user": msg.user, "text": msg.text, "timestamp": datetime.utcnow().isoformat(), "is_admin": is_admin, "role_badge": "ADMIN" if is_admin else "PLAYER"}
-    with _lock_for("chat_history"):
-        chat = _load_chat()
-        chat.append(new_msg)
-        _save_chat(chat[-500:])
-    return {"ok": True, "message": new_msg}
-
-@app.delete("/api/chat/{msg_id}")
-def delete_message(msg_id: str, x_auth: str = Header(None)):
-    if x_auth != ADMIN_TOKEN: raise HTTPException(status_code=403)
-    with _lock_for("chat_history"):
-        chat = [m for m in _load_chat() if m["id"] != msg_id]
-        _save_chat(chat)
-    return {"ok": True}
-
-@app.post("/api/admin/game-password")
-def update_game_password(body: PasswordUpdate, x_auth: str = Header(None)):
-    if x_auth != ADMIN_TOKEN: raise HTTPException(status_code=403)
-    _set_game_password(body.password)
-    return {"ok": True}
-
-# --- Compatibility CSVs ---
-SYSTEM_CSVS = {"switch": "switch.csv", "ps2": "ps2.csv", "ps3": "ps3.csv", "psvita": "psvita.csv", "winlator": "winlator.csv", "gamehub": "gamehub.csv", "wiiu": "wiiu.csv"}
-REQUIRED_COLS = {"device", "chipset", "system", "date added"}
+# Seeding Logic
+if not any(name.lower().endswith(".csv") for name in os.listdir(DATA_DIR) or []):
+    if os.path.isdir(DEFAULT_DATA_DIR):
+        for name in _list_csvs(DEFAULT_DATA_DIR):
+            shutil.copyfile(os.path.join(DEFAULT_DATA_DIR, name), os.path.join(DATA_DIR, name))
 
 @app.get("/api/compatibility/{system_name}")
 def get_compatibility_list(system_name: str):
-    filename = f"{system_name}.csv"
-    path = next((p for p in [os.path.join(DATA_DIR, filename), os.path.join(DEFAULT_DATA_DIR, filename)] if os.path.exists(p)), None)
-    if not path: raise HTTPException(status_code=404)
-    with open(path, mode="r", encoding="utf-8-sig") as f:
-        rows = list(csv.DictReader(f))
+    path = _find_csv_path(system_name)
+    if not path: raise HTTPException(status_code=404, detail="System not found")
+    rows = []
+    with open(path, mode="r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader: rows.append(row)
     return {"system": system_name, "count": len(rows), "rows": rows}
 
 @app.post("/api/compat/submit")
 def post_compat(sub: CompatSubmission):
-    system = sub.system.strip().lower()
-    if system not in SYSTEM_CSVS: raise HTTPException(status_code=400)
+    system = (sub.system or "").strip().lower()
+    if system not in SYSTEM_CSVS:
+        raise HTTPException(status_code=400, detail=f"Unknown system '{sub.system}'")
+    
     file_path = os.path.join(DATA_DIR, SYSTEM_CSVS[system])
     row = sub.model_dump(by_alias=True, exclude_none=True)
-    row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")
     
+    # Normalize aliases
+    if "rom_region" in row: row["rom region"] = row.pop("rom_region")
+    if "winlator_version" in row: row["winlator version"] = row.pop("winlator_version")
+    if "dx_wrapper" in row: row["dx wrapper"] = row.pop("dx_wrapper")
+    # ... (other aliases handled by Pydantic 'by_alias' mostly, but manual safety check)
+    
+    row["system"] = system
+    row["date added"] = datetime.utcnow().strftime("%Y/%m/%d")
+
     fieldnames = []
     if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
         with open(file_path, "r", encoding="utf-8-sig") as f:
             fieldnames = list(csv.DictReader(f).fieldnames or [])
     
     if not fieldnames:
-        fieldnames = ["device", "chipset", "system", "game", "performance", "driver", "emulator", "resolution", "rom region", "winlator version", "dx wrapper", "game resolution", "dxvk version", "vkd3d version", "pre-compiled shaders", "game title id", "notes", "date added"]
-    
-    for k in row.keys():
-        if k not in fieldnames: fieldnames.append(k)
+        fieldnames = ["device", "chipset", "system", "game", "performance", "driver", "emulator", "notes", "date added"]
+        fieldnames += [k for k in row.keys() if k not in fieldnames]
+    else:
+        new_cols = [k for k in row.keys() if k not in fieldnames]
+        if new_cols: fieldnames += new_cols
 
     with _lock_for(file_path):
-        write_h = not os.path.exists(file_path) or os.path.getsize(file_path) == 0
+        write_header = not os.path.exists(file_path) or os.path.getsize(file_path) == 0
         with open(file_path, "a", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
-            if write_h: writer.writeheader()
+            if write_header: writer.writeheader()
             writer.writerow({k: row.get(k, "") for k in fieldnames})
+            
     return {"ok": True}
 
-@app.get("/api/deals")
-def get_deals():
-    path = os.path.join(DATA_DIR, "deals.csv")
-    if not os.path.exists(path): return {"rows": []}
-    with open(path, "r", encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
-    return {"rows": rows[::-1]}
+# --------------------------------------------------------------------------------------
+# Admin / Debug
+# --------------------------------------------------------------------------------------
+@app.get("/api/debug/where")
+def debug_where(request: Request):
+    if request.query_params.get("token") != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    return {"repo_dir": REPO_DIR, "data_dir": DATA_DIR, "files": os.listdir(DATA_DIR) if os.path.exists(DATA_DIR) else []}
+
+@app.get("/admin/seed-data")
+def admin_seed_data(request: Request, force: int = 0, token: str = ""):
+    need = os.getenv("SEED_TOKEN", "")
+    if not need or token != need:
+        # Fallback to ADMIN_TOKEN if SEED_TOKEN not set
+        if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+            raise HTTPException(status_code=403, detail="Forbidden")
+            
+    copied = []
+    if os.path.isdir(DEFAULT_DATA_DIR):
+        for name in _list_csvs(DEFAULT_DATA_DIR):
+            src, dst = os.path.join(DEFAULT_DATA_DIR, name), os.path.join(DATA_DIR, name)
+            if force or not os.path.exists(dst):
+                shutil.copyfile(src, dst)
+                copied.append(name)
+    return {"ok": True, "copied": copied}
 
 # --------------------------------------------------------------------------------------
-# Page Routes
+# Page Routes & Static
 # --------------------------------------------------------------------------------------
+@app.get("/gameoftheweek", response_class=FileResponse)
+def game_of_the_week_page():
+    p = os.path.join(REPO_DIR, "static", "gameoftheweek.html")
+    return FileResponse(p) if os.path.exists(p) else HTMLResponse("<h1>Not Found</h1>", 404)
+
+@app.get("/guides/{slug}", response_class=HTMLResponse)
+def serve_guide(slug: str):
+    md_path = os.path.join("guides", f"{slug}.md")
+    if not os.path.exists(md_path):
+        return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
+    with open(md_path, "r", encoding="utf-8") as f: content = f.read()
+    html = markdown.markdown(content, extensions=["fenced_code", "tables"])
+    # (Simplified HTML wrapper for brevity, but you can paste your full template here if desired)
+    return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>{slug}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head><body class="bg-gray-900 text-white p-8"><article class="prose prose-invert mx-auto">{html}</article></body></html>"""
+
 @app.get("/", response_class=FileResponse)
 def root(): return FileResponse(os.path.join(REPO_DIR, "static", "index.html"))
 
@@ -478,36 +607,6 @@ def benchmarks_page(): return FileResponse(os.path.join(REPO_DIR, "static", "ben
 @app.get("/store", response_class=FileResponse)
 def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
 
-@app.get("/gameoftheweek", response_class=FileResponse)
-def gotw_page(): return FileResponse(os.path.join(REPO_DIR, "static", "gameoftheweek.html"))
-
-@app.get("/guides/{slug}", response_class=HTMLResponse)
-def serve_guide(slug: str):
-    md_path = os.path.join("guides", f"{slug}.md")
-    if not os.path.exists(md_path): return HTMLResponse("Not Found", 404)
-    with open(md_path, "r", encoding="utf-8") as f:
-        md_content = f.read()
-    
-    html = markdown.markdown(md_content, extensions=["fenced_code", "tables"])
-    # (Optional: Re-insert your CSS/Iframe wrap logic here as per the original serve_guide)
-    return HTMLResponse(f"<html><body>{html}</body></html>")
-
-# --------------------------------------------------------------------------------------
-# Admin & Seeding
-# --------------------------------------------------------------------------------------
-@app.get("/admin/seed-data")
-def admin_seed_data(token: str = ""):
-    if token != os.getenv("SEED_TOKEN"): raise HTTPException(status_code=403)
-    copied = []
-    for name in os.listdir(DEFAULT_DATA_DIR):
-        if name.endswith(".csv"):
-            shutil.copyfile(os.path.join(DEFAULT_DATA_DIR, name), os.path.join(DATA_DIR, name))
-            copied.append(name)
-    return {"ok": True, "copied": copied}
-
-# --------------------------------------------------------------------------------------
-# Mounts & Main
-# --------------------------------------------------------------------------------------
 app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
 app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
