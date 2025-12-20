@@ -460,6 +460,20 @@ def latest_videos(
                     return _shape(stale)
                 raise
 
+
+@app.get("/store", response_class=FileResponse)
+def store_page():
+    shop_path = os.path.join(REPO_DIR, "static", "shop.html")
+    return FileResponse(shop_path)
+
+# --- ADD THIS BLOCK ---
+@app.get("/gameoftheweek", response_class=FileResponse)
+def game_of_the_week_page():
+    gotw_path = os.path.join(REPO_DIR, "static", "gameoftheweek.html")
+    return FileResponse(gotw_path)
+# ----------------------
+
+
 # --------------------------------------------------------------------------------------
 # Storage paths (repo data + persistent volume)
 # --------------------------------------------------------------------------------------
