@@ -488,6 +488,10 @@ def admin_seed_data(request: Request, force: int = 0, token: str = ""):
 # --------------------------------------------------------------------------------------
 # Page Routes & Static
 # --------------------------------------------------------------------------------------
+@app.get("/patrons", response_class=FileResponse)
+def patrons_page():
+    return FileResponse(os.path.join(REPO_DIR, "static", "patrons.html"))
+
 @app.get("/gameoftheweek", response_class=FileResponse)
 @app.get("/gotw", response_class=FileResponse)
 def game_of_the_week_page():
