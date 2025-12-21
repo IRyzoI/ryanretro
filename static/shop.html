@@ -711,7 +711,16 @@
   let storeFilters = new Set();
   
   // 1. URL ID DETECTION
-  let urlProductId = new URLSearchParams(window.location.search).get('id');
+  // First check ?id=, if not found, check the URL path (e.g. /trimui_brick)
+  let urlParams = new URLSearchParams(window.location.search);
+  let pathSegment = window.location.pathname.replace(/^\/|\/$/g, ''); // Remove slashes
+  
+  // Ignore 'store' or 'shop' as IDs
+  if (pathSegment === 'store' || pathSegment === 'shop') {
+      pathSegment = null;
+  }
+
+  let urlProductId = urlParams.get('id') || pathSegment;
 
   const tierMap = { 0: "ALL", 1: "PS1", 2: "GAMECUBE", 3: "SWITCH", 4: "PC" };
   const exchangeRates = { USD: 1, EUR: 0.92, GBP: 0.78, KRW: 1375, CAD: 1.36, AUD: 1.52 };
