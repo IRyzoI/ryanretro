@@ -448,7 +448,25 @@
 
 <section class="container mx-auto px-4 min-h-[50vh]">
   <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-300">
+  </div>
+  
+  <div id="relatedVideosSection" class="hidden mt-16 pt-12 border-t-4 border-gray-800">
+    <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center pixel-border">
+            <i data-feather="youtube" class="text-white w-6 h-6"></i>
+        </div>
+        <div>
+            <h2 class="retro-font text-2xl text-white">RELATED VIDEOS</h2>
+            <p class="text-gray-400 text-sm mt-1">Watch my coverage of this device</p>
+        </div>
     </div>
+    
+    <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">
+            LOADING VIDEOS...
+        </div>
+    </div>
+  </div>
 </section>
 
 <template id="productTemplate">
@@ -716,7 +734,7 @@
   let pathSegment = window.location.pathname.replace(/^\/|\/$/g, ''); // Remove slashes
   
   // Ignore 'store' or 'shop' as IDs
-  if (pathSegment === 'store' || pathSegment === 'shop') {
+  if (pathSegment === 'store' || pathSegment === 'shop' || pathSegment.includes('static')) {
       pathSegment = null;
   }
 
@@ -777,6 +795,7 @@
 
   function renderProducts() {
     const grid = document.getElementById('productGrid');
+    const videoSection = document.getElementById('relatedVideosSection');
     
     // 3. SINGLE VIEW VS GRID VIEW SETUP
     if (urlProductId) {
@@ -784,7 +803,6 @@
         const p = allProducts.find(x => x.id === urlProductId);
         
         // Reset grid classes to be a centered container
-        // Removed mt-4 md:mt-10 to fix spacing issue as requested
         grid.className = 'max-w-5xl mx-auto'; 
         grid.innerHTML = '';
 
@@ -792,13 +810,23 @@
             // Pass 'true' to indicate single view mode
             const card = renderGridCard(p, true);
             grid.appendChild(card);
+            
+            // Show video section and load videos
+            videoSection.classList.remove('hidden');
+            videoSection.classList.add('max-w-5xl', 'mx-auto'); // align with card
+            loadRelatedVideos(p.name);
+            
         } else {
-            grid.innerHTML = `<div class="text-center text-white retro-font">PRODUCT NOT FOUND. <a href="/" class="text-yellow-400 underline">GO BACK</a></div>`;
+            grid.innerHTML = `<div class="text-center text-white retro-font">PRODUCT NOT FOUND. <a href="/store" class="text-yellow-400 underline">GO BACK</a></div>`;
+            videoSection.classList.add('hidden');
         }
         
         feather.replace(); AOS.refresh();
         return; // Stop normal rendering
     }
+    
+    // Hide video section in grid mode
+    videoSection.classList.add('hidden');
 
     // NORMAL RENDERING
     const products = allProducts.filter(matchesFilters).sort((a,b) => {
@@ -816,6 +844,51 @@
     grid.innerHTML = products.length ? '' : `<div class="col-span-full text-center text-gray-500 retro-font py-20">No matching gear.</div>`;
     products.forEach(p => currentView === 'list' ? grid.appendChild(renderListRow(p)) : grid.appendChild(renderGridCard(p, false)));
     feather.replace(); AOS.refresh();
+  }
+  
+  // FETCH YOUTUBE VIDEOS FUNCTION
+  async function loadRelatedVideos(productName) {
+      const grid = document.getElementById('videoGrid');
+      grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">LOADING VIDEOS...</div>';
+      
+      try {
+          // Use the existing API with query
+          const res = await fetch(`/api/youtube/latest?channel_id=UCh9GxjM-FNuSWv7xqn3UKVw&q=${encodeURIComponent(productName)}&limit=3`);
+          if (!res.ok) throw new Error("API Error");
+          const videos = await res.json();
+          
+          if (!videos || videos.length === 0) {
+              grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">No specific videos found for this device yet. Check my channel for more!</div>';
+              return;
+          }
+          
+          grid.innerHTML = videos.map((v, i) => `
+            <a href="https://www.youtube.com/watch?v=${v.videoId}" target="_blank"
+               class="bg-gray-800 rounded-lg overflow-hidden pixel-border block group hover:bg-gray-700 transition-colors"
+               data-aos="fade-up" data-aos-delay="${i * 100}">
+              <div class="relative pb-[56.25%] bg-black">
+                <img
+                  src="https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg"
+                  alt="${v.title.replace(/"/g, '&quot;')}"
+                  class="absolute h-full w-full object-cover group-hover:opacity-90 transition-opacity">
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-90 shadow-lg group-hover:scale-110 transition-transform">
+                    <i data-feather="play" class="text-white fill-white ml-1 w-5 h-5"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="text-sm font-bold text-white line-clamp-2 leading-relaxed">${v.title}</h3>
+              </div>
+            </a>
+          `).join('');
+          
+          feather.replace();
+          
+      } catch (err) {
+          console.error(err);
+          grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">Could not load videos.</div>';
+      }
   }
 
   function renderGridCard(p, isSingleView = false) {
@@ -853,12 +926,28 @@
     node.querySelector('.product-img').src = p.image;
     
     const imgWrapper = node.querySelector('.card-img-wrapper');
-    const cheapestLink = getCheapestLink(p);
+    // const cheapestLink = getCheapestLink(p); // OLD LOGIC
     
-    if (cheapestLink) {
+    // NEW CLICK LOGIC: Go to product page (Single View)
+    if (!isSingleView) {
         imgWrapper.style.cursor = 'pointer';
-        imgWrapper.setAttribute('title', `Open cheapest deal ($${cheapestLink.price})`);
-        imgWrapper.onclick = () => window.open(cheapestLink.url, '_blank');
+        imgWrapper.setAttribute('title', `View details for ${p.name}`);
+        imgWrapper.onclick = () => {
+            // Update URL and re-render without page reload (simulated SPA)
+            const newUrl = window.location.pathname + '?id=' + p.id;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+            urlProductId = p.id;
+            
+            // Hide filters, show header button change
+            document.getElementById('mainControlPanel').style.display = 'none';
+            const mainSection = document.getElementById('mainContentSection');
+            mainSection.classList.remove('py-8');
+            mainSection.classList.add('pt-4', 'pb-8');
+            updateHeaderButton();
+
+            renderProducts();
+            window.scrollTo(0,0);
+        };
     }
 
     node.querySelector('.product-title').textContent = p.name;
@@ -925,11 +1014,17 @@
     const img = row.querySelector('.c-thumb');
     img.src = p.image;
     
-    const cheapestLink = getCheapestLink(p);
-    if(cheapestLink) {
-        img.style.cursor = 'pointer';
-        img.onclick = () => window.open(cheapestLink.url, '_blank');
-    }
+    // Click logic for list view thumb
+    img.style.cursor = 'pointer';
+    img.onclick = () => {
+         const newUrl = window.location.pathname + '?id=' + p.id;
+         window.history.pushState({ path: newUrl }, '', newUrl);
+         urlProductId = p.id;
+         document.getElementById('mainControlPanel').style.display = 'none';
+         updateHeaderButton();
+         renderProducts();
+         window.scrollTo(0,0);
+    };
 
     row.querySelector('.c-title').textContent = p.name;
     row.querySelector('.c-cat').textContent = p.category;
@@ -960,6 +1055,36 @@
   function saveTray() { localStorage.setItem('ryan_tray', JSON.stringify([...traySet])); }
   function loadTray() { const s = localStorage.getItem('ryan_tray'); if(s) traySet = new Set(JSON.parse(s)); }
   function updateFilters() { const activeC = (currentStatus !== 'all' ? 1 : 0) + (currentCategory !== 'all' ? 1 : 0) + (currentBrand !== 'all' ? 1 : 0) + storeFilters.size + (currentBudget < 500 ? 1 : 0) + (currentTier > 0 ? 1 : 0); document.getElementById('filterBtnText').textContent = activeC > 0 ? `FILTERS (${activeC})` : 'FILTERS'; renderProducts(); }
+  
+  function updateHeaderButton() {
+     const headerBtn = document.getElementById('openDealModalHeader');
+     if (headerBtn) {
+         if (urlProductId) {
+             // In product view: Change to "BACK TO STORE"
+             headerBtn.innerHTML = `
+                <i data-feather="arrow-left" class="w-4 h-4 md:w-5 md:h-5"></i>
+                <span>BACK TO STORE</span>
+             `;
+             headerBtn.onclick = () => {
+                 window.location.href = window.location.pathname; // Reload clear
+             };
+         } else {
+             // Normal view
+             headerBtn.innerHTML = `
+                <i data-feather="tag" class="w-4 h-4 md:w-5 md:h-5"></i>
+                <span>POST DEAL</span>
+             `;
+             headerBtn.onclick = () => {
+                 dealModal.classList.remove('hidden'); 
+                 document.getElementById('dealModalTitle').textContent = "POST A DEAL";
+                 document.getElementById('dealName').value = "";
+                 document.getElementById('dealName').readOnly = false;
+                 document.getElementById('dealName').focus(); 
+             };
+         }
+         feather.replace();
+     }
+  }
 
   // --- MODAL & SUBMIT LOGIC ---
   const dealModal = document.getElementById('dealModal');
@@ -967,14 +1092,9 @@
   const dealToast = document.getElementById('dealToast');
   const dealSubmitBtn = document.getElementById('dealSubmitBtn');
   const thankYouOverlay = document.getElementById('thankYouOverlay');
-
-  document.getElementById('openDealModalHeader').onclick = () => { 
-    dealModal.classList.remove('hidden'); 
-    document.getElementById('dealModalTitle').textContent = "POST A DEAL";
-    document.getElementById('dealName').value = "";
-    document.getElementById('dealName').readOnly = false;
-    document.getElementById('dealName').focus(); 
-  };
+  
+  // Initial button logic
+  updateHeaderButton();
 
   // Function called by "Found it cheaper?" button
   window.openCheaperModal = (p) => {
@@ -1070,19 +1190,14 @@
       const mainSection = document.getElementById('mainContentSection');
       mainSection.classList.remove('py-8');
       mainSection.classList.add('pt-4', 'pb-8');
-
-      // REPLACE Header "Post Deal" Button with "Back to Store"
-  const headerBtn = document.getElementById('openDealModalHeader');
-  if (headerBtn) {
-      headerBtn.outerHTML = `
-        <a href="/store"
-           class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-          <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
-          <span>STORE</span>
-        </a>
-      `;
+      
+      updateHeaderButton();
   }
-  }
+  
+  // Enable browser back button handling for SPA feel
+  window.onpopstate = () => {
+      window.location.reload();
+  };
 
   document.getElementById('filterBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('filterMenu').classList.toggle('open'); };
   document.onclick = (e) => { if(!document.getElementById('filterWidget').contains(e.target)) document.getElementById('filterMenu').classList.remove('open'); };
