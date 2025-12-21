@@ -100,6 +100,45 @@
       border-top: 2px solid white;
     }
 
+    /* --- COUPON STYLES --- */
+    .link-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        width: 100%;
+    }
+
+    .coupon-badge {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.6rem;
+        padding: 8px 8px 6px 8px; /* Taller padding */
+        border-left: 2px solid #000;
+        border-right: 2px solid #000;
+        border-bottom: 2px solid #000;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        text-align: center;
+        width: 92%; /* Slightly narrower than button to look tucked */
+        margin-top: -6px; /* Pull it up behind the button */
+        position: relative;
+        z-index: 0; /* Sit behind the button */
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        transition: transform 0.1s;
+    }
+    .coupon-badge:hover {
+        transform: translateY(2px);
+    }
+    .coupon-badge:active {
+        transform: translateY(4px);
+    }
+    /* --------------------- */
+
+
     /* Unified Filter Dropdown */
     .unified-filter-menu {
         display: none;
@@ -285,16 +324,17 @@
   </div>
 </header>
 
-<section class="py-8 container mx-auto px-4">
-  <div class="bg-gray-800 p-6 rounded-lg pixel-border flex flex-col gap-6">
+<section id="mainContentSection" class="py-8 container mx-auto px-4">
+  
+  <div id="mainControlPanel" class="bg-gray-800 p-6 rounded-lg pixel-border flex flex-col gap-6">
 
-    <div class="w-full relative">
+    <div class="w-full relative" id="searchBarContainer">
       <i data-feather="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
       <input type="text" id="searchInput" placeholder="SEARCH GEAR..."
              class="w-full bg-gray-900 border-4 border-black text-white text-center px-4 py-4 rounded focus:outline-none focus:border-yellow-400 retro-font text-sm uppercase shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
     </div>
 
-    <div class="grid grid-cols-2 md:flex md:flex-row items-center justify-between gap-2 md:gap-4 w-full">
+    <div class="grid grid-cols-2 md:flex md:flex-row items-center justify-between gap-2 md:gap-4 w-full" id="filterRow">
       <div class="relative w-full md:w-auto" id="filterWidget">
           <button id="filterBtn" class="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
               <i data-feather="filter" class="w-4 h-4"></i>
@@ -425,7 +465,7 @@
         <i data-feather="plus" class="w-4 h-4"></i>
         <span class="tray-btn-text">ADD TO TRAY</span>
       </button>
-      <div class="space-y-3 product-links"></div>
+      <div class="space-y-4 product-links"></div>
       
       <button class="cheaper-btn w-full mt-4 py-3 bg-gray-900 border-2 border-dashed border-gray-600 hover:border-yellow-400 text-gray-500 hover:text-yellow-400 retro-font text-[8px] uppercase transition-all duration-200 flex items-center justify-center gap-2">
         <i data-feather="arrow-down-circle" class="w-3 h-3"></i>
@@ -582,9 +622,70 @@
         { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3nmWU5X", "price": 199.00, "currency": "$" }
       ] 
     },
-    { "id": "trimui_brick_hammer", "name": "TrimUI Brick Hammer", "category": "Handhelds", "releaseDate": "2024-11-15", "badge": "Best Value 🎁", "tier": 1, "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646", "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.", "links": [{ "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 94.99, "currency": "$" }, { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" }, { "store": "PowKiddy", "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro", "price": 80.75, "currency": "$" }] },
-    { "id": "trimui_brick", "name": "TrimUI Brick", "category": "Handhelds", "category": "Handhelds", "releaseDate": "2024-10-10", "badge": "Best Value 🎁", "tier": 1, "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646", "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.", "links": [{ "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJJv", "price": 84.99, "currency": "$" }, { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" }, { "store": "PowKiddy", "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro", "price": 61.75, "currency": "$" }] },
-    { "id": "rp6", "name": "Retroid Pocket 6", "category": "Handhelds", "releaseDate": "2025-01-15", "badge": "Pre-order 🔥", "tier": 3, "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686", "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", "links": [{ "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }] },
+  {
+    "id": "trimui_brick_hammer",
+    "name": "TrimUI Brick Hammer",
+    "category": "Handhelds",
+    "releaseDate": "2024-11-15",
+    "badge": "Best Value 🎁",
+    "tier": 1,
+    "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
+    "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
+    "links": [
+      {
+        "store": "Official",
+        "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
+        "price": 80.75,
+        "currency": "$",
+        "coupon": "TRIMUIMC15"
+      },
+      {
+        "store": "Amazon",
+        "url": "https://amzn.to/3MBZ1qY",
+        "price": 95.99,
+        "currency": "$"
+      },
+      {
+        "store": "PowKiddy",
+        "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro",
+        "price": 80.75,
+        "currency": "$",
+        "coupon": "RYAN"
+      }
+    ]
+  },
+  {
+    "id": "trimui_brick",
+    "name": "TrimUI Brick",
+    "category": "Handhelds",
+    "releaseDate": "2024-10-10",
+    "badge": "Best Value 🎁",
+    "tier": 1,
+    "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
+    "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
+    "links": [
+      {
+        "store": "Official",
+        "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
+        "price": 72.75,
+        "currency": "$",
+        "coupon": "TRIMUIMC15"
+      },
+      {
+        "store": "Amazon",
+        "url": "https://amzn.to/4j3t2Mw",
+        "price": 73.00,
+        "currency": "$"
+      },
+      {
+        "store": "PowKiddy",
+        "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro",
+        "price": 61.75,
+        "currency": "$",
+        "coupon": "RYAN"
+      }
+    ]
+  },   { "id": "rp6", "name": "Retroid Pocket 6", "category": "Handhelds", "releaseDate": "2025-01-15", "badge": "Pre-order 🔥", "tier": 3, "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686", "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", "links": [{ "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }] },
     { "id": "steam_deck", "name": "Steam Deck", "category": "Handhelds", "releaseDate": "2023-11-16", "tier": 4, "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg", "description": "The standard for PC handheld gaming. Play your Steam library on the go.", "links": [{ "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 469.00, "currency": "$" }] },
     { "id": "rp5", "name": "Retroid Pocket 5", "category": "Handhelds", "releaseDate": "2024-09-01", "tier": 2, "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png", "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" }] },
     { "id": "rp_mini2", "name": "Retroid Pocket Mini V2", "category": "Handhelds", "releaseDate": "2024-08-15", "tier": 2, "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824", "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" }, { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }] },
@@ -608,6 +709,9 @@
   let traySet = new Set();
   let currentView = 'grid', currentCurrency = 'USD', currentCategory = 'all', currentStatus = 'all', currentBrand = 'all', currentSort = 'default', currentSearch = '', currentBudget = 500, currentTier = 0;
   let storeFilters = new Set();
+  
+  // 1. URL ID DETECTION
+  let urlProductId = new URLSearchParams(window.location.search).get('id');
 
   const tierMap = { 0: "ALL", 1: "PS1", 2: "GAMECUBE", 3: "SWITCH", 4: "PC" };
   const exchangeRates = { USD: 1, EUR: 0.92, GBP: 0.78, KRW: 1375, CAD: 1.36, AUD: 1.52 };
@@ -633,6 +737,11 @@
   }
 
   function matchesFilters(p) {
+    // 2. EXCLUSIVE FILTERING LOGIC
+    if (urlProductId) {
+        return p.id === urlProductId; 
+    }
+
     if (currentCategory !== 'all' && p.category !== currentCategory) return false;
     const cheapest = getCheapestLink(p);
     if (cheapest && cheapest.price > currentBudget) return false;
@@ -658,35 +767,82 @@
   }
 
   function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    
+    // 3. SINGLE VIEW VS GRID VIEW SETUP
+    if (urlProductId) {
+        // Find the single product
+        const p = allProducts.find(x => x.id === urlProductId);
+        
+        // Reset grid classes to be a centered container
+        // Removed mt-4 md:mt-10 to fix spacing issue as requested
+        grid.className = 'max-w-5xl mx-auto'; 
+        grid.innerHTML = '';
+
+        if (p) {
+            // Pass 'true' to indicate single view mode
+            const card = renderGridCard(p, true);
+            grid.appendChild(card);
+        } else {
+            grid.innerHTML = `<div class="text-center text-white retro-font">PRODUCT NOT FOUND. <a href="/" class="text-yellow-400 underline">GO BACK</a></div>`;
+        }
+        
+        feather.replace(); AOS.refresh();
+        return; // Stop normal rendering
+    }
+
+    // NORMAL RENDERING
     const products = allProducts.filter(matchesFilters).sort((a,b) => {
         if(currentSort === 'default') return new Date(b.releaseDate || '2000-01-01') - new Date(a.releaseDate || '2000-01-01');
         const ap = getCheapestLink(a)?.price || Infinity, bp = getCheapestLink(b)?.price || Infinity;
         return currentSort === 'price-asc' ? ap - bp : bp - ap;
     });
-    const grid = document.getElementById('productGrid');
     
-    // Toggle grid/list class
     if (currentView === 'list') {
-        grid.classList.add('view-list');
-        grid.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-8');
+        grid.className = 'view-list';
     } else {
-        grid.classList.remove('view-list');
-        grid.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-8');
+        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8';
     }
 
     grid.innerHTML = products.length ? '' : `<div class="col-span-full text-center text-gray-500 retro-font py-20">No matching gear.</div>`;
-    products.forEach(p => currentView === 'list' ? grid.appendChild(renderListRow(p)) : grid.appendChild(renderGridCard(p)));
+    products.forEach(p => currentView === 'list' ? grid.appendChild(renderListRow(p)) : grid.appendChild(renderGridCard(p, false)));
     feather.replace(); AOS.refresh();
   }
 
-  function renderGridCard(p) {
+  function renderGridCard(p, isSingleView = false) {
     const node = document.getElementById('productTemplate').content.firstElementChild.cloneNode(true);
     node.dataset.pid = p.id;
     
+    // --- LAYOUT ADJUSTMENT FOR SINGLE VIEW ---
+    if (isSingleView) {
+        // Make card horizontal on desktop
+        node.classList.remove('flex-col', 'h-full');
+        node.classList.add('flex', 'flex-col', 'md:flex-row', 'h-auto', 'md:min-h-[500px]');
+        
+        // Adjust Image Container
+        const imgContainer = node.querySelector('.group'); // The relative container
+        imgContainer.classList.remove('h-56');
+        imgContainer.classList.add('h-64', 'md:h-auto', 'md:w-1/2', 'shrink-0');
+        
+        // Adjust Content Container
+        const contentContainer = node.querySelector('.card-content');
+        contentContainer.classList.add('md:w-1/2', 'flex', 'flex-col', 'justify-center', 'p-8');
+        
+        // Make Title Bigger
+        const title = node.querySelector('.product-title');
+        title.classList.replace('text-lg', 'text-2xl');
+        title.classList.add('md:text-3xl', 'mb-4');
+        
+        // Make Description Bigger
+        const desc = node.querySelector('.product-desc');
+        desc.classList.replace('text-sm', 'text-base');
+        desc.classList.add('md:text-lg', 'mb-8');
+    }
+    // -----------------------------------------
+
     // IMAGE & CLICK LOGIC
     node.querySelector('.product-img').src = p.image;
     
-    // --- START NEW LOGIC: CLICK IMAGE FOR CHEAPEST LINK ---
     const imgWrapper = node.querySelector('.card-img-wrapper');
     const cheapestLink = getCheapestLink(p);
     
@@ -695,7 +851,6 @@
         imgWrapper.setAttribute('title', `Open cheapest deal ($${cheapestLink.price})`);
         imgWrapper.onclick = () => window.open(cheapestLink.url, '_blank');
     }
-    // --- END NEW LOGIC ---
 
     node.querySelector('.product-title').textContent = p.name;
     node.querySelector('.product-desc').textContent = p.description;
@@ -707,14 +862,46 @@
     trayBtn.onclick = () => { traySet.has(p.id) ? traySet.delete(p.id) : traySet.add(p.id); saveTray(); refreshTrayBar(); renderProducts(); };
     
     const linksW = node.querySelector('.product-links'), cheapest = getCheapestLink(p);
+    
     (p.links || []).forEach(l => {
-      let bg = 'bg-gray-900', s = l.store.toLowerCase();
-      if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) bg = 'bg-blue-600';
-      if(s.includes('ali')) bg = 'bg-red-600';
-      if(s.includes('amazon')) bg = 'bg-yellow-500 text-black';
-      if(s.includes('powkiddy')) bg = 'bg-[#008c69]';
-      const label = (s.includes('powkiddy') && p.name.includes('TrimUI Brick')) ? 'POWKIDDY: [CODE: RYAN]' : l.store;
-      linksW.insertAdjacentHTML('beforeend', `<a href="${l.url}" target="_blank" class="${bg} ${cheapest && l.url === cheapest.url ? 'ring-2 ring-yellow-400' : ''} w-full px-4 py-3 rounded pixel-btn border-2 border-black flex items-center justify-between"><span class="retro-font text-[9px] uppercase">${label}</span><span class="retro-font text-[9px]">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span></a>`);
+      let btnBg = 'bg-gray-900';
+      let badgeBg = 'bg-gray-950 text-gray-400';
+      const s = l.store.toLowerCase();
+
+      if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
+         btnBg = 'bg-blue-600';
+         badgeBg = 'bg-blue-900 text-blue-100';
+      }
+      else if(s.includes('ali')) {
+         btnBg = 'bg-red-600';
+         badgeBg = 'bg-red-900 text-red-100';
+      }
+      else if(s.includes('amazon')) {
+         btnBg = 'bg-yellow-500 text-black';
+         badgeBg = 'bg-yellow-800 text-yellow-100';
+      }
+      else if(s.includes('powkiddy')) {
+         btnBg = 'bg-[#008c69]';
+         badgeBg = 'bg-[#004d3a] text-green-100';
+      }
+
+      const couponHtml = l.coupon 
+        ? `<div class="coupon-badge ${badgeBg}" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
+             <span>CODE: ${l.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
+           </div>` 
+        : '';
+
+      const wrapperHtml = `
+        <div class="link-group">
+          <a href="${l.url}" target="_blank" class="${btnBg} ${cheapest && l.url === cheapest.url ? 'ring-2 ring-yellow-400' : ''} w-full px-4 py-3 rounded pixel-btn border-2 border-black flex items-center justify-between relative z-10">
+            <span class="retro-font text-[9px] uppercase">${l.store}</span>
+            <span class="retro-font text-[9px]">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
+          </a>
+          ${couponHtml}
+        </div>
+      `;
+      
+      linksW.insertAdjacentHTML('beforeend', wrapperHtml);
     });
 
     // Handle "Found it cheaper" click
@@ -729,13 +916,11 @@
     const img = row.querySelector('.c-thumb');
     img.src = p.image;
     
-    // --- START NEW LOGIC: CLICK THUMBNAIL FOR CHEAPEST LINK ---
     const cheapestLink = getCheapestLink(p);
     if(cheapestLink) {
         img.style.cursor = 'pointer';
         img.onclick = () => window.open(cheapestLink.url, '_blank');
     }
-    // --- END NEW LOGIC ---
 
     row.querySelector('.c-title').textContent = p.name;
     row.querySelector('.c-cat').textContent = p.category;
@@ -866,6 +1051,30 @@
   };
 
   // --- FILTERS & INIT ---
+  
+  // 3. UI STATE MANAGEMENT IF URL ID IS PRESENT
+  if (urlProductId) {
+      // HIDE the entire Filter/Search Box ("big gray rectangle")
+      document.getElementById('mainControlPanel').style.display = 'none';
+      
+      // ADJUST PADDING AND MARGIN FOR TIGHTER FIT
+      const mainSection = document.getElementById('mainContentSection');
+      mainSection.classList.remove('py-8');
+      mainSection.classList.add('pt-4', 'pb-8');
+
+      // REPLACE Header "Post Deal" Button with "Back to Store"
+      const headerBtn = document.getElementById('openDealModalHeader');
+      if (headerBtn) {
+          headerBtn.outerHTML = `
+            <a href="${window.location.pathname}"
+               class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+              <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
+              <span>STORE</span>
+            </a>
+          `;
+      }
+  }
+
   document.getElementById('filterBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('filterMenu').classList.toggle('open'); };
   document.onclick = (e) => { if(!document.getElementById('filterWidget').contains(e.target)) document.getElementById('filterMenu').classList.remove('open'); };
   document.getElementById('budgetRange').oninput = (e) => { currentBudget = parseInt(e.target.value); document.getElementById('budgetLabel').textContent = `$${currentBudget}`; updateFilters(); };
