@@ -51,7 +51,7 @@
             min-height: 100vh;
         }
         
-        /* --- 3D Tier Special Effects --- */
+        /* --- Animations --- */
         @keyframes float {
             0% { transform: translateY(0px) rotateX(0deg); }
             50% { transform: translateY(-10px) rotateX(5deg); }
@@ -63,11 +63,17 @@
             100% { background-position: -200% center; }
         }
 
+        @keyframes shimmer-sweep {
+            0% { transform: translateX(-150%) skewX(-20deg); }
+            100% { transform: translateX(250%) skewX(-20deg); }
+        }
+
+        /* --- 3D Tier Special Effects --- */
         .tier-3d-card {
             perspective: 1000px;
             animation: float 4s ease-in-out infinite;
             background: linear-gradient(145deg, #1f2937, #111827);
-            border: 2px solid #facc15; /* Yellow border */
+            border: 2px solid #facc15; 
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.3), inset 0 0 10px rgba(250, 204, 21, 0.1);
         }
 
@@ -82,34 +88,29 @@
             text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
         }
 
-        /* --- 16-Bit Styles (Premium) --- */
+        /* --- 16-Bit Styles --- */
         .tier-16bit-card {
             background: #1f2937;
-            border-left: 4px solid #60a5fa; /* Blue accent */
+            border-left: 4px solid #60a5fa; 
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .tier-16bit-card:hover {
-            transform: scale(1.05); /* Significant pop */
+            transform: scale(1.05);
             background: #374151;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             z-index: 10;
         }
 
-        /* --- 8-Bit Styles (Standard - Now Upgraded!) --- */
+        /* --- 8-Bit Styles --- */
         .tier-8bit-card {
-            background: #1f2937; /* Same premium background as 16-bit */
-            border-left: 4px solid #9ca3af; /* Silver/Gray accent */
+            background: #1f2937;
+            border-left: 4px solid #9ca3af;
             transition: all 0.2s ease;
-            opacity: 1; /* Fully visible now! */
         }
         .tier-8bit-card:hover {
-            transform: scale(1.02); /* Subtle pop, less than 16-bit */
+            transform: scale(1.02);
             background: #374151;
-            border-color: #d1d5db; /* Lighter silver on hover */
         }
 
-        /* Hero Background */
         .hero-bg {
             background: #111827;
             position: relative;
@@ -125,44 +126,54 @@
 <body class="bg-gray-900 text-white overflow-x-hidden selection:bg-yellow-400 selection:text-black">
 
 <header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black relative">
-    <!-- Container relative allows absolute positioning of children on desktop -->
     <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center relative">
-    
-    <!-- LOGO (Left on Desktop, Top on Mobile) -->
-    <div class="md:absolute md:left-4 md:top-1/2 md:-translate-y-1/2 mb-3 md:mb-0 z-10">
-        <a href="/" class="block hover:scale-105 transition-transform" title="Return to Home">
-            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-                 class="w-12 h-12 md:w-16 md:h-16 rounded-full pixel-border bg-gray-900" alt="Ryan Retro Logo">
-        </a>
-    </div>
+        <div class="md:absolute md:left-4 md:top-1/2 md:-translate-y-1/2 mb-3 md:mb-0 z-10">
+            <a href="/" class="block hover:scale-105 transition-transform" title="Return to Home">
+                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+                     class="w-12 h-12 md:w-16 md:h-16 rounded-full pixel-border bg-gray-900" alt="Ryan Retro Logo">
+            </a>
+        </div>
 
-    <!-- PAGE TITLE (Center) -->
-    <h1 class="retro-font text-xl md:text-3xl text-yellow-400 drop-shadow-md cursor-default text-center z-0">
-        HALL OF FAME
-    </h1>
+        <h1 class="retro-font text-xl md:text-3xl text-yellow-400 drop-shadow-md cursor-default text-center z-0">
+            HALL OF FAME
+        </h1>
 
-    <!-- STORE BUTTON (Right on Desktop, Bottom on Mobile) -->
-    <div class="md:absolute md:right-4 md:top-1/2 md:-translate-y-1/2 mt-3 md:mt-0 w-full md:w-auto z-10">
-        <a href="/store"
-           class="px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-          <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
-          <span>STORE</span>
-        </a>
-    </div>
-
+        <div class="md:absolute md:right-4 md:top-1/2 md:-translate-y-1/2 mt-3 md:mt-0 w-full md:w-auto z-10">
+            <a href="/store"
+               class="px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+              <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
+              <span>STORE</span>
+            </a>
+        </div>
     </div>
 </header>
 
 <main>
-    <!-- Reduced top padding slightly since header has title -->
-    <section class="hero-bg pt-8 pb-4 text-center video-hidden">
-        <div class="container mx-auto px-4" data-aos="fade-down">
-            <p class="text-xl text-gray-400 w-full mx-auto mb-8">
+    <section class="hero-bg pt-8 pb-12 text-center video-hidden">
+        <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-down">
+            <p class="text-xl text-gray-400 w-full mx-auto mb-12 max-w-2xl">
                 A massive thank you to the legends who support the channel! This dream is becoming possible because of you ❤️
             </p>
-            <div class="inline-block pixel-border bg-gray-800 p-1 rounded">
-                <a href="https://patreon.com/ryanretro" target="_blank" class="block bg-orange-600 hover:bg-orange-500 text-white px-6 py-3 retro-font text-xs md:text-sm transition-colors">
-                    BECOME A PATRON
+            
+            <!-- INTERACTIVE PATREON GROUP -->
+            <div class="relative flex items-stretch group/patreon cursor-pointer hover:-translate-y-1 transition-transform duration-200">
+                <!-- Pop-up Badge -->
+                <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] retro-font px-2 py-1.5 rounded border-2 border-black opacity-0 group-hover/patreon:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20 shadow-lg -translate-y-2 group-hover/patreon:translate-y-0">
+                    JOIN THE RYAN RETRO FAMILY!
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black"></div>
+                </div>
+
+                <!-- The Button -->
+                <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+                   class="bg-[#f96854] hover:bg-[#ff8e7d] text-white px-8 py-5 rounded pixel-border retro-font text-[10px] md:text-sm flex items-center justify-center relative overflow-hidden transition-all duration-300">
+                    
+                    <!-- Continuous Shimmer Effect -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-1/2 h-full skew-x-[-20deg] animate-[shimmer-sweep_2.5s_infinite_linear] pointer-events-none"></div>
+
+                    <svg class="w-5 h-5 fill-current mr-3 relative z-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+                    </svg>
+                    <span class="relative z-10 tracking-wider">BECOME A PATRON</span>
                 </a>
             </div>
         </div>
