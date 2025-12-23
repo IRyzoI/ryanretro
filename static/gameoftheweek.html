@@ -117,6 +117,23 @@
             to { opacity: 1; transform: scale(1); }
         }
 
+        /* Custom Scrollbar for Modal */
+        .modal-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #111827; /* gray-900/header color */
+            border-radius: 4px;
+        }
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background: #4b5563; /* gray-600 */
+            border-radius: 4px;
+            border: 2px solid #111827; /* padding around thumb */
+        }
+        .modal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* gray-500 */
+        }
+
         /* Vue Cloak to hide uncompiled mustache bindings */
         [v-cloak] { display: none; }
     </style>
@@ -448,7 +465,7 @@
     <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" @click="showHandheldModal = false"></div>
     
     <!-- Modal Content -->
-    <div class="relative bg-gray-800 rounded-lg pixel-border border-4 border-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 shadow-2xl animate-fade-in-up">
+    <div class="relative bg-gray-800 rounded-lg pixel-border border-4 border-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 shadow-2xl animate-fade-in-up modal-scroll">
         
         <!-- Header -->
         <div class="bg-gray-900 p-4 border-b-4 border-black flex justify-between items-center sticky top-0 z-20">
@@ -461,16 +478,16 @@
             </button>
         </div>
 
-        <div class="p-6 md:p-8 space-y-10">
+        <div class="p-5 md:p-6 space-y-6">
             
             <!-- Section 1: Ryan's Recommended Handhelds -->
             <section>
-                <div class="flex items-center gap-3 mb-6">
+                <div class="flex items-center gap-3 mb-4">
                     <div class="w-2 h-8 bg-blue-500 rounded"></div>
                     <h3 class="retro-font text-white text-xs md:text-sm">RYAN'S RECOMMENDED HANDHELDS</h3>
                 </div>
                 
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                     <div v-for="device in recommendedHandhelds" :key="device.name" class="bg-gray-900 p-4 rounded border border-gray-700 hover:border-blue-500 transition-colors group flex flex-col h-full">
                         <div class="bg-black/50 rounded p-2 mb-3 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-800">
                             <img :src="device.heroImg" :alt="device.name" class="w-full h-auto object-contain max-h-full transition-transform group-hover:scale-110">
@@ -506,12 +523,12 @@
                             </p>
                             
                             <div class="flex flex-col sm:flex-row gap-3">
-                                <a :href="ryansChoice.affiliateHref" target="_blank" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+                                <a :href="ryansChoice.affiliateHref" target="_blank" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn">
                                     <i data-feather="shopping-bag" class="w-4 h-4"></i>
                                     GRAB YOURS
                                 </a>
-                                <a :href="ryansChoice.videosLinkHref" target="_blank" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn border border-gray-500">
-                                    <i data-feather="youtube" class="w-4 h-4 text-red-500"></i>
+                                <a :href="ryansChoice.videosLinkHref" target="_blank" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn">
+                                    <i data-feather="youtube" class="w-5 h-5 text-white"></i>
                                     WATCH VIDEOS
                                 </a>
                             </div>
