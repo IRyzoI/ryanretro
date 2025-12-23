@@ -116,11 +116,14 @@
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
+
+        /* Vue Cloak to hide uncompiled mustache bindings */
+        [v-cloak] { display: none; }
     </style>
 </head>
 <body class="bg-gray-900 text-white overflow-x-hidden">
 
-<div id="app">
+<div id="app" v-cloak>
   <header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
     <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative gap-4 md:gap-8">
       
@@ -203,14 +206,20 @@
 
                 <div class="p-6 md:p-8 relative z-10 flex flex-col md:flex-row lg:flex-col xl:flex-row items-center gap-6 md:gap-8 h-full">
                     
-                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 flex-shrink-0">
-                        <!-- Added <a> wrapper around the image card to make it clickable -->
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 flex-shrink-0 flex flex-col items-center">
+                        <!-- Image Wrapper -->
                         <a href="https://en.wikipedia.org/wiki/Monster_Boy_and_the_Cursed_Kingdom" target="_blank" class="block mx-auto w-48 md:w-64 lg:w-56 xl:w-64 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 cursor-pointer group">
                             <div class="pixel-border rounded-lg overflow-hidden scanlines bg-black relative">
                                 <img src="https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png" 
                                      alt="Monster Boy and the Cursed Kingdom" class="w-full h-auto block">
                             </div>
                         </a>
+                        
+                        <!-- NEW HANDHELDS BUTTON -->
+                        <button @click="showHandheldModal = true" class="mt-4 w-48 md:w-64 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[4px_4px_0_0_rgba(0,0,0,0.5)] transition-all">
+                            <i data-feather="smartphone" class="w-4 h-4"></i>
+                            <span>HANDHELDS</span>
+                        </button>
                     </div>
 
                     <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 text-center md:text-left lg:text-center xl:text-left flex flex-col justify-center">
@@ -433,6 +442,88 @@
 
   </main>
 
+  <!-- HANDHELDS POPUP MODAL -->
+  <div v-if="showHandheldModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" aria-modal="true" role="dialog">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" @click="showHandheldModal = false"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative bg-gray-800 rounded-lg pixel-border border-4 border-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 shadow-2xl animate-fade-in-up">
+        
+        <!-- Header -->
+        <div class="bg-gray-900 p-4 border-b-4 border-black flex justify-between items-center sticky top-0 z-20">
+            <h2 class="retro-font text-yellow-400 text-sm md:text-lg flex items-center gap-2">
+                <i data-feather="smartphone" class="w-5 h-5"></i>
+                HANDHELD SELECTOR
+            </h2>
+            <button @click="showHandheldModal = false" class="text-gray-400 hover:text-white transition-colors">
+                <i data-feather="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-10">
+            
+            <!-- Section 1: Ryan's Recommended Handhelds -->
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-2 h-8 bg-blue-500 rounded"></div>
+                    <h3 class="retro-font text-white text-xs md:text-sm">RYAN'S RECOMMENDED HANDHELDS</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div v-for="device in recommendedHandhelds" :key="device.name" class="bg-gray-900 p-4 rounded border border-gray-700 hover:border-blue-500 transition-colors group flex flex-col h-full">
+                        <div class="bg-black/50 rounded p-2 mb-3 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-800">
+                            <img :src="device.heroImg" :alt="device.name" class="w-full h-auto object-contain max-h-full transition-transform group-hover:scale-110">
+                        </div>
+                        <h4 class="retro-font text-[9px] md:text-[10px] text-gray-300 text-center mb-1 leading-tight">{{ device.name }}</h4>
+                        <div class="mt-auto pt-3">
+                             <a :href="device.affiliateHref" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-2 px-2 rounded text-center retro-font transition-colors pixel-btn">
+                                VIEW INFO
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Ryan's Choice -->
+            <section class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-1 pixel-border border-yellow-500/50">
+                <div class="bg-black/40 p-6 md:p-8 rounded-lg">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="w-full md:w-1/2 flex justify-center order-2 md:order-1">
+                            <div class="relative w-full max-w-sm">
+                                <div class="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse"></div>
+                                <img :src="ryansChoice.heroImg" :alt="ryansChoice.name" class="relative z-10 w-full h-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                            </div>
+                        </div>
+                        
+                        <div class="w-full md:w-1/2 text-center md:text-left order-1 md:order-2">
+                            <div class="inline-block bg-yellow-500 text-black px-3 py-1 rounded retro-font text-[10px] mb-3 font-bold">
+                                ★ RYAN'S CHOICE
+                            </div>
+                            <h3 class="retro-font text-xl md:text-3xl text-white mb-2">{{ ryansChoice.name }}</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                This is the handheld I'm personally using to play this week's game. It offers the perfect balance of performance and comfort for this title.
+                            </p>
+                            
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <a :href="ryansChoice.affiliateHref" target="_blank" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+                                    <i data-feather="shopping-bag" class="w-4 h-4"></i>
+                                    GRAB YOURS
+                                </a>
+                                <a :href="ryansChoice.videosLinkHref" target="_blank" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn border border-gray-500">
+                                    <i data-feather="youtube" class="w-4 h-4 text-red-500"></i>
+                                    WATCH VIDEOS
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+  </div>
+
   <footer class="bg-black py-12 border-t-4 border-gray-800 mt-20">
     <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
       © 2025 Ryan Retro. Keep Gaming.
@@ -464,7 +555,50 @@
     createApp({
         data() {
             return {
-                // Simplified Data State
+                showHandheldModal: false,
+                // Data pulled from handhelds.html config
+                recommendedHandhelds: [
+                    {
+                        name: "Retroid Pocket 5",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
+                        affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT"
+                    },
+                    {
+                        name: "Retroid Pocket G2",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
+                        affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT"
+                    },
+                    {
+                        name: "Ayaneo Konkr Pocket Fit",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkr-pocket-fit-3.jpg",
+                        affiliateHref: "https://www.indiegogo.com/projects/pocket-fit-premier-hi-performance-android-handheld/x/38203815#/"
+                    },
+                    {
+                        name: "Odin 3",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
+                        affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td"
+                    }
+                ],
+                ryansChoice: {
+                    name: "Odin 3",
+                    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
+                    affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
+                    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin 3"
+                }
+            }
+        },
+        watch: {
+            showHandheldModal(newVal) {
+                // Prevent scrolling when modal is open
+                if (newVal) {
+                    document.body.style.overflow = 'hidden';
+                    // Re-init feather icons inside modal after next tick
+                    this.$nextTick(() => {
+                        if(window.feather) feather.replace();
+                    });
+                } else {
+                    document.body.style.overflow = '';
+                }
             }
         },
         mounted() {
