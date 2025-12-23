@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Switch + Windows Benchmarks | Ryan Retro</title>
+  <title>Value Benchmarks | Ryan Retro</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
@@ -80,7 +80,7 @@
     /* Highlight best value cell */
     .rr-table td.best-cell {
       background-color: rgba(74, 222, 128, 0.2) !important;
-      color: #4ade80;
+      color: #4ade80 !important;
       font-weight: 700;
       border-left: 2px solid #4ade80;
     }
@@ -113,6 +113,12 @@
     /* Toggle Button States */
     .toggle-btn.off { opacity: 0.5; filter: grayscale(100%); }
     .toggle-btn.on { opacity: 1; filter: none; border-color: #facc15; color: #facc15; }
+
+    /* Shimmer Animation */
+    @keyframes shimmer-sweep {
+      0% { transform: translateX(-150%) skewX(-20deg); }
+      100% { transform: translateX(250%) skewX(-20deg); }
+    }
 
     /* Header Responsive Fixes */
     @media (max-width: 768px) {
@@ -148,11 +154,15 @@
         </span>
 
         <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
-          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+           class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105 relative overflow-hidden">
+          
+          <!-- Continuous Shimmer Effect -->
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-1/2 h-full pointer-events-none" style="animation: shimmer-sweep 2.5s linear infinite;"></div>
+
+          <svg class="w-5 h-5 fill-current relative z-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
           </svg>
-          <span class="tracking-tight">BECOME A PATRON</span>
+          <span class="tracking-tight relative z-10">BECOME A PATRON</span>
         </a>
       </div>
 
@@ -211,11 +221,11 @@
           <button id="toggleColorMode" class="px-3 py-1.5 rounded border border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
             <i data-feather="bar-chart" class="w-3 h-3"></i> Ranking Mode
           </button>
+          <button id="toggleValueMode" class="px-3 py-1.5 rounded border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
+            <i data-feather="dollar-sign" class="w-3 h-3"></i> Value Mode
+          </button>
           <button id="toggleRunsGreat" class="px-3 py-1.5 rounded border border-green-400 text-green-300 hover:bg-green-400 hover:text-black transition text-xs font-bold flex items-center gap-2">
             <i data-feather="check-circle" class="w-3 h-3"></i> Runs Great
-          </button>
-          <button id="toggleEmojiMode" class="px-3 py-1.5 rounded border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
-            <i data-feather="smile" class="w-3 h-3"></i> Emoji Mode
           </button>
           <button id="toggleMiniMode" class="px-3 py-1.5 rounded border border-sky-500 text-sky-400 hover:bg-sky-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
             <i data-feather="smartphone" class="w-3 h-3"></i> Mini View
@@ -357,7 +367,7 @@
             </tbody>
           </table>
 
-          <!-- SWITCH TABLE (RESTORED) -->
+          <!-- SWITCH TABLE -->
           <table class="rr-table w-full text-left" data-mode="switch" style="display:none;">
             <thead class="bg-black text-red-500 retro-font">
               <tr>
@@ -554,6 +564,101 @@
         </div>
       </div>
 
+      <!-- NOTES SECTION -->
+      <div class="mt-12 text-center" data-aos="fade-up">
+        <button id="toggleNotes" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded pixel-btn retro-font text-[10px] md:text-xs border-2 border-black flex items-center justify-center gap-3 mx-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+          <i data-feather="info" class="w-4 h-4"></i>
+          <span>SHOW NOTES</span>
+        </button>
+        
+        <div id="notesContent" class="hidden mt-8 text-left bg-gray-900 border-4 border-black p-6 md:p-8 rounded-lg max-w-4xl mx-auto shadow-[8px_8px_0_0_rgba(0,0,0,0.2)]">
+          <div class="space-y-6">
+            <section>
+              <h3 class="retro-font text-yellow-400 text-xs md:text-sm mb-3 flex items-center gap-2">
+                <i data-feather="eye" class="w-4 h-4"></i> PERFORMANCE MEASUREMENT
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed">
+                Please note that these tests utilize "eyeballed" FPS averages observed during active gameplay. They were not captured using scientific frame-time analysis tools or specialized benchmarking software. These values should be viewed as rough guidelines and performance estimates rather than precise scientific measurements.
+              </p>
+            </section>
+
+            <div class="grid md:grid-cols-2 gap-8">
+              <section>
+                <h3 class="retro-font text-blue-400 text-xs mb-3 flex items-center gap-2">
+                  <i data-feather="dollar-sign" class="w-4 h-4"></i> VALUE MODE
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  Value Mode displays the "Price per Frame" for each device. This is calculated by taking the cost of the handheld at the time of filming and dividing it by the average FPS achieved in that specific game ($/FPS). Lower values indicate better cost-to-performance efficiency.
+                </p>
+              </section>
+
+              <section>
+                <h3 class="retro-font text-green-400 text-xs mb-3 flex items-center gap-2">
+                  <i data-feather="check-circle" class="w-4 h-4"></i> RUNS GREAT
+                </h3>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                  The "Runs Great" highlight indicates that the handheld achieved the expected playable target for that title. This threshold is typically 30 FPS for demanding AAA/3D games and 60 FPS for lighter or 2D titles.
+                </p>
+              </section>
+            </div>
+
+            <!-- HANDHELD SPECIFICATIONS -->
+            <section class="border-t border-gray-700 pt-6">
+              <h3 class="retro-font text-purple-400 text-xs md:text-sm mb-4 flex items-center gap-2">
+                <i data-feather="cpu" class="w-4 h-4"></i> HANDHELD SPECIFICATIONS
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[10px] md:text-xs">
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-green-400 block mb-1">Retroid Pocket 5</span>
+                  <p class="text-gray-300 font-bold mb-1">Snapdragon 865</p>
+                  <p class="text-gray-400">8GB RAM / 128GB Storage</p>
+                  <p class="text-gray-400 mt-1">$199</p>
+                </div>
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-yellow-400 block mb-1">Retroid Pocket G2</span>
+                  <p class="text-gray-300 font-bold mb-1">Snapdragon G2 Gen 2</p>
+                  <p class="text-gray-400">8GB RAM / 128GB Storage</p>
+                  <p class="text-gray-400 mt-1">$219</p>
+                </div>
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-blue-400 block mb-1">AYN Odin 2 Portal</span>
+                  <p class="text-gray-300 font-bold mb-1">Snapdragon 8 Gen 2</p>
+                  <p class="text-gray-400">8GB RAM / 128GB Storage</p>
+                  <p class="text-gray-400 mt-1">$329</p>
+                </div>
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-orange-400 block mb-1">Konkr Pocket Fit</span>
+                  <p class="text-gray-300 font-bold mb-1">Snapdragon G3 Gen 3</p>
+                  <p class="text-gray-400">12GB RAM / 256GB Storage</p>
+                  <p class="text-gray-400 mt-1">$329</p>
+                </div>
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-pink-400 block mb-1">Samsung Fold 7</span>
+                  <p class="text-gray-300 font-bold mb-1">Snapdragon 8 Elite</p>
+                  <p class="text-gray-400">12GB RAM / 512GB Storage</p>
+                  <p class="text-gray-400 mt-1">$1719</p>
+                </div>
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-purple-400 block mb-1">AYN Odin 3</span>
+                  <p class="text-gray-300 font-bold mb-1">Snapdragon 8 Elite</p>
+                  <p class="text-gray-400">16GB RAM / 512GB Storage</p>
+                  <p class="text-gray-400 mt-1">$449</p>
+                </div>
+                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
+                  <span class="text-cyan-400 block mb-1">Steam Deck</span>
+                  <p class="text-gray-300 font-bold mb-1">AMD Custom APU</p>
+                  <p class="text-gray-400">16GB RAM / 512GB Storage</p>
+                  <p class="text-gray-400 mt-1">$399</p>
+                </div>
+              </div>
+              <p class="text-gray-600 text-[16px] mt-4 tracking-tighter">
+                Note: All prices shown were accurate at the time of filming and may have changed.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -571,15 +676,24 @@
       feather.replace();
 
       const DEVICE_COUNT = 7;
+      // Provided Prices (at time of filming)
+      const prices = {
+        1: 199,  // RP5
+        2: 219,  // RPG2
+        3: 329,  // Odin 2 Portal
+        4: 329,  // Konkr
+        5: 1719, // Fold 7
+        6: 449,  // Odin 3
+        7: 399   // Steam Deck
+      };
 
       // State
       let activeMode = 'combined';
       let highlightOn = false;
       let colorModeOn = false;
+      let valueModeOn = false;
       let runsGreatOn = false;
-      let emojiModeOn = false; 
       let miniModeOn = false;
-      // FOLD 7 (index 5) is disabled by default
       const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: false, 6: true, 7: true };
 
       // Selectors
@@ -588,10 +702,25 @@
       const deviceButtons = document.querySelectorAll('.device-toggle');
       const highlightBtn = document.getElementById('toggleHighlight');
       const colorBtn = document.getElementById('toggleColorMode');
+      const valueBtn = document.getElementById('toggleValueMode');
       const runsBtn = document.getElementById('toggleRunsGreat');
-      const emojiBtn = document.getElementById('toggleEmojiMode'); 
       const miniBtn = document.getElementById('toggleMiniMode');
       const benchCard = document.getElementById('benchCard');
+      const notesBtn = document.getElementById('toggleNotes');
+      const notesContent = document.getElementById('notesContent');
+
+      // Notes Toggle
+      notesBtn.addEventListener('click', () => {
+        const isHidden = notesContent.classList.contains('hidden');
+        if (isHidden) {
+          notesContent.classList.remove('hidden');
+          notesBtn.querySelector('span').innerText = 'HIDE NOTES';
+          notesContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          notesContent.classList.add('hidden');
+          notesBtn.querySelector('span').innerText = 'SHOW NOTES';
+        }
+      });
 
       function getActiveTable() {
         return document.querySelector(`.rr-table[data-mode="${activeMode}"]`);
@@ -636,8 +765,8 @@
         
         if (highlightOn) applyHighlight();
         if (colorModeOn) applyColorMode();
+        if (valueModeOn) applyValueMode();
         if (runsGreatOn) applyRunsGreat();
-        if (emojiModeOn) applyEmojiMode(); 
       }
 
       function applyHighlight() {
@@ -706,6 +835,60 @@
         });
       }
 
+      function applyValueMode() {
+        clearEffects();
+        const table = getActiveTable();
+        const rows = table.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+          let minCost = Infinity;
+          let calculatedCosts = {};
+
+          // First pass: Find minimum cost among visible columns
+          for (let i = 1; i <= DEVICE_COUNT; i++) {
+            const cell = row.children[i];
+            // Ensure dataset.original is set
+            const originalText = cell.dataset.original || cell.innerText.trim();
+            if (!cell.dataset.original) {
+              cell.dataset.original = originalText;
+            }
+
+            if (!columnVisibility[i]) continue;
+
+            const val = parseFloat(originalText);
+
+            if (!isNaN(val) && val > 0) {
+              const cost = prices[i] / val;
+              calculatedCosts[i] = cost;
+              if (cost < minCost) {
+                minCost = cost;
+              }
+            }
+          }
+
+          // Second pass: Apply styling
+          for (let i = 1; i <= DEVICE_COUNT; i++) {
+            const cell = row.children[i];
+            const originalText = cell.dataset.original;
+            const val = parseFloat(originalText);
+
+            if (!isNaN(val) && val > 0) {
+              const cost = prices[i] / val;
+              
+              // Check if best value (must be visible to be minCost, but if hidden we still calculate)
+              const isBest = (calculatedCosts[i] !== undefined && Math.abs(cost - minCost) < 0.0001);
+
+              if (isBest) {
+                cell.innerHTML = `<span class="text-green-400 font-bold">$${cost.toFixed(2)}</span>`;
+                cell.classList.add('best-cell');
+              } else {
+                cell.innerHTML = `<span class="text-yellow-400 font-bold">$${cost.toFixed(2)}</span>`;
+              }
+            }
+          }
+        });
+      }
+
       function applyRunsGreat() {
         clearEffects();
         const table = getActiveTable();
@@ -738,60 +921,6 @@
         });
       }
 
-      function applyEmojiMode() {
-        clearEffects(); 
-        const table = getActiveTable();
-        const rows = table.querySelectorAll('tbody tr');
-
-        rows.forEach(row => {
-          let vals = [];
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            if (!columnVisibility[i]) continue;
-            const val = parseFloat(row.children[i].innerText);
-            if (!isNaN(val)) vals.push(val);
-          }
-
-          const minVal = vals.length > 0 ? Math.min(...vals) : null;
-          const maxVal = vals.length > 0 ? Math.max(...vals) : null;
-          const range = (maxVal !== null && minVal !== null) ? (maxVal - minVal) || 1 : 1;
-
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            if (!columnVisibility[i]) continue;
-            const cell = row.children[i];
-            const originalText = cell.innerText.trim();
-            const val = parseFloat(originalText);
-
-            if (!cell.dataset.original) {
-              cell.dataset.original = originalText;
-            }
-
-            if (originalText === '') {
-            } else if (originalText === '-') {
-               cell.innerHTML = '<span class="text-2xl leading-none">💀</span>'; 
-            } else if (originalText.toLowerCase() === 'untested') {
-               cell.innerHTML = '<span class="text-2xl leading-none">🤡</span>'; 
-            } else if (!isNaN(val)) {
-               let emoji = '';
-               if (val === maxVal) {
-                 emoji = '🏆'; 
-               } else if (val === minVal) {
-                 emoji = '💩'; 
-               } else {
-                 const t = (val - minVal) / range;
-                 if (t < 0.33) {
-                   emoji = '😐'; 
-                 } else if (t < 0.66) {
-                   emoji = '😊'; 
-                 } else {
-                   emoji = '😆'; 
-                 }
-               }
-               cell.innerHTML = `<span class="text-2xl leading-none">${emoji}</span>`;
-            }
-          }
-        });
-      }
-
       function updateGameNamesForMiniMode() {
         const rows = document.querySelectorAll('.rr-table tbody tr');
         rows.forEach(row => {
@@ -814,6 +943,19 @@
               cell.innerText = cell.dataset.fullName;
             }
           }
+        });
+      }
+
+      // Universal reset for filter buttons
+      function resetFilterButtons() {
+        const btns = [highlightBtn, colorBtn, valueBtn, runsBtn];
+        btns.forEach(b => {
+          b.classList.remove('bg-emerald-500', 'bg-fuchsia-500', 'bg-yellow-500', 'bg-green-500', 'text-black', 'shadow-lg');
+          const originalBorder = b.id === 'toggleHighlight' ? 'border-emerald-500 text-emerald-400' :
+                                b.id === 'toggleColorMode' ? 'border-fuchsia-500 text-fuchsia-400' :
+                                b.id === 'toggleValueMode' ? 'border-yellow-500 text-yellow-400' :
+                                'border-green-400 text-green-300';
+          b.className = `px-3 py-1.5 rounded border transition text-xs font-bold flex items-center gap-2 ${originalBorder}`;
         });
       }
 
@@ -842,8 +984,8 @@
           
           if (highlightOn) applyHighlight();
           if (colorModeOn) applyColorMode();
+          if (valueModeOn) applyValueMode();
           if (runsGreatOn) applyRunsGreat();
-          if (emojiModeOn) applyEmojiMode();
           
           if (miniModeOn) updateGameNamesForMiniMode();
         });
@@ -872,107 +1014,55 @@
         });
       });
 
-      // Highlight Button
+      // Feature Toggles
       highlightBtn.addEventListener('click', () => {
-        highlightOn = !highlightOn;
-        colorModeOn = false;
-        runsGreatOn = false;
-        emojiModeOn = false; 
-        
-        colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
-        colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
-        runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
-        runsBtn.classList.add('border-green-400', 'text-green-300');
-        emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
-        emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
-
+        const state = !highlightOn;
+        resetFilterButtons();
+        clearEffects();
+        highlightOn = state; colorModeOn = false; valueModeOn = false; runsGreatOn = false;
         if (highlightOn) {
           applyHighlight();
           highlightBtn.classList.add('bg-emerald-500', 'text-black', 'shadow-lg');
           highlightBtn.classList.remove('border-emerald-500', 'text-emerald-400');
-        } else {
-          clearEffects();
-          highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
-          highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
         }
       });
 
-      // Ranking Mode
       colorBtn.addEventListener('click', () => {
-        colorModeOn = !colorModeOn;
-        highlightOn = false; 
-        runsGreatOn = false;
-        emojiModeOn = false;
-
-        highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
-        highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
-        runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
-        runsBtn.classList.add('border-green-400', 'text-green-300');
-        emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
-        emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
-
+        const state = !colorModeOn;
+        resetFilterButtons();
+        clearEffects();
+        colorModeOn = state; highlightOn = false; valueModeOn = false; runsGreatOn = false;
         if (colorModeOn) {
           applyColorMode();
           colorBtn.classList.add('bg-fuchsia-500', 'text-black', 'shadow-lg');
           colorBtn.classList.remove('border-fuchsia-500', 'text-fuchsia-400');
-        } else {
-          clearEffects();
-          colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
-          colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
         }
       });
 
-      // Runs Great Button
+      valueBtn.addEventListener('click', () => {
+        const state = !valueModeOn;
+        resetFilterButtons();
+        clearEffects();
+        valueModeOn = state; highlightOn = false; colorModeOn = false; runsGreatOn = false;
+        if (valueModeOn) {
+          applyValueMode();
+          valueBtn.classList.add('bg-yellow-500', 'text-black', 'shadow-lg');
+          valueBtn.classList.remove('border-yellow-500', 'text-yellow-400');
+        }
+      });
+
       runsBtn.addEventListener('click', () => {
-        runsGreatOn = !runsGreatOn;
-        highlightOn = false;
-        colorModeOn = false;
-        emojiModeOn = false;
-
-        highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
-        highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
-        colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
-        colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
-        emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
-        emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
-
+        const state = !runsGreatOn;
+        resetFilterButtons();
+        clearEffects();
+        runsGreatOn = state; highlightOn = false; colorModeOn = false; valueModeOn = false;
         if (runsGreatOn) {
           applyRunsGreat();
           runsBtn.classList.add('bg-green-500', 'text-black', 'shadow-lg');
           runsBtn.classList.remove('border-green-400', 'text-green-300');
-        } else {
-          clearEffects();
-          runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
-          runsBtn.classList.add('border-green-400', 'text-green-300');
         }
       });
 
-      // Emoji Mode
-      emojiBtn.addEventListener('click', () => {
-        emojiModeOn = !emojiModeOn;
-        highlightOn = false;
-        colorModeOn = false;
-        runsGreatOn = false;
-
-        highlightBtn.classList.remove('bg-emerald-500', 'text-black', 'shadow-lg');
-        highlightBtn.classList.add('border-emerald-500', 'text-emerald-400');
-        colorBtn.classList.remove('bg-fuchsia-500', 'text-black', 'shadow-lg');
-        colorBtn.classList.add('border-fuchsia-500', 'text-fuchsia-400');
-        runsBtn.classList.remove('bg-green-500', 'text-black', 'shadow-lg');
-        runsBtn.classList.add('border-green-400', 'text-green-300');
-
-        if (emojiModeOn) {
-          applyEmojiMode();
-          emojiBtn.classList.add('bg-yellow-500', 'text-black', 'shadow-lg');
-          emojiBtn.classList.remove('border-yellow-500', 'text-yellow-400');
-        } else {
-          clearEffects();
-          emojiBtn.classList.remove('bg-yellow-500', 'text-black', 'shadow-lg');
-          emojiBtn.classList.add('border-yellow-500', 'text-yellow-400');
-        }
-      });
-
-      // Mini Mode
       miniBtn.addEventListener('click', () => {
         miniModeOn = !miniModeOn;
         if (miniModeOn) {
@@ -987,7 +1077,7 @@
         updateGameNamesForMiniMode(); 
       });
 
-      // Sorting
+      // Sorting Logic (Handles Dollar Values)
       document.querySelectorAll('th.sortable').forEach(th => {
         th.addEventListener('click', function() {
           const table = th.closest('table');
@@ -1002,20 +1092,30 @@
           rowsArray.sort((a, b) => {
             const cellA = a.children[colIndex];
             const cellB = b.children[colIndex];
-            const valA = cellA.dataset.original || cellA.innerText.trim();
-            const valB = cellB.dataset.original || cellB.innerText.trim();
-            const numA = parseFloat(valA);
-            const numB = parseFloat(valB);
-            if (!isNaN(numA) && !isNaN(numB)) {
-              return isAsc ? numB - numA : numA - numB;
+            
+            // Clean values for comparison (remove $, etc)
+            const getCleanVal = (cell) => {
+              let val = cell.innerText.trim();
+              if (val.startsWith('$')) val = val.substring(1);
+              if (val === '-' || val.toLowerCase() === 'untested') return -1;
+              const n = parseFloat(val);
+              return isNaN(n) ? val : n;
+            };
+
+            const valA = getCleanVal(cellA);
+            const valB = getCleanVal(cellB);
+
+            if (typeof valA === 'number' && typeof valB === 'number') {
+              return isAsc ? valB - valA : valA - valB;
             } else {
-              return isAsc ? valB.localeCompare(valA) : valA.localeCompare(valB);
+              return isAsc ? valB.toString().localeCompare(valA) : valA.toString().localeCompare(valB);
             }
           });
           tbody.append(...rowsArray);
         });
       });
 
+      // Initial check for mobile
       if (window.innerWidth < 768) {
         miniModeOn = true;
         benchCard.classList.add('mini-mode');
