@@ -1,75 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Compatibility | Ryan Retro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game of the Week | Ryan Retro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+        
+        body { font-family: 'Roboto', sans-serif; }
+        .retro-font { font-family: 'Press Start 2P', cursive; }
+        
+        .pixel-border {
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+        }
+        
+        .pixel-btn {
+            transition: all 0.2s ease;
+        }
+        .pixel-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+        }
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+        .hero-header {
+            background: #111827;
+            position: relative;
+        }
+        .hero-header::before {
+            content: "";
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none; opacity: .35;
+        }
+        
+        /* CRT Scanline effect */
+        .scanlines {
+            position: relative;
+            overflow: hidden;
+        }
+        .scanlines::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        
+        /* Flip Button Styles */
+        .flip-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 40px; 
+            margin-top: auto;
+        }
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flip-container.flipped .flip-inner {
+            transform: rotateX(180deg);
+        }
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem; 
+        }
+        .flip-front { z-index: 2; }
+        .flip-back {
+            transform: rotateX(180deg);
+            background-color: #dc2626; 
+            color: white;
+            font-size: 0.65rem; 
+            border: 1px solid #991b1b;
+        }
 
-  <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
-  <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://huggingface.co" crossorigin>
-  <link rel="dns-prefetch" href="//huggingface.co">
-  <link rel="icon" href="data:,">
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .carousel-slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            animation: fadeIn 0.5s;
+        }
+        .carousel-slide.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-
-    .retro-font { font-family: 'Press Start 2P', cursive; }
-    
-    /* Shared Retro Styles */
-    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-    .pixel-btn { transition: all 0.1s ease; }
-    .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
-
-    /* Performance Colors */
-    .perf-perfect, .status-perfect { color: #4ade80; }
-    .perf-great, .status-great { color: #38bdf8; }
-    .perf-playable, .status-playable { color: #fb923c; }
-    .perf-unplayable, .status-unplayable { color: #f87171; }
-
-    /* Table & Form */
-    #compatibility-table thead th { position: sticky; top: 0; z-index: 10; }
-
-    .form-input {
-      background-color: #374151; border: 2px solid #1f2937; border-radius: .25rem;
-      padding: .5rem .75rem; color: #d1d5db; width: 100%; transition: border-color .2s;
-    }
-    .form-input:focus { outline: none; border-color: #facc15; }
-
-    .custom-scrollbar::-webkit-scrollbar { height: 8px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-
-    select.form-input.perf-perfect    { background-color: rgba(74, 222, 128, .10); }
-    select.form-input.perf-great      { background-color: rgba(56, 189, 248, .10); }
-    select.form-input.perf-playable   { background-color: rgba(251, 146, 60, .10); }
-    select.form-input.perf-unplayable { background-color: rgba(248, 113, 113, .10); }
-
-    .island { content-visibility: auto; contain-intrinsic-size: 800px; }
-
-    /* Active filter state */
-    .filter-active { outline: 2px solid white; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-
-    /* Header Responsive Fixes */
-    @media (max-width: 768px) {
-      .header-container { flex-direction: column; gap: 0.25rem; }
-    }
-  </style>
+        /* Vue Cloak to hide uncompiled mustache bindings */
+        [v-cloak] { display: none; }
+    </style>
 </head>
+<body class="bg-gray-900 text-white overflow-x-hidden">
 
-<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
-
+<div id="app" v-cloak>
   <header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container relative">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between relative gap-4 md:gap-8">
       
       <a href="/" class="flex items-center gap-3 md:gap-4 mb-2 md:mb-0">
         <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
@@ -78,21 +134,18 @@
       </a>
 
       <a href="/store"
-         class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+          class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
         <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
         <span>STORE</span>
       </a>
 
-      <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
+      <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative group w-full md:w-auto mt-5 md:mt-0">
         <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
           SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
         </span>
 
         <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
-          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-          </svg>
+            class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
           <span class="tracking-tight">BECOME A PATRON</span>
         </a>
       </div>
@@ -100,925 +153,525 @@
     </div>
   </header>
 
-  <main class="py-12">
-    <div class="mx-auto w-full max-w-[1900px] px-2 sm:px-4">
-      <div class="max-w-full mx-auto">
-        <div class="flex items-center mb-8">
-          <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font mr-4">HANDHELD</span>
-          <h1 id="device-heading" class="retro-font text-3xl md:text-4xl">Device</h1>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div class="md:col-span-2" data-aos="fade-right">
-            <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border h-full p-4 relative group hover:border-gray-500 transition-colors duration-300">
-               <a id="hero-link" href="#" target="_blank" class="flex w-full h-full items-center justify-center">
-                  <img id="hero-img" src="" alt="Device" class="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105" decoding="async" fetchpriority="high">
-               </a>
-            </div>
-          </div>
-
-          <div id="sidebar-panel"
-               class="md:col-span-1 bg-gray-800 p-8 rounded-lg pixel-border flex flex-col" data-aos="fade-left">
-            <div id="cta-buttons" class="flex flex-col gap-4 h-full">
-              <a id="affiliate-link" href="#" target="_blank"
-                 class="group flex-grow bg-green-600 hover:bg-green-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base
-                        flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="shopping-cart" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
-                <span class="btn-label">PURCHASE</span>
-              </a>
-
-              <a id="videos-link" href="#" target="_blank"
-                 class="group flex-grow bg-red-600 hover:bg-red-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="youtube" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> VIDEOS
-              </a>
-              <a id="review-or-compat-link"
-                 href="#compatibility"
-                 class="group flex-grow bg-blue-600 hover:bg-blue-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="list" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
-                <span id="review-or-compat-label">PLAY GAMES</span>
-              </a>
-
-              <a href="/benchmarks"
-                 class="group flex-grow bg-purple-600 hover:bg-purple-700 text-white px-4 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="bar-chart-2" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> BENCHMARKS
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <section id="videos-section" class="mb-12 island">
-          <h2 class="retro-font text-2xl mb-6">Videos</h2>
-          <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <p class="md:col-span-3">Loading videos...</p>
-          </div>
-        </section>
-
-        <div id="compatibility" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 island">
-          <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
-
-          <div id="variant-tabs" class="mb-4 hidden">
-            <div class="inline-flex flex-wrap gap-2"></div>
-          </div>
-
-          <div id="system-buttons" class="mb-4 flex flex-wrap gap-2">
-            <button data-system="switch"    class="system-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">Switch</button>
-            <button data-system="ps2"       class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
-            <button data-system="ps3"       class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS3</button>
-            <button data-system="psvita"    class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS Vita</button>
-            <button data-system="winlator" class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Winlator</button>
-            <button data-system="gamehub"  class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">GameHub</button>
-            <button data-system="wiiu"     class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Wii U</button>
-          </div>
-
-          <div id="perf-filters" class="mb-3 flex flex-wrap gap-2 text-xs">
-            <button data-perf=""            class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 border border-transparent filter-active">All</button>
-            <button data-perf="Perfect"     class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-perfect font-bold border border-transparent">Perfect</button>
-            <button data-perf="Great"       class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-great font-bold border border-transparent">Great</button>
-            <button data-perf="Playable"    class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-playable font-bold border border-transparent">Playable</button>
-            <button data-perf="Unplayable" class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-unplayable font-bold border border-transparent">Unplayable</button>
-          </div>
-
-          <div class="mb-6 flex flex-col md:flex-row gap-4">
-            <div class="flex-grow">
-              <input type="text" id="game-search-box" class="form-input" placeholder="Search for a game...">
-            </div>
-            <div class="flex items-center justify-end gap-2">
-              <label for="rows-per-page" class="text-sm font-bold text-gray-400">Rows:</label>
-              <select id="rows-per-page" class="bg-gray-700 text-white border border-gray-600 rounded px-2 py-2 text-sm focus:outline-none focus:border-yellow-400">
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto custom-scrollbar">
-            <table id="compatibility-table" class="min-w-full text-sm text-left text-gray-300">
-              <thead class="bg-gray-700 text-gray-100 retro-font text-xs uppercase tracking-wider cursor-pointer"></thead>
-              <tbody class="divide-y divide-gray-700 align-baseline"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="pagination-controls" class="mt-6 flex items-center justify-center gap-4">
-          <button id="prev-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Previous</button>
-          <span id="page-info" class="retro-font text-sm text-yellow-400">Page 1 of 1</span>
-          <button id="next-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Next</button>
-        </div>
-
-        <div class="text-center mt-6">
-          <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">
-            ADD YOUR ENTRY
-          </button>
-        </div>
-
-        <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden mt-8" data-aos="fade-up">
-          <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
-
-          <form id="compatibility-form">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label for="form-system-select" class="block mb-2 font-bold">System *</label>
-                <select id="form-system-select" class="form-input" required>
-                  <option value="switch">Nintendo Switch</option>
-                  <option value="ps2">PlayStation 2</option>
-                  <option value="ps3">PlayStation 3</option>
-                  <option value="psvita">PlayStation Vita</option>
-                  <option value="winlator">Winlator</option>
-                  <option value="gamehub">GameHub</option>
-                  <option value="wiiu">Wii U</option>
-                </select>
-              </div>
-            </div>
-
-            <div id="dynamic-fields" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"></div>
-
-            <div class="mb-6">
-              <label for="notes" class="block mb-2 font-bold">Notes (optional)</label>
-              <textarea id="notes" name="notes" rows="3" class="form-input" placeholder="Extra context, settings, caveats..."></textarea>
-            </div>
-
-            <input type="hidden" id="hidden-device" name="device" value="">
-            <input type="hidden" id="hidden-system" name="system" value="switch">
-
-            <div class="flex items-center justify-end gap-4">
-              <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font">CANCEL</button>
-              <button type="submit" class="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded retro-font">SUBMIT</button>
-            </div>
-          </form>
-        </div>
-
-      </div>
+  <main class="container mx-auto px-4 py-4 md:py-6">
+    
+    <div class="text-center mb-6" data-aos="fade-down">
+        <span class="bg-red-600 text-white px-3 py-1 rounded retro-font text-xs mb-4 inline-block pixel-border">
+            SEASON 1 • WEEK 1
+        </span>
+        <h1 class="retro-font text-3xl md:text-5xl text-yellow-400 mt-2 text-shadow tracking-tight leading-normal">
+            GAME OF THE WEEK
+        </h1>
+        <p class="text-gray-400 mt-4 max-w-2xl lg:max-w-5xl mx-auto text-sm md:text-base">
+            Every week we play a retro classic together. Join the community, vote for the next title, and share your high scores!
+        </p>
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+        
+        <!-- Last Week Section -->
+        <div class="lg:col-span-3 order-2 lg:order-1 flex flex-col justify-start" data-aos="fade-right" data-aos-delay="100">
+            <div class="bg-gray-800 p-6 rounded-lg pixel-border text-center opacity-70 hover:opacity-100 transition-opacity duration-300 border border-gray-700 hover:border-gray-500 h-full flex flex-col">
+                <h3 class="retro-font text-[10px] text-gray-400 mb-4 tracking-widest">LAST WEEK</h3>
+                
+                <div class="relative w-3/4 mx-auto aspect-[3/4] mb-4 bg-black rounded overflow-hidden shadow-lg group">
+                    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png')] bg-cover bg-center blur-sm opacity-50 scale-110"></div>
+                    <img src="https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png" 
+                         alt="Last Week Game" class="relative z-10 w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-20 pointer-events-none"></div>
+                </div>
+                
+                <h4 class="retro-font text-sm text-white mb-1">Zelda: Minish Cap</h4>
+                <p class="text-xs text-gray-500 mb-4">GBA • 2004</p>
+                
+                <div class="flip-container mt-auto" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-300 text-xs retro-font">
+                            VIEW ARCHIVE
+                        </div>
+                        <div class="flip-back retro-font">
+                            BUTTON UNDER CONSTRUCTION 🚧
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Current Game Section -->
+        <div class="lg:col-span-6 order-1 lg:order-2" data-aos="zoom-in">
+            <div class="bg-gray-800 rounded-xl pixel-border overflow-hidden relative border-t-4 border-yellow-500 shadow-[0_0_50px_-12px_rgba(234,179,8,0.2)]">
+                <div class="absolute inset-0 bg-[url('https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png')] bg-cover bg-center opacity-10 blur-md pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/95 to-gray-900 pointer-events-none"></div>
+
+                <div class="p-6 md:p-8 relative z-10 flex flex-col md:flex-row lg:flex-col xl:flex-row items-center gap-6 md:gap-8 h-full">
+                    
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 flex-shrink-0 flex flex-col items-center">
+                        <!-- Image Wrapper -->
+                        <a href="https://en.wikipedia.org/wiki/Monster_Boy_and_the_Cursed_Kingdom" target="_blank" class="block mx-auto w-48 md:w-64 lg:w-56 xl:w-64 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 cursor-pointer group">
+                            <div class="pixel-border rounded-lg overflow-hidden scanlines bg-black relative">
+                                <img src="https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png" 
+                                     alt="Monster Boy and the Cursed Kingdom" class="w-full h-auto block">
+                            </div>
+                        </a>
+                        
+                        <!-- NEW HANDHELDS BUTTON -->
+                        <button @click="showHandheldModal = true" class="mt-4 w-48 md:w-64 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[4px_4px_0_0_rgba(0,0,0,0.5)] transition-all">
+                            <i data-feather="smartphone" class="w-4 h-4"></i>
+                            <span>HANDHELDS</span>
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 text-center md:text-left lg:text-center xl:text-left flex flex-col justify-center">
+                        <h2 class="retro-font text-xl md:text-2xl text-white mb-4 leading-snug">
+                            MONSTER BOY AND THE CURSED KINGDOM
+                        </h2>
+                        
+                        <div class="flex flex-wrap justify-center md:justify-start lg:justify-center xl:justify-start gap-2 mb-6">
+                            <span class="bg-blue-900/50 text-blue-200 border border-blue-800 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">MODERN RETRO</span>
+                            <span class="bg-purple-900/50 text-purple-200 border border-purple-800 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">ACTION ADVENTURE</span>
+                            <span class="bg-gray-800 text-gray-400 border border-gray-700 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">2018</span>
+                        </div>
+
+                        <div class="flex justify-center md:justify-start lg:justify-center xl:justify-start gap-4 mb-8 text-gray-400">
+                            <div class="group relative cursor-pointer hover:text-red-500 transition-colors">
+                                <i data-feather="tv" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-blue-500 transition-colors">
+                                <i data-feather="monitor" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">PS4 / PS5</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-green-500 transition-colors">
+                                <i data-feather="box" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Xbox</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-cyan-400 transition-colors">
+                                <i data-feather="hard-drive" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows PC</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/60 p-4 rounded-lg border border-gray-700 mb-0 backdrop-blur-sm w-full">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-[10px] font-bold text-red-400 uppercase tracking-widest flex items-center">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                                    Time Remaining
+                                </span>
+                                <span id="timer-text" class="retro-font text-yellow-400 text-xs tabular-nums">--:--:--</span>
+                            </div>
+                            
+                            <div class="w-full bg-gray-900 h-6 rounded-full border border-gray-600 relative overflow-hidden">
+                                <div id="progress-bar" class="h-full bg-gradient-to-r from-red-600 to-yellow-500 w-0 transition-all duration-1000 ease-linear relative">
+                                    <div class="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjIHFBmlpYWIDphIkCVAAAddQj/6W1NQQAAAABJRU5ErkJggg==')] opacity-20"></div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-[10px] text-gray-500 mt-2 text-right">Next game: Monday 00:00 GMT</p>
+                        </div>
+                        
+                        <!-- JOIN THE CONVERSATION BUTTON START -->
+                        <a href="https://ryan-retro.link/gotw" target="_blank" rel="noopener noreferrer" 
+                           class="mt-4 group relative w-full block bg-[#5865F2] hover:bg-[#4752C4] text-white pixel-border rounded transition-all duration-200 hover:-translate-y-1 active:translate-y-0 shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]">
+                            <div class="p-3 flex items-center justify-between relative z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-black/20 p-2 rounded group-hover:bg-black/30 transition-colors">
+                                        <i data-feather="message-circle" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="flex flex-col items-start text-left">
+                                        <span class="text-[8px] uppercase tracking-widest font-bold opacity-80 mb-0.5">Patrons Only</span>
+                                        <span class="retro-font text-[10px] md:text-xs">JOIN THE CONVERSATION</span>
+                                    </div>
+                                </div>
+                                <i data-feather="arrow-right" class="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </a>
+                        <!-- JOIN THE CONVERSATION BUTTON END -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vote Next Week Section -->
+        <div class="lg:col-span-3 order-3 flex flex-col justify-start" data-aos="fade-left" data-aos-delay="200">
+            <div class="bg-gray-800 p-6 rounded-lg pixel-border text-center border border-gray-700 flex flex-col h-full relative group/card">
+                <h3 class="retro-font text-[10px] text-blue-400 mb-4 tracking-widest">VOTE: NEXT WEEK</h3>
+                
+                <div id="vote-carousel" class="flex-grow w-full relative mb-4">
+    
+    <div class="carousel-slide active" data-game="Golf Story">
+        <a href="https://en.wikipedia.org/wiki/Golf_Story" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://m.media-amazon.com/images/M/MV5BYjI2Y2JhZDMtMDRhZC00YjZmLWE2MTctYjFiY2M4MmVlNTQ3XkEyXkFqcGc@._V1_.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">GOLF STORY</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Sports/RPG • 2017</p>
+        
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Megabonk">
+        <a href="https://en.wikipedia.org/wiki/Megabonk" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzG2QDyhRyjx7n2O4eYEh5-_QC__Id9eFe3EH4dta4lcvO7O8KILuEyDt0soUyvA2bYiwNJg&s=10" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">MEGABONK</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Roguelike • 2025</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows, Linux</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Gris">
+        <a href="https://en.wikipedia.org/wiki/Gris" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://image.api.playstation.com/vulcan/ap/rnd/202211/1801/PMjvy3y1p6gkPsBwCUuaFnfv.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">GRIS</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Platformer • 2018</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows, macOS</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-blue-500 transition-colors">
+                <i data-feather="monitor" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">PS4 / PS5</span>
+            </div>
+             <div class="group/icon relative cursor-pointer hover:text-green-500 transition-colors">
+                <i data-feather="box" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Xbox One / X / S</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-purple-400 transition-colors">
+                <i data-feather="smartphone" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">iOS, Android</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Mega Man X">
+        <a href="https://en.wikipedia.org/wiki/Mega_Man_X_%28video_game%29" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg group cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png" 
+                 class="relative z-10 w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font z-20">MEGA MAN X</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Action • 1993</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Super NES</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">MS-DOS, Windows</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-purple-400 transition-colors">
+                <i data-feather="smartphone" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Android, iOS</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="carousel-slide" data-game="Sonic the Hedgehog 2">
+        <a href="https://en.wikipedia.org/wiki/Sonic_the_Hedgehog_2" target="_blank" rel="noopener noreferrer" 
+           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Sonic_2_US_Cover.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">SONIC 2</div>
+        </a>
+        <p class="text-[10px] text-gray-400 mb-2">Platformer • 1992</p>
+
+        <div class="flex justify-center gap-3 text-gray-500">
+            <div class="group/icon relative cursor-pointer hover:text-gray-300 transition-colors">
+                <i data-feather="tv" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Sega Genesis, Arcade</span>
+            </div>
+             <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                <i data-feather="layers" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Switch, 3DS</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-purple-400 transition-colors">
+                <i data-feather="smartphone" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Android, iOS</span>
+            </div>
+            <div class="group/icon relative cursor-pointer hover:text-blue-400 transition-colors">
+                <i data-feather="monitor" class="w-4 h-4"></i>
+                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Apple TV</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="absolute top-1/2 left-0 -translate-y-1/2 -ml-2 bg-black/50 hover:bg-black text-white p-1 rounded-full border border-gray-600 z-10" onclick="window.changeSlide(-1)">
+        <i data-feather="chevron-left" class="w-4 h-4"></i>
+    </button>
+    <button class="absolute top-1/2 right-0 -translate-y-1/2 -mr-2 bg-black/50 hover:bg-black text-white p-1 rounded-full border border-gray-600 z-10" onclick="window.changeSlide(1)">
+        <i data-feather="chevron-right" class="w-4 h-4"></i>
+    </button>
+
+</div>
+
+                <div class="bg-orange-900/20 border border-orange-500/30 p-4 rounded mt-auto">
+                    <p class="text-[10px] text-orange-200 mb-3 leading-relaxed">
+                        Patrons vote on next week's game!
+                    </p>
+                    <a href="https://patreon.com/ryanretro" target="_blank" 
+                       class="block w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded pixel-btn retro-font text-[10px] flex items-center justify-center">
+                        <i data-feather="check-circle" class="mr-2 w-3 h-3"></i> VOTE FOR THIS
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
   </main>
 
-  <footer class="bg-black py-8 mt-20 border-t-4 border-gray-800">
-    <div class="container mx-auto px-4 text-center text-gray-500 text-xs retro-font">
-      <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
-      <p class="mt-2">© 2025 Ryan Retro</p>
+  <!-- HANDHELDS POPUP MODAL -->
+  <div v-if="showHandheldModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" aria-modal="true" role="dialog">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" @click="showHandheldModal = false"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative bg-gray-800 rounded-lg pixel-border border-4 border-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 shadow-2xl animate-fade-in-up">
+        
+        <!-- Header -->
+        <div class="bg-gray-900 p-4 border-b-4 border-black flex justify-between items-center sticky top-0 z-20">
+            <h2 class="retro-font text-yellow-400 text-sm md:text-lg flex items-center gap-2">
+                <i data-feather="smartphone" class="w-5 h-5"></i>
+                HANDHELD SELECTOR
+            </h2>
+            <button @click="showHandheldModal = false" class="text-gray-400 hover:text-white transition-colors">
+                <i data-feather="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div class="p-6 md:p-8 space-y-10">
+            
+            <!-- Section 1: Ryan's Recommended Handhelds -->
+            <section>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-2 h-8 bg-blue-500 rounded"></div>
+                    <h3 class="retro-font text-white text-xs md:text-sm">RYAN'S RECOMMENDED HANDHELDS</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div v-for="device in recommendedHandhelds" :key="device.name" class="bg-gray-900 p-4 rounded border border-gray-700 hover:border-blue-500 transition-colors group flex flex-col h-full">
+                        <div class="bg-black/50 rounded p-2 mb-3 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-800">
+                            <img :src="device.heroImg" :alt="device.name" class="w-full h-auto object-contain max-h-full transition-transform group-hover:scale-110">
+                        </div>
+                        <h4 class="retro-font text-[9px] md:text-[10px] text-gray-300 text-center mb-1 leading-tight">{{ device.name }}</h4>
+                        <div class="mt-auto pt-3">
+                             <a :href="device.affiliateHref" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-2 px-2 rounded text-center retro-font transition-colors pixel-btn">
+                                VIEW INFO
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Ryan's Choice -->
+            <section class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-1 pixel-border border-yellow-500/50">
+                <div class="bg-black/40 p-6 md:p-8 rounded-lg">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="w-full md:w-1/2 flex justify-center order-2 md:order-1">
+                            <div class="relative w-full max-w-sm">
+                                <div class="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse"></div>
+                                <img :src="ryansChoice.heroImg" :alt="ryansChoice.name" class="relative z-10 w-full h-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                            </div>
+                        </div>
+                        
+                        <div class="w-full md:w-1/2 text-center md:text-left order-1 md:order-2">
+                            <div class="inline-block bg-yellow-500 text-black px-3 py-1 rounded retro-font text-[10px] mb-3 font-bold">
+                                ★ RYAN'S CHOICE
+                            </div>
+                            <h3 class="retro-font text-xl md:text-3xl text-white mb-2">{{ ryansChoice.name }}</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                This is the handheld I'm personally using to play this week's game. It offers the perfect balance of performance and comfort for this title.
+                            </p>
+                            
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <a :href="ryansChoice.affiliateHref" target="_blank" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn shadow-[4px_4px_0_0_rgba(255,255,255,0.2)]">
+                                    <i data-feather="shopping-bag" class="w-4 h-4"></i>
+                                    GRAB YOURS
+                                </a>
+                                <a :href="ryansChoice.videosLinkHref" target="_blank" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn border border-gray-500">
+                                    <i data-feather="youtube" class="w-4 h-4 text-red-500"></i>
+                                    WATCH VIDEOS
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+  </div>
+
+  <footer class="bg-black py-12 border-t-4 border-gray-800 mt-20">
+    <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+      © 2025 Ryan Retro. Keep Gaming.
     </div>
   </footer>
+</div>
 
 <script>
-/* --------------------------- Device config --------------------------- */
-const DEVICE_CONFIG = {
-  "Retroid Pocket 5": {
-    label: "Retroid Pocket 5",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket 5",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
-    aliases: ["Retroid Pocket5","RP5"],
-    variants: [{ id: "sd865", label: "Snapdragon 865" }]
-  },
-
-  "Retroid Pocket 6": {
-    label: "Retroid Pocket 6",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
-    affiliateHref: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket 6",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
-    aliases: ["Retroid 6","RP6","Retroid Pocket6"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2", pullsFrom: ["Odin 2 Portal", "Odin 2", "Odin 2 Mini", "AYN Thor"] }]
-  },
-
-  "Retroid Pocket G2": {
-    label: "Retroid Pocket G2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket g2",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
-    aliases: ["Retroid G2", "RP G2", "Retroid Pocket G2"],
-    variants: [{ id: "g2g2", label: "Snapdragon G2 Gen 2" }],
-    reviewHref: "/static/rpg2review.html",
-    reviewText: "REVIEW"
-  },
-
-  "Odin 2 Portal": {
-    label: "Odin 2 Portal",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/portal.png",
-    affiliateHref: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 2 portal",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
-    aliases: ["Odin2 Portal","Odin 2"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2" }]
-  },
-
-  "Odin 2": {
-    label: "Odin 2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
-    affiliateHref: "https://www.ayntec.com/collections/all",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 2",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin%202",
-    aliases: ["AYN Odin 2"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2" }]
-  },
-
-  "Odin 2 Mini": {
-    label: "Odin 2 Mini",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
-    affiliateHref: "https://www.ayntec.com/collections/all",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 2 mini",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20mini",
-    aliases: ["Odin2 Mini"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2" }]
-  },
-
-  "AYN Thor": {
-    label: "AYN Thor",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/thor.png",
-    affiliateHref: "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "ayn thor",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=ayn%20thor",
-    aliases: ["Thor","AYN THOR","AynThor"],
-    variants: [
-      { id: "sd865", label: "Snapdragon 865", pullsFrom: ["Retroid Pocket 5", "Retroid Pocket5", "RP5"] },
-      { id: "sd8g2", label: "Snapdragon 8 Gen 2", pullsFrom: ["Odin 2 Portal", "Odin2 Portal", "Odin 2", "Odin 2 Mini", "AYN Thor"] }
-    ],
-    hasVideos: false,
-    noVideosMessage: "Ryan hasn't made any videos on the AYN Thor yet. Get to work, Ryan!"
-  },
-
-  "Ayaneo Konkr Pocket Fit": {
-    label: "Ayaneo Konkr Pocket Fit",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkr-pocket-fit-3.jpg",
-    affiliateHref: "https://www.indiegogo.com/projects/pocket-fit-premier-hi-performance-android-handheld/x/38203815#/",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "Ayaneo Konkr Pocket Fit",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=Ayaneo%20Konkr%20Pocket%20Fit",
-    aliases: ["Konkr Pocket Fit","Ayaneo Konkr","Konkr Fit"],
-    hasVideos: false,
-    noVideosMessage: "Ryan hasn't made any videos on the Konkr Pocket Fit yet. Get to work, Ryan!",
-    variants: [
-      { id: "g3g3", label: "Snapdragon G3 Gen 3", pullsFrom: ["Ayaneo Konkr Pocket Fit"] },
-      { id: "sd8elite", label: "Snapdragon 8 Elite", pullsFrom: ["Odin 3", "AYN Odin 3", "Odin3", "Odin III", "Ayaneo Konkr Pocket Fit"] }
-    ]
-  },
-
-  "Retroid Pocket Flip 2": {
-    label: "Retroid Pocket Flip 2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/flip%20hero.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket flip 2",
-    aliases: ["RP Flip 2", "Flip 2"],
-    variants: [{ id: "sd865", label: "Snapdragon 865", pullsFrom: ["Retroid Pocket Flip 2", "Retroid Pocket 5", "Retroid Pocket5", "RP5"] }]
-  },
-
-  "Odin 3": {
-    label: "Odin 3",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
-    affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 3",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin 3",
-    aliases: ["AYN Odin 3","Odin3","Odin III"],
-    hasVideos: false,
-    noVideosMessage: "Ryan hasn't made any videos on the Odin 3 yet. Get to work, Ryan!",
-    variants: [{ id: "sd8elite", label: "Snapdragon 8 Elite", pullsFrom: ["Odin 3", "Ayaneo Konkr Pocket Fit"] }]
-  },
-
-  "Retroid Pocket Classic": {
-    label: "Retroid Pocket Classic",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20colors.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket classic",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
-    aliases: ["Retroid Classic","RP Classic","RPClassic","Retroid Pocket Classic"],
-    variants: [{ id: "g1g2", label: "Snapdragon G1 Gen 2" }]
-  },
-};
-
-
-/* ---------- URL/device resolution ---------- */
-const urlParams = new URLSearchParams(location.search);
-function resolveDeviceFromUrl() {
-  const param = (urlParams.get("device") || "").trim().toLowerCase();
-  if (!param) return "Retroid Pocket 5";
-  for (const key of Object.keys(DEVICE_CONFIG)) {
-    const dev = DEVICE_CONFIG[key];
-    const names = [key, dev.label, ...(dev.aliases || [])].map(s => s.trim().toLowerCase());
-    if (names.includes(param)) return key;
-  }
-  return "Retroid Pocket 5";
-}
-const CURRENT_DEVICE = resolveDeviceFromUrl();
-const DEVICE = DEVICE_CONFIG[CURRENT_DEVICE];
-
-/* active chipset variant (if any) */
-let currentVariant = (DEVICE.variants && DEVICE.variants[0]) || null;
-
-/* ---------- Helpers ---------- */
-const norm = s => (s || '').trim().toLowerCase();
-
-const esc = s => (s == null ? '' : String(s)
-  .replace(/&/g,'&amp;')
-  .replace(/</g,'&lt;')
-  .replace(/>/g,'&gt;'));
-
-function ymdKey(s){
-  const m = (s || '').trim().match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
-  if (!m) return -Infinity;
-  const y = +m[1], mo = +m[2], d = +m[3];
-  return y * 10000 + mo * 100 + d;
-}
-
-function normalizeDateDisplay(s){
-  const m = (s || '').trim().match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
-  if (!m) return s || '';
-  const y = m[1], mo = String(+m[2]).padStart(2,'0'), d = String(+m[3]).padStart(2,'0');
-  return `${y}/${mo}/${d}`;
-}
-
-const normSystemId = s => (s || '').toString().trim().toLowerCase().replace(/[\s_-]+/g, '');
-const ALLOWED_PERF = ['Perfect','Great','Playable','Unplayable'];
-const PERFORMANCE_ORDER = { 'Perfect':0, 'Great':1, 'Playable':2, 'Unplayable':3 };
-function getSortValue(row, colKey){
-  const raw = (row[colKey] ?? '').toString();
-  if (colKey === 'performance') return (raw in PERFORMANCE_ORDER ? PERFORMANCE_ORDER[raw] : 999);
-  if (colKey === 'date added' || colKey === 'date') return ymdKey(raw);
-  return raw.toLowerCase();
-}
-
-const PERF_CLASS = { 'Perfect':'perf-perfect', 'Great':'perf-great', 'Playable':'perf-playable', 'Unplayable':'perf-unplayable' };
-function colorizePerformanceSelects(container=document){
-  const selects = container.querySelectorAll('select[name="performance"]');
-  selects.forEach(sel=>{
-    const apply=()=>{
-      sel.classList.remove(...Object.values(PERF_CLASS),'font-bold');
-      const cls = PERF_CLASS[sel.value] || '';
-      if (cls) sel.classList.add(cls,'font-bold');
-    };
-    sel.addEventListener('change', apply);
-    apply();
-  });
-}
-function debounce(fn, delay=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; }
-
-function ensureChipsetField() {
-  const form = document.getElementById('compatibility-form');
-  if (!form) return;
-  const old = form.querySelector('#chipset-field-wrap');
-  if (old) old.remove();
-  if (!DEVICE.variants || DEVICE.variants.length <= 1) return;
-  const wrap = document.createElement('div');
-  wrap.id = 'chipset-field-wrap';
-  wrap.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 mb-6';
-  const inner = document.createElement('div');
-  inner.innerHTML = `
-    <label for="form-chipset-select" class="block mb-2 font-bold">Chipset *</label>
-    <select id="form-chipset-select" name="chipset" class="form-input" required>
-      ${DEVICE.variants.map(v => `<option value="${v.id || v.label}">${v.label}</option>`).join('')}
-    </select>
-  `;
-  wrap.appendChild(inner);
-  const dyn = document.getElementById('dynamic-fields');
-  dyn?.parentNode?.insertBefore(wrap, dyn);
-  const sel = document.getElementById('form-chipset-select');
-  if (sel && currentVariant) sel.value = currentVariant.id || currentVariant.label;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  AOS?.init({
-    once: true,
-    duration: 300,
-    easing: 'ease-out',
-    disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  });
-
-  (function initVariantTabs(){
-    const wrap = document.getElementById('variant-tabs');
-    if (!DEVICE.variants || DEVICE.variants.length <= 1 || !wrap) return;
-    wrap.classList.remove('hidden');
-    const row = wrap.querySelector('div');
-    row.innerHTML = '';
-    DEVICE.variants.forEach((v, i) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = [
-        'px-3','py-1.5','rounded-md','retro-font','text-xs',
-        i === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-700 hover:bg-gray-600 text-white'
-      ].join(' ');
-      btn.textContent = v.label;
-      btn.dataset.variantId = v.id || v.label;
-      row.appendChild(btn);
-    });
-    row.addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-variant-id]');
-      if (!btn) return;
-      const id = btn.dataset.variantId;
-      const next = DEVICE.variants.find(v => (v.id || v.label) === id);
-      if (!next || (currentVariant && (next.id || next.label) === (currentVariant.id || currentVariant.label))) return;
-      [...row.children].forEach(b => b.classList.remove('bg-yellow-400','text-black'));
-      [...row.children].forEach(b => b.classList.add('bg-gray-700','text-white'));
-      btn.classList.remove('bg-gray-700','text-white');
-      btn.classList.add('bg-yellow-400','text-black');
-      currentVariant = next;
-      loadSystemData(currentSystemId);
-      const chipSel = document.getElementById('form-chipset-select');
-      if (chipSel) chipSel.value = currentVariant.id || currentVariant.label;
-    });
-  })();
-
-  document.title = `${DEVICE.label} Compatibility | Ryan Retro`;
-  document.getElementById('device-heading').textContent = DEVICE.label;
-  const hero = document.getElementById('hero-img');
-  hero.src = DEVICE.heroImg;
-  hero.alt = DEVICE.label;
-  const heroLink = document.getElementById('hero-link');
-  if (heroLink) heroLink.href = DEVICE.affiliateHref;
-  const buyBtn = document.getElementById('affiliate-link');
-  buyBtn.href = DEVICE.affiliateHref;
-  buyBtn.querySelector('.btn-label').textContent = DEVICE.affiliateText;
-  const videosLink = document.getElementById('videos-link');
-  videosLink.href = DEVICE.videosLinkHref;
-  document.getElementById('hidden-device').value = DEVICE.label;
-
-  const reviewBtn   = document.getElementById('review-or-compat-link');
-  const reviewLabel = document.getElementById('review-or-compat-label');
-  const reviewIcon  = reviewBtn ? reviewBtn.querySelector('[data-feather]') : null;
-
-  if (reviewBtn && reviewLabel && reviewIcon) {
-    if (DEVICE.reviewHref) {
-      reviewBtn.href = DEVICE.reviewHref;
-      reviewBtn.target = "_blank";
-      reviewLabel.textContent = DEVICE.reviewText || "REVIEW";
-      reviewIcon.setAttribute('data-feather', 'file-text');
-      reviewBtn.classList.remove('bg-blue-600','hover:bg-blue-700','text-white');
-      reviewBtn.classList.add('bg-yellow-400','hover:bg-yellow-500','text-black');
-    } else {
-      reviewBtn.href = "#compatibility";
-      reviewBtn.removeAttribute('target');
-      reviewLabel.textContent = "PLAY GAMES";
-      reviewIcon.setAttribute('data-feather', 'list');
-      reviewBtn.classList.remove('bg-yellow-400','hover:bg-yellow-500','text-black');
-      reviewBtn.classList.add('bg-blue-600','hover:bg-blue-700','text-white');
-    }
-  }
-  feather.replace();
-
-/* --------------------------- Videos --------------------------- */
-async function fetchYouTubeVideos() {
-  const videosContainer = document.getElementById('videos-container');
-  if (!videosContainer) return;
-  if (DEVICE.hasVideos === false) {
-    videosContainer.className = 'grid grid-cols-1';
-    videosContainer.innerHTML = `<p class="text-gray-300">${DEVICE.noVideosMessage}</p>`;
-    return;
-  }
-  const channelId  = DEVICE.youtubeChannelId;
-  const query      = (DEVICE.youtubeQuery || '').toLowerCase();
-  const maxResults = 18;
-  const aliases    = (DEVICE.aliases || []).join(',');
-  try {
-    const res = await fetch(`/api/youtube/latest?channel_id=${encodeURIComponent(channelId)}&q=${encodeURIComponent(query)}&aliases=${encodeURIComponent(aliases)}&limit=${maxResults}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const items = await res.json();
-    if (!Array.isArray(items) || items.length === 0) {
-      videosContainer.className = 'grid grid-cols-1';
-      videosContainer.innerHTML = `
-        <div class="text-gray-300 space-y-3">
-          <p>No videos found.</p>
-          <p class="text-sm opacity-75">
-            You can still browse on YouTube:
-            <a class="underline text-yellow-400" target="_blank" rel="noopener" href="${DEVICE.videosLinkHref}">Open device videos</a>
-          </p>
-        </div>`;
-      return;
-    }
-    videosContainer.className = 'flex overflow-x-auto space-x-8 py-4 custom-scrollbar';
-    videosContainer.innerHTML = '';
-    items.forEach(item => {
-      const id = item.videoId;
-      const title = item.title || '';
-      const card = document.createElement('div');
-      card.setAttribute('data-aos','fade-up');
-      card.className = 'flex-shrink-0 w-80 md:w-96 bg-gray-800 rounded-lg overflow-hidden pixel-border relative cursor-pointer';
-      card.dataset.videoId = id;
-      card.innerHTML = `
-        <div class="aspect-video relative group video-thumbnail-container">
-          <img src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="${title}" loading="lazy" class="w-full h-full object-cover">
-          <div class="absolute inset-0 flex items-center justify-center group-hover:bg-black/40 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-              <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm14.024-.983a1.125 1.125 0 010 1.966l-5.603 3.113A1.125 1.125 0 019 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113z" clip-rule="evenodd" />
-            </svg>
-          </div>
-        </div>
-        <div class="p-4">
-          <h3 class="font-bold text-sm leading-tight text-gray-200 truncate" title="${title}">${title}</h3>
-        </div>`;
-      videosContainer.appendChild(card);
-    });
-    if (window.requestIdleCallback) { requestIdleCallback(() => AOS && AOS.refresh()); } 
-    else { setTimeout(() => AOS && AOS.refresh(), 0); }
-    videosContainer.addEventListener('click', (e) => {
-      const card = e.target.closest('[data-video-id]'); if (!card) return;
-      const container = card.querySelector('.video-thumbnail-container');
-      const id = card.dataset.videoId;
-      container.innerHTML = `
-        <div class="aspect-video">
-          <iframe src="https://www.youtube.com/embed/${id}?autoplay=1" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen class="w-full h-full"></iframe>
-        </div>`;
-    });
-  } catch (e) {
-    videosContainer.className = 'grid grid-cols-1';
-    videosContainer.innerHTML = `<div class="text-gray-300"><p>Error loading videos.</p></div>`;
-  }
-}
-
-const videosSection = document.getElementById('videos-section');
-if (videosSection) {
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some(e => e.isIntersecting)) {
-        fetchYouTubeVideos();
-        io.disconnect();
-      }
-    }, { rootMargin: '200px' });
-    io.observe(videosSection);
-  } else { fetchYouTubeVideos(); }
-}
-
-
-  /* --------------------------- Compatibility table --------------------------- */
-  let rowsPerPage = 10;
-  const DATA_BASE = '/data/';
-
-  const SYSTEM_CONFIG = {
-    switch:{ path: `${DATA_BASE}switch.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'driver',label:'Driver'},{key:'emulator',label:'Emulator'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]},
-    ps2:{ path: `${DATA_BASE}ps2.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'emulator',label:'Emulator'},{key:'resolution',label:'Resolution'},
-      {key:'rom region',label:'ROM Region'},{key:'notes',label:'Notes',minWidth:'300px'},
-      {key:'date added',label:'Date'}
-    ]},
-    winlator:{ path: `${DATA_BASE}winlator.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'winlator version',label:'Winlator Version'},{key:'driver',label:'Driver'},
-      {key:'dx wrapper',label:'DX Wrapper'},{key:'notes',label:'Notes',minWidth:'300px'},
-      {key:'date added',label:'Date'}
-    ]},
-    gamehub:{ path: `${DATA_BASE}gamehub.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'game resolution',label:'Game Resolution'},{key:'driver',label:'Driver'},
-      {key:'dxvk version',label:'DXVK Version'},{key:'vkd3d version',label:'VKD3D Version'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]},
-    ps3:{ path: `${DATA_BASE}ps3.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'emulator',label:'Emulator'},{key:'resolution',label:'Resolution'},
-      {key:'driver',label:'Driver'},{key:'notes',label:'Notes',minWidth:'300px'},
-      {key:'date added',label:'Date'}
-    ]},
-    psvita:{ path: `${DATA_BASE}psvita.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'driver',label:'Driver'},{key:'game title id',label:'Game Title ID'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]},
-    wiiu:{ path: `${DATA_BASE}wiiu.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'driver',label:'Driver'},{key:'pre-compiled shaders',label:'Pre-compiled Shaders'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]}
-  };
-
-  const FORM_CONFIG = {
-    switch: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'emulator', label: 'Emulator', required: true }
-    ],
-    ps2: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'emulator', label: 'Emulator', required: true },
-      { key: 'resolution', label: 'Resolution', required: true },
-      { key: 'rom region', label: 'ROM Region', required: true }
-    ],
-    winlator: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'winlator version', label: 'Winlator Version', required: true },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'dx wrapper', label: 'DX Wrapper', required: true }
-    ],
-    gamehub: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'game resolution', label: 'Game Resolution', required: true },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'dxvk version', label: 'DXVK Version', required: true },
-      { key: 'vkd3d version', label: 'VKD3D Version', required: true }
-    ],
-    ps3: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'emulator', label: 'Emulator', required: true },
-      { key: 'resolution', label: 'Resolution', required: true },
-      { key: 'driver', label: 'Driver', required: true }
-    ],
-    psvita: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'game title id', label: 'Game Title ID', required: true }
-    ],
-    wiiu: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'pre-compiled shaders', label: 'Pre-compiled Shaders', required: true, type: 'select', suggestions: ['Yes','No'] }
-    ]
-  };
-
-  let masterDataCache = {};
-  let activeDataSet = [];
-  let currentlyDisplayedGames = [];
-  const STORAGE_KEY = `rr:lastSystem:${CURRENT_DEVICE}`;
-  let currentSystemId = localStorage.getItem(STORAGE_KEY) && SYSTEM_CONFIG[localStorage.getItem(STORAGE_KEY)]
-    ? localStorage.getItem(STORAGE_KEY) : 'switch';
-  let currentPage = 1;
-  let sortColumn = SYSTEM_CONFIG[currentSystemId].columns[0].key;
-  let sortDirection = 'asc';
-  let perfFilter = '';
-
-  const tableBody = document.querySelector('#compatibility-table tbody');
-  const tableHead = document.querySelector('#compatibility-table thead');
-  const searchBox = document.getElementById('game-search-box');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const pageInfo = document.getElementById('page-info');
-  const formWrap = document.getElementById('add-entry-form-container');
-  const formSystemSelect = document.getElementById('form-system-select');
-  const rowsPerPageSelect = document.getElementById('rows-per-page');
-
-  async function fetchAndCacheData(systemId){
-    if (masterDataCache[systemId]) return masterDataCache[systemId];
-    const res = await fetch(`/api/compatibility/${systemId}`);
-    if (!res.ok) { masterDataCache[systemId] = []; return []; }
-    const payload = await res.json();
-    const rows = Array.isArray(payload.rows) ? payload.rows : [];
-    const normalized = rows.map(r => {
-      const o = {};
-      for (const k in r) o[k.trim().toLowerCase()] = typeof r[k] === 'string' ? r[k].trim() : r[k];
-      return o;
-    });
-    masterDataCache[systemId] = normalized;
-    return normalized;
-  }
-
-  async function loadSystemData(systemId){
-    currentSystemId = systemId;
-    sortColumn = SYSTEM_CONFIG[currentSystemId].columns[0].key;
-    sortDirection = 'asc';
-    tableHead.innerHTML = '';
-    tableBody.innerHTML = `<tr><td class="p-4 text-center">Loading reports...</td></tr>`;
-    const allData = await fetchAndCacheData(systemId);
-    const wantChip = currentVariant ? norm(currentVariant.id || currentVariant.label) : '';
-    let rowsByChipset = wantChip ? allData.filter(r => norm(r.chipset || '') === wantChip) : [];
-    const filtered = rowsByChipset.filter(row => normSystemId(row.system) === normSystemId(currentSystemId));
-    activeDataSet = filtered;
-    renderTableStructure();
-    if (!activeDataSet.length) {
-      tableBody.innerHTML = `<tr><td colspan="${SYSTEM_CONFIG[currentSystemId].columns.length}" class="p-6 text-center">No reports yet.</td></tr>`;
-      updatePaginationControls();
-      return;
-    }
-    applySearchAndSort();
-  }
-
-  function renderTableStructure(){
-    const config = SYSTEM_CONFIG[currentSystemId];
-    const headerCells = config.columns.map(col => `
-      <th class="p-3" data-sort="${col.key}" style="${col.minWidth ? `min-width:${col.minWidth}` : ''}">
-        ${col.label} <span class="sort-indicator"></span>
-      </th>`).join('');
-    tableHead.innerHTML = `<tr>${headerCells}</tr>`;
-  }
-
-  function displayCurrentPage(){
-    updateSortIndicators();
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const pageItems = currentlyDisplayedGames.slice(startIndex, startIndex + rowsPerPage);
-    const config = SYSTEM_CONFIG[currentSystemId];
-    const perfClass = { 'Perfect':'perf-perfect','Great':'perf-great','Playable':'perf-playable','Unplayable':'perf-unplayable' };
-    let html = '';
-    for (const row of pageItems) {
-      html += '<tr>';
-      for (const col of config.columns) {
-        let raw = row[col.key] ?? '';
-        let display = (col.key === 'date added' || col.key === 'date') ? normalizeDateDisplay(raw) : raw;
-        
-        // --- NOTE FILTERING FIX START ---
-        if (col.key === 'notes') {
-            const val = (display || '').trim();
-            // This hides "-", "'-", or empty strings
-            if (val === '-' || val === "'-" || val === '') display = '';
-        }
-        // --- NOTE FILTERING FIX END ---
-
-        const cls = col.isStatus ? `p-3 font-bold ${perfClass[raw] || ''}` : 'p-3';
-        html += `<td class="${cls}">${esc(display)}</td>`;
-      }
-      html += '</tr>';
-    }
-    tableBody.innerHTML = html || '<tr><td colspan="100" class="p-4 text-center">No results.</td></tr>';
-    updatePaginationControls();
-  }
-
-  function updatePaginationControls(){
-    const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
-    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage === totalPages;
-  }
-
-  function applySearchAndSort(){
-    const searchTerm = (searchBox.value || '').toLowerCase();
-    const firstKey = SYSTEM_CONFIG[currentSystemId].columns[0].key;
-    let filtered = activeDataSet;
-    if (perfFilter) filtered = filtered.filter(row => (row.performance || '') === perfFilter);
-    if (searchTerm) filtered = filtered.filter(row => (row[firstKey] || '').toString().toLowerCase().includes(searchTerm));
-    filtered.sort((a,b)=>{
-      const A = getSortValue(a, sortColumn);
-      const B = getSortValue(b, sortColumn);
-      if (A < B) return sortDirection === 'asc' ? -1 : 1;
-      if (A > B) return sortDirection === 'asc' ?  1 : -1;
-      return 0;
-    });
-    currentlyDisplayedGames = filtered;
-    currentPage = 1;
-    displayCurrentPage();
-  }
-
-  function updateSortIndicators(){
-    tableHead.querySelectorAll('th').forEach(th=>{
-      const ind = th.querySelector('.sort-indicator');
-      if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
-    });
-  }
-
-  prevBtn?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
-  nextBtn?.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
-  
-  // --- ROW SELECTION FIX START ---
-  rowsPerPageSelect?.addEventListener('change', (e) => {
-    rowsPerPage = parseInt(e.target.value, 10);
-    currentPage = 1;
-    displayCurrentPage();
-  });
-  // --- ROW SELECTION FIX END ---
-
-  const SYSTEM_ACTIVE = { switch:['bg-red-600','text-white'], ps2:['bg-green-700','text-white'], ps3:['bg-black','text-white'], winlator:['bg-sky-500','text-white'], wiiu:['bg-blue-600','text-white'], gamehub:['bg-blue-900','text-white'], psvita:['bg-teal-500','text-white'] };
-  function setActiveSystemBtn(systemId){
-    const wrap = document.getElementById('system-buttons');
-    wrap.querySelectorAll('button[data-system]').forEach(btn => {
-      btn.classList.remove('bg-red-600','bg-green-700','bg-black','bg-sky-500','bg-blue-600','bg-blue-900','bg-teal-500','text-white','bg-yellow-400','text-black');
-      btn.classList.add('bg-gray-600','text-white');
-    });
-    const active = wrap.querySelector(`[data-system="${systemId}"]`);
-    if (active) {
-      active.classList.remove('bg-gray-600');
-      (SYSTEM_ACTIVE[systemId] || ['bg-yellow-400','text-black']).forEach(c => active.classList.add(c));
-    }
-  }
-
-  document.getElementById('system-buttons')?.addEventListener('click', (e)=>{
-    const btn = e.target.closest('button[data-system]'); if (!btn) return;
-    const sid = btn.dataset.system;
-    localStorage.setItem(STORAGE_KEY, sid);
-    setActiveSystemBtn(sid);
-    loadSystemData(sid);
-  });
-
-  searchBox.addEventListener('input', debounce(applySearchAndSort, 200));
-  tableHead.addEventListener('click', (e)=>{
-    const th = e.target.closest('th'); if (!th?.dataset.sort) return;
-    sortDirection = (sortColumn === th.dataset.sort && sortDirection === 'asc') ? 'desc' : 'asc';
-    sortColumn = th.dataset.sort;
-    applySearchAndSort();
-  });
-
-  /* --------------------------- FIXED: Performance Filters --------------------------- */
-  document.getElementById('perf-filters')?.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
+    // Global Carousel Helpers (Vanilla JS Logic)
+    let currentSlide = 0;
     
-    // 1. Update filter state
-    perfFilter = btn.dataset.perf;
-    
-    // 2. Update visuals
-    const allBtns = document.getElementById('perf-filters').querySelectorAll('button');
-    allBtns.forEach(b => {
-        if (b.dataset.perf === perfFilter) {
-            b.classList.add('filter-active');
-        } else {
-            b.classList.remove('filter-active');
-        }
-    });
-
-    // 3. Re-run search
-    applySearchAndSort();
-  });
-
-  /* --------------------------- FIXED: Add Entry Logic --------------------------- */
-  function updateFormFields(sysId) {
-    const container = document.getElementById('dynamic-fields');
-    container.innerHTML = '';
-    
-    const config = FORM_CONFIG[sysId] || [];
-    config.forEach(field => {
-        const div = document.createElement('div');
-        const req = field.required ? 'required' : '';
-        const star = field.required ? '*' : '';
+    // Explicitly attach to window so HTML onclicks work
+    window.changeSlide = function(direction) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if(!slides.length) return;
+        const totalSlides = slides.length;
         
-        let inputHtml = '';
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
         
-        if (field.type === 'select') {
-            const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            const cls = field.key === 'performance' ? 'form-input perf-perfect font-bold' : 'form-input';
+        // Refresh icons in the new slide if needed
+        setTimeout(() => { if(window.feather) feather.replace(); }, 50);
+    }
+
+    // Initialize Vue App
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                showHandheldModal: false,
+                // Data pulled from handhelds.html config
+                recommendedHandhelds: [
+                    {
+                        name: "Retroid Pocket 5",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
+                        affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT"
+                    },
+                    {
+                        name: "Retroid Pocket G2",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
+                        affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT"
+                    },
+                    {
+                        name: "Ayaneo Konkr Pocket Fit",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkr-pocket-fit-3.jpg",
+                        affiliateHref: "https://www.indiegogo.com/projects/pocket-fit-premier-hi-performance-android-handheld/x/38203815#/"
+                    },
+                    {
+                        name: "Odin 3",
+                        heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
+                        affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td"
+                    }
+                ],
+                ryansChoice: {
+                    name: "Odin 3",
+                    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
+                    affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
+                    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin 3"
+                }
+            }
+        },
+        watch: {
+            showHandheldModal(newVal) {
+                // Prevent scrolling when modal is open
+                if (newVal) {
+                    document.body.style.overflow = 'hidden';
+                    // Re-init feather icons inside modal after next tick
+                    this.$nextTick(() => {
+                        if(window.feather) feather.replace();
+                    });
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+        },
+        mounted() {
+            // Initialize Animation Library
+            if(window.AOS) AOS.init({ duration: 800, once: true });
             
-            inputHtml = `
-                <select name="${field.key}" class="${cls}" ${req}>
-                    ${options}
-                </select>
-            `;
-        } else {
-            inputHtml = `
-                <input type="text" name="${field.key}" class="form-input" ${req}>
-            `;
+            // Initialize Feather Icons
+            if(window.feather) feather.replace();
+
+            // Initialize Custom Logic (Timer & Carousel Swipe)
+            this.initTimer();
+            this.initCarouselSwipe();
+        },
+        methods: {
+            initTimer() {
+                const timerText = document.getElementById('timer-text');
+                const progressBar = document.getElementById('progress-bar');
+                if(!timerText || !progressBar) return;
+
+                const update = () => {
+                    const now = new Date();
+                    const prevMonday = new Date(now);
+                    const day = prevMonday.getUTCDay(); 
+                    const diff = prevMonday.getUTCDate() - day + (day === 0 ? -6 : 1); 
+                    prevMonday.setUTCDate(diff);
+                    prevMonday.setUTCHours(0,0,0,0);
+
+                    if (prevMonday > now) prevMonday.setUTCDate(prevMonday.getUTCDate() - 7);
+                    
+                    const nextMonday = new Date(prevMonday);
+                    nextMonday.setUTCDate(prevMonday.getUTCDate() + 7);
+
+                    const totalDuration = nextMonday - prevMonday;
+                    const timeElapsed = now - prevMonday;
+                    const timeRemaining = nextMonday - now;
+
+                    if (timeRemaining <= 0) {
+                        timerText.innerText = "STARTING SOON...";
+                        progressBar.style.width = "100%";
+                        return;
+                    }
+
+                    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                    
+                    const pad = (n) => n < 10 ? '0'+n : n;
+                    timerText.innerText = `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+                    const pct = Math.min(100, Math.max(0, (timeElapsed / totalDuration) * 100));
+                    progressBar.style.width = `${pct}%`;
+                }
+                update();
+                setInterval(update, 1000); 
+            },
+            initCarouselSwipe() {
+                const container = document.getElementById('vote-carousel');
+                if(!container) return;
+                let touchstartX = 0;
+                let touchendX = 0;
+
+                container.addEventListener('touchstart', e => {
+                    touchstartX = e.changedTouches[0].screenX;
+                });
+
+                container.addEventListener('touchend', e => {
+                    touchendX = e.changedTouches[0].screenX;
+                    if (touchendX < touchstartX - 50) window.changeSlide(1);
+                    if (touchendX > touchstartX + 50) window.changeSlide(-1);
+                });
+            }
         }
-        
-        div.innerHTML = `
-            <label class="block mb-2 font-bold capitalize">${field.label} ${star}</label>
-            ${inputHtml}
-        `;
-        container.appendChild(div);
-    });
-
-    // Re-bind color changes for performance selects
-    colorizePerformanceSelects(container);
-    // Ensure chipset field exists
-    ensureChipsetField();
-    
-    // Update hidden system input
-    document.getElementById('hidden-system').value = sysId;
-  }
-
-  // Open Form
-  document.getElementById('add-entry-btn')?.addEventListener('click', () => {
-    const formContainer = document.getElementById('add-entry-form-container');
-    formContainer.classList.remove('hidden');
-    // Initialize form with current system
-    const currentSys = document.getElementById('form-system-select').value || currentSystemId;
-    document.getElementById('form-system-select').value = currentSys;
-    updateFormFields(currentSys);
-    
-    // Scroll to form
-    formContainer.scrollIntoView({ behavior: 'smooth' });
-  });
-
-  // Close Form
-  document.getElementById('cancel-btn')?.addEventListener('click', () => {
-    document.getElementById('add-entry-form-container').classList.add('hidden');
-  });
-
-  // Change fields when system changes in form
-  document.getElementById('form-system-select')?.addEventListener('change', (e) => {
-    updateFormFields(e.target.value);
-  });
-
-
-  setActiveSystemBtn(currentSystemId);
-  loadSystemData(currentSystemId);
-});
+    }).mount('#app');
 </script>
 </body>
 </html>
