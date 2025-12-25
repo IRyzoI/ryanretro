@@ -6,123 +6,352 @@
   <meta name="description" content="Ryan Retro Shop - Best Deals on Handhelds, Accessories, and Retro Gear.">
   <title>Ryan Retro Shop - Best Deals & Gear</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
+    
+    :root {
+      /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
+      --gb-grey: #e0e0e0;
+      --gb-dark-grey: #c4c4c4;
+      --gb-shadow: #9e9e9e;
+      --gb-highlight: #ffffff;
+      --gb-accent: #6b7280;
+      
+      --bg-body: #f0f0f0;
+      --bg-panel: #e5e7eb; /* gray-200 */
+      --text-main: #111827;
+      --text-muted: #4b5563;
+      --border-color: #000000;
+    }
+
+    /* DARK MODE VARIABLES */
+    body.dark-mode {
+      --gb-grey: #4b5563;       /* Gray 600 - Lighter face for contrast */
+      --gb-dark-grey: #111827;  /* Gray 900 - Dark sides/thickness */
+      --gb-shadow: #000000;     /* Deep shadow */
+      --gb-highlight: rgba(255,255,255,0.15); /* Sharp edge highlight */
+      --gb-accent: #9ca3af;
+      
+      --bg-body: #111827;       /* Very dark background for page */
+      --bg-panel: #1f2937;      /* Panel backgrounds */
+      --text-main: #d1d5db;     /* Light text */
+      --text-muted: #9ca3af;
+      --border-color: #000000;  
+
+      /* Dark mode texture (subtle) */
+      background-image: 
+          linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03)),
+          linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03));
+    }
+
     .retro-font { font-family: 'Press Start 2P', cursive; }
-    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
+    
+    /* BACKGROUND TEXTURE - Cartridge Case */
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        transition: background-color 0.3s, color 0.3s;
+        /* Mimic the translucent frosted plastic of a case */
+        background-image: 
+            linear-gradient(45deg, rgba(255,255,255,0.4) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.4)),
+            linear-gradient(45deg, rgba(255,255,255,0.4) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.4));
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
+        background-attachment: fixed;
+    }
+    
+    .bg-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
+        pointer-events: none;
+        z-index: -1;
+    }
     .pixel-btn { transition: all 0.1s ease; }
     .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
     
-    /* Tray Animation */
-    #tray { transition: transform 0.3s ease-in-out; }
-    .tray-hidden { transform: translateY(100%); }
-    .tray-visible { transform: translateY(0); }
-
-    /* List View (formerly Compact) */
-    #productGrid.view-list {
-      display: flex !important;
-      flex-direction: column !important;
-      grid-template-columns: 1fr !important;
-      gap: 0 !important;
-      border: 4px solid #000;
-      background: #1f2937;
-      width: 100%;
+    /* Snappy Entry Animation */
+    @keyframes popIn {
+        0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .cart-animate {
+        animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        opacity: 0; /* Hidden initially until animation starts */
+    }
+    
+    /* GAMEBOY CARTRIDGE STYLES */
+    .gb-cartridge {
+        background-color: var(--gb-grey);
+        border-radius: 5px 5px 15px 5px; 
+        padding: 12px;
+        position: relative;
+        box-shadow: 
+            inset 3px 3px 5px var(--gb-highlight), 
+            inset -3px -3px 5px rgba(0,0,0,0.2),   
+            8px 8px 15px rgba(0,0,0,0.3);            
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border-right: 6px solid var(--gb-dark-grey); 
+        border-bottom: 6px solid var(--gb-dark-grey); 
+        transition: transform 0.2s, background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
     }
 
-    .list-row {
-      display: flex;
-      width: 100%;
-      align-items: center;
-      padding: 0.5rem 1rem;
-      border-bottom: 1px solid #374151;
-      transition: background 0.1s;
-      height: 70px;
+    body.dark-mode .gb-cartridge {
+        box-shadow: 
+            inset 2px 2px 3px var(--gb-highlight), 
+            inset -2px -2px 3px rgba(0,0,0,0.6),   
+            0px 15px 25px rgba(0,0,0,0.6); 
     }
-    .list-row:hover { background-color: #374151; }
-    .list-row:last-child { border-bottom: none; }
-
-    .c-thumb { width: 48px; height: 48px; border-radius: 4px; object-fit: cover; border: 2px solid #000; flex-shrink: 0; }
-    .c-info { flex-grow: 1; margin-left: 1rem; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
-    .c-title { font-weight: bold; font-size: 0.875rem; color: #fff; line-height: 1.2; }
-    .c-cat { font-size: 0.65rem; color: #9ca3af; text-transform: uppercase; margin-top: 4px; }
-
-    .c-stores { display: flex; gap: 8px; margin: 0 1.5rem; flex-shrink: 0; }
-    .store-icon-btn {
-      display: flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px;
-      border-radius: 4px;
-      color: #fff;
-      transition: all 0.2s;
-      opacity: 0.2;
-      pointer-events: none;
-      background: #374151;
-    }
-    .store-icon-btn.active { opacity: 1; pointer-events: auto; }
-    .store-icon-btn.active:hover { transform: scale(1.1); }
-
-    /* Custom Select for form */
-    .retro-select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
+    
+    .gb-cartridge:hover {
+        transform: translateY(-5px);
     }
 
+    /* The depressed area at the top saying "RYAN BOY" */
+    .gb-header-depression {
+        background-color: var(--gb-grey);
+        border-radius: 12px 12px 0 0;
+        height: 28px;
+        margin-bottom: 12px;
+        box-shadow: 
+            inset 2px 2px 5px rgba(0,0,0,0.15),
+            inset -1px -1px 2px var(--gb-highlight);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark-mode .gb-header-depression {
+        box-shadow: 
+            inset 3px 3px 6px rgba(0,0,0,0.6),
+            inset -1px -1px 2px rgba(255,255,255,0.1);
+        border: none;
+    }
+
+    .gb-header-text {
+        font-family: sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        color: var(--gb-grey); 
+        text-shadow: 
+            1px 1px 0 var(--gb-highlight), 
+            -1px -1px 0 rgba(0,0,0,0.1);
+        font-size: 10px;
+        letter-spacing: 1px;
+        transition: color 0.3s;
+    }
+
+    /* The "Sticker" containing the image */
+    .gb-sticker {
+        background: #222;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        border: 1px solid #999;
+        aspect-ratio: 1 / 0.85; 
+        flex-shrink: 0;
+        margin-bottom: 10px;
+    }
+    .gb-sticker img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .gb-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* INSERT BUTTON STYLES */
+    .gb-insert-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: auto;
+        padding-top: 8px;
+        padding-bottom: 4px;
+        opacity: 0.5;
+        transition: all 0.2s;
+        cursor: pointer;
+        border-top: 1px solid transparent;
+    }
+    .gb-insert-btn:hover {
+        opacity: 1;
+        background: rgba(255,255,255,0.3);
+        border-top: 1px solid rgba(255,255,255,0.8);
+        border-radius: 4px;
+    }
+    body.dark-mode .gb-insert-btn:hover {
+        background: rgba(255,255,255,0.1);
+        border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    /* ------------------------------------------- */
+    /* BIG WIDESCREEN PAK (MODAL) STYLES */
+    /* ------------------------------------------- */
+    
+    #bigRyanPak {
+        background-color: var(--gb-grey);
+        border-radius: 20px 20px 60px 20px; 
+        box-shadow: 
+            inset 4px 4px 10px var(--gb-highlight),
+            inset -6px -6px 15px rgba(0,0,0,0.2),
+            0 50px 100px rgba(0,0,0,0.5);
+        border-right: 12px solid var(--gb-dark-grey);
+        border-bottom: 12px solid var(--gb-dark-grey);
+        position: relative;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s;
+    }
+    
+    body.dark-mode #bigRyanPak {
+        box-shadow: 
+            inset 4px 4px 10px var(--gb-highlight), 
+            inset -6px -6px 15px rgba(0,0,0,0.5),
+            0 50px 100px rgba(0,0,0,0.9);
+    }
+    
+    .pak-active { transform: translateY(0) !important; }
+    
+    .big-pak-depression {
+        background-color: var(--gb-grey);
+        border-radius: 20px 20px 0 0;
+        height: 50px;
+        margin-bottom: 20px;
+        box-shadow: 
+            inset 3px 3px 8px rgba(0,0,0,0.15),
+            inset -2px -2px 4px var(--gb-highlight);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: background-color 0.3s;
+    }
+    body.dark-mode .big-pak-depression {
+        box-shadow: 
+            inset 5px 5px 10px rgba(0,0,0,0.6),
+            inset -2px -2px 4px rgba(255,255,255,0.1);
+        border: none;
+    }
+
+    .big-pak-text {
+        font-family: sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        color: var(--gb-grey);
+        text-shadow: 
+            2px 2px 0 var(--gb-highlight), 
+            -2px -2px 0 rgba(0,0,0,0.1);
+        font-size: 24px;
+        letter-spacing: 4px;
+        transition: color 0.3s;
+    }
+    
+    .big-pak-sticker-area {
+        background: #111;
+        border-radius: 12px;
+        border: 2px solid #888;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    /* Split Screen Layout inside the "Sticker" */
+    .pak-split-layout {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    @media (min-width: 768px) {
+        .pak-split-layout { flex-direction: row; }
+    }
+    
+    .pak-media-side {
+        flex: 1;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        min-height: 250px;
+        border-right: 2px solid #333;
+    }
+    .pak-info-side {
+        flex: 1;
+        background: #fdfdfd; /* White label paper look */
+        padding: 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        color: #000;
+        box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); 
+        transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode .pak-info-side {
+        background-color: #1f2937;
+        color: #d1d5db;
+    }
+    
+    .pak-grips {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding-bottom: 8px;
+        opacity: 0.3;
+    }
+    .pak-grip-line {
+        width: 6px;
+        height: 40px;
+        background: #000;
+        border-radius: 4px;
+        box-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+    }
+    
+    .retro-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
+    
     /* Brand Colors */
     .store-brand.active { background: #3B82F6; }
     .store-ali.active { background: #EF4444; }
     .store-amz.active { background: #F59E0B; color: black; }
     .store-pow.active { background: #008c69; }
-
-    .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: #4ade80; margin-right: 1.5rem; width: 100px; text-align: right; flex-shrink: 0; }
-    .c-actions { display: flex; gap: 0.5rem; align-items: center; border-left: 1px solid #4b5563; padding-left: 1rem; flex-shrink: 0; }
-
-    .product-badge {
-      position: absolute;
-      bottom: 0; right: 0;
-      background-color: #991b1b;
-      color: white;
-      padding: 4px 8px;
-      border-top-left-radius: 6px;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.5rem;
-      line-height: 1.4;
-      box-shadow: -2px -2px 0 rgba(0,0,0,0.3);
-      z-index: 20;
-      text-transform: uppercase;
-      border-left: 2px solid white;
-      border-top: 2px solid white;
-    }
-
+    
+    .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: inherit; margin-right: 1.5rem; width: 100px; text-align: right; flex-shrink: 0; font-weight: bold; }
+    
     /* --- COUPON STYLES --- */
     .link-group {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         width: 100%;
     }
-
     .coupon-badge {
         font-family: 'Press Start 2P', cursive;
         font-size: 0.6rem;
-        padding: 8px 8px 6px 8px; /* Taller padding */
-        border-left: 2px solid #000;
-        border-right: 2px solid #000;
-        border-bottom: 2px solid #000;
+        padding: 6px 8px 4px 8px;
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+        border-bottom: 1px solid #000;
         border-bottom-left-radius: 6px;
         border-bottom-right-radius: 6px;
         text-align: center;
-        width: 92%; /* Slightly narrower than button to look tucked */
-        margin-top: -6px; /* Pull it up behind the button */
+        width: 90%;
+        margin-top: -4px;
         position: relative;
-        z-index: 0; /* Sit behind the button */
+        z-index: 0;
         cursor: pointer;
         display: flex;
         justify-content: center;
@@ -130,14 +359,122 @@
         gap: 6px;
         transition: transform 0.1s;
     }
-    .coupon-badge:hover {
-        transform: translateY(2px);
+    .coupon-badge:hover { transform: translateY(2px); }
+    .coupon-badge:active { transform: translateY(4px); }
+    
+    /* Power Switch Styles (Updated for Responsiveness) */
+    .power-switch-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 8px;
+        width: 100%; /* Ensure container takes full width if needed */
     }
-    .coupon-badge:active {
-        transform: translateY(4px);
+    .power-switch-track {
+        width: 360px;
+        max-width: 100%; /* Fix for mobile screens */
+        height: 32px;
+        background-color: #d1d5db;
+        border-radius: 4px;
+        border: 2px solid #9ca3af;
+        position: relative;
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+        display: flex;
+        cursor: pointer;
+        overflow: hidden;
+        transition: background-color 0.3s, border-color 0.3s;
     }
-    /* --------------------- */
+    body.dark-mode .power-switch-track {
+        background-color: #4b5563; 
+        border-color: #000000;
+    }
 
+    .power-switch-thumb {
+        width: 33.33%; /* Fluid width */
+        height: calc(100% + 2px); 
+        background-color: #374151;
+        border-radius: 2px;
+        position: absolute;
+        top: -1px;
+        left: 33.33%; /* Start center */
+        transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
+        box-shadow: 
+            2px 2px 5px rgba(0,0,0,0.3),
+            inset 1px 1px 2px rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+    }
+    body.dark-mode .power-switch-thumb {
+        background-color: #1f2937;
+        box-shadow: 
+            2px 2px 5px rgba(0,0,0,0.5),
+            inset 1px 1px 2px rgba(255,255,255,0.05);
+    }
+
+    .thumb-ridges { display: flex; flex-direction: column; gap: 3px; }
+    .thumb-ridge {
+        width: 30px;
+        height: 2px;
+        background-color: #1f2937;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .power-label-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+    .power-label {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 8px;
+        color: #6b7280;
+        transition: all 0.3s;
+        width: 33.33%; /* Fluid width */
+        z-index: 3;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%; 
+        padding-bottom: 3px;
+    }
+    body.dark-mode .power-label { color: #9ca3af; }
+    
+    .power-label.active { 
+        color: #d1d5db;
+        text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+    }
+    body.dark-mode .power-label.active { color: #f3f4f6; }
+
+    .switch-title {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 10px;
+        color: #374151;
+        margin-bottom: 2px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.3s;
+    }
+    body.dark-mode .switch-title { color: #d1d5db; }
+
+    .led-indicator {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #9ca3af;
+        box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+        transition: background 0.3s, box-shadow 0.3s;
+    }
+    .led-indicator.on {
+        background: #ef4444;
+        box-shadow: 0 0 5px #ef4444, inset -1px -1px 2px rgba(0,0,0,0.2);
+    }
 
     /* Unified Filter Dropdown */
     .unified-filter-menu {
@@ -147,27 +484,30 @@
         left: 0;
         margin-top: 0.5rem;
         width: 300px;
-        background-color: #1f2937;
-        border: 4px solid #000;
+        background-color: var(--gb-grey);
+        border: 4px solid #999;
         z-index: 100;
-        box-shadow: 12px 12px 0 rgba(0,0,0,0.4);
+        box-shadow: 12px 12px 0 rgba(0,0,0,0.2);
         max-height: 80vh;
         overflow-y: auto;
+        color: var(--text-main);
     }
+    body.dark-mode .unified-filter-menu { border-color: #4b5563; }
     .unified-filter-menu.open { display: block; }
     
     .filter-section-header {
-      background: #111827;
+      background: #c0c0c0;
       padding: 10px 16px;
       font-family: 'Press Start 2P', cursive;
       font-size: 9px;
-      color: #fbbf24;
-      border-bottom: 2px solid #000;
+      color: #000;
+      border-bottom: 2px solid #999;
       letter-spacing: 1px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+    body.dark-mode .filter-section-header { background: #4b5563; color: #fff; border-bottom-color: #1f2937; }
 
     .filter-option {
       display: flex;
@@ -175,23 +515,28 @@
       padding: 12px 16px;
       cursor: pointer;
       transition: all 0.1s;
-      border-bottom: 1px solid #374151;
+      border-bottom: 1px solid #ccc;
       font-family: 'Press Start 2P', cursive;
       font-size: 8px;
       text-transform: uppercase;
-      color: #d1d5db;
+      color: #333;
     }
-    .filter-option:hover { background-color: #374151; color: #fff; }
-    .filter-option.active { color: #fbbf24; background-color: #2d3748; }
+    body.dark-mode .filter-option { border-bottom-color: #4b5563; color: #d1d5db; }
+
+    .filter-option:hover { background-color: #fff; color: #000; }
+    body.dark-mode .filter-option:hover { background-color: #1f2937; color: #fff; }
+
+    .filter-option.active { color: #000; background-color: #fff; font-weight: bold; }
+    body.dark-mode .filter-option.active { background-color: #111827; color: #fff; }
 
     /* Slider styling */
     .retro-slider {
       -webkit-appearance: none;
       width: 100%;
       height: 8px;
-      background: #111827;
+      background: #999;
       outline: none;
-      border: 2px solid #000;
+      border: 2px solid #555;
       margin: 10px 0;
     }
     .retro-slider::-webkit-slider-thumb {
@@ -199,71 +544,120 @@
       appearance: none;
       width: 20px;
       height: 20px;
-      background: #fbbf24;
+      background: #e0e0e0;
       cursor: pointer;
       border: 2px solid #000;
       box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
     }
-
     .filter-checkbox, .filter-radio {
       appearance: none;
       width: 14px;
       height: 14px;
-      border: 2px solid #9ca3af;
-      background: transparent;
+      border: 2px solid #555;
+      background: white;
       margin-right: 12px;
       position: relative;
       cursor: pointer;
       flex-shrink: 0;
     }
     .filter-radio { border-radius: 50%; }
-    .filter-checkbox:checked, .filter-radio:checked { background: #fbbf24; border-color: #fbbf24; }
+    .filter-checkbox:checked, .filter-radio:checked { background: #000; border-color: #000; }
     .filter-checkbox:checked::after {
       content: '✓';
       position: absolute;
       top: -3px; left: 1px;
-      color: #000;
+      color: #fff;
       font-weight: bold;
       font-size: 10px;
     }
+    
+    /* DARK MODE SPECIFIC OVERRIDES FOR TAILWIND CLASSES */
+    body.dark-mode header,
+    body.dark-mode footer {
+        background-color: var(--gb-grey) !important;
+        border-color: var(--gb-dark-grey) !important;
+    }
+    
+    body.dark-mode #mainControlPanel {
+        background-color: var(--gb-grey) !important;
+        border-color: var(--gb-dark-grey) !important;
+    }
+    
+    body.dark-mode h1, 
+    body.dark-mode h2, 
+    body.dark-mode h3 {
+        color: #fff !important;
+    }
+    
+    body.dark-mode p {
+        color: #d1d5db !important; /* gray-300 */
+    }
+    
+    /* Input/Select overrides in dark mode */
+    body.dark-mode input,
+    body.dark-mode select {
+        background-color: #1f2937 !important; /* gray-800 */
+        color: #fff !important;
+        border-color: #4b5563 !important; /* gray-600 */
+    }
+    
+    /* Button overrides in dark mode */
+    body.dark-mode .bg-gray-100 {
+        background-color: #1f2937 !important;
+        color: #fff !important;
+    }
+    body.dark-mode .bg-gray-100:hover {
+        background-color: #374151 !important;
+    }
+    
+    /* Flash Deals Modal Dark Mode */
+    body.dark-mode .bg-gray-200 {
+        background-color: #374151 !important;
+        border-color: #1f2937 !important;
+    }
+    body.dark-mode .bg-white {
+        background-color: #1f2937 !important;
+        border-color: #4b5563 !important;
+        color: #fff !important;
+    }
+    
+    body.dark-mode .gb-content h3 { color: #fff !important; }
+    body.dark-mode .gb-content p { color: #d1d5db !important; }
+    body.dark-mode .gb-insert-btn span { color: #d1d5db !important; }
+    body.dark-mode svg.fill-black { fill: #fff !important; }
+    
+    /* RYAN BOY Header Text Color Override for Dark Mode */
+    body.dark-mode .gb-header-text,
+    body.dark-mode .big-pak-text {
+        color: #e5e7eb !important;
+        text-shadow: 2px 2px 0 rgba(0,0,0,0.9), -1px -1px 0 rgba(255,255,255,0.2) !important;
+    }
+    
+    /* Affiliate Banner Dark Mode Override */
+    body.dark-mode .bg-yellow-50 {
+        background-color: #362F08 !important; 
+        border-color: #facc15 !important;
+        color: #fef08a !important; 
+    }
+    body.dark-mode .bg-yellow-50 p,
+    body.dark-mode .bg-yellow-50 h3 {
+        color: #fef08a !important; 
+    }
+    body.dark-mode .bg-yellow-400 {
+        background-color: #facc15 !important; 
+        color: #000 !important;
+    }
 
-    /* Thank You Animation */
-    #thankYouOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(0,0,0,0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
+    body.dark-mode #tierLabel,
+    body.dark-mode #budgetLabel {
+        color: #fff !important;
     }
-    #thankYouOverlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .ty-text {
-      font-family: 'Press Start 2P', cursive;
-      color: #fbbf24;
-      text-shadow: 6px 6px 0 #000; 
-      transform: scale(0);
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    #thankYouOverlay.active .ty-text { transform: scale(1); }
-    .confetti-piece {
-      position: absolute;
-      width: 10px; height: 10px;
-      background: #f00;
-      animation: confetti-fall 2s linear forwards;
-    }
-    @keyframes confetti-fall {
-      0% { transform: translateY(-100vh) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(720deg); }
+    body.dark-mode .text-gray-600 {
+        color: #d1d5db !important; 
     }
 
+    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
+    
     @media (max-width: 768px) {
       .header-container { flex-direction: column; gap: 0.25rem; }
       .c-stores { display: none; }
@@ -282,37 +676,78 @@
         max-height: 80vh; 
         overflow-y: auto;
       }
+      
+      #bigRyanPak {
+        height: 90vh;
+        border-radius: 10px;
+        border-right-width: 6px;
+        border-bottom-width: 6px;
+      }
+      .pak-split-layout { flex-direction: column; }
+      .pak-media-side { min-height: 200px; flex: 0 0 200px; }
+      
+      /* Mobile Scale for Power Switch Container */
+      .power-switch-container {
+        transform: scale(0.95);
+        transform-origin: center;
+      }
     }
   </style>
 </head>
+<body class="font-sans overflow-x-hidden pb-8 dark-mode">
+<div class="bg-overlay"></div>
 
-<body class="bg-gray-900 text-white font-sans overflow-x-hidden pb-32">
-
-<div id="thankYouOverlay">
-  <h1 class="ty-text text-4xl md:text-6xl mb-4 text-center leading-normal">THANK YOU!</h1>
-  <p class="ty-text text-white text-xs md:text-sm text-center font-sans tracking-widest uppercase mt-4">Deal Submitted For Review</p>
+<div id="ryanBoyModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center pointer-events-none p-4">
+  <div class="absolute inset-0 bg-black/90 transition-opacity opacity-0 pointer-events-auto" id="rbBackdrop" onclick="closeRyanBoy()"></div>
+  
+  <div id="bigRyanPak" class="w-full max-w-5xl h-auto md:h-[650px] flex flex-col pointer-events-auto z-10 transform translate-y-[120%]">
+      
+      <div class="big-pak-depression">
+          <span class="big-pak-text">RYAN BOY</span>
+      </div>
+      
+      <div class="px-4 md:px-8 flex-1 overflow-hidden flex flex-col mb-4">
+          <div class="big-pak-sticker-area flex-1">
+              <div class="pak-split-layout" id="rbScreenContent">
+                  </div>
+          </div>
+      </div>
+      
+      <div class="pb-2 flex flex-col items-center justify-center">
+          <div class="opacity-30 drop-shadow-md cursor-pointer hover:opacity-50 transition-opacity" onclick="closeRyanBoy()" title="Close Cart">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="fill-black">
+                 <path d="M12 21L2 5H22L12 21Z" />
+              </svg>
+          </div>
+      </div>
+      
+  </div>
 </div>
-
-<header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
+<header class="bg-gray-100 py-3 md:py-8 border-b-4 border-gray-400 shadow-md transition-colors duration-300">
   <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container relative">
     
     <a href="/" class="flex items-center gap-3 md:gap-4 mb-2 md:mb-0">
       <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-           class="w-10 h-10 md:w-16 md:h-16 rounded-full pixel-border bg-gray-900" alt="Ryan Retro Logo">
-      <h1 class="retro-font text-lg md:text-2xl text-yellow-400">RYAN'S STORE</h1>
+           class="w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-gray-400 bg-gray-200" alt="Ryan Retro Logo">
+      <h1 class="retro-font text-lg md:text-2xl text-gray-800">RYAN'S STORE</h1>
     </a>
+    
+    <div class="flex flex-wrap items-center gap-2 order-2 md:order-2 w-full md:w-auto justify-center">
+        <button id="darkModeToggle" class="p-3 md:p-4 bg-gray-800 text-yellow-400 hover:text-white rounded pixel-btn border-2 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]" title="Toggle Dark Mode">
+            <i data-feather="sun" class="w-4 h-4 md:w-5 md:h-5"></i>
+        </button>
 
-    <button id="openDealModalHeader"
-            class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-      <i data-feather="tag" class="w-4 h-4 md:w-5 md:h-5"></i>
-      <span>POST DEAL</span>
-    </button>
+        <button id="openFlashDealsBtn"
+                class="px-3 py-3 md:py-4 md:px-6 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[4px_4px_0_0_rgba(0,0,0,0.2)] hidden">
+          <i data-feather="zap" class="w-4 h-4 md:w-5 md:h-5"></i>
+          <span>FLASH DEALS</span>
+        </button>
+    </div>
 
-    <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
-      <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
+    <div class="order-3 md:order-3 flex items-center justify-center border-2 border-gray-400 rounded p-3 relative hover:shadow-lg transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0 bg-white">
+      <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap">
         SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
       </span>
-
       <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
          class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -323,20 +758,53 @@
     </div>
   </div>
 </header>
-
 <section id="mainContentSection" class="py-8 container mx-auto px-4">
   
-  <div id="mainControlPanel" class="bg-gray-800 p-6 rounded-lg pixel-border flex flex-col gap-6">
+  <div class="bg-yellow-50 border-4 border-yellow-400 text-yellow-800 p-4 mb-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center gap-4 text-center md:text-left cart-animate" style="animation-delay: 0.1s;">
+      <div class="bg-yellow-400 text-white p-3 rounded-full border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.1)] flex-shrink-0">
+          <i data-feather="heart" class="w-6 h-6 fill-current"></i>
+      </div>
+      <div class="flex-1">
+          <h3 class="retro-font text-xs font-bold mb-1 uppercase">Support The Channel</h3>
+          <p class="font-sans text-xs md:text-sm leading-relaxed">
+              These are affiliate links. Using them costs you nothing, but it helps me keep buying handhelds to review for you! Thank you for your support! ❤️
+          </p>
+      </div>
+  </div>
 
-    <div class="w-full relative" id="searchBarContainer">
-      <i data-feather="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-      <input type="text" id="searchInput" placeholder="SEARCH GEAR..."
-             class="w-full bg-gray-900 border-4 border-black text-white text-center px-4 py-4 rounded focus:outline-none focus:border-yellow-400 retro-font text-sm uppercase shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+  <div id="mainControlPanel" class="bg-gray-200 p-6 rounded-lg border-4 border-gray-400 shadow-xl flex flex-col gap-6 transition-colors duration-300">
+    
+    <div class="power-switch-container">
+        <div class="switch-title">
+            <div id="powerLed" class="led-indicator on"></div>
+            <span>CATEGORY</span>
+        </div>
+        <div class="power-switch-track" id="powerSwitchTrack">
+            <div class="power-label-container">
+                <span class="power-label" data-pos="0">HANDHELD</span>
+                <span class="power-label active" data-pos="1">ALL</span>
+                <span class="power-label" data-pos="2">ACCESSORIES</span>
+            </div>
+            <div class="power-switch-thumb" id="powerSwitchThumb">
+                <div class="thumb-ridges">
+                    <div class="thumb-ridge"></div>
+                    <div class="thumb-ridge"></div>
+                    <div class="thumb-ridge"></div>
+                    <div class="thumb-ridge"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="grid grid-cols-2 md:flex md:flex-row items-center justify-between gap-2 md:gap-4 w-full" id="filterRow">
-      <div class="relative w-full md:w-auto" id="filterWidget">
-          <button id="filterBtn" class="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+    <div class="w-full relative" id="searchBarContainer">
+      <i data-feather="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5"></i>
+      <input type="text" id="searchInput" placeholder="SEARCH GEAR..."
+             class="w-full bg-white border-4 border-gray-400 text-gray-800 text-center px-4 py-4 rounded focus:outline-none focus:border-purple-500 retro-font text-sm uppercase shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1)]">
+    </div>
+    
+    <div class="grid grid-cols-2 md:grid md:grid-cols-3 gap-2 md:gap-4 w-full items-center" id="filterRow">
+      <div class="relative w-full md:w-auto md:justify-self-start" id="filterWidget">
+          <button id="filterBtn" class="bg-gray-100 hover:bg-white text-black px-4 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
               <i data-feather="filter" class="w-4 h-4"></i>
               <span id="filterBtnText">FILTERS</span>
               <i data-feather="chevron-down" class="w-4 h-4"></i>
@@ -345,11 +813,11 @@
           <div id="filterMenu" class="unified-filter-menu rounded no-scrollbar">
               <div class="filter-section-header">
                   <span>PLAYABLE UP TO</span>
-                  <span id="tierLabel" class="text-white">ALL</span>
+                  <span id="tierLabel" class="text-black">ALL</span>
               </div>
-              <div class="px-4 py-3 bg-gray-800 border-b border-gray-700">
+              <div class="px-4 py-3 bg-gray-100 border-b border-gray-300">
                   <input type="range" id="tierRange" min="0" max="4" value="0" step="1" class="retro-slider">
-                  <div class="flex justify-between text-[12px] text-white font-bold retro-font mt-2">
+                  <div class="flex justify-between text-[12px] text-gray-600 font-bold retro-font mt-2">
                       <span>ALL</span>
                       <span>PS1</span>
                       <span>GC</span>
@@ -357,15 +825,13 @@
                       <span>PC</span>
                   </div>
               </div>
-
               <div class="filter-section-header">
                   <span>BUDGET</span>
-                  <span id="budgetLabel" class="text-white">$500</span>
+                  <span id="budgetLabel" class="text-black">$500</span>
               </div>
-              <div class="px-4 py-2 bg-gray-800 border-b border-gray-700">
+              <div class="px-4 py-2 bg-gray-100 border-b border-gray-300">
                   <input type="range" id="budgetRange" min="0" max="500" value="500" step="10" class="retro-slider">
               </div>
-
               <div class="filter-section-header">AVAILABILITY</div>
               <label class="filter-option">
                   <input type="radio" name="status" class="filter-radio status-opt" value="all" checked>
@@ -375,7 +841,6 @@
                   <input type="radio" name="status" class="filter-radio status-opt" value="available">
                   <span>Available Now</span>
               </label>
-
               <div class="filter-section-header">CATEGORY</div>
               <label class="filter-option">
                   <input type="radio" name="category" class="filter-radio cat-opt" value="all" checked>
@@ -389,10 +854,8 @@
                   <input type="radio" name="category" class="filter-radio cat-opt" value="Accessories">
                   <span>Accessories</span>
               </label>
-
               <div class="filter-section-header">BRANDS</div>
               <div id="brandOptionsList"></div>
-
               <div class="filter-section-header">STORES</div>
               <label class="filter-option">
                   <input type="checkbox" class="filter-checkbox store-opt" value="official">
@@ -412,18 +875,18 @@
               </label>
           </div>
       </div>
-
-      <div class="relative w-full md:w-auto">
-        <select id="sortFilter" class="appearance-none bg-gray-900 text-white pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+      
+      <div class="relative w-full md:w-auto md:justify-self-center">
+        <select id="sortFilter" class="appearance-none bg-gray-100 text-black pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-purple-500 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
           <option value="default">SORT: NEW</option>
           <option value="price-asc">PRICE: LOW ⬆</option>
           <option value="price-desc">PRICE: HIGH ⬇</option>
         </select>
-        <i data-feather="chevron-down" class="absolute right-2 top-3.5 w-4 h-4 text-gray-400 pointer-events-none"></i>
+        <i data-feather="chevron-down" class="absolute right-2 top-3.5 w-4 h-4 text-gray-500 pointer-events-none"></i>
       </div>
-
-      <div class="relative w-full md:w-auto">
-        <select id="currencyFilter" class="appearance-none bg-gray-900 text-yellow-400 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-yellow-400 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
+      
+      <div class="relative w-full md:w-auto col-span-2 md:col-span-1 md:justify-self-end">
+        <select id="currencyFilter" class="appearance-none bg-gray-100 text-purple-700 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-purple-500 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
           <option value="USD">USD $</option>
           <option value="EUR">EUR €</option>
           <option value="GBP">GBP £</option>
@@ -431,279 +894,94 @@
           <option value="CAD">CAD $</option>
           <option value="AUD">AUD $</option>
         </select>
-        <i data-feather="chevron-down" class="absolute right-2 top-3.5 w-4 h-4 text-gray-400 pointer-events-none"></i>
-      </div>
-
-      <div class="flex bg-gray-900 rounded border-2 border-black p-1 shadow-[4px_4px_0_0_rgba(0,0,0,0.5)] items-center justify-center w-full md:w-auto">
-        <button class="view-btn py-1.5 px-4 hover:bg-gray-700 rounded text-yellow-400" data-view="grid" title="Grid View">
-          <i data-feather="grid" class="w-4 h-4"></i>
-        </button>
-        <button class="view-btn py-1.5 px-4 hover:bg-gray-700 rounded text-gray-400" data-view="list" title="List View">
-          <i data-feather="list" class="w-4 h-4"></i>
-        </button>
+        <i data-feather="chevron-down" class="absolute right-2 top-3.5 w-4 h-4 text-gray-500 pointer-events-none"></i>
       </div>
     </div>
   </div>
 </section>
-
 <section class="container mx-auto px-4 min-h-[50vh]">
   <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-300">
-  </div>
-  
-  <div id="relatedVideosSection" class="hidden mt-16 pt-12 border-t-4 border-gray-800">
-    <div class="flex items-center gap-4 mb-8">
-        <div class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center pixel-border">
-            <i data-feather="youtube" class="text-white w-6 h-6"></i>
-        </div>
-        <div>
-            <h2 class="retro-font text-2xl text-white">RELATED VIDEOS</h2>
-            <p class="text-gray-400 text-sm mt-1">Watch my coverage of this device</p>
-        </div>
     </div>
-    
-    <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">
-            LOADING VIDEOS...
-        </div>
-    </div>
-  </div>
 </section>
-
 <template id="productTemplate">
-  <div class="product-card bg-gray-800 rounded-lg overflow-hidden pixel-border flex flex-col h-full" data-aos="fade-up">
-    <div class="relative h-56 bg-black group card-img-wrapper shrink-0">
-      <img src="" alt="" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 product-img">
-      <div class="in-tray-indicator absolute inset-0 border-4 border-yellow-400 hidden pointer-events-none z-10 bg-yellow-400/10"></div>
-      <div class="product-badge hidden"></div>
+  <div class="gb-cartridge cart-animate">
+    <div class="gb-header-depression">
+        <span class="gb-header-text">RYAN BOY</span>
     </div>
-    <div class="p-6 flex-1 flex flex-col card-content">
-      <h3 class="retro-font text-lg text-white mb-2 leading-tight product-title">Product Name</h3>
-      <p class="text-gray-400 text-sm mb-6 flex-1 product-desc">Description goes here.</p>
-      <button class="tray-btn w-full mb-4 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded pixel-btn retro-font text-[10px] flex items-center justify-center gap-2 transition-colors">
-        <i data-feather="plus" class="w-4 h-4"></i>
-        <span class="tray-btn-text">ADD TO TRAY</span>
-      </button>
-      <div class="space-y-4 product-links"></div>
+    <div class="gb-sticker group card-img-wrapper">
+      <img src="" alt="" class="product-img transition-transform duration-300 group-hover:scale-105">
+    </div>
+    <div class="gb-content card-content">
+      <h3 class="retro-font text-xs text-black mb-1 leading-tight product-title truncate font-bold">Product Name</h3>
+      <p class="text-gray-600 text-[10px] mb-4 flex-1 product-desc line-clamp-2 leading-relaxed">Description goes here.</p>
       
-      <button class="cheaper-btn w-full mt-4 py-3 bg-gray-900 border-2 border-dashed border-gray-600 hover:border-yellow-400 text-gray-500 hover:text-yellow-400 retro-font text-[8px] uppercase transition-all duration-200 flex items-center justify-center gap-2">
-        <i data-feather="arrow-down-circle" class="w-3 h-3"></i>
-        <span>Found it cheaper?</span>
-      </button>
-    </div>
-  </div>
-</template>
-
-<template id="listTemplate">
-  <div class="list-row group">
-    <img src="" class="c-thumb" alt="Product">
-    <div class="c-info">
-      <div class="c-title truncate pr-2">Product Name</div>
-      <div class="c-cat">Category</div>
-    </div>
-    <div class="c-stores">
-      <a href="#" target="_blank" class="store-icon-btn store-brand" title="Official Store"><i data-feather="globe" class="w-4 h-4"></i></a>
-      <a href="#" target="_blank" class="store-icon-btn store-ali" title="AliExpress"><i data-feather="package" class="w-4 h-4"></i></a>
-      <a href="#" target="_blank" class="store-icon-btn store-amz" title="Amazon"><i data-feather="shopping-cart" class="w-4 h-4"></i></a>
-      <a href="#" target="_blank" class="store-icon-btn store-pow" title="PowKiddy"><i data-feather="zap" class="w-4 h-4"></i></a>
-    </div>
-    <div class="c-price">$0.00</div>
-    <div class="c-actions">
-      <button class="c-tray-btn bg-gray-700 hover:bg-yellow-400 hover:text-black text-gray-300 p-2 rounded transition-colors">
-        <i data-feather="plus" class="w-4 h-4"></i>
-      </button>
-    </div>
-  </div>
-</template>
-
-<div id="tray" class="fixed bottom-0 left-0 right-0 z-50 tray-hidden">
-  <div class="bg-black/95 border-t-2 border-yellow-400 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] backdrop-blur-md">
-    <div class="container mx-auto px-4 py-3">
-      <div class="flex flex-wrap items-center justify-between mb-3 border-b border-gray-700 pb-2 gap-4">
-        <div class="flex items-center gap-6">
-          <div class="flex items-center gap-2">
-            <div class="retro-font text-xs text-yellow-400">YOUR TRAY</div>
-            <div class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded"><span id="trayCount" class="text-white font-bold">0</span> items</div>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-gray-400 uppercase tracking-wide">Est. Total:</span>
-            <span id="trayTotal" class="retro-font text-sm text-green-400">$0.00</span>
-          </div>
-        </div>
-        <div class="flex gap-2">
-          <button id="openTrayLinks" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded pixel-btn text-[10px] font-bold flex items-center gap-2">
-            <i data-feather="external-link" class="w-3 h-3"></i> OPEN ALL
-          </button>
-          <button id="clearTray" class="bg-gray-800 hover:bg-red-900 text-gray-300 px-3 py-1.5 rounded pixel-btn text-[10px]">CLEAR</button>
-        </div>
-      </div>
-      <div id="trayItems" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar"></div>
-    </div>
-  </div>
-</div>
-
-<div id="dealModal" class="fixed inset-0 z-50 hidden">
-  <div id="dealModalBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-gray-800 rounded-lg pixel-border w-full max-w-3xl xl:max-w-4xl overflow-hidden relative">
-      <div class="p-6 border-b-4 border-black flex items-center justify-between">
-        <h2 id="dealModalTitle" class="retro-font text-sm text-yellow-400 uppercase">Post a Deal</h2>
-        <button id="closeDealModal" class="pixel-btn bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-black">CLOSE</button>
-      </div>
-
-      <form id="dealForm" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto no-scrollbar">
-        <input type="text" id="companyField" class="hidden" tabindex="-1" autocomplete="off" />
-
-        <div>
-          <label class="block text-xs text-gray-300 retro-font mb-2">PRODUCT NAME</label>
-          <input name="item_name" id="dealName" required
-                 class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px] uppercase"
-                 placeholder="RETROID POCKET 5" />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs text-gray-300 retro-font mb-2">PRICE</label>
-            <input name="original_price" id="dealPrice" type="number" step="0.01" min="0" required
-                   class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
-                   placeholder="199.00" />
-          </div>
-
-          <div>
-            <label class="block text-xs text-gray-300 retro-font mb-2">CURRENCY</label>
-            <div class="relative">
-              <select name="original_currency" id="dealCurrency"
-                      class="w-full retro-select appearance-none bg-gray-900 border-4 border-black text-yellow-400 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase cursor-pointer focus:outline-none focus:border-yellow-400">
-                <option value="USD">USD $</option>
-                <option value="EUR">EUR €</option>
-                <option value="GBP">GBP £</option>
-                <option value="KRW">KRW ₩</option>
-                <option value="CAD">CAD $</option>
-                <option value="AUD">AUD $</option>
-              </select>
-              <i data-feather="chevron-down" class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none"></i>
+      <div class="space-y-1 product-links"></div>
+      
+      <button class="gb-insert-btn w-full group">
+         <div class="flex flex-col items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+            <span class="retro-font text-[8px] font-bold text-black group-hover:text-purple-600">INSERT CART</span>
+            <div class="mt-1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="fill-black group-hover:fill-purple-600 transition-colors">
+                    <path d="M12 21L2 5H22L12 21Z" />
+                </svg>
             </div>
-          </div>
+         </div>
+      </button>
+    </div>
+  </div>
+</template>
+
+<div id="flashDealsModal" class="fixed inset-0 z-[80] hidden">
+  <div id="flashDealsBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="bg-gray-200 rounded-lg border-4 border-gray-400 w-full max-w-2xl overflow-hidden relative shadow-2xl flex flex-col max-h-[80vh]">
+      <div class="p-4 border-b-4 border-gray-400 flex items-center justify-between bg-red-600 text-white">
+        <h2 class="retro-font text-sm uppercase flex items-center gap-2"><i data-feather="zap" class="w-4 h-4"></i> CURRENT FLASH DEALS</h2>
+        <button id="closeFlashDeals" class="pixel-btn bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-white">CLOSE</button>
+      </div>
+      <div class="p-6 overflow-y-auto no-scrollbar space-y-4" id="flashDealsList">
         </div>
-
-        <div>
-          <label class="block text-xs text-gray-300 retro-font mb-2">LINK</label>
-          <input name="link" id="dealLink" type="url" required
-                 class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
-                 placeholder="https://..." />
-        </div>
-
-        <div class="grid grid-cols-1 gap-4">
-          <div>
-            <label class="block text-xs text-gray-300 retro-font mb-2">NOTES (OPTIONAL)</label>
-            <input name="notes" id="dealNotes"
-                   class="w-full bg-gray-900 border-4 border-black text-white px-4 py-3 rounded focus:outline-none focus:border-yellow-400 retro-font text-[10px]"
-                   placeholder="COUPON CODES, SHIPPING INFO..." />
-          </div>
-        </div>
-
-        <button id="dealSubmitBtn" type="submit"
-                class="w-full bg-yellow-400 hover:bg-yellow-300 text-black py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2">
-          <i data-feather="send" class="w-4 h-4"></i>
-          SUBMIT DEAL
-        </button>
-
-        <p class="text-gray-400 text-xs text-center">
-          Submissions are reviewed before appearing on the main deals page.
-        </p>
-
-        <div id="dealToast" class="hidden text-center text-xs retro-font py-2 rounded border-2 border-black"></div>
-      </form>
     </div>
   </div>
 </div>
 
-<footer class="bg-black py-8 mt-20 border-t-4 border-gray-800">
+<footer class="bg-gray-100 py-8 mt-12 border-t-4 border-gray-300 transition-colors duration-300">
   <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
     <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
     <p class="mt-2">© 2025 Ryan Retro</p>
   </div>
 </footer>
-
 <script>
+  // --- DARK MODE LOGIC ---
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const body = document.body;
+  const icon = darkModeToggle.querySelector('i');
+
+  // Check Local Storage
+  // Default is now DARK. Only switch to LIGHT if explicitly saved.
+  if (localStorage.getItem('theme') === 'light') {
+      body.classList.remove('dark-mode');
+      icon.setAttribute('data-feather', 'moon');
+  } else {
+      body.classList.add('dark-mode');
+      icon.setAttribute('data-feather', 'sun');
+  }
+
+  darkModeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+          localStorage.setItem('theme', 'dark');
+          icon.setAttribute('data-feather', 'sun');
+      } else {
+          localStorage.setItem('theme', 'light');
+          icon.setAttribute('data-feather', 'moon');
+      }
+      feather.replace();
+  });
+
   // Tiers: 0=All, 1=PS1, 2=Gamecube, 3=Switch, 4=PC
   const officialProducts = [
-    { 
-      "id": "anbernic_rg477v", 
-      "name": "ANBERNIC RG477V", 
-      "category": "Handhelds", 
-      "releaseDate": "2025-12-20", 
-      "badge": "New Arrival ✨", 
-      "tier": 2, 
-      "image": "https://anbernic.com/cdn/shop/files/ANBERNICRG477V_1.webp?v=1765251474&width=800", 
-      "description": "Brand new vertical powerhouse! Get it while it's on discount.", 
-      "links": [
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3nmWU5X", "price": 199.00, "currency": "$" }
-      ] 
-    },
-  {
-    "id": "trimui_brick_hammer",
-    "name": "TrimUI Brick Hammer",
-    "category": "Handhelds",
-    "releaseDate": "2024-11-15",
-    "badge": "Best Value 🎁",
-    "tier": 1,
-    "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
-    "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
-    "links": [
-      {
-        "store": "Official",
-        "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
-        "price": 80.75,
-        "currency": "$",
-        "coupon": "TRIMUIMC15"
-      },
-      {
-        "store": "Amazon",
-        "url": "https://amzn.to/3MBZ1qY",
-        "price": 95.99,
-        "currency": "$"
-      },
-      {
-        "store": "PowKiddy",
-        "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro",
-        "price": 80.75,
-        "currency": "$",
-        "coupon": "RYAN"
-      }
-    ]
-  },
-  {
-    "id": "trimui_brick",
-    "name": "TrimUI Brick",
-    "category": "Handhelds",
-    "releaseDate": "2024-10-10",
-    "badge": "Best Value 🎁",
-    "tier": 1,
-    "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
-    "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
-    "links": [
-      {
-        "store": "Official",
-        "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
-        "price": 72.75,
-        "currency": "$",
-        "coupon": "TRIMUIMC15"
-      },
-      {
-        "store": "Amazon",
-        "url": "https://amzn.to/4j3t2Mw",
-        "price": 73.00,
-        "currency": "$"
-      },
-      {
-        "store": "PowKiddy",
-        "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro",
-        "price": 61.75,
-        "currency": "$",
-        "coupon": "RYAN"
-      }
-    ]
-  },   { "id": "rp6", "name": "Retroid Pocket 6", "category": "Handhelds", "releaseDate": "2025-01-15", "badge": "Pre-order 🔥", "tier": 3, "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686", "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", "links": [{ "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }] },
+    { "id": "rp6", "name": "Retroid Pocket 6", "category": "Handhelds", "releaseDate": "2025-01-15", "badge": "Pre-order 🔥", "tier": 3, "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686", "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", "links": [{ "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }] },
     { "id": "steam_deck", "name": "Steam Deck", "category": "Handhelds", "releaseDate": "2023-11-16", "tier": 4, "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg", "description": "The standard for PC handheld gaming. Play your Steam library on the go.", "links": [{ "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 469.00, "currency": "$" }] },
     { "id": "rp5", "name": "Retroid Pocket 5", "category": "Handhelds", "releaseDate": "2024-09-01", "tier": 2, "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png", "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" }] },
     { "id": "rp_mini2", "name": "Retroid Pocket Mini V2", "category": "Handhelds", "releaseDate": "2024-08-15", "tier": 2, "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824", "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" }, { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }] },
@@ -720,41 +998,124 @@
     { "id": "odin3", "name": "AYN Odin 3", "category": "Handhelds", "badge": "Pre-order 🔥", "releaseDate": "2025-02-01", "tier": 3, "image": "https://www.ayntec.com/cdn/shop/files/d92e076f69cb1a6f81c9bab8cd8f57a2_f21bc7dc-1ec5-4a8c-a0fb-159aecd12d8c_1080x.jpg?v=1761054667", "description": "Snapdragon 8 Elite flagship.", "links": [{ "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }] },
     { "id": "odin2_portal", "name": "AYN Odin2 Portal", "category": "Handhelds", "releaseDate": "2024-05-15", "tier": 3, "image": "https://www.ayntec.com/cdn/shop/files/8b9cc7c9808a81fc8db0eaf67a4d79d7_1080x.jpg?v=1737092883", "description": "7-inch OLED powerhouse.", "links": [{ "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }] },
     { "id": "ayn_thor", "name": "AYN Thor", "category": "Handhelds", "badge": "Pre-order 🔥", "releaseDate": "2025-03-01", "tier": 3, "image": "https://www.ayntec.com/cdn/shop/files/e50c1d352b31e3f4a65f1f0a706072c3_1080x.jpg?v=1755943485", "description": "Dual-screen OLED clamshell.", "links": [{ "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }] },
-    { "id": "sd_card", "name": "SanDisk Extreme 512GB", "category": "Accessories", "tier": 0, "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg", "description": "Reliable library storage.", "links": [{ "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }] }
+    { "id": "sd_card", "name": "SanDisk Extreme 512GB", "category": "Accessories", "tier": 0, "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg", "description": "Reliable library storage.", "links": [{ "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }] },
+    { 
+      "id": "anbernic_rg477v", 
+      "name": "ANBERNIC RG477V", 
+      "category": "Handhelds", 
+      "releaseDate": "2025-12-20", 
+      "badge": "New Arrival ✨", 
+      "tier": 2, 
+      "image": "https://anbernic.com/cdn/shop/files/ANBERNICRG477V_1.webp?v=1765251474&width=800", 
+      "description": "Brand new vertical powerhouse! Get it while it's on discount.", 
+      "links": [
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3nmWU5X", "price": 199.00, "currency": "$" }
+      ] 
+    },
+    {
+      "id": "trimui_brick_hammer",
+      "name": "TrimUI Brick Hammer",
+      "category": "Handhelds",
+      "releaseDate": "2024-11-15",
+      "badge": "Best Value 🎁",
+      "tier": 1,
+      "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
+      "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
+      "links": [
+        {
+          "store": "Official",
+          "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
+          "price": 80.75,
+          "currency": "$",
+          "coupon": "TRIMUIMC15"
+        },
+        {
+          "store": "Amazon",
+          "url": "https://amzn.to/3MBZ1qY",
+          "price": 95.99,
+          "currency": "$"
+        },
+        {
+          "store": "PowKiddy",
+          "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro",
+          "price": 80.75,
+          "currency": "$",
+          "coupon": "RYAN"
+        }
+      ]
+    },
+    {
+      "id": "trimui_brick",
+      "name": "TrimUI Brick",
+      "category": "Handhelds",
+      "releaseDate": "2024-10-10",
+      "badge": "Best Value 🎁",
+      "tier": 1,
+      "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
+      "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
+      "links": [
+        {
+          "store": "Official",
+          "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
+          "price": 72.75,
+          "currency": "$",
+          "coupon": "TRIMUIMC15"
+        },
+        {
+          "store": "Amazon",
+          "url": "https://amzn.to/4j3t2Mw",
+          "price": 73.00,
+          "currency": "$"
+        },
+        {
+          "store": "PowKiddy",
+          "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro",
+          "price": 61.75,
+          "currency": "$",
+          "coupon": "RYAN"
+        }
+      ]
+    }
+  ];
+  
+  // --- FLASH DEALS DATA ---
+  const flashDeals = [
+    { title: "Samsung EVO 512GB MicroSD", price: "$34.99", discount: "40% OFF", link: "https://amzn.to/example", store: "Amazon" },
+    { title: "Anbernic RG35XX Plus", price: "$55.00", discount: "FLASH SALE", link: "https://aliexpress.com/example", store: "AliExpress", coupon: "RG35XXDEAL" },
+    { title: "Miyoo Mini Plus (Purple)", price: "$58.00", discount: "LIMITED STOCK", link: "https://aliexpress.com/example", store: "AliExpress" }
   ];
 
   let allProducts = JSON.parse(JSON.stringify(officialProducts));
-  let traySet = new Set();
   let currentView = 'grid', currentCurrency = 'USD', currentCategory = 'all', currentStatus = 'all', currentBrand = 'all', currentSort = 'default', currentSearch = '', currentBudget = 500, currentTier = 0;
   let storeFilters = new Set();
   
   // 1. URL ID DETECTION
-  // First check ?id=, if not found, check the URL path (e.g. /trimui_brick)
   let urlParams = new URLSearchParams(window.location.search);
-  let pathSegment = window.location.pathname.replace(/^\/|\/$/g, ''); // Remove slashes
+  let explicitId = urlParams.get('id');
+  let pathSegment = window.location.pathname.replace(/^\/|\/$/g, ''); 
   
-  // Ignore 'store' or 'shop' as IDs
-  if (pathSegment === 'store' || pathSegment === 'shop' || pathSegment.includes('static')) {
+  if (pathSegment === 'store' || pathSegment === 'shop' || pathSegment.includes('.html') || pathSegment.includes('/')) {
       pathSegment = null;
   }
-
-  let urlProductId = urlParams.get('id') || pathSegment;
-
+  let urlProductId = explicitId || pathSegment;
+  const productExists = allProducts.some(p => p.id === urlProductId);
+  
+  if (urlProductId && !productExists && !explicitId) {
+      console.log("Ignoring invalid path ID:", urlProductId);
+      urlProductId = null;
+  }
   const tierMap = { 0: "ALL", 1: "PS1", 2: "GAMECUBE", 3: "SWITCH", 4: "PC" };
   const exchangeRates = { USD: 1, EUR: 0.92, GBP: 0.78, KRW: 1375, CAD: 1.36, AUD: 1.52 };
   const currencySymbols = { USD: '$', EUR: '€', GBP: '£', KRW: '₩', CAD: '$', AUD: '$' };
-
   function convertFromUSD(usd, cur) { return cur === 'USD' ? usd : usd * (exchangeRates[cur] || 1); }
   function formatPrice(amt, cur) {
     const sym = currencySymbols[cur] || '$';
     return cur === 'KRW' ? `${sym}${Math.round(amt).toLocaleString()}` : `${sym}${Number(amt).toFixed(2)}`;
   }
-
   function getCheapestLink(p) {
     const valid = (p.links || []).filter(l => l.price > 0 && l.url !== '#');
     return valid.length ? [...valid].sort((a,b) => a.price - b.price)[0] : null;
   }
-
   function populateBrandOptions() {
     const list = document.getElementById('brandOptionsList');
     const brands = Array.from(new Set(allProducts.map(p => p.name.split(' ')[0].toUpperCase()))).sort();
@@ -762,13 +1123,10 @@
     brands.forEach(b => list.insertAdjacentHTML('beforeend', `<label class="filter-option"><input type="radio" name="brand" class="filter-radio brand-opt" value="${b}"><span>${b}</span></label>`));
     document.querySelectorAll('.brand-opt').forEach(opt => opt.addEventListener('change', (e) => { currentBrand = e.target.value; updateFilters(); }));
   }
-
   function matchesFilters(p) {
-    // 2. EXCLUSIVE FILTERING LOGIC
     if (urlProductId) {
         return p.id === urlProductId; 
     }
-
     if (currentCategory !== 'all' && p.category !== currentCategory) return false;
     const cheapest = getCheapestLink(p);
     if (cheapest && cheapest.price > currentBudget) return false;
@@ -792,42 +1150,33 @@
     }
     return true;
   }
-
   function renderProducts() {
     const grid = document.getElementById('productGrid');
-    const videoSection = document.getElementById('relatedVideosSection');
     
-    // 3. SINGLE VIEW VS GRID VIEW SETUP
+    // SINGLE VIEW SETUP
     if (urlProductId) {
-        // Find the single product
         const p = allProducts.find(x => x.id === urlProductId);
-        
-        // Reset grid classes to be a centered container
         grid.className = 'max-w-5xl mx-auto'; 
         grid.innerHTML = '';
-
         if (p) {
-            // Pass 'true' to indicate single view mode
             const card = renderGridCard(p, true);
             grid.appendChild(card);
-            
-            // Show video section and load videos
-            videoSection.classList.remove('hidden');
-            videoSection.classList.add('max-w-5xl', 'mx-auto'); // align with card
-            loadRelatedVideos(p.name);
-            
         } else {
-            grid.innerHTML = `<div class="text-center text-white retro-font">PRODUCT NOT FOUND. <a href="/store" class="text-yellow-400 underline">GO BACK</a></div>`;
-            videoSection.classList.add('hidden');
+            grid.innerHTML = `
+              <div class="col-span-full flex flex-col items-center justify-center py-20 text-center animate-pulse">
+                <div class="gb-cartridge w-64 h-64 flex flex-col items-center justify-center mb-6 opacity-50">
+                   <i data-feather="alert-octagon" class="w-16 h-16 text-gray-400 mb-2"></i>
+                   <span class="retro-font text-[10px] text-gray-500">MISSING CART</span>
+                </div>
+                <h2 class="retro-font text-xl text-black mb-4">INSERT CARTRIDGE</h2>
+                <p class="text-gray-600 text-xs mb-6 max-w-md retro-font leading-relaxed">THE GAME CART YOU ARE LOOKING FOR<br>IS NOT IN THE SLOT.</p>
+                <a href="/" class="px-6 py-3 bg-gray-800 text-white rounded pixel-btn retro-font text-xs border-2 border-black hover:bg-gray-700 transition-colors">RETURN TO TITLE</a>
+              </div>
+            `;
         }
-        
-        feather.replace(); AOS.refresh();
-        return; // Stop normal rendering
+        feather.replace(); 
+        return; 
     }
-    
-    // Hide video section in grid mode
-    videoSection.classList.add('hidden');
-
     // NORMAL RENDERING
     const products = allProducts.filter(matchesFilters).sort((a,b) => {
         if(currentSort === 'default') return new Date(b.releaseDate || '2000-01-01') - new Date(a.releaseDate || '2000-01-01');
@@ -835,154 +1184,88 @@
         return currentSort === 'price-asc' ? ap - bp : bp - ap;
     });
     
-    if (currentView === 'list') {
-        grid.className = 'view-list';
-    } else {
-        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8';
-    }
-
-    grid.innerHTML = products.length ? '' : `<div class="col-span-full text-center text-gray-500 retro-font py-20">No matching gear.</div>`;
-    products.forEach(p => currentView === 'list' ? grid.appendChild(renderListRow(p)) : grid.appendChild(renderGridCard(p, false)));
-    feather.replace(); AOS.refresh();
+    grid.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8';
+    
+    grid.innerHTML = products.length ? '' : `
+      <div class="col-span-full flex flex-col items-center justify-center py-20 text-center opacity-70">
+         <i data-feather="frown" class="w-12 h-12 text-gray-400 mb-4"></i>
+         <div class="text-gray-500 retro-font text-xs">NO GAME CARTS FOUND.</div>
+      </div>
+    `;
+    products.forEach(p => grid.appendChild(renderGridCard(p, false)));
+    feather.replace(); 
   }
-  
-  // FETCH YOUTUBE VIDEOS FUNCTION
-  async function loadRelatedVideos(productName) {
-      const grid = document.getElementById('videoGrid');
-      grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">LOADING VIDEOS...</div>';
-      
-      try {
-          // Use the existing API with query
-          const res = await fetch(`/api/youtube/latest?channel_id=UCh9GxjM-FNuSWv7xqn3UKVw&q=${encodeURIComponent(productName)}&limit=3`);
-          if (!res.ok) throw new Error("API Error");
-          const videos = await res.json();
-          
-          if (!videos || videos.length === 0) {
-              grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">No specific videos found for this device yet. Check my channel for more!</div>';
-              return;
-          }
-          
-          grid.innerHTML = videos.map((v, i) => `
-            <a href="https://www.youtube.com/watch?v=${v.videoId}" target="_blank"
-               class="bg-gray-800 rounded-lg overflow-hidden pixel-border block group hover:bg-gray-700 transition-colors"
-               data-aos="fade-up" data-aos-delay="${i * 100}">
-              <div class="relative pb-[56.25%] bg-black">
-                <img
-                  src="https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg"
-                  alt="${v.title.replace(/"/g, '&quot;')}"
-                  class="absolute h-full w-full object-cover group-hover:opacity-90 transition-opacity">
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center opacity-90 shadow-lg group-hover:scale-110 transition-transform">
-                    <i data-feather="play" class="text-white fill-white ml-1 w-5 h-5"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="p-4">
-                <h3 class="text-sm font-bold text-white line-clamp-2 leading-relaxed">${v.title}</h3>
-              </div>
-            </a>
-          `).join('');
-          
-          feather.replace();
-          
-      } catch (err) {
-          console.error(err);
-          grid.innerHTML = '<div class="col-span-full text-center text-gray-500 retro-font text-xs py-10">Could not load videos.</div>';
-      }
-  }
-
   function renderGridCard(p, isSingleView = false) {
     const node = document.getElementById('productTemplate').content.firstElementChild.cloneNode(true);
     node.dataset.pid = p.id;
     
     // --- LAYOUT ADJUSTMENT FOR SINGLE VIEW ---
     if (isSingleView) {
-        // Make card horizontal on desktop
         node.classList.remove('flex-col', 'h-full');
         node.classList.add('flex', 'flex-col', 'md:flex-row', 'h-auto', 'md:min-h-[500px]');
         
-        // Adjust Image Container
-        const imgContainer = node.querySelector('.group'); // The relative container
-        imgContainer.classList.remove('h-56');
-        imgContainer.classList.add('h-64', 'md:h-auto', 'md:w-1/2', 'shrink-0');
+        const imgContainer = node.querySelector('.group'); 
+        imgContainer.classList.add('md:w-1/2', 'shrink-0', 'mr-8');
         
-        // Adjust Content Container
         const contentContainer = node.querySelector('.card-content');
         contentContainer.classList.add('md:w-1/2', 'flex', 'flex-col', 'justify-center', 'p-8');
         
-        // Make Title Bigger
         const title = node.querySelector('.product-title');
-        title.classList.replace('text-lg', 'text-2xl');
+        title.classList.replace('text-xs', 'text-2xl');
         title.classList.add('md:text-3xl', 'mb-4');
         
-        // Make Description Bigger
         const desc = node.querySelector('.product-desc');
-        desc.classList.replace('text-sm', 'text-base');
+        desc.classList.replace('text-[10px]', 'text-base');
         desc.classList.add('md:text-lg', 'mb-8');
-    }
-    // -----------------------------------------
-
-    // IMAGE & CLICK LOGIC
-    node.querySelector('.product-img').src = p.image;
-    
-    const imgWrapper = node.querySelector('.card-img-wrapper');
-    // const cheapestLink = getCheapestLink(p); // OLD LOGIC
-    
-    // NEW CLICK LOGIC: Go to product page (Single View)
-    if (!isSingleView) {
-        imgWrapper.style.cursor = 'pointer';
-        imgWrapper.setAttribute('title', `View details for ${p.name}`);
-        imgWrapper.onclick = () => {
-            // Update URL and re-render without page reload (simulated SPA)
-            const newUrl = window.location.pathname + '?id=' + p.id;
-            window.history.pushState({ path: newUrl }, '', newUrl);
-            urlProductId = p.id;
-            
-            // Hide filters, show header button change
-            document.getElementById('mainControlPanel').style.display = 'none';
-            const mainSection = document.getElementById('mainContentSection');
-            mainSection.classList.remove('py-8');
-            mainSection.classList.add('pt-4', 'pb-8');
-            updateHeaderButton();
-
-            renderProducts();
-            window.scrollTo(0,0);
+    } else {
+        node.style.cursor = 'pointer';
+        node.onclick = (e) => {
+            if (e.target.closest('a') || e.target.closest('.coupon-badge') || e.target.closest('.card-img-wrapper')) return;
+            openRyanBoy(node);
         };
     }
 
+    node.querySelector('.product-img').src = p.image;
+    
+    const imgWrapper = node.querySelector('.card-img-wrapper');
+    const cheapestLink = getCheapestLink(p);
+    
+    if (cheapestLink) {
+        imgWrapper.style.cursor = 'pointer';
+        imgWrapper.setAttribute('title', `Open cheapest deal ($${cheapestLink.price})`);
+        imgWrapper.onclick = (e) => {
+            e.stopPropagation(); 
+            window.open(cheapestLink.url, '_blank');
+        };
+    }
     node.querySelector('.product-title').textContent = p.name;
     node.querySelector('.product-desc').textContent = p.description;
-    const badge = node.querySelector('.product-badge');
-    if(p.badge) { badge.textContent = p.badge; badge.classList.remove('hidden'); }
-    const trayBtn = node.querySelector('.tray-btn'), inT = traySet.has(p.id);
-    trayBtn.querySelector('span').textContent = inT ? 'IN TRAY' : 'ADD TO TRAY';
-    if(inT) trayBtn.classList.add('bg-yellow-400', 'text-black');
-    trayBtn.onclick = () => { traySet.has(p.id) ? traySet.delete(p.id) : traySet.add(p.id); saveTray(); refreshTrayBar(); renderProducts(); };
     
-    const linksW = node.querySelector('.product-links'), cheapest = getCheapestLink(p);
+    const linksW = node.querySelector('.product-links');
     
-    (p.links || []).forEach(l => {
-      let btnBg = 'bg-gray-900';
-      let badgeBg = 'bg-gray-950 text-gray-400';
+    // SORT LINKS BY PRICE ASCENDING
+    const sortedLinks = (p.links || []).sort((a,b) => a.price - b.price);
+    
+    sortedLinks.forEach(l => {
+      let btnBg = 'bg-gray-800 text-white';
+      let badgeBg = 'bg-gray-700 text-gray-300';
       const s = l.store.toLowerCase();
-
       if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-         btnBg = 'bg-blue-600';
-         badgeBg = 'bg-blue-900 text-blue-100';
+         btnBg = 'bg-blue-600 text-white';
+         badgeBg = 'bg-blue-800 text-blue-100';
       }
       else if(s.includes('ali')) {
-         btnBg = 'bg-red-600';
-         badgeBg = 'bg-red-900 text-red-100';
+         btnBg = 'bg-red-600 text-white';
+         badgeBg = 'bg-red-800 text-red-100';
       }
       else if(s.includes('amazon')) {
          btnBg = 'bg-yellow-500 text-black';
-         badgeBg = 'bg-yellow-800 text-yellow-100';
+         badgeBg = 'bg-yellow-700 text-yellow-100';
       }
       else if(s.includes('powkiddy')) {
-         btnBg = 'bg-[#008c69]';
+         btnBg = 'bg-[#008c69] text-white';
          badgeBg = 'bg-[#004d3a] text-green-100';
       }
-
       const couponHtml = l.coupon 
         ? `<div class="coupon-badge ${badgeBg}" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
              <span>CODE: ${l.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
@@ -991,9 +1274,9 @@
 
       const wrapperHtml = `
         <div class="link-group">
-          <a href="${l.url}" target="_blank" class="${btnBg} ${cheapest && l.url === cheapest.url ? 'ring-2 ring-yellow-400' : ''} w-full px-4 py-3 rounded pixel-btn border-2 border-black flex items-center justify-between relative z-10">
-            <span class="retro-font text-[9px] uppercase">${l.store}</span>
-            <span class="retro-font text-[9px]">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
+          <a href="${l.url}" target="_blank" class="${btnBg} w-full px-3 py-2 rounded pixel-btn border border-black flex items-center justify-between relative z-10 shadow-sm">
+            <span class="retro-font text-[8px] uppercase">${l.store}</span>
+            <span class="retro-font text-[8px] font-bold">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
           </a>
           ${couponHtml}
         </div>
@@ -1001,218 +1284,271 @@
       
       linksW.insertAdjacentHTML('beforeend', wrapperHtml);
     });
-
-    // Handle "Found it cheaper" click
-    node.querySelector('.cheaper-btn').onclick = () => openCheaperModal(p);
-
     return node;
   }
-
-  function renderListRow(p) {
-    const row = document.getElementById('listTemplate').content.firstElementChild.cloneNode(true);
-    
-    const img = row.querySelector('.c-thumb');
-    img.src = p.image;
-    
-    // Click logic for list view thumb
-    img.style.cursor = 'pointer';
-    img.onclick = () => {
-         const newUrl = window.location.pathname + '?id=' + p.id;
-         window.history.pushState({ path: newUrl }, '', newUrl);
-         urlProductId = p.id;
-         document.getElementById('mainControlPanel').style.display = 'none';
-         updateHeaderButton();
-         renderProducts();
-         window.scrollTo(0,0);
-    };
-
-    row.querySelector('.c-title').textContent = p.name;
-    row.querySelector('.c-cat').textContent = p.category;
-    const cheapest = getCheapestLink(p);
-    row.querySelector('.c-price').textContent = cheapest ? formatPrice(convertFromUSD(cheapest.price, currentCurrency), currentCurrency) : '—';
-    const setB = (sel, key) => { const b = row.querySelector(sel), l = p.links.find(x => x.store.toLowerCase().includes(key)); if(l) { b.href = l.url; b.classList.add('active'); } else b.style.display = 'none'; };
-    setB('.store-brand', 'official'); setB('.store-ali', 'ali'); setB('.store-amz', 'amazon'); setB('.store-pow', 'powkiddy');
-    const tb = row.querySelector('.c-tray-btn'); if(traySet.has(p.id)) tb.classList.add('bg-yellow-400', 'text-black');
-    tb.onclick = () => { traySet.has(p.id) ? traySet.delete(p.id) : traySet.add(p.id); saveTray(); refreshTrayBar(); renderProducts(); };
-    return row;
-  }
-
-  function refreshTrayBar() {
-    const ids = Array.from(traySet), itemsEl = document.getElementById('trayItems');
-    document.getElementById('trayCount').textContent = ids.length;
-    itemsEl.innerHTML = ''; let total = 0;
-    ids.forEach(id => {
-      const p = allProducts.find(x => x.id === id); if(!p) return;
-      const c = getCheapestLink(p); if(c) total += c.price;
-      itemsEl.insertAdjacentHTML('beforeend', `<div class="flex items-center gap-3 bg-gray-800 p-2 rounded border-2 border-black min-w-[200px]"><img src="${p.image}" class="w-8 h-8 rounded border-2 border-black"><div class="flex-1 min-w-0"><div class="retro-font text-[8px] truncate">${p.name}</div><div class="text-[8px] text-gray-400">${c ? formatPrice(convertFromUSD(c.price, currentCurrency), currentCurrency) : ''}</div></div><button onclick="removeFromTray('${p.id}')" class="text-red-500 p-1"><i data-feather="x" class="w-3 h-3"></i></button></div>`);
-    });
-    document.getElementById('trayTotal').textContent = formatPrice(convertFromUSD(total, currentCurrency), currentCurrency);
-    document.getElementById('tray').className = ids.length ? 'fixed bottom-0 left-0 right-0 z-50 tray-visible' : 'fixed bottom-0 left-0 right-0 z-50 tray-hidden';
-    feather.replace();
-  }
-
-  window.removeFromTray = (id) => { traySet.delete(id); saveTray(); refreshTrayBar(); renderProducts(); };
-  function saveTray() { localStorage.setItem('ryan_tray', JSON.stringify([...traySet])); }
-  function loadTray() { const s = localStorage.getItem('ryan_tray'); if(s) traySet = new Set(JSON.parse(s)); }
+  
   function updateFilters() { const activeC = (currentStatus !== 'all' ? 1 : 0) + (currentCategory !== 'all' ? 1 : 0) + (currentBrand !== 'all' ? 1 : 0) + storeFilters.size + (currentBudget < 500 ? 1 : 0) + (currentTier > 0 ? 1 : 0); document.getElementById('filterBtnText').textContent = activeC > 0 ? `FILTERS (${activeC})` : 'FILTERS'; renderProducts(); }
   
-  function updateHeaderButton() {
-     const headerBtn = document.getElementById('openDealModalHeader');
-     if (headerBtn) {
-         if (urlProductId) {
-             // In product view: Change to "BACK TO STORE"
-             headerBtn.innerHTML = `
-                <i data-feather="arrow-left" class="w-4 h-4 md:w-5 md:h-5"></i>
-                <span>BACK TO STORE</span>
-             `;
-             headerBtn.onclick = () => {
-                 window.location.href = window.location.pathname; // Reload clear
-             };
-         } else {
-             // Normal view
-             headerBtn.innerHTML = `
-                <i data-feather="tag" class="w-4 h-4 md:w-5 md:h-5"></i>
-                <span>POST DEAL</span>
-             `;
-             headerBtn.onclick = () => {
-                 dealModal.classList.remove('hidden'); 
-                 document.getElementById('dealModalTitle').textContent = "POST A DEAL";
-                 document.getElementById('dealName').value = "";
-                 document.getElementById('dealName').readOnly = false;
-                 document.getElementById('dealName').focus(); 
-             };
-         }
-         feather.replace();
-     }
-  }
-
-  // --- MODAL & SUBMIT LOGIC ---
-  const dealModal = document.getElementById('dealModal');
-  const dealForm = document.getElementById('dealForm');
-  const dealToast = document.getElementById('dealToast');
-  const dealSubmitBtn = document.getElementById('dealSubmitBtn');
-  const thankYouOverlay = document.getElementById('thankYouOverlay');
+  // --- FLASH DEALS LOGIC ---
+  const flashDealsModal = document.getElementById('flashDealsModal');
+  const flashDealsList = document.getElementById('flashDealsList');
   
-  // Initial button logic
-  updateHeaderButton();
-
-  // Function called by "Found it cheaper?" button
-  window.openCheaperModal = (p) => {
-    dealModal.classList.remove('hidden');
-    document.getElementById('dealModalTitle').textContent = "FOUND A BETTER PRICE?";
-    const nameInput = document.getElementById('dealName');
-    nameInput.value = p.name;
-    document.getElementById('dealPrice').focus();
+  document.getElementById('openFlashDealsBtn').onclick = () => {
+      renderFlashDeals();
+      flashDealsModal.classList.remove('hidden');
+  };
+  
+  document.getElementById('closeFlashDeals').onclick = () => {
+      flashDealsModal.classList.add('hidden');
+  };
+  
+  document.getElementById('flashDealsBackdrop').onclick = () => {
+      flashDealsModal.classList.add('hidden');
   };
 
-  const closeDealModalFn = () => { dealModal.classList.add('hidden'); dealForm.reset(); dealToast.classList.add('hidden'); };
-  document.getElementById('closeDealModal').onclick = closeDealModalFn;
-  document.getElementById('dealModalBackdrop').onclick = closeDealModalFn;
-
-  function playThankYouAnimation() {
-    thankYouOverlay.classList.add('active');
-    // Create confetti
-    for(let i=0; i<30; i++) {
-        const c = document.createElement('div');
-        c.classList.add('confetti-piece');
-        c.style.left = Math.random() * 100 + 'vw';
-        c.style.animationDuration = (Math.random() * 2 + 1) + 's';
-        c.style.backgroundColor = ['#f00', '#0f0', '#00f', '#ff0', '#0ff'][Math.floor(Math.random()*5)];
-        thankYouOverlay.appendChild(c);
-        setTimeout(() => c.remove(), 3000);
-    }
-    setTimeout(() => {
-        thankYouOverlay.classList.remove('active');
-    }, 2500);
-  }
-
-  dealForm.onsubmit = async (e) => {
-      e.preventDefault();
-      if(document.getElementById('companyField').value) return; // Honeypot
-
-      dealSubmitBtn.disabled = true;
-      dealSubmitBtn.classList.add('opacity-50');
-      dealToast.textContent = "SENDING...";
-      dealToast.classList.remove('hidden', 'bg-green-600', 'bg-red-700');
-      dealToast.classList.add('bg-yellow-600', 'text-black');
-
-      try {
-          const formData = new FormData(dealForm);
-          const data = Object.fromEntries(formData.entries());
+  function renderFlashDeals() {
+      flashDealsList.innerHTML = '';
+      if(flashDeals.length === 0) {
+          flashDealsList.innerHTML = '<div class="text-center p-4 retro-font text-xs text-gray-500">NO FLASH DEALS RIGHT NOW. CHECK BACK SOON!</div>';
+          return;
+      }
+      
+      flashDeals.forEach(deal => {
+          let btnBg = 'bg-gray-800 text-white';
+          let badgeBg = 'bg-gray-700 text-gray-300';
+          const s = deal.store.toLowerCase();
           
-          // 1. AUTO-CALC USD FOR BACKEND
-          const p = parseFloat(data.original_price);
-          data.price_usd = (data.original_currency === 'USD') ? p : (p / (exchangeRates[data.original_currency] || 1)).toFixed(2);
-          
-          // 2. SAFEGUARD: Add store_name since input was removed from UI
-          if(!data.store_name) {
-             data.store_name = "User Submission";
+          if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
+             btnBg = 'bg-blue-600 text-white hover:bg-blue-500';
+             badgeBg = 'bg-blue-800 text-blue-100';
+          }
+          else if(s.includes('ali')) {
+             btnBg = 'bg-red-600 text-white hover:bg-red-500';
+             badgeBg = 'bg-red-800 text-red-100';
+          }
+          else if(s.includes('amazon')) {
+             btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400';
+             badgeBg = 'bg-yellow-700 text-yellow-100';
+          }
+          else if(s.includes('powkiddy')) {
+             btnBg = 'bg-[#008c69] text-white hover:bg-[#00a87d]';
+             badgeBg = 'bg-[#004d3a] text-green-100';
           }
 
-          // 3. REAL FETCH REQUEST
-          const res = await fetch('/api/submit-deal', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data)
-          });
+          const couponHtml = deal.coupon 
+            ? `<div class="bg-gray-100 border border-gray-400 px-2 py-1 rounded text-[10px] font-bold text-red-600 flex items-center gap-1 cursor-pointer hover:bg-gray-200" onclick="navigator.clipboard.writeText('${deal.coupon}'); alert('Code copied: ${deal.coupon}')">
+                 <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
+               </div>` 
+            : '';
 
-          if (!res.ok) throw new Error("Server Error");
-          
-          // 4. SUCCESS UI
-          dealToast.textContent = "SUCCESS!";
-          dealToast.classList.replace('bg-yellow-600', 'bg-green-600');
-          dealToast.classList.replace('text-black', 'text-white');
-          
-          closeDealModalFn();
-          playThankYouAnimation();
-          
-          dealSubmitBtn.disabled = false;
-          dealSubmitBtn.classList.remove('opacity-50');
+          const itemHtml = `
+            <div class="bg-white border-4 border-gray-300 p-4 rounded flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                <div class="flex-1 text-center md:text-left">
+                    <h3 class="retro-font text-xs font-bold mb-1">${deal.title}</h3>
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-red-200">${deal.discount}</span>
+                        ${couponHtml}
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-1 w-full md:w-auto">
+                    <a href="${deal.link}" target="_blank" class="${btnBg} px-4 py-2 rounded pixel-btn border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
+                        <span class="retro-font text-[10px] uppercase">${deal.store}</span>
+                        <span class="retro-font text-[10px] font-bold bg-black/20 px-2 py-0.5 rounded">${deal.price}</span>
+                    </a>
+                </div>
+            </div>
+          `;
+          flashDealsList.insertAdjacentHTML('beforeend', itemHtml);
+      });
+      feather.replace();
+  }
 
-      } catch (err) {
-          console.error(err);
-          dealToast.textContent = "ERROR. TRY AGAIN.";
-          dealToast.classList.replace('bg-yellow-600', 'bg-red-700');
-          dealToast.classList.replace('text-black', 'text-white');
-          dealSubmitBtn.disabled = false;
-          dealSubmitBtn.classList.remove('opacity-50');
-      }
+  // --- BIG RYAN PAK LOGIC ---
+  const rbModal = document.getElementById('ryanBoyModal');
+  const rbBackdrop = document.getElementById('rbBackdrop');
+  const rbPak = document.getElementById('bigRyanPak');
+  const rbScreen = document.getElementById('rbScreenContent');
+  
+  window.openRyanBoy = (el) => {
+    // Find product ID from parent
+    const card = el.closest('[data-pid]');
+    if(!card) return; // Safety check
+    const pid = card.dataset.pid;
+    const product = allProducts.find(p => p.id === pid);
+    
+    if(!product) return;
+    
+    // Calculate the best link for the image click
+    const cheapest = getCheapestLink(product);
+    const currentProductLink = cheapest ? cheapest.url : '#';
+    
+    // Generate Links List HTML
+    let linksHtml = '';
+    const sortedLinks = (product.links || []).sort((a,b) => a.price - b.price);
+    
+    sortedLinks.forEach(l => {
+        let btnBg = 'bg-gray-800 text-white';
+        let badgeBg = 'bg-gray-700 text-gray-300';
+        const s = l.store.toLowerCase();
+        
+        if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
+           btnBg = 'bg-blue-600 text-white hover:bg-blue-500';
+           badgeBg = 'bg-blue-800 text-blue-100';
+        }
+        else if(s.includes('ali')) {
+           btnBg = 'bg-red-600 text-white hover:bg-red-500';
+           badgeBg = 'bg-red-800 text-red-100';
+        }
+        else if(s.includes('amazon')) {
+           btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400';
+           badgeBg = 'bg-yellow-700 text-yellow-100';
+        }
+        else if(s.includes('powkiddy')) {
+           btnBg = 'bg-[#008c69] text-white hover:bg-[#00a87d]';
+           badgeBg = 'bg-[#004d3a] text-green-100';
+        }
+
+        const couponHtml = l.coupon 
+          ? `<div class="coupon-badge ${badgeBg} mt-1 w-fit mx-0" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
+               <span>CODE: ${l.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
+             </div>` 
+          : '';
+
+        linksHtml += `
+            <div class="mb-3">
+                <a href="${l.url}" target="_blank" class="${btnBg} px-4 py-3 rounded pixel-btn border-2 border-black flex justify-between items-center group transition-colors shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
+                    <div class="flex flex-col">
+                        <span class="retro-font text-[10px] uppercase">${l.store}</span>
+                    </div>
+                    <span class="retro-font text-xs font-bold">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
+                </a>
+                ${couponHtml}
+            </div>
+        `;
+    });
+    // BIG PAK LAYOUT
+    rbScreen.innerHTML = `
+        <div class="pak-media-side cursor-pointer group relative overflow-hidden" onclick="window.open('${currentProductLink}', '_blank')" title="Visit Store">
+            <img src="${product.image}" class="w-full h-full object-cover shadow-2xl transition-transform duration-500 group-hover:scale-105">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition-colors pointer-events-none"></div>
+            <div class="absolute bottom-4 right-4 bg-yellow-400 text-black px-3 py-2 text-[10px] retro-font uppercase rounded shadow-lg border-2 border-black transform translate-y-20 group-hover:translate-y-0 transition-transform duration-300 z-10">
+                GO TO STORE ↗
+            </div>
+        </div>
+        <div class="pak-info-side">
+            <h2 class="text-3xl font-bold font-sans uppercase mb-1 leading-tight tracking-tight">${product.name}</h2>
+            <div class="h-1 w-20 bg-black mb-4"></div>
+            
+            <p class="text-sm text-gray-700 leading-relaxed mb-6 font-medium">
+                ${product.description}
+            </p>
+            
+            <div class="mb-6">
+                <h3 class="text-[10px] retro-font text-gray-400 mb-3 border-b pb-1">PURCHASE OPTIONS</h3>
+                ${linksHtml}
+            </div>
+            
+            <div class="mt-auto">
+                <h3 class="text-[10px] retro-font text-gray-400 mb-3 border-b pb-1">RYAN RETRO CHANNEL</h3>
+                <a href="https://www.youtube.com/@RyanRetro/search?query=${encodeURIComponent(product.name)}" target="_blank" class="block bg-red-600 hover:bg-red-700 text-white p-4 text-center rounded flex items-center justify-center gap-3 transition-colors shadow-lg group border-2 border-black pixel-btn shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
+                    <i data-feather="youtube" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
+                    <span class="font-bold text-sm">WATCH VIDEOS</span>
+                </a>
+            </div>
+        </div>
+    `;
+    feather.replace();
+    // Show Modal
+    rbModal.classList.remove('hidden');
+    
+    // Animate In
+    setTimeout(() => {
+        rbBackdrop.classList.remove('opacity-0');
+        rbPak.classList.add('pak-active');
+    }, 10);
   };
-
+  window.closeRyanBoy = () => {
+    rbPak.classList.remove('pak-active');
+    rbBackdrop.classList.add('opacity-0');
+    setTimeout(() => {
+        rbModal.classList.add('hidden');
+    }, 400);
+  };
   // --- FILTERS & INIT ---
   
-  // 3. UI STATE MANAGEMENT IF URL ID IS PRESENT
-  if (urlProductId) {
-      // HIDE the entire Filter/Search Box ("big gray rectangle")
-      document.getElementById('mainControlPanel').style.display = 'none';
+  // Power Switch Logic (Updated for Responsiveness)
+  const powerTrack = document.getElementById('powerSwitchTrack');
+  const powerThumb = document.getElementById('powerSwitchThumb');
+  const powerLed = document.getElementById('powerLed');
+  const powerLabels = document.querySelectorAll('.power-label');
+  
+  powerTrack.addEventListener('click', (e) => {
+      const rect = powerTrack.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
       
-      // ADJUST PADDING AND MARGIN FOR TIGHTER FIT
+      let newPos = 1; // Default to center (ALL)
+      
+      // Use percentages for click areas (33.33% each)
+      if (clickX < (width * 0.33)) newPos = 0; // Handheld
+      else if (clickX > (width * 0.66)) newPos = 2; // Accessory
+      else newPos = 1; // Center
+      
+      // Move Thumb using Percentage
+      powerThumb.style.left = (newPos * 33.33) + '%'; 
+      
+      // Update Labels
+      powerLabels.forEach(l => l.classList.remove('active'));
+      document.querySelector(`.power-label[data-pos="${newPos}"]`).classList.add('active');
+      
+      // Update LED
+      powerLed.classList.add('on');
+      
+      // Set Logic
+      if (newPos === 0) currentCategory = 'Handhelds';
+      else if (newPos === 1) currentCategory = 'all';
+      else if (newPos === 2) currentCategory = 'Accessories';
+      
+      // Update Radio Buttons Sync
+      const radio = document.querySelector(`.cat-opt[value="${currentCategory}"]`);
+      if(radio) radio.checked = true;
+      
+      updateFilters();
+  });
+  
+  if (urlProductId) {
+      document.getElementById('mainControlPanel').style.display = 'none';
       const mainSection = document.getElementById('mainContentSection');
       mainSection.classList.remove('py-8');
       mainSection.classList.add('pt-4', 'pb-8');
-      
-      updateHeaderButton();
   }
-  
-  // Enable browser back button handling for SPA feel
-  window.onpopstate = () => {
-      window.location.reload();
-  };
-
   document.getElementById('filterBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('filterMenu').classList.toggle('open'); };
   document.onclick = (e) => { if(!document.getElementById('filterWidget').contains(e.target)) document.getElementById('filterMenu').classList.remove('open'); };
   document.getElementById('budgetRange').oninput = (e) => { currentBudget = parseInt(e.target.value); document.getElementById('budgetLabel').textContent = `$${currentBudget}`; updateFilters(); };
   document.getElementById('tierRange').oninput = (e) => { currentTier = parseInt(e.target.value); document.getElementById('tierLabel').textContent = tierMap[currentTier]; updateFilters(); };
   document.getElementById('sortFilter').onchange = (e) => { currentSort = e.target.value; renderProducts(); };
-  document.querySelectorAll('.status-opt, .cat-opt').forEach(o => o.onchange = (e) => { if(o.classList.contains('status-opt')) currentStatus = e.target.value; if(o.classList.contains('cat-opt')) currentCategory = e.target.value; updateFilters(); });
+  document.querySelectorAll('.status-opt, .cat-opt').forEach(o => o.onchange = (e) => { 
+      if(o.classList.contains('status-opt')) currentStatus = e.target.value; 
+      if(o.classList.contains('cat-opt')) {
+          currentCategory = e.target.value; 
+          // Sync Power Switch
+          let pos = 1;
+          if(currentCategory === 'Handhelds') pos = 0;
+          if(currentCategory === 'Accessories') pos = 2;
+          
+          // Use percentage for sync movement
+          powerThumb.style.left = (pos * 33.33) + '%';
+          
+          powerLabels.forEach(l => l.classList.remove('active'));
+          document.querySelector(`.power-label[data-pos="${pos}"]`).classList.add('active');
+      }
+      updateFilters(); 
+  });
   document.querySelectorAll('.store-opt').forEach(o => o.onchange = (e) => { e.target.checked ? storeFilters.add(e.target.value) : storeFilters.delete(e.target.value); updateFilters(); });
   document.getElementById('searchInput').oninput = (e) => { currentSearch = e.target.value; renderProducts(); };
-  document.getElementById('currencyFilter').onchange = (e) => { currentCurrency = e.target.value; renderProducts(); refreshTrayBar(); };
-  document.querySelectorAll('.view-btn').forEach(b => b.onclick = () => { currentView = b.dataset.view; document.querySelectorAll('.view-btn').forEach(x => { x.classList.remove('text-yellow-400'); x.classList.add('text-gray-400'); }); b.classList.add('text-yellow-400'); renderProducts(); });
-  document.getElementById('clearTray').onclick = () => { traySet.clear(); saveTray(); refreshTrayBar(); renderProducts(); };
-  document.getElementById('openTrayLinks').onclick = () => traySet.forEach(id => { const c = getCheapestLink(allProducts.find(x => x.id === id)); if(c) window.open(c.url, '_blank'); });
+  document.getElementById('currencyFilter').onchange = (e) => { currentCurrency = e.target.value; renderProducts(); };
 
-  document.addEventListener('DOMContentLoaded', () => { AOS.init({ duration: 400, once: true }); loadTray(); populateBrandOptions(); renderProducts(); refreshTrayBar(); feather.replace(); });
+  document.addEventListener('DOMContentLoaded', () => { populateBrandOptions(); renderProducts(); feather.replace(); });
 </script>
 </body>
 </html>
