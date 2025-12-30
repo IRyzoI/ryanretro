@@ -978,27 +978,292 @@
       }
       feather.replace();
   });
-
-  // Tiers: 0=All, 1=PS1, 2=Gamecube, 3=Switch, 4=PC
+// Tiers: 0=All, 1=PS1, 2=Gamecube, 3=Switch, 4=PC
   const officialProducts = [
-    { "id": "rp6", "name": "Retroid Pocket 6", "category": "Handhelds", "releaseDate": "2025-01-15", "badge": "Pre-order 🔥", "tier": 3, "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686", "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", "links": [{ "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }] },
-    { "id": "steam_deck", "name": "Steam Deck", "category": "Handhelds", "releaseDate": "2023-11-16", "tier": 4, "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg", "description": "The standard for PC handheld gaming. Play your Steam library on the go.", "links": [{ "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 469.00, "currency": "$" }] },
-    { "id": "rp5", "name": "Retroid Pocket 5", "category": "Handhelds", "releaseDate": "2024-09-01", "tier": 2, "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png", "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" }] },
-    { "id": "rp_mini2", "name": "Retroid Pocket Mini V2", "category": "Handhelds", "releaseDate": "2024-08-15", "tier": 2, "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824", "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" }, { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }] },
-    { "id": "rp_classic", "name": "Retroid Pocket Classic", "category": "Handhelds", "releaseDate": "2024-11-20", "tier": 2, "image": "https://www.goretroid.com/cdn/shop/files/SKU_790b844f-6ba6-4834-8278-9fce3b994d27_1024x1024@2x.png?v=1754461254", "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" }, { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 134.00, "currency": "$" }] },
-    { "id": "rp_flip2", "name": "Retroid Pocket Flip 2", "category": "Handhelds", "releaseDate": "2024-07-01", "tier": 2, "image": "https://www.goretroid.com/cdn/shop/files/ice_blue_4b29c9c7-fcc1-4bb4-8a83-f8cf03b9cfd2_1024x1024@2x.jpg?v=1744886442", "description": "The clamshell returns. Snapdragon 865 performance.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }] },
-    { "id": "rpg2", "name": "Retroid Pocket G2 Handheld", "category": "Handhelds", "releaseDate": "2024-12-01", "tier": 3, "image": "https://www.goretroid.com/cdn/shop/files/723e012906c411dfa82d5fec119e5474_1024x1024@2x.jpg?v=1762132633", "description": "Premium mid-range Android handheld.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" }] },
-    { "id": "miyoo_mini_v4", "name": "MIYOO MINI V4", "category": "Handhelds", "releaseDate": "2023-09-01", "tier": 1, "image": "https://ae01.alicdn.com/kf/Hf697a985ea05431daa39020720da42a9y.jpg", "description": "Tiny horizontal legend.", "links": [{ "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3b0uLQt", "price": 51, "currency": "$" }] },
-    { "id": "miyoo_mini_plus", "name": "MIYOO MINI PLUS", "category": "Handhelds", "releaseDate": "2023-03-01", "tier": 1, "image": "https://officialmiyoomini.com/wp-content/uploads/2023/12/litnxt-miyoominiplus-1-1-990x990.webp", "description": "The vertical standard.", "links": [{ "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4n4CCil", "price": 69.57, "currency": "$" }] },
-    { "id": "anker_power", "name": "Anker 25000mAh Power Bank", "category": "Accessories", "tier": 0, "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg", "description": "140W fast charging.", "links": [{ "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }] },
-    { "id": "ugreen_power", "name": "UGreen 25000mAh Power Bank", "category": "Accessories", "tier": 0, "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg", "description": "Reliable 25k bank.", "links": [{ "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" }] },
-    { "id": "ugreen_dock", "name": "UGreen 9-in-1 Dock", "category": "Accessories", "tier": 0, "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg", "description": "4K@60Hz HDMI.", "links": [{ "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" }] },
-    { "id": "rp_ds_addon", "name": "Retroid Dual Screen Add-on", "category": "Accessories", "tier": 0, "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811", "description": "AMOLED secondary screen.", "links": [{ "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }] },
-    { "id": "gamesir_g8p", "name": "GameSir G8 Plus", "category": "Accessories", "tier": 0, "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif", "description": "Ultimate controller.", "links": [{ "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" }] },
-    { "id": "odin3", "name": "AYN Odin 3", "category": "Handhelds", "badge": "Pre-order 🔥", "releaseDate": "2025-02-01", "tier": 3, "image": "https://www.ayntec.com/cdn/shop/files/d92e076f69cb1a6f81c9bab8cd8f57a2_f21bc7dc-1ec5-4a8c-a0fb-159aecd12d8c_1080x.jpg?v=1761054667", "description": "Snapdragon 8 Elite flagship.", "links": [{ "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }] },
-    { "id": "odin2_portal", "name": "AYN Odin2 Portal", "category": "Handhelds", "releaseDate": "2024-05-15", "tier": 3, "image": "https://www.ayntec.com/cdn/shop/files/8b9cc7c9808a81fc8db0eaf67a4d79d7_1080x.jpg?v=1737092883", "description": "7-inch OLED powerhouse.", "links": [{ "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }] },
-    { "id": "ayn_thor", "name": "AYN Thor", "category": "Handhelds", "badge": "Pre-order 🔥", "releaseDate": "2025-03-01", "tier": 3, "image": "https://www.ayntec.com/cdn/shop/files/e50c1d352b31e3f4a65f1f0a706072c3_1080x.jpg?v=1755943485", "description": "Dual-screen OLED clamshell.", "links": [{ "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }] },
-    { "id": "sd_card", "name": "SanDisk Extreme 512GB", "category": "Accessories", "tier": 0, "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg", "description": "Reliable library storage.", "links": [{ "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }] },
+    { 
+      "id": "rp6", 
+      "name": "Retroid Pocket 6", 
+      "category": "Handhelds", 
+      "releaseDate": "2025-01-15", 
+      "badge": "Pre-order 🔥", 
+      "tier": 3, 
+      "image": "https://www.goretroid.com/cdn/shop/files/5_768cb886-abd3-4002-9b24-247afa1976f1_1024x1024@2x.jpg?v=1763437686", 
+      "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "steam_deck", 
+      "name": "Steam Deck", 
+      "category": "Handhelds", 
+      "releaseDate": "2023-11-16", 
+      "tier": 4, 
+      "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg", 
+      "description": "The standard for PC handheld gaming. Play your Steam library on the go.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 469.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rp5", 
+      "name": "Retroid Pocket 5", 
+      "category": "Handhelds", 
+      "releaseDate": "2024-09-01", 
+      "tier": 2, 
+      "image": "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png", 
+      "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" }, 
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "mangmi_air_x", 
+      "name": "Mangmi Air X", 
+      "category": "Handhelds", 
+      "releaseDate": "2026-01-10", 
+      "badge": "New Release ✨", 
+      "tier": 3, 
+      "image": "https://mangmi.com/cdn/shop/files/mangmi_air_x_android_retro_gaming_concole.jpg?v=1747463867", 
+      "description": "A new contender enters the ring. Ultra-lightweight design meets heavy-hitting performance.", 
+      "links": [
+        { "store": "Official", "url": "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr", "price": 299.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rp_mini2", 
+      "name": "Retroid Pocket Mini V2", 
+      "category": "Handhelds", 
+      "releaseDate": "2024-08-15", 
+      "tier": 2, 
+      "image": "https://www.goretroid.com/cdn/shop/files/1_0a16ff81-5144-4635-8efb-f1ab541e4a14_1024x1024@2x.jpg?v=1746701824", 
+      "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" }, 
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" }, 
+        { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "ayaneo_pocket_air_mini", 
+      "name": "Ayaneo Pocket Air Mini", 
+      "category": "Handhelds", 
+      "releaseDate": "2025-12-25", 
+      "badge": "Premium 💎", 
+      "tier": 3, 
+      "image": "https://ayaneo-1305909189.cos.accelerate.myqcloud.com/ayaneo_com/image/product/2025/AYANEO_Pocket_AIR_Mini/20250903-191936.png", 
+      "description": "Ayaneo's signature OLED quality shrunk down into a pocketable Android form factor.", 
+      "links": [
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c34ldFrn", "price": 289.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "trimui_smart_pro_s", 
+      "name": "TrimUI Smart Pro S", 
+      "category": "Handhelds", 
+      "releaseDate": "2025-12-15", 
+      "badge": "Upgrade 🚀", 
+      "tier": 2, 
+      "image": "https://imgaz1.staticbg.com/thumb/large//oaupload/banggood/images/24/83/580c85b6-381d-4d36-b9e3-db317c58f07a.jpg.webp", 
+      "description": "The 'S' stands for Speed. The sequel to the budget king with improved internals for better PSP emulation.", 
+      "links": [
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3d4sfRf", "price": 89.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "trimui_smart_pro", 
+      "name": "TrimUI Smart Pro", 
+      "category": "Handhelds", 
+      "releaseDate": "2023-11-01", 
+      "tier": 1, 
+      "image": "https://trimui.net/cdn/shop/files/TrimuiSmartProHandheldGameConsole_7_ca0d73d1-ca74-4ffd-aa10-e11e942f175d.jpg?v=1736505863", 
+      "description": "The 16:9 budget favorite. Excellent screen and ergonomics for wide-screen retro gaming.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/4piaw4j", "price": 99.99, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3po77XX", "price": 69.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rp_classic", 
+      "name": "Retroid Pocket Classic", 
+      "category": "Handhelds", 
+      "releaseDate": "2024-11-20", 
+      "tier": 2, 
+      "image": "https://www.goretroid.com/cdn/shop/files/SKU_790b844f-6ba6-4834-8278-9fce3b994d27_1024x1024@2x.png?v=1754461254", 
+      "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" }, 
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 134.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rp_flip2", 
+      "name": "Retroid Pocket Flip 2", 
+      "category": "Handhelds", 
+      "releaseDate": "2024-07-01", 
+      "tier": 2, 
+      "image": "https://www.goretroid.com/cdn/shop/files/ice_blue_4b29c9c7-fcc1-4bb4-8a83-f8cf03b9cfd2_1024x1024@2x.jpg?v=1744886442", 
+      "description": "The clamshell returns. Snapdragon 865 performance.", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rpg2", 
+      "name": "Retroid Pocket G2 Handheld", 
+      "category": "Handhelds", 
+      "releaseDate": "2024-12-01", 
+      "tier": 3, 
+      "image": "https://www.goretroid.com/cdn/shop/files/723e012906c411dfa82d5fec119e5474_1024x1024@2x.jpg?v=1762132633", 
+      "description": "Premium mid-range Android handheld.", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3a6yCjb", "price": 224.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rg34xx", 
+      "name": "ANBERNIC RG34XX", 
+      "category": "Handhelds", 
+      "releaseDate": "2026-01-05", 
+      "badge": "Hot Item 🔥", 
+      "tier": 1, 
+      "image": "https://anbernic.com/cdn/shop/files/RG34XX_536136c4-deaf-4180-9c74-d680502ae5fb.png?v=1766554202&width=800", 
+      "description": "The classic form factor refined. A perfect pocket companion for 8-bit and 16-bit classics.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/49kYAZJ", "price": 65.99, "currency": "$" },
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3cp23I9", "price": 49.99, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "miyoo_mini_v4", 
+      "name": "MIYOO MINI V4", 
+      "category": "Handhelds", 
+      "releaseDate": "2023-09-01", 
+      "tier": 1, 
+      "image": "https://ae01.alicdn.com/kf/Hf697a985ea05431daa39020720da42a9y.jpg", 
+      "description": "Tiny horizontal legend.", 
+      "links": [
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3b0uLQt", "price": 51, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "miyoo_mini_plus", 
+      "name": "MIYOO MINI PLUS", 
+      "category": "Handhelds", 
+      "releaseDate": "2023-03-01", 
+      "tier": 1, 
+      "image": "https://officialmiyoomini.com/wp-content/uploads/2023/12/litnxt-miyoominiplus-1-1-990x990.webp", 
+      "description": "The vertical standard.", 
+      "links": [
+        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4n4CCil", "price": 69.57, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "anker_power", 
+      "name": "Anker 25000mAh Power Bank", 
+      "category": "Accessories", 
+      "tier": 0, 
+      "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg", 
+      "description": "140W fast charging.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "ugreen_power", 
+      "name": "UGreen 25000mAh Power Bank", 
+      "category": "Accessories", 
+      "tier": 0, 
+      "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg", 
+      "description": "Reliable 25k bank.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "ugreen_dock", 
+      "name": "UGreen 9-in-1 Dock", 
+      "category": "Accessories", 
+      "tier": 0, 
+      "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg", 
+      "description": "4K@60Hz HDMI.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "rp_ds_addon", 
+      "name": "Retroid Dual Screen Add-on", 
+      "category": "Accessories", 
+      "tier": 0, 
+      "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811", 
+      "description": "AMOLED secondary screen.", 
+      "links": [
+        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "gamesir_g8p", 
+      "name": "GameSir G8 Plus", 
+      "category": "Accessories", 
+      "tier": 0, 
+      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif", 
+      "description": "Ultimate controller.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "odin3", 
+      "name": "AYN Odin 3", 
+      "category": "Handhelds", 
+      "badge": "Pre-order 🔥", 
+      "releaseDate": "2025-02-01", 
+      "tier": 3, 
+      "image": "https://www.ayntec.com/cdn/shop/files/d92e076f69cb1a6f81c9bab8cd8f57a2_f21bc7dc-1ec5-4a8c-a0fb-159aecd12d8c_1080x.jpg?v=1761054667", 
+      "description": "Snapdragon 8 Elite flagship.", 
+      "links": [
+        { "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "odin2_portal", 
+      "name": "AYN Odin2 Portal", 
+      "category": "Handhelds", 
+      "releaseDate": "2024-05-15", 
+      "tier": 3, 
+      "image": "https://www.ayntec.com/cdn/shop/files/8b9cc7c9808a81fc8db0eaf67a4d79d7_1080x.jpg?v=1737092883", 
+      "description": "7-inch OLED powerhouse.", 
+      "links": [
+        { "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "ayn_thor", 
+      "name": "AYN Thor", 
+      "category": "Handhelds", 
+      "badge": "Pre-order 🔥", 
+      "releaseDate": "2025-03-01", 
+      "tier": 3, 
+      "image": "https://www.ayntec.com/cdn/shop/files/e50c1d352b31e3f4a65f1f0a706072c3_1080x.jpg?v=1755943485", 
+      "description": "Dual-screen OLED clamshell.", 
+      "links": [
+        { "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }
+      ] 
+    },
+    { 
+      "id": "sd_card", 
+      "name": "SanDisk Extreme 512GB", 
+      "category": "Accessories", 
+      "tier": 0, 
+      "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg", 
+      "description": "Reliable library storage.", 
+      "links": [
+        { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
+      ] 
+    },
     { 
       "id": "anbernic_rg477v", 
       "name": "ANBERNIC RG477V", 
@@ -1022,26 +1287,9 @@
       "image": "https://www.trimuistore.com/cdn/shop/files/en_BRICK_HAMMER_CN_61.jpg?v=1761893782&width=1646",
       "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
       "links": [
-        {
-          "store": "Official",
-          "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
-          "price": 80.75,
-          "currency": "$",
-          "coupon": "TRIMUIMC15"
-        },
-        {
-          "store": "Amazon",
-          "url": "https://amzn.to/3MBZ1qY",
-          "price": 95.99,
-          "currency": "$"
-        },
-        {
-          "store": "PowKiddy",
-          "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro",
-          "price": 80.75,
-          "currency": "$",
-          "coupon": "RYAN"
-        }
+        { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 80.75, "currency": "$", "coupon": "TRIMUIMC15" },
+        { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" },
+        { "store": "PowKiddy", "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro", "price": 80.75, "currency": "$", "coupon": "RYAN" }
       ]
     },
     {
@@ -1054,26 +1302,9 @@
       "image": "https://www.trimuistore.com/cdn/shop/files/TRIMUI_Brick_Retro_Game_Console_Purple.png?v=1763623253&width=1646",
       "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
       "links": [
-        {
-          "store": "Official",
-          "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
-          "price": 72.75,
-          "currency": "$",
-          "coupon": "TRIMUIMC15"
-        },
-        {
-          "store": "Amazon",
-          "url": "https://amzn.to/4j3t2Mw",
-          "price": 73.00,
-          "currency": "$"
-        },
-        {
-          "store": "PowKiddy",
-          "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro",
-          "price": 61.75,
-          "currency": "$",
-          "coupon": "RYAN"
-        }
+        { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 72.75, "currency": "$", "coupon": "TRIMUIMC15" },
+        { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" },
+        { "store": "PowKiddy", "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro", "price": 61.75, "currency": "$", "coupon": "RYAN" }
       ]
     }
   ];
