@@ -22,6 +22,28 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
 
+    /* --- NEW HEADER & MENU STYLES --- */
+    :root {
+      /* GAMEBOY COLORS */
+      --gb-grey: #e0e0e0;
+      --gb-dark-grey: #c4c4c4;
+    }
+    
+    body.dark-mode {
+      --gb-grey: #4b5563;
+      --gb-dark-grey: #111827;
+    }
+    
+    /* Dark Mode Overrides for Header */
+    body.dark-mode header {
+        background-color: var(--gb-grey) !important;
+        border-color: var(--gb-dark-grey) !important;
+    }
+    body.dark-mode .nav-item:hover {
+        background-color: #dc2626 !important; /* Red-600 */
+        color: white !important;
+    }
+
     .retro-font { font-family: 'Press Start 2P', cursive; }
     
     /* Shared Retro Styles */
@@ -66,37 +88,127 @@
   </style>
 </head>
 
-<body class="bg-gray-900 text-white font-sans overflow-x-hidden">
+<body class="bg-gray-900 text-white font-sans overflow-x-hidden dark-mode">
 
-  <header class="bg-gray-800 py-3 md:py-8 border-b-4 border-black">
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container relative">
+  <div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
+      <div class="absolute inset-0" onclick="toggleNav()"></div>
       
-      <a href="/" class="flex items-center gap-3 md:gap-4 mb-2 md:mb-0">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-             class="w-10 h-10 md:w-16 md:h-16 rounded-full pixel-border bg-gray-900" alt="Ryan Retro Logo">
-        <h1 class="retro-font text-lg md:text-2xl text-yellow-400">RYAN RETRO</h1>
-      </a>
+      <div class="bg-gray-200 border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
+          
+          <div class="bg-gray-800 text-white p-2 mb-1 flex justify-between items-center border-b-2 border-black">
+              <span class="retro-font text-xs">PAUSE MENU</span>
+              <button onclick="toggleNav()" class="text-white hover:text-red-400">
+                  <i data-feather="x" class="w-4 h-4"></i>
+              </button>
+          </div>
 
-      <a href="/store"
-         class="order-2 md:order-2 px-3 py-3 md:py-4 md:px-8 bg-purple-600 hover:bg-purple-500 text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-        <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
-        <span>STORE</span>
-      </a>
+          <div class="flex flex-col gap-1" id="navLinksList">
+              <a href="benchmarks.html" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">BENCHMARKS</span>
+                  <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              </a>
 
-      <div class="order-3 md:order-3 flex items-center justify-center border-2 border-white rounded p-3 relative hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all duration-300 group w-full md:w-auto mt-5 md:mt-0">
-        <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-800 px-2 text-[8px] text-white retro-font uppercase tracking-widest flex items-center gap-1 rounded border-2 border-gray-800 whitespace-nowrap">
-          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
-        </span>
+              <a href="handheld.html" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">HANDHELDS</span>
+                  <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              </a>
 
-        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-5 py-2 md:py-3 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-3 w-full transition-transform hover:scale-105">
-          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-          </svg>
-          <span class="tracking-tight">BECOME A PATRON</span>
-        </a>
+              <a href="index.html" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">HOME</span>
+                  <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              </a>
+
+              <a href="patrons.html" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">PATRONS</span>
+                  <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              </a>
+
+              <a href="shop.html" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">STORE</span>
+                  <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              </a>
+          </div>
+          
+          <div class="h-0.5 bg-gray-400 my-1"></div>
+
+          <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
+               <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
+               <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
+          </div>
+
+          <div class="mt-1 text-center pb-1">
+              <span class="text-[8px] retro-font text-gray-500">SELECT OPTION</span>
+          </div>
       </div>
+  </div>
 
+  <header class="bg-gray-100 py-3 md:py-6 border-b-4 border-gray-400 shadow-md transition-colors duration-300 relative z-50">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container gap-4">
+      
+      <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+          
+          <button id="navToggle" class="p-3 bg-gray-800 text-white hover:bg-gray-700 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
+              <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+              <span class="retro-font text-[10px] hidden md:block">MENU</span>
+          </button>
+  
+          <a href="index.html" class="flex items-center gap-3 md:gap-4">
+              <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+                  class="w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-gray-400 bg-gray-200" alt="Ryan Retro Logo">
+              <div class="flex flex-col">
+                  <h1 class="retro-font text-sm md:text-xl text-gray-800 leading-tight">RYAN RETRO</h1>
+                  <span class="retro-font text-[8px] text-gray-500 uppercase">Retro Gear & Reviews</span>
+              </div>
+          </a>
+      </div>
+  
+      <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto order-3 md:order-3 mt-2 md:mt-0">
+        
+        <a href="shop.html"
+           class="px-3 py-2 md:py-4 md:px-4 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] w-full md:w-auto">
+            <i data-feather="shopping-cart" class="w-4 h-4 md:w-5 md:h-5"></i>
+            <span>STORE</span>
+        </a>
+  
+        <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
+          <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
+            FIND ME
+          </span>
+          <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
+             <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
+               <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
+             </a>
+             <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
+               <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
+             </a>
+             <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
+               <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+             </a>
+             <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
+               <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+             </a>
+             <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
+               <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
+             </a>
+             <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
+               <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+             </a>
+          </div>
+        </div>
+  
+        <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
+          <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
+            SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
+          </span>
+          <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+             class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
+            <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+            </svg>
+            <span class="tracking-tight">JOIN PATREON</span>
+          </a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -261,6 +373,70 @@
   </footer>
 
 <script>
+// --- NAVIGATION & DARK MODE LOGIC ---
+const navToggle = document.getElementById('navToggle');
+const navOverlay = document.getElementById('navOverlay');
+const navBox = document.getElementById('navBox');
+const body = document.body;
+const darkModeToggle = document.getElementById('darkModeToggle');
+const themeIcon = document.getElementById('themeIcon');
+
+// Navigation Toggle
+window.toggleNav = () => {
+    const isHidden = navOverlay.classList.contains('hidden');
+    if (isHidden) {
+        navOverlay.classList.remove('hidden');
+        setTimeout(() => {
+            navBox.classList.remove('scale-95', 'opacity-0');
+            navBox.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    } else {
+        navBox.classList.remove('scale-100', 'opacity-100');
+        navBox.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            navOverlay.classList.add('hidden');
+        }, 200);
+    }
+};
+
+navToggle.addEventListener('click', toggleNav);
+
+// Auto-Highlight Active Page
+const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.nav-item').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentPath) {
+        // Highlight style: Red background + White Text
+        link.classList.add('bg-red-600', 'border-black', 'text-white');
+        link.classList.remove('border-transparent', 'bg-white');
+        link.querySelector('span').classList.add('text-white', 'text-gray-800');
+        link.querySelector('i').classList.add('text-white');
+        link.querySelector('i').classList.remove('text-gray-400');
+    }
+});
+
+// Dark Mode Toggle Logic
+// Default is set to DARK via HTML class.
+if (localStorage.getItem('theme') === 'light') {
+    body.classList.remove('dark-mode');
+    themeIcon.setAttribute('data-feather', 'moon');
+} else {
+    body.classList.add('dark-mode');
+    themeIcon.setAttribute('data-feather', 'sun');
+}
+
+darkModeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        themeIcon.setAttribute('data-feather', 'sun');
+    } else {
+        localStorage.setItem('theme', 'light');
+        themeIcon.setAttribute('data-feather', 'moon');
+    }
+    feather.replace();
+});
+
 /* --------------------------- Device config --------------------------- */
 const DEVICE_CONFIG = {
   "Retroid Pocket 5": {
