@@ -52,17 +52,12 @@
       
       /* Page Colors */
       --bg-body: #111827;        
-      --bg-panel: #1f2937;       
+      --bg-panel: #1f2937;        
       --text-main: #d1d5db;      
       --text-muted: #9ca3af;
       --border-color: #000000;
       --bg-box: #1f2937;
       --border-main: #1f2937;
-
-      /* Dark mode texture */
-      background-image: 
-          linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03)),
-          linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03));
     }
 
     .retro-font { font-family: 'Press Start 2P', cursive; }
@@ -72,13 +67,6 @@
         background-color: var(--bg-body);
         color: var(--text-main);
         transition: background-color 0.3s, color 0.3s;
-        /* Mimic the translucent frosted plastic of a case */
-        background-image: 
-            linear-gradient(45deg, rgba(255,255,255,0.4) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.4)),
-            linear-gradient(45deg, rgba(255,255,255,0.4) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.4));
-        background-size: 20px 20px;
-        background-position: 0 0, 10px 10px;
-        background-attachment: fixed;
     }
 
     .bg-overlay {
@@ -127,6 +115,8 @@
     body.dark-mode .bg-yellow-50 p, body.dark-mode .bg-yellow-50 h3 { color: #fef08a !important; }
     body.dark-mode .bg-yellow-400 { background-color: #facc15 !important; color: #000 !important; }
     body.dark-mode .text-gray-600 { color: #d1d5db !important; }
+    body.dark-mode .text-gray-700 { color: #d1d5db !important; }
+    body.dark-mode .text-gray-700:hover { color: #facc15 !important; }
 
     /* --- COMPATIBILITY PAGE STYLES (Restored) --- */
     .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
@@ -211,6 +201,63 @@
     @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
     @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
+    /* ADDED DARK MODE NAV SUPPORT */
+    body.dark-mode #navBox {
+        background-color: #1f2937 !important;
+        border-color: #000 !important;
+    }
+    body.dark-mode .pause-menu-header {
+        background-color: #374151 !important;
+        color: #fff !important;
+        border-color: #000 !important;
+    }
+    body.dark-mode .pause-menu-header button {
+        color: #fff !important;
+    }
+    /* Default Inactive Item in Dark Mode */
+    body.dark-mode .nav-item.bg-white {
+        background-color: #1f2937 !important;
+        border-color: transparent;
+    }
+    body.dark-mode .nav-item.bg-white span {
+        color: #d1d5db !important;
+    }
+    body.dark-mode .nav-item.bg-white i {
+        color: #9ca3af !important;
+    }
+    /* Hover States in Dark Mode (Allowing colors to show through) */
+    body.dark-mode .nav-item:hover {
+        border-color: #000 !important;
+    }
+    /* Specific Hovers need to force background color over the dark mode override */
+    body.dark-mode .nav-item.hover\:bg-green-600:hover { background-color: #16a34a !important; }
+    body.dark-mode .nav-item.hover\:bg-red-600:hover { background-color: #dc2626 !important; }
+    body.dark-mode .nav-item.hover\:bg-sky-500:hover { background-color: #0ea5e9 !important; }
+    body.dark-mode .nav-item.hover\:bg-yellow-400:hover { background-color: #facc15 !important; }
+    body.dark-mode .nav-item.hover\:bg-orange-500:hover { background-color: #f97316 !important; }
+    body.dark-mode .nav-item.hover\:bg-purple-600:hover { background-color: #9333ea !important; }
+    
+    /* Hover Text Colors in Dark Mode */
+    body.dark-mode .nav-item:hover span,
+    body.dark-mode .nav-item:hover i {
+        color: #fff !important;
+    }
+    /* Home (Yellow) Hover Text Black */
+    body.dark-mode .nav-item.hover\:bg-yellow-400:hover span,
+    body.dark-mode .nav-item.hover\:bg-yellow-400:hover i {
+        color: #000 !important;
+    }
+
+    /* Active Item (Yellow) in Dark Mode */
+    body.dark-mode .nav-item.bg-yellow-400 {
+        background-color: #facc15 !important;
+        border-color: #000 !important;
+    }
+    body.dark-mode .nav-item.bg-yellow-400 span,
+    body.dark-mode .nav-item.bg-yellow-400 i {
+        color: #000 !important;
+    }
+
     @media (max-width: 768px) {
       /* Increased gap to prevent badge overlap */
       .header-container { flex-direction: column; gap: 1.5rem; }
@@ -226,38 +273,49 @@
   <div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
       <div class="absolute inset-0" onclick="toggleNav()"></div>
       
-      <div class="bg-gray-200 border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
+      <div class="bg-white border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
           
-          <div class="bg-gray-800 text-white p-2 mb-1 flex justify-between items-center border-b-2 border-black">
+          <div class="pause-menu-header bg-gray-200 text-black p-2 mb-1 flex justify-between items-center border-b-2 border-black">
               <span class="retro-font text-xs">PAUSE MENU</span>
-              <button onclick="toggleNav()" class="text-white hover:text-red-400">
+              <button onclick="toggleNav()" class="text-black hover:text-red-500">
                   <i data-feather="x" class="w-4 h-4"></i>
               </button>
           </div>
 
           <div class="flex flex-col gap-1" id="navLinksList">
-              <a href="benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] group-hover:text-white">BENCHMARKS</span>
+              <!-- 1. BENCHMARKS (Green) -->
+              <a href="/benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-green-600 cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">BENCHMARKS</span>
                   <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
               </a>
 
-              <a href="handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] group-hover:text-white">HANDHELDS</span>
-                  <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              <!-- 2. GOTW (Red) -->
+              <a href="/gotw" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">GOTW</span>
+                  <i data-feather="crosshair" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
               </a>
 
-              <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] group-hover:text-white">HOME</span>
-                  <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+              <!-- 3. HANDHELDS (Active/Illuminated - Yellow) -->
+              <a href="/handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-yellow-400 border-2 border-black cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-black">HANDHELDS</span>
+                  <i data-feather="smartphone" class="w-4 h-4 text-black"></i>
               </a>
 
-              <a href="patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] group-hover:text-white">PATRONS</span>
+              <!-- 4. HOME (Yellow Hover) -->
+              <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-yellow-400 cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-black">HOME</span>
+                  <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-black"></i>
+              </a>
+
+              <!-- 5. PATRONS (Orange) -->
+              <a href="/patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-orange-500 cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">PATRONS</span>
                   <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
               </a>
 
-              <a href="store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] group-hover:text-white">STORE</span>
+              <!-- 6. STORE (Purple) -->
+              <a href="/store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-purple-600 cursor-pointer group transition-colors">
+                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">STORE</span>
                   <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
               </a>
           </div>
@@ -265,7 +323,7 @@
           <div class="h-0.5 bg-gray-400 my-1"></div>
 
           <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
-               <span class="retro-font text-[10px] group-hover:text-white">SWITCH THEME</span>
+               <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
                <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
           </div>
 
@@ -518,10 +576,16 @@
   </div>
 </div>
 
-<footer class="theme-header py-8 mt-12 border-t-4 border-gray-300 transition-colors duration-300">
-  <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
-    <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
-    <p class="mt-2">© 2025 Ryan Retro</p>
+<footer class="bg-gray-200 py-12 mt-12 border-t-4 border-gray-400 transition-colors duration-300">
+  <div class="container mx-auto px-4 text-center">
+    <div class="flex items-center justify-center mb-4">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Logo" class="w-10 h-10 rounded-full mr-3 border-2 border-gray-400">
+        <h3 class="retro-font text-lg text-yellow-400 drop-shadow-[1px_1px_0_rgba(0,0,0,1)]">RYAN RETRO</h3>
+    </div>
+    <a href="mailto:ryanretro.contact@gmail.com" class="text-gray-700 hover:text-yellow-500 text-sm flex items-center justify-center transition-colors">
+      <i data-feather="mail" class="w-4 h-4 mr-2"></i> ryanretro.contact@gmail.com
+    </a>
+    <p class="text-gray-600 text-[10px] mt-4 uppercase">© 2025 Ryan Retro.</p>
   </div>
 </footer>
 
@@ -576,18 +640,9 @@
 
   navToggle.addEventListener('click', toggleNav);
 
-  // Forced Navigation Highlighting (since we are on 'handhelds' flow mostly)
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-item').forEach(link => {
-      const href = link.getAttribute('href');
-      if (href === currentPath || href === 'handheld.html') { // Highlighting handheld.html as active
-          link.classList.add('bg-red-600', 'border-black', 'text-white');
-          link.classList.remove('border-transparent', 'bg-white');
-          link.querySelector('span').classList.add('text-white');
-          link.querySelector('i').classList.add('text-white');
-          link.querySelector('i').classList.remove('text-gray-400');
-      }
-  });
+  // Forced Navigation Highlighting removed to respect HTML structure
+  // const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  // document.querySelectorAll('.nav-item').forEach...
 
   // Flash Deals Logic
   const flashDeals = [
@@ -651,7 +706,7 @@
 
           const couponHtml = deal.coupon 
             ? `<div class="bg-gray-100 border border-gray-400 px-2 py-1 rounded text-[10px] font-bold text-red-600 flex items-center gap-1 cursor-pointer hover:bg-gray-200" onclick="copyCoupon('${deal.coupon}')">
-                 <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
+                  <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
                </div>` 
             : '';
 
