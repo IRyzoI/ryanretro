@@ -640,10 +640,6 @@
 
   navToggle.addEventListener('click', toggleNav);
 
-  // Forced Navigation Highlighting removed to respect HTML structure
-  // const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  // document.querySelectorAll('.nav-item').forEach...
-
   // Flash Deals Logic
   const flashDeals = [
     { title: "Samsung EVO 512GB MicroSD", price: "$34.99", discount: "40% OFF", link: "https://amzn.to/example", store: "Amazon" },
@@ -706,7 +702,7 @@
 
           const couponHtml = deal.coupon 
             ? `<div class="bg-gray-100 border border-gray-400 px-2 py-1 rounded text-[10px] font-bold text-red-600 flex items-center gap-1 cursor-pointer hover:bg-gray-200" onclick="copyCoupon('${deal.coupon}')">
-                  <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
+                 <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
                </div>` 
             : '';
 
@@ -975,6 +971,62 @@ document.addEventListener('DOMContentLoaded', function () {
     easing: 'ease-out',
     disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   });
+
+  // --- MISSING FORM SUBMISSION LOGIC ---
+  const compatForm = document.getElementById('compatibility-form');
+  
+  if (compatForm) {
+      compatForm.addEventListener('submit', async (e) => {
+          e.preventDefault(); // Stop page refresh
+          
+          const submitBtn = compatForm.querySelector('button[type="submit"]');
+          const originalText = submitBtn.textContent;
+          submitBtn.disabled = true;
+          submitBtn.textContent = "SENDING...";
+
+          // 1. Gather Data
+          const formData = new FormData(compatForm);
+          const data = Object.fromEntries(formData.entries());
+
+          // Ensure hidden fields are populated correctly
+          data.device = document.getElementById('hidden-device').value || DEVICE.label;
+          
+          // Handle Chipset if it wasn't in the form (fallback)
+          if (!data.chipset && currentVariant) {
+             data.chipset = currentVariant.id || currentVariant.label;
+          }
+
+          try {
+              // 2. Send to Backend
+              const res = await fetch('/api/compat/submit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(data)
+              });
+
+              if (!res.ok) throw new Error("Submission failed");
+
+              // 3. Success Handling
+              showToast("Report added! Refreshing...");
+              
+              // Clear the cache for this system so the new entry shows up immediately
+              const sysId = data.system;
+              if (masterDataCache[sysId]) delete masterDataCache[sysId];
+
+              // Hide form and reload table
+              document.getElementById('add-entry-form-container').classList.add('hidden');
+              compatForm.reset();
+              loadSystemData(sysId);
+
+          } catch (err) {
+              console.error(err);
+              alert("Error submitting report. Please try again.");
+          } finally {
+              submitBtn.disabled = false;
+              submitBtn.textContent = originalText;
+          }
+      });
+  }
 
   (function initVariantTabs(){
     const wrap = document.getElementById('variant-tabs');
