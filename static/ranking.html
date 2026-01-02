@@ -11,29 +11,106 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap');
 
         :root {
-            --bg-dark: #111827;
+            /* LIGHT MODE (Default) */
+            --bg-body: #111827; /* Defaulting to dark for this specific tool */
             --text-main: #d1d5db;
             --accent-yellow: #facc15; 
+            
+            /* Site Variables */
+            --bg-panel: #e5e7eb;
+            --text-muted: #4b5563;
         }
 
+        /* Standard Light Mode if toggled */
+        body.light-mode {
+            --bg-body: #f3f4f6;
+            --text-main: #111827;
+        }
+
+        /* Force dark mode styles when class is missing or explicit dark mode */
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-body);
             color: var(--text-main);
             font-family: 'Roboto', sans-serif;
-            overflow: hidden; 
-            height: 100vh;
+            overflow-x: hidden; 
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            position: relative; /* For absolute positioning of button */
+            position: relative;
         }
 
-        .retro-font {
-            font-family: 'Press Start 2P', cursive;
+        .retro-font { font-family: 'Press Start 2P', cursive; }
+        .pixel-border { border: 4px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+        .pixel-btn { transition: all 0.2s ease; cursor: pointer; }
+        .pixel-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+
+        /* --- DARK MODE OVERRIDES (Applied when NOT .light-mode) --- */
+        body:not(.light-mode) header#site-header {
+            background-color: #1f2937;
+            border-color: #000;
+        }
+        body:not(.light-mode) header#site-header h1,
+        body:not(.light-mode) header#site-header .text-gray-800 {
+            color: #fff !important;
+        }
+        
+        /* Nav Box & Items */
+        body:not(.light-mode) #navBox {
+            background-color: #374151 !important;
+            border-color: #1f2937 !important;
+        }
+        body:not(.light-mode) #navBox .pause-menu-header {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-bottom-color: #000 !important;
+        }
+        /* Nav Item Text Color Fix */
+        body:not(.light-mode) #navBox .nav-item .text-gray-800 {
+            color: #fff !important;
+        }
+        body:not(.light-mode) #navBox .nav-item i {
+            color: #9ca3af; 
+        }
+        body:not(.light-mode) #navBox .nav-item:hover i {
+            color: #fff;
+        }
+        body:not(.light-mode) .nav-item:not(.bg-yellow-400):not(:hover) {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: transparent;
+        }
+        
+        /* Menu Button */
+        body:not(.light-mode) #navToggle {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: #000 !important;
         }
 
-        /* GRID CONTAINER */
+        /* Info Boxes (Find Me / Support Me) */
+        body:not(.light-mode) .info-box {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: #000 !important;
+        }
+        body:not(.light-mode) .info-label {
+            background-color: #1f2937 !important;
+            color: #9ca3af !important;
+            border-color: #4b5563 !important;
+        }
+
+        /* --- HEADER STYLES --- */
+        header#site-header {
+            width: 100%;
+            z-index: 50;
+            background-color: #f3f4f6; /* Default Light Header */
+            border-bottom: 4px solid #9ca3af;
+            padding: 1rem;
+        }
+
+        /* --- GRID CONTAINER --- */
         .handheld-container {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -44,6 +121,7 @@
             flex-grow: 1;
             align-content: center;
             padding-bottom: 20px;
+            margin-top: 20px;
         }
 
         /* CARD STYLE */
@@ -153,51 +231,47 @@
             object-fit: contain;
         }
 
-        /* HEADER & FOOTER */
-        header {
-            padding-top: 20px;
+        /* RANKING TITLE & LAYOUT */
+        .ranking-title {
             text-align: center;
-            width: 100%;
-            z-index: 50;
+            margin-top: 20px;
+            position: relative;
+            width: 95%;
+            max-width: 1000px; /* Matches grid max-width */
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
         }
         
+        /* SCREENSHOT BUTTON - Moved further right */
         .screenshot-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            right: -20px; /* Moves it outside the container to the right */
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             align-items: center;
-            gap: 8px;
-            background-color: #374151;
-            color: white;
-            padding: 8px 12px;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #facc15; /* Yellow */
+            color: black;
             border-radius: 6px;
-            font-size: 0.8rem;
             cursor: pointer;
-            transition: background-color 0.2s;
-            border: 1px solid #4b5563;
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
             z-index: 100;
         }
 
         .screenshot-btn:hover {
-            background-color: #4b5563;
-        }
-        
-        /* Updated Camera Icon Color to Yellow */
-        .screenshot-btn svg {
-            color: var(--accent-yellow);
+            background-color: #fcd34d; /* Lighter yellow on hover */
         }
 
         /* Subtle Grid Background */
-        /* Note: Re-adding a very minimal background helps screenshot context, but keeping it off as requested in previous turn */
         .bg-color-layer {
-            position: absolute;
+            position: fixed;
             inset: 0;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-body);
             z-index: -2;
         }
 
@@ -205,15 +279,129 @@
 </head>
 <body>
     
+    <!-- Background Layer -->
     <div class="bg-color-layer"></div>
 
-    <button id="share-btn" class="screenshot-btn" title="Save as Image">
-        <i data-feather="camera" class="w-5 h-5"></i>
-    </button>
+    <!-- NAVIGATION OVERLAY (Hidden by default) -->
+    <div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
+        <div class="absolute inset-0" onclick="toggleNav()"></div>
+        
+        <div class="bg-white border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
+            
+            <div class="pause-menu-header bg-gray-200 text-black p-2 mb-1 flex justify-between items-center border-b-2 border-black">
+                <span class="retro-font text-xs">PAUSE MENU</span>
+                <button onclick="toggleNav()" class="text-black hover:text-red-500">
+                    <i data-feather="x" class="w-4 h-4"></i>
+                </button>
+            </div>
 
-    <header>
-        <h1 class="retro-font text-2xl md:text-3xl text-yellow-400 drop-shadow-[3px_3px_0_rgba(0,0,0,1)] mb-2">MY HANDHELD RANKING</h1>
+            <div class="flex flex-col gap-1" id="navLinksList">
+                <a href="/benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-green-600 cursor-pointer group transition-colors">
+                    <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">BENCHMARKS</span>
+                    <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+                </a>
+                <a href="/gotw" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 cursor-pointer group transition-colors">
+                    <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">GOTW</span>
+                    <i data-feather="crosshair" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+                </a>
+                <a href="/handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-sky-500 cursor-pointer group transition-colors">
+                    <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">HANDHELDS</span>
+                    <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+                </a>
+                <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-yellow-400 border-2 border-black cursor-pointer group transition-colors">
+                    <span class="retro-font text-[10px] text-black">HOME</span>
+                    <i data-feather="home" class="w-4 h-4 text-black"></i>
+                </a>
+                <a href="/patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-orange-500 cursor-pointer group transition-colors">
+                    <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">PATRONS</span>
+                    <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+                </a>
+                <a href="/store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-purple-600 cursor-pointer group transition-colors">
+                    <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">STORE</span>
+                    <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+                </a>
+            </div>
+            
+            <div class="h-0.5 bg-gray-400 my-1"></div>
+
+            <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
+                 <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
+                 <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- SITE HEADER -->
+    <header id="site-header">
+      <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+            <button id="navToggle" class="p-3 bg-white text-black hover:bg-gray-200 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
+                <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                <span class="retro-font text-[10px] hidden md:block">MENU</span>
+            </button>
+            <a href="/" class="flex items-center gap-3 md:gap-4">
+                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
+                    class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-400 bg-gray-800" alt="Ryan Retro Logo">
+                <div class="flex flex-col">
+                    <h1 class="retro-font text-xs md:text-sm text-gray-800 leading-tight">RYAN RETRO</h1>
+                    <span class="retro-font text-[8px] text-gray-500 uppercase">Gaming Channel</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto mt-2 md:mt-0">
+          <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
+            <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
+              FIND ME
+            </span>
+            <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
+               <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
+                 <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
+               </a>
+               <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
+                 <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
+               </a>
+               <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
+                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+               </a>
+               <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
+                  <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+               </a>
+               <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#1877F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Facebook">
+                 <i data-feather="facebook" class="w-4 h-4 md:w-5 md:h-5"></i>
+               </a>
+               <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
+                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
+               </a>
+               <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
+                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+               </a>
+            </div>
+          </div>
+          <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
+            <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
+              SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
+            </span>
+            <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+               class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
+              <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+              </svg>
+              <span class="tracking-tight">JOIN PATREON</span>
+            </a>
+          </div>
+        </div>
+      </div>
     </header>
+
+    <!-- CONTENT WRAPPER FOR CAPTURE -->
+    <div class="ranking-title">
+        <h1 class="retro-font text-2xl md:text-3xl text-yellow-400 drop-shadow-[3px_3px_0_rgba(0,0,0,1)] mb-2">MY HANDHELD RANKING</h1>
+        <button id="share-btn" class="screenshot-btn" title="Save as Image">
+            <i data-feather="camera" class="w-5 h-5"></i>
+        </button>
+    </div>
 
     <div class="handheld-container" id="grid-container">
         <!-- JS will populate ranks -->
@@ -351,6 +539,61 @@
         let cards = Array.from(document.querySelectorAll('.handheld-card'));
         let draggedItem = null;
 
+        // --- NAVIGATION & THEME LOGIC ---
+        const navToggle = document.getElementById('navToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navBox = document.getElementById('navBox');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        window.toggleNav = () => {
+            const isHidden = navOverlay.classList.contains('hidden');
+            if (isHidden) {
+                navOverlay.classList.remove('hidden');
+                setTimeout(() => {
+                    navBox.classList.remove('scale-95', 'opacity-0');
+                    navBox.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                navBox.classList.remove('scale-100', 'opacity-100');
+                navBox.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    navOverlay.classList.add('hidden');
+                }, 200);
+            }
+        };
+        if(navToggle) navToggle.addEventListener('click', toggleNav);
+
+        // Dark Mode Logic
+        if(darkModeToggle) {
+            // Check stored preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                if(themeIcon) themeIcon.setAttribute('data-feather', 'moon');
+            } else {
+                document.body.classList.remove('light-mode');
+                if(themeIcon) themeIcon.setAttribute('data-feather', 'sun');
+            }
+            feather.replace();
+
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                const isLight = document.body.classList.contains('light-mode');
+                
+                if (isLight) {
+                    localStorage.setItem('theme', 'light');
+                    if(themeIcon) themeIcon.setAttribute('data-feather', 'moon');
+                } else {
+                    localStorage.setItem('theme', 'dark');
+                    if(themeIcon) themeIcon.setAttribute('data-feather', 'sun');
+                }
+                feather.replace();
+            });
+        }
+
+        // --- RANKING LOGIC ---
+
         function getRankHTML(rank) {
             if (rank === 1) {
                 return `<div class="rank-medal rank-gold retro-font">#1</div>`;
@@ -372,7 +615,6 @@
             });
         }
 
-        // Initialize Ranks on Load
         refreshRanks();
 
         // --- DRAG AND DROP EVENTS ---
@@ -421,27 +663,36 @@
             });
         }
 
-        // Screenshot Logic
+        // --- SCREENSHOT LOGIC ---
         document.getElementById('share-btn').addEventListener('click', () => {
             const btn = document.getElementById('share-btn');
-            const originalDisplay = btn.style.display;
-            btn.style.display = 'none'; // Hide button for screenshot
+            const header = document.getElementById('site-header'); // Get site header
+            const originalBtnDisplay = btn.style.display;
+            const originalHeaderDisplay = header.style.display; // Save original display state
+
+            // HIDE elements we don't want in screenshot
+            btn.style.display = 'none'; 
+            header.style.display = 'none'; 
             
-            // html2canvas config with useCORS to capture external images
             html2canvas(document.body, {
                 useCORS: true, 
                 allowTaint: true,
-                backgroundColor: '#111827', // Force dark background color just in case
-                scale: 2 // Higher resolution
+                // Ensure background color is captured (use current body variable)
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg-body'),
+                scale: 2 
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'my-handheld-ranking.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                btn.style.display = originalDisplay || 'flex'; // Show button again
+                
+                // RESTORE elements
+                btn.style.display = originalBtnDisplay || 'flex';
+                header.style.display = originalHeaderDisplay || 'block'; 
             }).catch(err => {
                 console.error("Screenshot failed:", err);
-                btn.style.display = originalDisplay || 'flex';
+                btn.style.display = originalBtnDisplay || 'flex';
+                header.style.display = originalHeaderDisplay || 'block';
                 alert("Could not create image. Security settings on images may be blocking it.");
             });
         });
