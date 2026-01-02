@@ -1,21 +1,50 @@
 {% extends "layout.html" %}
 
-{% block title %}Shop{% endblock %}
+{% block title %}Ryan Retro Shop{% endblock %}
 
 {% block head_styles %}
 <style>
-    /* --- SHOP SPECIFIC STYLES --- */
-    
-    /* Background Overlay */
-    .bg-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
-        pointer-events: none;
-        z-index: -1;
+    /* --- SHOP SPECIFIC VARIABLES --- */
+    :root {
+        /* LIGHT MODE (Default) - GAMEBOY COLORS */
+        --gb-grey: #e0e0e0;
+        --gb-dark-grey: #c4c4c4;
+        --gb-shadow: #9e9e9e;
+        --gb-highlight: #ffffff;
+        --gb-accent: #6b7280;
+        
+        --bg-body: #f0f0f0;
+        --bg-panel: #e5e7eb; 
+        --text-main: #111827;
+        --text-muted: #4b5563;
+        --border-color: #000000;
     }
 
-    /* Snappy Entry Animation */
+    /* DARK MODE VARIABLES */
+    body.dark-mode {
+        --gb-grey: #4b5563;        
+        --gb-dark-grey: #111827;   
+        --gb-shadow: #000000;      
+        --gb-highlight: rgba(255,255,255,0.15); 
+        --gb-accent: #9ca3af;
+        
+        --bg-body: #111827;        
+        --bg-panel: #1f2937;       
+        --text-main: #d1d5db;      
+        --text-muted: #9ca3af;
+        --border-color: #000000;   
+    }
+
+    /* Force Body Background for Shop Page */
+    body { 
+        background-color: var(--bg-body) !important; 
+        color: var(--text-main) !important;
+    }
+
+    .retro-font { font-family: 'Press Start 2P', cursive; }
+    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
+    
+    /* Animation */
     @keyframes popIn {
         0% { opacity: 0; transform: translateY(10px) scale(0.98); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -25,7 +54,7 @@
         opacity: 0; 
     }
     
-    /* GAMEBOY CARTRIDGE STYLES */
+    /* --- GAMEBOY CARTRIDGE STYLES --- */
     .gb-cartridge {
         background-color: var(--gb-grey);
         border-radius: 5px 5px 15px 5px; 
@@ -50,511 +79,202 @@
             0px 15px 25px rgba(0,0,0,0.6); 
     }
     
-    .gb-cartridge:hover {
-        transform: translateY(-5px);
-    }
+    .gb-cartridge:hover { transform: translateY(-5px); }
 
-    /* The depressed area at the top saying "RYAN BOY" */
     .gb-header-depression {
         background-color: var(--gb-grey);
         border-radius: 12px 12px 0 0;
         height: 28px;
         margin-bottom: 12px;
-        box-shadow: 
-            inset 2px 2px 5px rgba(0,0,0,0.15),
-            inset -1px -1px 2px var(--gb-highlight);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: background-color 0.3s, box-shadow 0.3s;
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.15), inset -1px -1px 2px var(--gb-highlight);
+        display: flex; align-items: center; justify-content: center;
+        border: 1px solid rgba(0,0,0,0.05); transition: background-color 0.3s, box-shadow 0.3s;
     }
 
     body.dark-mode .gb-header-depression {
-        box-shadow: 
-            inset 3px 3px 6px rgba(0,0,0,0.6),
-            inset -1px -1px 2px rgba(255,255,255,0.1);
+        box-shadow: inset 3px 3px 6px rgba(0,0,0,0.6), inset -1px -1px 2px rgba(255,255,255,0.1);
         border: none;
     }
 
     .gb-header-text {
-        font-family: sans-serif;
-        font-weight: 900;
-        font-style: italic;
+        font-family: sans-serif; font-weight: 900; font-style: italic;
         color: var(--gb-grey); 
-        text-shadow: 
-            1px 1px 0 var(--gb-highlight), 
-            -1px -1px 0 rgba(0,0,0,0.1);
-        font-size: 10px;
-        letter-spacing: 1px;
-        transition: color 0.3s;
-    }
-
-    /* The "Sticker" containing the image */
-    .gb-sticker {
-        background: #222;
-        border-radius: 8px;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        border: 1px solid #999;
-        aspect-ratio: 1 / 0.85; 
-        flex-shrink: 0;
-        margin-bottom: 10px;
-    }
-    .gb-sticker img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        text-shadow: 1px 1px 0 var(--gb-highlight), -1px -1px 0 rgba(0,0,0,0.1);
+        font-size: 10px; letter-spacing: 1px; transition: color 0.3s;
     }
     
-    .gb-content {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    /* INSERT BUTTON STYLES */
-    .gb-insert-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: auto;
-        padding-top: 8px;
-        padding-bottom: 4px;
-        opacity: 0.5;
-        transition: all 0.2s;
-        cursor: pointer;
-        border-top: 1px solid transparent;
-    }
-    .gb-insert-btn:hover {
-        opacity: 1;
-        background: rgba(255,255,255,0.3);
-        border-top: 1px solid rgba(255,255,255,0.8);
-        border-radius: 4px;
-    }
-    body.dark-mode .gb-insert-btn:hover {
-        background: rgba(255,255,255,0.1);
-        border-top: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    /* BIG WIDESCREEN PAK (MODAL) STYLES */
-    #bigRyanPak {
-        background-color: var(--gb-grey);
-        border-radius: 20px 20px 60px 20px; 
-        box-shadow: 
-            inset 4px 4px 10px var(--gb-highlight),
-            inset -6px -6px 15px rgba(0,0,0,0.2),
-            0 50px 100px rgba(0,0,0,0.5);
-        border-right: 12px solid var(--gb-dark-grey);
-        border-bottom: 12px solid var(--gb-dark-grey);
-        position: relative;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s;
-    }
-    
-    body.dark-mode #bigRyanPak {
-        box-shadow: 
-            inset 4px 4px 10px var(--gb-highlight), 
-            inset -6px -6px 15px rgba(0,0,0,0.5),
-            0 50px 100px rgba(0,0,0,0.9);
-    }
-    
-    .pak-active { transform: translateY(0) !important; }
-    
-    .big-pak-depression {
-        background-color: var(--gb-grey);
-        border-radius: 20px 20px 0 0;
-        height: 50px;
-        margin-bottom: 20px;
-        box-shadow: 
-            inset 3px 3px 8px rgba(0,0,0,0.15),
-            inset -2px -2px 4px var(--gb-highlight);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: background-color 0.3s;
-    }
-    body.dark-mode .big-pak-depression {
-        box-shadow: 
-            inset 5px 5px 10px rgba(0,0,0,0.6),
-            inset -2px -2px 4px rgba(255,255,255,0.1);
-        border: none;
-    }
-
-    .big-pak-text {
-        font-family: sans-serif;
-        font-weight: 900;
-        font-style: italic;
-        color: var(--gb-grey);
-        text-shadow: 
-            2px 2px 0 var(--gb-highlight), 
-            -2px -2px 0 rgba(0,0,0,0.1);
-        font-size: 24px;
-        letter-spacing: 4px;
-        transition: color 0.3s;
-    }
-    
-    .big-pak-sticker-area {
-        background: #111;
-        border-radius: 12px;
-        border: 2px solid #888;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        position: relative;
-    }
-    
-    /* Split Screen Layout inside the "Sticker" */
-    .pak-split-layout {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    @media (min-width: 768px) {
-        .pak-split-layout { flex-direction: row; }
-    }
-    
-    .pak-media-side {
-        flex: 1;
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        min-height: 250px;
-        border-right: 2px solid #333;
-    }
-    .pak-info-side {
-        flex: 1;
-        background: #fdfdfd; 
-        padding: 24px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        color: #000;
-        box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); 
-        transition: background-color 0.3s, color 0.3s;
-    }
-    body.dark-mode .pak-info-side {
-        background-color: #1f2937;
-        color: #d1d5db;
-    }
-    
-    .retro-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    
-    .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: inherit; margin-right: 1.5rem; width: 100px; text-align: right; flex-shrink: 0; font-weight: bold; }
-    
-    /* COUPON STYLES */
-    .link-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        width: 100%;
-    }
-    .coupon-badge {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 0.6rem;
-        padding: 6px 8px 4px 8px;
-        border-left: 1px solid #000;
-        border-right: 1px solid #000;
-        border-bottom: 1px solid #000;
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
-        text-align: center;
-        width: 90%;
-        margin-top: -4px;
-        position: relative;
-        z-index: 0;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 6px;
-        transition: transform 0.1s;
-    }
-    .coupon-badge:hover { transform: translateY(2px); }
-    .coupon-badge:active { transform: translateY(4px); }
-    
-    /* Power Switch Styles */
-    .power-switch-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        margin-bottom: 8px;
-        width: 100%; 
-    }
-    .power-switch-track {
-        width: 360px;
-        max-width: 100%; 
-        height: 32px;
-        background-color: #d1d5db;
-        border-radius: 4px;
-        border: 2px solid #9ca3af;
-        position: relative;
-        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
-        display: flex;
-        cursor: pointer;
-        overflow: hidden;
-        transition: background-color 0.3s, border-color 0.3s;
-    }
-    body.dark-mode .power-switch-track {
-        background-color: #4b5563; 
-        border-color: #000000;
-    }
-
-    .power-switch-thumb {
-        width: 33.33%; 
-        height: calc(100% + 2px); 
-        background-color: #374151;
-        border-radius: 2px;
-        position: absolute;
-        top: -1px;
-        left: 33.33%; 
-        transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
-        box-shadow: 
-            2px 2px 5px rgba(0,0,0,0.3),
-            inset 1px 1px 2px rgba(255,255,255,0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2;
-    }
-    body.dark-mode .power-switch-thumb {
-        background-color: #1f2937;
-        box-shadow: 
-            2px 2px 5px rgba(0,0,0,0.5),
-            inset 1px 1px 2px rgba(255,255,255,0.05);
-    }
-
-    .thumb-ridges { display: flex; flex-direction: column; gap: 3px; }
-    .thumb-ridge {
-        width: 30px;
-        height: 2px;
-        background-color: #1f2937;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .power-label-container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        pointer-events: none;
-    }
-    .power-label {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 8px;
-        color: #6b7280;
-        transition: all 0.3s;
-        width: 33.33%; 
-        z-index: 3;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%; 
-        padding-bottom: 3px;
-    }
-    body.dark-mode .power-label { color: #9ca3af; }
-    
-    .power-label.active { 
-        color: #d1d5db;
-        text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-    }
-    body.dark-mode .power-label.active { color: #f3f4f6; }
-
-    .switch-title {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 10px;
-        color: #374151;
-        margin-bottom: 2px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: color 0.3s;
-    }
-    body.dark-mode .switch-title { color: #d1d5db; }
-
-    .led-indicator {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        background: #9ca3af;
-        box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
-        transition: background 0.3s, box-shadow 0.3s;
-    }
-    .led-indicator.on {
-        background: #ef4444;
-        box-shadow: 0 0 5px #ef4444, inset -1px -1px 2px rgba(0,0,0,0.2);
-    }
-
-    /* Unified Filter Dropdown */
-    .unified-filter-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        margin-top: 0.5rem;
-        width: 300px;
-        background-color: var(--gb-grey);
-        border: 4px solid #999;
-        z-index: 100;
-        box-shadow: 12px 12px 0 rgba(0,0,0,0.2);
-        max-height: 80vh;
-        overflow-y: auto;
-        color: var(--text-main);
-    }
-    body.dark-mode .unified-filter-menu { border-color: #4b5563; }
-    .unified-filter-menu.open { display: block; }
-    
-    .filter-section-header {
-        background: #c0c0c0;
-        padding: 10px 16px;
-        font-family: 'Press Start 2P', cursive;
-        font-size: 9px;
-        color: #000;
-        border-bottom: 2px solid #999;
-        letter-spacing: 1px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    body.dark-mode .filter-section-header { background: #4b5563; color: #fff; border-bottom-color: #1f2937; }
-
-    .filter-option {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px;
-        cursor: pointer;
-        transition: all 0.1s;
-        border-bottom: 1px solid #ccc;
-        font-family: 'Press Start 2P', cursive;
-        font-size: 8px;
-        text-transform: uppercase;
-        color: #333;
-    }
-    body.dark-mode .filter-option { border-bottom-color: #4b5563; color: #d1d5db; }
-
-    .filter-option:hover { background-color: #fff; color: #000; }
-    body.dark-mode .filter-option:hover { background-color: #1f2937; color: #fff; }
-
-    .filter-option.active { color: #000; background-color: #fff; font-weight: bold; }
-    body.dark-mode .filter-option.active { background-color: #111827; color: #fff; }
-
-    /* Slider styling */
-    .retro-slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        background: #999;
-        outline: none;
-        border: 2px solid #555;
-        margin: 10px 0;
-    }
-    .retro-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        background: #e0e0e0;
-        cursor: pointer;
-        border: 2px solid #000;
-        box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-    }
-    .filter-checkbox, .filter-radio {
-        appearance: none;
-        width: 14px;
-        height: 14px;
-        border: 2px solid #555;
-        background: white;
-        margin-right: 12px;
-        position: relative;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
-    .filter-radio { border-radius: 50%; }
-    .filter-checkbox:checked, .filter-radio:checked { background: #000; border-color: #000; }
-    .filter-checkbox:checked::after {
-        content: '✓';
-        position: absolute;
-        top: -3px; left: 1px;
-        color: #fff;
-        font-weight: bold;
-        font-size: 10px;
-    }
-    
-    /* Dark Mode Overrides for Specific Components */
-    body.dark-mode #mainControlPanel {
-        background-color: var(--gb-grey) !important;
-        border-color: var(--gb-dark-grey) !important;
-    }
-    body.dark-mode .gb-content h3 { color: #fff !important; }
-    body.dark-mode .gb-content p { color: #d1d5db !important; }
-    body.dark-mode .gb-insert-btn span { color: #d1d5db !important; }
-    
-    /* RYAN BOY Header Text Color Override for Dark Mode */
+    /* Text Color Override for Dark Mode Header Text */
     body.dark-mode .gb-header-text,
     body.dark-mode .big-pak-text {
         color: #e5e7eb !important;
         text-shadow: 2px 2px 0 rgba(0,0,0,0.9), -1px -1px 0 rgba(255,255,255,0.2) !important;
     }
+
+    .gb-sticker {
+        background: #222; border-radius: 8px; overflow: hidden; position: relative;
+        box-shadow: 1px 1px 3px rgba(0,0,0,0.2); border: 1px solid #999;
+        aspect-ratio: 1 / 0.85; flex-shrink: 0; margin-bottom: 10px;
+    }
+    .gb-sticker img { width: 100%; height: 100%; object-fit: cover; }
+    .gb-content { flex-grow: 1; display: flex; flex-direction: column; }
     
-    /* Affiliate Banner Dark Mode Override */
-    body.dark-mode .bg-yellow-50 {
-        background-color: #362F08 !important; 
-        border-color: #facc15 !important;
-        color: #fef08a !important; 
+    /* Insert Button */
+    .gb-insert-btn {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        margin-top: auto; padding-top: 8px; padding-bottom: 4px; opacity: 0.5;
+        transition: all 0.2s; cursor: pointer; border-top: 1px solid transparent;
     }
-    body.dark-mode .bg-yellow-50 p,
-    body.dark-mode .bg-yellow-50 h3 {
-        color: #fef08a !important; 
+    .gb-insert-btn:hover {
+        opacity: 1; background: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.8); border-radius: 4px;
     }
-    body.dark-mode .bg-yellow-400 {
-        background-color: #facc15 !important; 
-        color: #000 !important;
+    body.dark-mode .gb-insert-btn:hover {
+        background: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.2);
     }
+    
+    /* --- BIG RYAN PAK (MODAL) --- */
+    #bigRyanPak {
+        background-color: var(--gb-grey);
+        border-radius: 20px 20px 60px 20px; 
+        box-shadow: inset 4px 4px 10px var(--gb-highlight), inset -6px -6px 15px rgba(0,0,0,0.2), 0 50px 100px rgba(0,0,0,0.5);
+        border-right: 12px solid var(--gb-dark-grey); border-bottom: 12px solid var(--gb-dark-grey);
+        position: relative; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    body.dark-mode #bigRyanPak {
+        box-shadow: inset 4px 4px 10px var(--gb-highlight), inset -6px -6px 15px rgba(0,0,0,0.5), 0 50px 100px rgba(0,0,0,0.9);
+    }
+    .pak-active { transform: translateY(0) !important; }
+    
+    .big-pak-depression {
+        background-color: var(--gb-grey); border-radius: 20px 20px 0 0; height: 50px; margin-bottom: 20px;
+        box-shadow: inset 3px 3px 8px rgba(0,0,0,0.15), inset -2px -2px 4px var(--gb-highlight);
+        display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0,0,0,0.05);
+    }
+    body.dark-mode .big-pak-depression {
+        box-shadow: inset 5px 5px 10px rgba(0,0,0,0.6), inset -2px -2px 4px rgba(255,255,255,0.1); border: none;
+    }
+    .big-pak-text {
+        font-family: sans-serif; font-weight: 900; font-style: italic; color: var(--gb-grey);
+        text-shadow: 2px 2px 0 var(--gb-highlight), -2px -2px 0 rgba(0,0,0,0.1);
+        font-size: 24px; letter-spacing: 4px;
+    }
+    
+    .big-pak-sticker-area {
+        background: #111; border-radius: 12px; border: 2px solid #888;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.8); display: flex; flex-direction: column;
+        overflow: hidden; position: relative;
+    }
+    .pak-split-layout { display: flex; flex-direction: column; height: 100%; }
+    @media (min-width: 768px) { .pak-split-layout { flex-direction: row; } }
+    
+    .pak-media-side { flex: 1; background: #000; display: flex; align-items: center; justify-content: center; position: relative; min-height: 250px; border-right: 2px solid #333; }
+    .pak-info-side {
+        flex: 1; background: #fdfdfd; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; color: #000;
+        box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); 
+    }
+    body.dark-mode .pak-info-side { background-color: #1f2937; color: #d1d5db; }
+
+    /* --- DARK MODE UI OVERRIDES (CRITICAL) --- */
+    /* Fix for Buttons/Inputs remaining light in dark mode */
+    body.dark-mode #mainControlPanel {
+        background-color: var(--gb-grey) !important;
+        border-color: var(--gb-dark-grey) !important;
+    }
+    
+    /* Buttons with bg-gray-100 */
+    body.dark-mode .bg-gray-100 {
+        background-color: #1f2937 !important; /* Dark gray bg */
+        color: #fff !important;
+        border-color: #4b5563 !important;
+    }
+    body.dark-mode .bg-gray-100:hover {
+        background-color: #374151 !important;
+    }
+    
+    /* Inputs */
+    body.dark-mode input, body.dark-mode select {
+        background-color: #1f2937 !important;
+        color: #fff !important;
+        border-color: #4b5563 !important;
+    }
+    
+    /* Flash Deals Modal */
+    body.dark-mode .bg-gray-200 { background-color: #374151 !important; border-color: #1f2937 !important; }
+    body.dark-mode .bg-white { background-color: #1f2937 !important; border-color: #4b5563 !important; color: #fff !important; }
+    
+    /* Cartridge Content Text */
+    body.dark-mode .gb-content h3 { color: #fff !important; }
+    body.dark-mode .gb-content p { color: #d1d5db !important; }
+    body.dark-mode .gb-insert-btn span { color: #d1d5db !important; }
+    
+    /* Filter Menu */
+    .unified-filter-menu {
+        display: none; position: absolute; top: 100%; left: 0; margin-top: 0.5rem; width: 300px;
+        background-color: var(--gb-grey); border: 4px solid #999; z-index: 100;
+        box-shadow: 12px 12px 0 rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; color: var(--text-main);
+    }
+    body.dark-mode .unified-filter-menu { border-color: #4b5563; background-color: #1f2937; }
+    .unified-filter-menu.open { display: block; }
+    
+    .filter-section-header {
+        background: #c0c0c0; padding: 10px 16px; font-family: 'Press Start 2P', cursive; font-size: 9px;
+        color: #000; border-bottom: 2px solid #999; display: flex; justify-content: space-between; align-items: center;
+    }
+    body.dark-mode .filter-section-header { background: #4b5563; color: #fff; border-bottom-color: #1f2937; }
+
+    .filter-option {
+        display: flex; align-items: center; padding: 12px 16px; cursor: pointer;
+        border-bottom: 1px solid #ccc; font-family: 'Press Start 2P', cursive; font-size: 8px; text-transform: uppercase; color: #333;
+    }
+    body.dark-mode .filter-option { border-bottom-color: #4b5563; color: #d1d5db; }
+    .filter-option:hover { background-color: #fff; }
+    body.dark-mode .filter-option:hover { background-color: #374151; color: #fff; }
+
+    /* Affiliate Banner */
+    body.dark-mode .bg-yellow-50 { background-color: #362F08 !important; border-color: #facc15 !important; color: #fef08a !important; }
+    body.dark-mode .bg-yellow-50 p, body.dark-mode .bg-yellow-50 h3 { color: #fef08a !important; }
+    
+    /* --- Power Switch --- */
+    .power-switch-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; margin-bottom: 8px; width: 100%; }
+    .power-switch-track {
+        width: 360px; max-width: 100%; height: 32px; background-color: #d1d5db; border-radius: 4px; border: 2px solid #9ca3af;
+        position: relative; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2); display: flex; cursor: pointer; overflow: hidden;
+    }
+    body.dark-mode .power-switch-track { background-color: #4b5563; border-color: #000000; }
+    .power-switch-thumb {
+        width: 33.33%; height: calc(100% + 2px); background-color: #374151; border-radius: 2px; position: absolute; top: -1px; left: 33.33%;
+        transition: left 0.3s, background-color 0.3s; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 2;
+    }
+    body.dark-mode .power-switch-thumb { background-color: #1f2937; }
+    .thumb-ridges { display: flex; flex-direction: column; gap: 3px; }
+    .thumb-ridge { width: 30px; height: 2px; background-color: #1f2937; }
+    
+    .power-label-container { position: absolute; width: 100%; height: 100%; display: flex; justify-content: space-between; pointer-events: none; }
+    .power-label {
+        font-family: 'Press Start 2P', cursive; font-size: 8px; color: #6b7280; width: 33.33%; z-index: 3;
+        font-weight: bold; display: flex; align-items: center; justify-content: center; height: 100%; padding-bottom: 3px;
+    }
+    body.dark-mode .power-label { color: #9ca3af; }
+    .power-label.active { color: #d1d5db; text-shadow: 0 1px 0 rgba(0,0,0,0.5); }
+    body.dark-mode .power-label.active { color: #f3f4f6; }
+    
+    .switch-title { font-family: 'Press Start 2P', cursive; font-size: 10px; color: #374151; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+    body.dark-mode .switch-title { color: #d1d5db; }
+    .led-indicator { width: 8px; height: 8px; border-radius: 50%; background: #9ca3af; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2); }
+    .led-indicator.on { background: #ef4444; box-shadow: 0 0 5px #ef4444; }
 
     @media (max-width: 768px) {
       .header-container { flex-direction: column; gap: 0.25rem; }
-      .c-stores { display: none; }
-      .c-price { display: block; margin-right: 0.5rem; width: auto; font-size: 0.55rem; }
-      
-      .unified-filter-menu {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        max-width: 320px;
-        margin-top: 0;
-        box-shadow: 0 0 100px rgba(0,0,0,0.9);
-        border: 4px solid #000;
-        max-height: 80vh; 
-        overflow-y: auto;
-      }
-      
-      #bigRyanPak {
-        height: 90vh;
-        border-radius: 10px;
-        border-right-width: 6px;
-        border-bottom-width: 6px;
-      }
+      .unified-filter-menu { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 320px; box-shadow: 0 0 100px rgba(0,0,0,0.9); border: 4px solid #000; max-height: 80vh; overflow-y: auto; }
+      #bigRyanPak { height: 90vh; }
       .pak-split-layout { flex-direction: column; }
       .pak-media-side { min-height: 200px; flex: 0 0 200px; }
-      
-      /* Mobile Scale for Power Switch Container */
-      .power-switch-container {
-        transform: scale(0.95);
-        transform-origin: center;
-      }
+      .power-switch-container { transform: scale(0.95); }
     }
+    
+    /* Misc Utils */
+    .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: inherit; margin-right: 1.5rem; width: 100px; text-align: right; flex-shrink: 0; font-weight: bold; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 {% endblock %}
 
@@ -565,18 +285,15 @@
   <div class="absolute inset-0 bg-black/90 transition-opacity opacity-0 pointer-events-auto" id="rbBackdrop" onclick="closeRyanBoy()"></div>
   
   <div id="bigRyanPak" class="w-full max-w-5xl h-auto md:h-[650px] flex flex-col pointer-events-auto z-10 transform translate-y-[120%]">
-      
       <div class="big-pak-depression">
           <span class="big-pak-text">RYAN BOY</span>
       </div>
-      
       <div class="px-4 md:px-8 flex-1 overflow-hidden flex flex-col mb-4">
           <div class="big-pak-sticker-area flex-1">
               <div class="pak-split-layout" id="rbScreenContent">
                   </div>
           </div>
       </div>
-      
       <div class="pb-2 flex flex-col items-center justify-center">
           <div class="opacity-30 drop-shadow-md cursor-pointer hover:opacity-50 transition-opacity" onclick="closeRyanBoy()" title="Close Cart">
               <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="fill-black">
@@ -584,7 +301,6 @@
               </svg>
           </div>
       </div>
-      
   </div>
 </div>
 
@@ -788,10 +504,7 @@
 
 {% block scripts %}
 <script>
-    // --- MAIN SHOP LOGIC ---
-    
     // Tiers: 0=All, 1=PS1, 2=Gamecube, 3=Switch, 4=PC
-    // REPLACE THIS WITH YOUR REAL PRODUCT LIST
     const officialProducts = [
     { 
       "id": "rp6", 
