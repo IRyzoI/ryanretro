@@ -6,7 +6,7 @@
 <style>
     /* --- BENCHMARK SPECIFIC STYLES --- */
     
-    /* Scrollbar */
+    /* Scrollbar override for the table container */
     .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 10px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
@@ -33,7 +33,7 @@
       white-space: nowrap;
     }
 
-    /* Vertical column dividers for all modes */
+    /* Vertical column dividers */
     .rr-table tbody tr td:not(:first-child) {
       border-left: 1px solid #374151;
     }
@@ -41,7 +41,7 @@
       border-bottom: none;
     }
     
-    /* Device Header Colors (Subtle backgrounds for headers) */
+    /* Device Header Colors */
     .th-device { background-color: #1f2937; color: #fff; vertical-align: bottom; padding: 1rem; }
     
     /* Sortable Headers */
@@ -72,15 +72,12 @@
       padding: 0.5rem 0.5rem;
       font-size: 0.7rem;
     }
-    /* Reduce vertical padding even more for header in mini mode */
     .mini-mode .rr-table th.th-device {
       padding-top: 0.25rem;
       padding-bottom: 0.25rem;
       vertical-align: middle;
     }
     .mini-mode .chipset-label { display: none; }
-    
-    /* Remove bottom margin from device name in mini mode to save vertical space */
     .mini-mode .rr-table th span.mb-1 { margin-bottom: 0; }
 
     /* Toggle Button States */
@@ -90,12 +87,14 @@
 {% endblock %}
 
 {% block content %}
-<main class="flex-grow py-10 md:py-14">
+<div class="bg-overlay"></div>
+
+<div class="py-10 md:py-14 w-full">
     <div class="mx-auto w-full max-w-[1900px] px-2 sm:px-4">
       
       <div class="text-center mb-10" data-aos="fade-down">
         <h1 class="retro-font text-3xl md:text-5xl text-yellow-400 mb-4 text-shadow">BENCHMARKS</h1>
-        <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
+        <p class="text-gray-500 dark:text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
           Comparing average FPS across popular handhelds. Toggle devices and modes below to compare the power of the Snapdragon chipsets.
         </p>
       </div>
@@ -284,6 +283,10 @@
                 <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
                 <td class="text-center">14</td><td class="text-center">30</td><td class="text-center">42</td><td class="text-center">35</td><td class="text-center">41</td><td class="text-center">75</td><td class="text-center">Untested</td>
               </tr>
+              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
+                <td class="font-bold text-white bg-gray-800/50">Traveller’s Rest</td>
+                <td class="text-center">-</td><td class="text-center">40</td><td class="text-center">30</td><td class="text-center">50</td><td class="text-center">40</td><td class="text-center">70</td><td class="text-center">78</td>
+              </tr>
             </tbody>
           </table>
 
@@ -361,14 +364,6 @@
               <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
                 <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
                 <td class="text-center">-</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
-                <td class="text-center">40</td><td class="text-center">70</td><td class="text-center">84</td><td class="text-center">123</td><td class="text-center">95</td><td class="text-center">130</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
-                <td class="text-center">30</td><td class="text-center">33</td><td class="text-center">50</td><td class="text-center">53</td><td class="text-center">50</td><td class="text-center">68</td><td class="text-center">Untested</td>
               </tr>
               <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
                 <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
@@ -604,7 +599,7 @@
       </div>
 
     </div>
-  </main>
+</div>
 {% endblock %}
 
 {% block scripts %}
