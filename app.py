@@ -528,9 +528,12 @@ async def gotw_page(request: Request):
 def benchmarks_page(): 
     return FileResponse(os.path.join(REPO_DIR, "static", "benchmarks.html"))
 
-@app.get("/store", response_class=FileResponse)
-def store_page(): 
-    return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
+@app.get("/store", response_class=HTMLResponse)
+async def store_page(request: Request):
+    return templates.TemplateResponse("store.html", {
+        "request": request, 
+        "active_page": "store"
+    })
 
 @app.get("/ranking", response_class=FileResponse)
 def ranking_page(): 
@@ -569,11 +572,14 @@ KNOWN_IDS = {
 }
 
 # 6. The "Catch-All" Route (MUST BE LAST)
-@app.get("/{product_id}", response_class=FileResponse)
-def serve_pretty_product_url(product_id: str):
+@app.get("/{product_id}", response_class=HTMLResponse)
+async def serve_pretty_product_url(request: Request, product_id: str):
     # Check if the URL matches a known product ID
     if product_id in KNOWN_IDS:
-        return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
+        return templates.TemplateResponse("store.html", {
+            "request": request, 
+            "active_page": "store"
+        })
     
     # If not found, raise 404
     raise HTTPException(status_code=404, detail="Page not found")
