@@ -1,0 +1,265 @@
+{% extends "layout.html" %}
+
+{% block title %}Patrons{% endblock %}
+
+{% block head_styles %}
+<style>
+    /* --- PATRON PAGE SPECIFIC STYLES --- */
+    
+    /* BACKGROUND TEXTURE - Cartridge Case */
+    .bg-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* --- Video Mode / Overlay Styles --- */
+    body.video-mode {
+        background: transparent !important;
+        overflow: hidden;
+        background-image: none !important;
+    }
+    body.video-mode header, 
+    body.video-mode footer,
+    body.video-mode #navOverlay,
+    body.video-mode .bg-overlay,
+    body.video-mode .video-hidden {
+        display: none !important;
+    }
+    body.video-mode main {
+        padding-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+    
+    /* --- PATRON PAGE SPECIFIC ANIMATIONS --- */
+    @keyframes float {
+        0% { transform: translateY(0px) rotateX(0deg); }
+        50% { transform: translateY(-10px) rotateX(5deg); }
+        100% { transform: translateY(0px) rotateX(0deg); }
+    }
+
+    @keyframes shine {
+        0% { background-position: 200% center; }
+        100% { background-position: -200% center; }
+    }
+
+    @keyframes shimmer-sweep {
+        0% { transform: translateX(-150%) skewX(-20deg); }
+        100% { transform: translateX(250%) skewX(-20deg); }
+    }
+
+    /* --- 3D Tier Special Effects --- */
+    .tier-3d-card {
+        perspective: 1000px;
+        animation: float 4s ease-in-out infinite;
+        background: linear-gradient(145deg, #1f2937, #111827);
+        border: 2px solid #facc15; 
+        box-shadow: 0 0 15px rgba(250, 204, 21, 0.3), inset 0 0 10px rgba(250, 204, 21, 0.1);
+    }
+
+    .tier-3d-text {
+        background: linear-gradient(to right, #facc15, #f87171, #60a5fa, #facc15);
+        background-size: 200% auto;
+        color: transparent;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: shine 3s linear infinite;
+        font-weight: 900;
+        text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+    }
+
+    /* --- 16-Bit Styles --- */
+    .tier-16bit-card {
+        background: #1f2937;
+        border-left: 4px solid #60a5fa; 
+        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .tier-16bit-card:hover {
+        transform: scale(1.05);
+        background: #374151;
+        z-index: 10;
+    }
+
+    /* --- 8-Bit Styles --- */
+    .tier-8bit-card {
+        background: #1f2937;
+        border-left: 4px solid #9ca3af; 
+        transition: all 0.2s ease;
+    }
+    .tier-8bit-card:hover {
+        transform: scale(1.02);
+        background: #374151;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-overlay"></div>
+
+<div class="pt-8 pb-4 text-center video-hidden">
+    <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-down">
+        
+        <h1 class="retro-font text-xl md:text-4xl !text-yellow-400 drop-shadow-md mb-6 cursor-default">
+            HALL OF FAME
+        </h1>
+
+        <p class="text-sm md:text-xl text-gray-400 w-full mb-12">
+            A massive thank you to the legends who support the channel! This dream is becoming possible because of you ❤️
+        </p>
+        
+    </div>
+</div>
+
+<div class="container mx-auto px-4 pt-2 pb-12 max-w-4xl">
+    
+    <div class="mb-16">
+        <h2 class="retro-font text-center text-2xl !text-yellow-400 mb-8 flex items-center justify-center gap-3" data-aos="fade-up">
+            <i data-feather="box" class="w-8 h-8"></i> 3D TIER
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="tier-3d-card rounded-xl p-8 text-center" data-aos="zoom-in" data-aos-delay="0">
+                <div class="mb-4 flex justify-center">
+                    <div class="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center border border-purple-500/50">
+                        <i data-feather="video" class="w-8 h-8 text-purple-400"></i>
+                    </div>
+                </div>
+                <h3 class="tier-3d-text text-xl md:text-2xl tracking-wide">Frostbright Productions</h3>
+            </div>
+
+            <div class="tier-3d-card rounded-xl p-8 text-center" data-aos="zoom-in" data-aos-delay="150" style="animation-delay: 0.5s;">
+                <div class="mb-4 flex justify-center">
+                    <div class="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center border border-yellow-400/50">
+                        <i data-feather="zap" class="w-8 h-8 text-yellow-400"></i>
+                    </div>
+                </div>
+                <h3 class="tier-3d-text text-xl md:text-2xl tracking-wide">Kahl</h3>
+            </div>
+
+            <div class="tier-3d-card rounded-xl p-8 text-center" data-aos="zoom-in" data-aos-delay="300" style="animation-delay: 1s;">
+                <div class="mb-4 flex justify-center">
+                    <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/50">
+                        <i data-feather="cpu" class="w-8 h-8 text-green-400"></i>
+                    </div>
+                </div>
+                <h3 class="tier-3d-text text-xl md:text-2xl tracking-wide">Kevin Wagner</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-16">
+        <h2 class="retro-font text-center text-xl !text-blue-400 mb-6 flex items-center justify-center gap-3" data-aos="fade-up">
+            <i data-feather="layers" class="w-6 h-6"></i> 16-BIT TIER
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+             <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="0">
+                <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Chappers</span>
+            </div>
+            <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Daniel Svensson</span>
+            </div>
+            <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">DM Spectre</span>
+            </div>
+             <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Joseph Pizza</span>
+            </div>
+            <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Mr. Sir</span>
+            </div>
+            <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="250">
+                <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">OsakaBoy</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-12">
+        <h2 class="retro-font text-center text-lg !text-gray-400 mb-6 flex items-center justify-center gap-3" data-aos="fade-up">
+            <i data-feather="grid" class="w-5 h-5"></i> 8-BIT TIER
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="0">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Calicoma</span>
+            </div>
+            <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Charlie</span>
+            </div>
+            <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">John’s Ducks</span>
+            </div>
+            <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Materia-listic</span>
+            </div>
+            <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Michael Wells</span>
+            </div>
+             <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="250">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Ricardo Chavarria</span>
+            </div>
+            <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="300">
+                <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
+                <span class="font-bold text-gray-200">Steve Berman</span>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<section class="pb-12 text-center video-hidden">
+    <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-up">
+        <div class="relative flex items-stretch group/patreon cursor-pointer hover:-translate-y-1 transition-transform duration-200">
+            <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] retro-font px-2 py-1.5 rounded border-2 border-black opacity-0 group-hover/patreon:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20 shadow-lg -translate-y-2 group-hover/patreon:translate-y-0">
+                JOIN THE RYAN RETRO FAMILY!
+                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black"></div>
+            </div>
+
+            <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+               class="bg-[#f96854] hover:bg-[#ff8e7d] text-white px-8 py-5 rounded pixel-border retro-font text-[10px] md:text-sm flex items-center justify-center relative overflow-hidden transition-all duration-300">
+                
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-1/2 h-full skew-x-[-20deg] animate-[shimmer-sweep_2.5s_infinite_linear] pointer-events-none"></div>
+
+                <svg class="w-5 h-5 fill-current mr-3 relative z-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+                </svg>
+                <span class="relative z-10 tracking-wider">BECOME A PATRON</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // --- VIDEO MODE & AOS ---
+    document.addEventListener('DOMContentLoaded', function() {
+        // Init AOS
+        if(window.AOS) AOS.init({ duration: 800, once: true });
+        
+        // Feather Icons
+        if(window.feather) feather.replace();
+
+        // Check for URL param ?video=1 to hide UI
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('video') === '1') {
+            document.body.classList.add('video-mode');
+        }
+    });
+</script>
+{% endblock %}
