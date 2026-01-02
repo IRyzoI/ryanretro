@@ -523,10 +523,12 @@ async def gotw_page(request: Request):
         "active_page": "gotw"
     })
 
-# 3. Define Static Pages (Not yet converted)
-@app.get("/benchmarks", response_class=FileResponse)
-def benchmarks_page(): 
-    return FileResponse(os.path.join(REPO_DIR, "static", "benchmarks.html"))
+@app.get("/benchmarks", response_class=HTMLResponse)
+async def benchmarks_page(request: Request):
+    return templates.TemplateResponse("benchmarks.html", {
+        "request": request, 
+        "active_page": "benchmarks"
+    })
 
 @app.get("/store", response_class=HTMLResponse)
 async def store_page(request: Request):
