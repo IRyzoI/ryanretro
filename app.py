@@ -578,6 +578,13 @@ def serve_pretty_product_url(product_id: str):
     # If not found, raise 404
     raise HTTPException(status_code=404, detail="Page not found")
 
+@app.get("/test-store", response_class=HTMLResponse)
+async def test_store(request: Request):
+    return templates.TemplateResponse("store.html", {
+        "request": request, 
+        "active_page": "store"
+    })
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=int(os.getenv("PORT", "8080")))
