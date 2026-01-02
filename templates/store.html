@@ -4,11 +4,11 @@
 
 {% block head_styles %}
 <style>
+    /* Keep the import at the top */
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
     
-    /* --- RESTORED ORIGINAL VARIABLES --- */
     :root {
-      /* LIGHT MODE (Default) - GAMEBOY COLORS */
+      /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
       --gb-grey: #e0e0e0;
       --gb-dark-grey: #c4c4c4;
       --gb-shadow: #9e9e9e;
@@ -16,6 +16,7 @@
       --gb-accent: #6b7280;
       
       --bg-body: #f0f0f0;
+      --bg-panel: #e5e7eb; 
       --text-main: #111827;
       --text-muted: #4b5563;
       --border-color: #000000;
@@ -30,9 +31,10 @@
       --gb-accent: #9ca3af;
       
       --bg-body: #111827;        
+      --bg-panel: #1f2937;        
       --text-main: #d1d5db;      
       --text-muted: #9ca3af;
-      --border-color: #000000;   
+      --border-color: #000000;    
     }
 
     .retro-font { font-family: 'Press Start 2P', cursive; }
@@ -56,7 +58,7 @@
     }
     .cart-animate {
         animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        opacity: 0; /* Ensures it starts invisible then pops in */
+        opacity: 0; 
     }
     
     /* GAMEBOY CARTRIDGE STYLES */
@@ -68,7 +70,7 @@
         box-shadow: 
             inset 3px 3px 5px var(--gb-highlight), 
             inset -3px -3px 5px rgba(0,0,0,0.2),    
-            8px 8px 15px rgba(0,0,0,0.3);             
+            8px 8px 15px rgba(0,0,0,0.3);              
         display: flex;
         flex-direction: column;
         height: 100%;
@@ -121,7 +123,6 @@
         transition: color 0.3s;
     }
     
-    /* Text overrides for Dark Mode */
     body.dark-mode .gb-header-text,
     body.dark-mode .big-pak-text {
         color: #e5e7eb !important;
@@ -907,18 +908,18 @@
   let allProducts = JSON.parse(JSON.stringify(officialProducts));
   let currentView = 'grid', currentCurrency = 'USD', currentCategory = 'all', currentStatus = 'all', currentBrand = 'all', currentSort = 'default', currentSearch = '', currentBudget = 500, currentTier = 0;
   let storeFilters = new Set();
-  
+   
   // 1. URL ID DETECTION
   let urlParams = new URLSearchParams(window.location.search);
   let explicitId = urlParams.get('id');
   let pathSegment = window.location.pathname.replace(/^\/|\/$/g, ''); 
-  
+   
   if (pathSegment === 'store' || pathSegment === 'shop' || pathSegment.includes('.html') || pathSegment.includes('/')) {
       pathSegment = null;
   }
   let urlProductId = explicitId || pathSegment;
   const productExists = allProducts.some(p => p.id === urlProductId);
-  
+   
   if (urlProductId && !productExists && !explicitId) {
       console.log("Ignoring invalid path ID:", urlProductId);
       urlProductId = null;
@@ -927,7 +928,7 @@
   const tierMap = { 0: "ALL", 1: "PS1", 2: "GAMECUBE", 3: "SWITCH", 4: "PC" };
   const exchangeRates = { USD: 1, EUR: 0.92, GBP: 0.78, KRW: 1375, CAD: 1.36, AUD: 1.52 };
   const currencySymbols = { USD: '$', EUR: '€', GBP: '£', KRW: '₩', CAD: '$', AUD: '$' };
-  
+   
   function convertFromUSD(usd, cur) { return cur === 'USD' ? usd : usd * (exchangeRates[cur] || 1); }
   function formatPrice(amt, cur) {
     const sym = currencySymbols[cur] || '$';
@@ -944,7 +945,7 @@
     brands.forEach(b => list.insertAdjacentHTML('beforeend', `<label class="filter-option"><input type="radio" name="brand" class="filter-radio brand-opt" value="${b}"><span>${b}</span></label>`));
     document.querySelectorAll('.brand-opt').forEach(opt => opt.addEventListener('change', (e) => { currentBrand = e.target.value; updateFilters(); }));
   }
-  
+   
   function matchesFilters(p) {
     if (urlProductId) {
         return p.id === urlProductId; 
@@ -1113,22 +1114,22 @@
     });
     return node;
   }
-  
+   
   function updateFilters() { const activeC = (currentStatus !== 'all' ? 1 : 0) + (currentCategory !== 'all' ? 1 : 0) + (currentBrand !== 'all' ? 1 : 0) + storeFilters.size + (currentBudget < 500 ? 1 : 0) + (currentTier > 0 ? 1 : 0); document.getElementById('filterBtnText').textContent = activeC > 0 ? `FILTERS (${activeC})` : 'FILTERS'; renderProducts(); }
-  
+   
   // --- FLASH DEALS LOGIC ---
   const flashDealsModal = document.getElementById('flashDealsModal');
   const flashDealsList = document.getElementById('flashDealsList');
-  
+   
   document.getElementById('openFlashDealsBtn').onclick = () => {
       renderFlashDeals();
       flashDealsModal.classList.remove('hidden');
   };
-  
+   
   document.getElementById('closeFlashDeals').onclick = () => {
       flashDealsModal.classList.add('hidden');
   };
-  
+   
   document.getElementById('flashDealsBackdrop').onclick = () => {
       flashDealsModal.classList.add('hidden');
   };
@@ -1195,7 +1196,7 @@
   const rbBackdrop = document.getElementById('rbBackdrop');
   const rbPak = document.getElementById('bigRyanPak');
   const rbScreen = document.getElementById('rbScreenContent');
-  
+   
   window.openRyanBoy = (el) => {
     // Find product ID from parent
     const card = el.closest('[data-pid]');
@@ -1302,13 +1303,13 @@
     }, 400);
   };
   // --- FILTERS & INIT ---
-  
+   
   // Power Switch Logic (Updated for Responsiveness)
   const powerTrack = document.getElementById('powerSwitchTrack');
   const powerThumb = document.getElementById('powerSwitchThumb');
   const powerLed = document.getElementById('powerLed');
   const powerLabels = document.querySelectorAll('.power-label');
-  
+   
   powerTrack.addEventListener('click', (e) => {
       const rect = powerTrack.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
@@ -1342,7 +1343,7 @@
       
       updateFilters();
   });
-  
+   
   if (urlProductId) {
       document.getElementById('mainControlPanel').style.display = 'none';
       const mainSection = document.getElementById('mainContentSection');
