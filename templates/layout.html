@@ -172,9 +172,11 @@
             width: 42px; height: 42px; transition: all 0.2s;
         }
         .play-trigger svg { width: 20px; height: 20px; fill: currentColor; }
-        .play-trigger.active { background: #4ade80 !important; color: black !important; border-color: black !important; }
+.play-trigger.active { background: #4ade80 !important; color: black !important; border-color: black !important; }
 
     </style>
+    
+    {% block head_styles %}{% endblock %} 
 </head>
 <body class="text-gray-800 font-sans overflow-x-hidden">
 
