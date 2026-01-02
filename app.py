@@ -530,6 +530,13 @@ async def benchmarks_page(request: Request):
         "active_page": "benchmarks"
     })
 
+@app.get("/reviews/retroid-pocket-g2", response_class=HTMLResponse)
+async def rpg2_review_page(request: Request):
+    return templates.TemplateResponse("rpg2-review.html", {
+        "request": request,
+        "active_page": "handheld"
+    })
+
 @app.get("/store", response_class=HTMLResponse)
 async def store_page(request: Request):
     return templates.TemplateResponse("store.html", {
