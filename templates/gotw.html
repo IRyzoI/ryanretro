@@ -341,7 +341,7 @@
                         <div class="bg-black/50 rounded p-2 mb-3 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-800">
                             <img :src="device.heroImg" :alt="device.name" class="w-full h-auto object-contain max-h-full transition-transform group-hover:scale-110">
                         </div>
-                        <h4 class="retro-font text-[9px] md:text-[10px] text-gray-300 text-center mb-1 leading-tight">{{ device.name }}</h4>
+                        <h4 class="retro-font text-[9px] md:text-[10px] text-gray-300 text-center mb-1 leading-tight">[[ device.name ]]</h4>
                         <div class="mt-auto pt-3">
                              <a :href="device.affiliateHref" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-2 px-2 rounded text-center retro-font transition-colors pixel-btn">
                                 VIEW INFO
@@ -365,7 +365,7 @@
                             <div class="inline-block bg-yellow-500 text-black px-3 py-1 rounded retro-font text-[10px] mb-3 font-bold">
                                 ★ RYAN'S CHOICE
                             </div>
-                            <h3 class="retro-font text-xl md:text-3xl text-white mb-2">{{ ryansChoice.name }}</h3>
+                            <h3 class="retro-font text-xl md:text-3xl text-white mb-2">[[ ryansChoice.name ]]</h3>
                             <p class="text-gray-400 text-sm mb-6 leading-relaxed">
                                 This is the handheld I'm personally using to play this week's game. It offers the perfect balance of performance and comfort for this title.
                             </p>
@@ -417,6 +417,7 @@
     const { createApp } = Vue;
 
     createApp({
+        delimiters: ['[[', ']]'],
         data() {
             return {
                 showHandheldModal: false,
