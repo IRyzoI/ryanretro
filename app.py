@@ -521,6 +521,9 @@ def benchmarks_page(): return FileResponse(os.path.join(REPO_DIR, "static", "ben
 @app.get("/store", response_class=FileResponse)
 def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
 
+@app.get("/ranking", response_class=FileResponse)
+def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
+
 # --------------------------------------------------------------------------------------
 # Pretty URL Routing (Dynamic Handheld/Accessory IDs)
 # --------------------------------------------------------------------------------------
