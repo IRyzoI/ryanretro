@@ -542,7 +542,7 @@ async def test_new_home(request: Request):
 
 @app.get("/test-gotw", response_class=HTMLResponse)
 async def test_gotw(request: Request):
-    return templates.TemplateResponse("gameoftheweek.html", {
+    return templates.TemplateResponse("gotw.html", {
         "request": request, 
         "active_page": "gotw"
     })
