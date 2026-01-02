@@ -4,7 +4,7 @@
 
 {% block head_styles %}
 <style>
-    /* --- RESTORED ORIGINAL CSS --- */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
     
     :root {
       /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
@@ -15,7 +15,7 @@
       --gb-accent: #6b7280;
       
       --bg-body: #f0f0f0;
-      --bg-panel: #e5e7eb; 
+      --bg-panel: #e5e7eb; /* gray-200 */
       --text-main: #111827;
       --text-muted: #4b5563;
       --border-color: #000000;
@@ -23,22 +23,28 @@
 
     /* DARK MODE VARIABLES */
     body.dark-mode {
-      --gb-grey: #4b5563;        
-      --gb-dark-grey: #111827;   
-      --gb-shadow: #000000;      
-      --gb-highlight: rgba(255,255,255,0.15); 
+      --gb-grey: #4b5563;        /* Gray 600 - Lighter face for contrast */
+      --gb-dark-grey: #111827;   /* Gray 900 - Dark sides/thickness */
+      --gb-shadow: #000000;      /* Deep shadow */
+      --gb-highlight: rgba(255,255,255,0.15); /* Sharp edge highlight */
       --gb-accent: #9ca3af;
       
-      --bg-body: #111827;        
-      --bg-panel: #1f2937;       
-      --text-main: #d1d5db;      
+      --bg-body: #111827;        /* Very dark background for page */
+      --bg-panel: #1f2937;       /* Panel backgrounds */
+      --text-main: #d1d5db;      /* Light text */
       --text-muted: #9ca3af;
       --border-color: #000000;   
     }
 
     .retro-font { font-family: 'Press Start 2P', cursive; }
     
-    /* BACKGROUND TEXTURE */
+    /* BACKGROUND TEXTURE - Solid Color Only */
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        transition: background-color 0.3s, color 0.3s;
+    }
+    
     .bg-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
@@ -56,7 +62,7 @@
     }
     .cart-animate {
         animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        opacity: 0;
+        opacity: 0; /* Hidden initially until animation starts */
     }
     
     /* GAMEBOY CARTRIDGE STYLES */
@@ -263,7 +269,7 @@
     }
     .pak-info-side {
         flex: 1;
-        background: #fdfdfd; 
+        background: #fdfdfd; /* White label paper look */
         padding: 24px;
         overflow-y: auto;
         display: flex;
@@ -345,11 +351,11 @@
         justify-content: center;
         gap: 4px;
         margin-bottom: 8px;
-        width: 100%; 
+        width: 100%; /* Ensure container takes full width if needed */
     }
     .power-switch-track {
         width: 360px;
-        max-width: 100%; 
+        max-width: 100%; /* Fix for mobile screens */
         height: 32px;
         background-color: #d1d5db;
         border-radius: 4px;
@@ -367,13 +373,13 @@
     }
 
     .power-switch-thumb {
-        width: 33.33%; 
+        width: 33.33%; /* Fluid width */
         height: calc(100% + 2px); 
         background-color: #374151;
         border-radius: 2px;
         position: absolute;
         top: -1px;
-        left: 33.33%; 
+        left: 33.33%; /* Start center */
         transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
         box-shadow: 
             2px 2px 5px rgba(0,0,0,0.3),
@@ -410,7 +416,7 @@
         font-size: 8px;
         color: #6b7280;
         transition: all 0.3s;
-        width: 33.33%; 
+        width: 33.33%; /* Fluid width */
         z-index: 3;
         font-weight: bold;
         display: flex;
@@ -467,10 +473,7 @@
         overflow-y: auto;
         color: var(--text-main);
     }
-    body.dark-mode .unified-filter-menu { 
-        background-color: #1f2937;
-        border-color: #4b5563; 
-    }
+    body.dark-mode .unified-filter-menu { border-color: #4b5563; }
     .unified-filter-menu.open { display: block; }
     
     .filter-section-header {
@@ -485,11 +488,7 @@
         justify-content: space-between;
         align-items: center;
     }
-    body.dark-mode .filter-section-header { 
-        background: #4b5563; 
-        color: #fff; 
-        border-bottom-color: #1f2937; 
-    }
+    body.dark-mode .filter-section-header { background: #4b5563; color: #fff; border-bottom-color: #1f2937; }
 
     .filter-option {
         display: flex;
@@ -503,16 +502,10 @@
         text-transform: uppercase;
         color: #333;
     }
-    body.dark-mode .filter-option { 
-        border-bottom-color: #4b5563; 
-        color: #d1d5db; 
-    }
+    body.dark-mode .filter-option { border-bottom-color: #4b5563; color: #d1d5db; }
 
     .filter-option:hover { background-color: #fff; color: #000; }
-    body.dark-mode .filter-option:hover { 
-        background-color: #374151; 
-        color: #fff; 
-    }
+    body.dark-mode .filter-option:hover { background-color: #1f2937; color: #fff; }
 
     .filter-option.active { color: #000; background-color: #fff; font-weight: bold; }
     body.dark-mode .filter-option.active { background-color: #111827; color: #fff; }
@@ -559,14 +552,48 @@
         font-size: 10px;
     }
     
-    /* DARK MODE SPECIFIC OVERRIDES */
+    /* DARK MODE SPECIFIC OVERRIDES FOR TAILWIND CLASSES */
+    /* Ensure the control panel and buttons switch colors correctly */
+    
     body.dark-mode #mainControlPanel {
         background-color: var(--gb-grey) !important;
         border-color: var(--gb-dark-grey) !important;
     }
+    
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: #fff !important; }
+    body.dark-mode p { color: #d1d5db !important; }
+    
+    /* Input/Select overrides in dark mode */
+    body.dark-mode input, body.dark-mode select {
+        background-color: #1f2937 !important; /* gray-800 */
+        color: #fff !important;
+        border-color: #4b5563 !important; /* gray-600 */
+    }
+    
+    /* Button overrides in dark mode */
+    body.dark-mode .bg-gray-100 {
+        background-color: #1f2937 !important;
+        color: #fff !important;
+    }
+    body.dark-mode .bg-gray-100:hover {
+        background-color: #374151 !important;
+    }
+    
+    /* Flash Deals Modal Dark Mode */
+    body.dark-mode .bg-gray-200 {
+        background-color: #374151 !important;
+        border-color: #1f2937 !important;
+    }
+    body.dark-mode .bg-white {
+        background-color: #1f2937 !important;
+        border-color: #4b5563 !important;
+        color: #fff !important;
+    }
+    
     body.dark-mode .gb-content h3 { color: #fff !important; }
     body.dark-mode .gb-content p { color: #d1d5db !important; }
     body.dark-mode .gb-insert-btn span { color: #d1d5db !important; }
+    body.dark-mode svg.fill-black { fill: #fff !important; }
     
     /* RYAN BOY Header Text Color Override for Dark Mode */
     body.dark-mode .gb-header-text,
@@ -596,29 +623,6 @@
     }
     body.dark-mode .text-gray-600 {
         color: #d1d5db !important; 
-    }
-
-    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-    
-    /* Buttons and Inputs */
-    body.dark-mode .bg-gray-100 {
-        background-color: #1f2937 !important;
-        color: #fff !important;
-        border-color: #4b5563 !important;
-    }
-    body.dark-mode .bg-gray-100:hover {
-        background-color: #374151 !important;
-    }
-    body.dark-mode input, body.dark-mode select {
-        background-color: #1f2937 !important;
-        color: #fff !important;
-        border-color: #4b5563 !important;
-    }
-    
-    /* Flash Deals Modal */
-    body.dark-mode .bg-gray-200.flash-modal {
-        background-color: #374151 !important;
-        border-color: #1f2937 !important;
     }
 
     @media (max-width: 768px) {
@@ -874,7 +878,7 @@
 <div id="flashDealsModal" class="fixed inset-0 z-[80] hidden">
   <div id="flashDealsBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-gray-200 flash-modal rounded-lg border-4 border-gray-400 w-full max-w-2xl overflow-hidden relative shadow-2xl flex flex-col max-h-[80vh]">
+    <div class="bg-gray-200 rounded-lg border-4 border-gray-400 w-full max-w-2xl overflow-hidden relative shadow-2xl flex flex-col max-h-[80vh]">
       <div class="p-4 border-b-4 border-gray-400 flex items-center justify-between bg-red-600 text-white">
         <h2 class="retro-font text-sm uppercase flex items-center gap-2"><i data-feather="zap" class="w-4 h-4"></i> CURRENT FLASH DEALS</h2>
         <button id="closeFlashDeals" class="pixel-btn bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-white">CLOSE</button>
@@ -889,7 +893,8 @@
 {% block scripts %}
 <script>
     // --- MAIN SHOP LOGIC ---
-    // Products List
+    
+    // Tiers: 0=All, 1=PS1, 2=Gamecube, 3=Switch, 4=PC
     const officialProducts = [
     { 
       "id": "rp6", 
