@@ -16,6 +16,7 @@ from fastapi import FastAPI, HTTPException, Response, Request, Header
 from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
@@ -551,6 +552,17 @@ def serve_pretty_product_url(product_id: str):
 # Static mounts must come last so they don't override specific routes
 app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
 app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
+
+# ADD THIS LINE:
+templates = Jinja2Templates(directory="templates")
+
+# --- TEMPORARY TEST ROUTE ---
+@app.get("/test-new", response_class=HTMLResponse)
+async def test_new_home(request: Request):
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "active_page": "home"
+    })
 
 if __name__ == "__main__":
     import uvicorn
