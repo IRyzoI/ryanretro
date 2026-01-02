@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro - Interactive Ranking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-dark: #111827;
+            --text-main: #d1d5db;
+            --accent-yellow: #facc15; 
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative; /* For absolute positioning of button */
+        }
+
+        .retro-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        /* GRID CONTAINER */
+        .handheld-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2rem 0.5rem; 
+            width: 95%;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-grow: 1;
+            align-content: center;
+            padding-bottom: 20px;
+        }
+
+        /* CARD STYLE */
+        .handheld-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            cursor: grab;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .handheld-card:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .handheld-card.dragging {
+            opacity: 0.4;
+            transform: scale(0.9);
+            filter: grayscale(100%);
+        }
+
+        /* BADGE CONTAINER */
+        .badge-container {
+            min-height: 45px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            margin-bottom: 5px;
+        }
+
+        /* RANK BADGES */
+        .rank-badge {
+            padding: 0.35rem 0.85rem;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+            transform: skew(-5deg); 
+            z-index: 20;
+            font-weight: bold;
+            background-color: var(--accent-yellow);
+            color: #000;
+        }
+
+        /* MEDAL STYLES */
+        .rank-medal {
+            width: 50px; 
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.5);
+            margin-bottom: 0;
+            z-index: 20;
+            position: relative;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .rank-medal::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            width: 28px; 
+            height: 14px; 
+            background: #ef4444; 
+            z-index: -1;
+            border: 1px solid #000;
+        }
+
+        .rank-bronze {
+            background: linear-gradient(135deg, #e6ac78 0%, #cd7f32 50%, #8c531b 100%);
+            color: #fff;
+            text-shadow: 1px 1px 0 #5c3a1e;
+        }
+
+        .rank-silver {
+            background: linear-gradient(135deg, #f3f4f6 0%, #9ca3af 50%, #4b5563 100%);
+            color: #fff;
+            text-shadow: 1px 1px 0 #374151;
+        }
+
+        .rank-gold {
+            background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #d97706 100%);
+            color: #fff;
+            text-shadow: 1px 1px 0 #b45309;
+        }
+
+        /* IMAGE WRAPPER */
+        .img-wrapper {
+            height: 100px;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            pointer-events: none; 
+        }
+
+        .img-wrapper img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* HEADER & FOOTER */
+        header {
+            padding-top: 20px;
+            text-align: center;
+            width: 100%;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .screenshot-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #374151;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 1px solid #4b5563;
+            z-index: 100;
+        }
+
+        .screenshot-btn:hover {
+            background-color: #4b5563;
+        }
+        
+        /* Updated Camera Icon Color to Yellow */
+        .screenshot-btn svg {
+            color: var(--accent-yellow);
+        }
+
+        /* Subtle Grid Background */
+        /* Note: Re-adding a very minimal background helps screenshot context, but keeping it off as requested in previous turn */
+        .bg-color-layer {
+            position: absolute;
+            inset: 0;
+            background-color: var(--bg-dark);
+            z-index: -2;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="bg-color-layer"></div>
+
+    <button id="share-btn" class="screenshot-btn" title="Save as Image">
+        <i data-feather="camera" class="w-5 h-5"></i>
+    </button>
+
+    <header>
+        <h1 class="retro-font text-2xl md:text-3xl text-yellow-400 drop-shadow-[3px_3px_0_rgba(0,0,0,1)] mb-2">MY HANDHELD RANKING</h1>
+    </header>
+
+    <div class="handheld-container" id="grid-container">
+        <!-- JS will populate ranks -->
+        
+        <!-- 1 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/brick.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/konkr.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rp5.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rpg2.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rpmini.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/odin3.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/mangmiairx.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/flip2.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/portal.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rpclassic.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rg34xx.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/xuretroxu20v32.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/pixel2.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/magicxzero40.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="handheld-card" draggable="true">
+            <div class="badge-container"></div>
+            <div class="img-wrapper">
+                <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/f5.png" draggable="false" crossorigin="anonymous">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center mb-6">
+        <p class="text-gray-400 font-bold tracking-wider uppercase text-[10px]">What's yours? Try at</p>
+        <p class="text-white font-bold text-sm tracking-widest">WWW.RYANRETRO.COM/RANKING</p>
+    </div>
+
+    <script>
+        feather.replace();
+        const container = document.getElementById('grid-container');
+        let cards = Array.from(document.querySelectorAll('.handheld-card'));
+        let draggedItem = null;
+
+        function getRankHTML(rank) {
+            if (rank === 1) {
+                return `<div class="rank-medal rank-gold retro-font">#1</div>`;
+            } else if (rank === 2) {
+                return `<div class="rank-medal rank-silver retro-font">#2</div>`;
+            } else if (rank === 3) {
+                return `<div class="rank-medal rank-bronze retro-font">#3</div>`;
+            } else {
+                return `<div class="rank-badge retro-font">#${rank}</div>`;
+            }
+        }
+
+        function refreshRanks() {
+            cards = Array.from(document.querySelectorAll('.handheld-card'));
+            cards.forEach((card, index) => {
+                const rank = index + 1;
+                const badgeContainer = card.querySelector('.badge-container');
+                badgeContainer.innerHTML = getRankHTML(rank);
+            });
+        }
+
+        // Initialize Ranks on Load
+        refreshRanks();
+
+        // --- DRAG AND DROP EVENTS ---
+
+        cards.forEach(card => {
+            addDragEvents(card);
+        });
+
+        function addDragEvents(card) {
+            card.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.opacity = '0.5';
+                }, 0);
+                this.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                    refreshRanks();
+                }, 0);
+            });
+            
+            card.addEventListener('dragover', function(e) {
+                e.preventDefault(); 
+            });
+
+            card.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                if (this !== draggedItem && draggedItem) {
+                    const allCards = Array.from(container.children);
+                    const draggedIndex = allCards.indexOf(draggedItem);
+                    const targetIndex = allCards.indexOf(this);
+                    
+                    if (targetIndex !== -1) {
+                         if (draggedIndex < targetIndex) {
+                            container.insertBefore(draggedItem, this.nextSibling);
+                         } else {
+                            container.insertBefore(draggedItem, this);
+                         }
+                    }
+                }
+            });
+        }
+
+        // Screenshot Logic
+        document.getElementById('share-btn').addEventListener('click', () => {
+            const btn = document.getElementById('share-btn');
+            const originalDisplay = btn.style.display;
+            btn.style.display = 'none'; // Hide button for screenshot
+            
+            // html2canvas config with useCORS to capture external images
+            html2canvas(document.body, {
+                useCORS: true, 
+                allowTaint: true,
+                backgroundColor: '#111827', // Force dark background color just in case
+                scale: 2 // Higher resolution
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'my-handheld-ranking.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.style.display = originalDisplay || 'flex'; // Show button again
+            }).catch(err => {
+                console.error("Screenshot failed:", err);
+                btn.style.display = originalDisplay || 'flex';
+                alert("Could not create image. Security settings on images may be blocking it.");
+            });
+        });
+    </script>
+</body>
+</html>
