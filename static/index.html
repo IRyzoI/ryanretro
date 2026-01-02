@@ -19,7 +19,7 @@
         
         :root {
             /* LIGHT MODE (Default) */
-            --bg-body: #f3f4f6;         /* Light Gray Background */
+            --bg-body: #f3f4f6;          /* Light Gray Background */
             --bg-panel: #e5e7eb;        /* Panel Gray */
             --text-main: #111827;       /* Dark Text */
             --text-muted: #4b5563;
@@ -73,28 +73,53 @@
         body.dark-mode .text-gray-500 { color: #9ca3af !important; }
         body.dark-mode p { color: #d1d5db !important; }
 
-        /* 3. Header & Navigation */
-        body.dark-mode header { background-color: #1f2937 !important; } 
+        /* 3. Header & Navigation (MATCHING RANKING PAGE) */
+        body.dark-mode header#site-header { 
+            background-color: #1f2937 !important; 
+            border-color: #000 !important;
+        } 
         
+        /* Nav Box Logic */
         body.dark-mode #navBox {
             background-color: #374151 !important;
             border-color: #1f2937 !important;
         }
-
         body.dark-mode #navBox .pause-menu-header {
             background-color: #1f2937 !important;
             color: #fff !important;
             border-bottom-color: #000 !important;
         }
 
+        /* Nav Items Dark Mode */
+        body.dark-mode #navBox .nav-item .text-gray-800 {
+            color: #fff !important;
+        }
+        body.dark-mode .nav-item:not(.bg-yellow-400):not(:hover) {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: transparent;
+        }
+        /* Active Home Button in Dark Mode */
+        body.dark-mode .nav-item.bg-yellow-400 {
+            background-color: #facc15 !important;
+            color: #000 !important;
+            border-color: #000 !important;
+        }
+        body.dark-mode .nav-item.bg-yellow-400 span,
+        body.dark-mode .nav-item.bg-yellow-400 i {
+            color: #000 !important;
+        }
+
+        /* Header Buttons Dark Mode */
         body.dark-mode #navToggle {
             background-color: #1f2937 !important;
             color: #fff !important;
+            border-color: #000 !important;
         }
 
-        /* "Find Me" / "Support Me" frames */
+        /* Info Boxes (Find Me / Support Me) Dark Mode */
         body.dark-mode .info-box {
-            background-color: #1f2937 !important; /* Dark Panel Color */
+            background-color: #1f2937 !important;
             color: #fff !important;
             border-color: #000 !important;
         }
@@ -102,21 +127,6 @@
             background-color: #1f2937 !important;
             color: #9ca3af !important;
             border-color: #4b5563 !important;
-        }
-        
-        /* Nav Items (Inactive) */
-        body.dark-mode .nav-item:not(.bg-yellow-400):not(:hover) {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-            border-color: transparent;
-        }
-        /* Nav Items (Hover Borders) */
-        body.dark-mode .nav-item:hover { border-color: #000 !important; }
-        /* Active Home Button */
-        body.dark-mode .nav-item.bg-yellow-400 {
-            background-color: #facc15 !important;
-            color: #000 !important;
-            border-color: #000 !important;
         }
 
         /* 4. JS GENERATED CONTENT OVERRIDES */
@@ -146,6 +156,22 @@
         }
 
         /* --- END DARK MODE --- */
+
+        /* Header specific styles to match ranking page */
+        header#site-header {
+            width: 100%;
+            z-index: 50;
+            background-color: #f3f4f6; /* Default Light Header */
+            border-bottom: 4px solid #9ca3af;
+            padding: 1rem;
+            position: relative; /* Changed from sticky to match ranking page style if needed, or keep sticky */
+        }
+        /* Restore sticky behavior for home page UX if desired, but ranking page uses relative/standard flow usually. 
+           Let's keep sticky for Home Page UX but use ranking styles */
+        header#site-header {
+            position: sticky;
+            top: 0;
+        }
 
         /* Beautiful Custom Scrollbars (Updated to use Variables) */
         .custom-scrollbar {
@@ -241,10 +267,7 @@
 <!-- CRITICAL FIX: Script to prevent White Flash on Dark Mode refresh -->
 <script>
     (function() {
-        // Check local storage immediately
         const savedTheme = localStorage.getItem('theme');
-        // Default to dark mode if no setting found, or if explicitly set to dark
-        // Remove !savedTheme if you want Light Mode to be default for new users
         if (savedTheme === 'dark' || !savedTheme) {
             document.body.classList.add('dark-mode');
         } else {
@@ -253,7 +276,7 @@
     })();
 </script>
 
-<!-- NAVIGATION OVERLAY (Hidden by default) -->
+<!-- NAVIGATION OVERLAY (Identical structure to Ranking Page) -->
 <div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
     <div class="absolute inset-0" onclick="toggleNav()"></div>
     
@@ -267,37 +290,38 @@
         </div>
 
         <div class="flex flex-col gap-1" id="navLinksList">
-            <!-- 1. BENCHMARKS (Green) -->
+            <!-- BENCHMARKS (Green) -->
             <a href="/benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-green-600 cursor-pointer group transition-colors">
                 <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">BENCHMARKS</span>
                 <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
             </a>
 
-            <!-- 2. GOTW (Red) -->
+            <!-- GOTW (Red) -->
             <a href="/gotw" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 cursor-pointer group transition-colors">
                 <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">GOTW</span>
                 <i data-feather="crosshair" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
             </a>
 
-            <!-- 3. HANDHELDS (Sky Blue) -->
+            <!-- HANDHELDS (Sky Blue) -->
             <a href="/handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-sky-500 cursor-pointer group transition-colors">
                 <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">HANDHELDS</span>
                 <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
             </a>
 
-            <!-- 4. HOME (Yellow - Illuminated/Active) -->
+            <!-- HOME (Yellow - Illuminated/Active) -->
+            <!-- Note: Background set to yellow-400, border black to show active state -->
             <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-yellow-400 border-2 border-black cursor-pointer group transition-colors">
                 <span class="retro-font text-[10px] text-black">HOME</span>
                 <i data-feather="home" class="w-4 h-4 text-black"></i>
             </a>
 
-            <!-- 5. PATRONS (Orange) -->
+            <!-- PATRONS (Orange) -->
             <a href="/patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-orange-500 cursor-pointer group transition-colors">
                 <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">PATRONS</span>
                 <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
             </a>
 
-            <!-- 6. STORE (Purple) -->
+            <!-- STORE (Purple) -->
             <a href="/store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-purple-600 cursor-pointer group transition-colors">
                 <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">STORE</span>
                 <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
@@ -308,27 +332,20 @@
 
         <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
              <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
-             <!-- Icon will be set by JS on load -->
              <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
-        </div>
-
-        <div class="mt-1 text-center pb-1">
-            <span class="text-[8px] retro-font text-gray-500">SELECT OPTION</span>
         </div>
     </div>
 </div>
 
-<!-- NEW HEADER (Sticky Nav Bar) -->
-<header class="py-3 md:py-4 shadow-lg transition-colors duration-300 relative z-50 bg-gray-100 border-b-4 border-gray-400">
+<!-- SITE HEADER (Identical structure to Ranking Page) -->
+<header id="site-header">
   <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
     
     <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-        
         <button id="navToggle" class="p-3 bg-white text-black hover:bg-gray-200 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
             <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
             <span class="retro-font text-[10px] hidden md:block">MENU</span>
         </button>
-
         <a href="/" class="flex items-center gap-3 md:gap-4">
             <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
                 class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-400 bg-gray-800" alt="Ryan Retro Logo">
@@ -340,7 +357,6 @@
     </div>
 
     <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto mt-2 md:mt-0">
-      
       <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
         <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
           FIND ME
@@ -358,6 +374,9 @@
            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
               <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
            </a>
+           <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#1877F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Facebook">
+             <i data-feather="facebook" class="w-4 h-4 md:w-5 md:h-5"></i>
+           </a>
            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
              <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
            </a>
@@ -366,7 +385,6 @@
            </a>
         </div>
       </div>
-
       <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
         <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
           SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
