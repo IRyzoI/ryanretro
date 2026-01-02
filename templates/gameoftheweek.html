@@ -1,0 +1,515 @@
+{% extends "layout.html" %}
+
+{% block title %}Game of the Week{% endblock %}
+
+{% block head_styles %}
+<style>
+    /* GAME OF THE WEEK SPECIFIC STYLES */
+    :root {
+        /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
+        --gb-grey: #e0e0e0;
+        --gb-dark-grey: #c4c4c4;
+        --gb-shadow: #9e9e9e;
+        --gb-highlight: #ffffff;
+        --gb-accent: #6b7280;
+    }
+
+    /* DARK MODE VARIABLES OVERRIDE FOR THIS PAGE */
+    body.dark-mode {
+        --gb-grey: #4b5563;         /* Gray 600 */
+        --gb-dark-grey: #111827;    /* Gray 900 */
+        --gb-shadow: #000000;       
+        --gb-highlight: rgba(255,255,255,0.15);
+        --gb-accent: #9ca3af;
+    }
+
+    /* Background Overlay Pattern */
+    .bg-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* Scanlines for the monitor effect */
+    .scanlines { position: relative; overflow: hidden; }
+    .scanlines::after {
+        content: " "; display: block; position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        z-index: 2; background-size: 100% 2px, 3px 100%; pointer-events: none;
+    }
+
+    /* Flip Button Styles (Specific to GOTW Archive) */
+    .flip-container { perspective: 1000px; width: 100%; height: 40px; margin-top: auto; }
+    .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
+    .flip-container.flipped .flip-inner { transform: rotateX(180deg); }
+    .flip-front, .flip-back {
+        position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+        display: flex; align-items: center; justify-content: center; border-radius: 0.25rem;
+    }
+    .flip-front { z-index: 2; }
+    .flip-back {
+        transform: rotateX(180deg); background-color: #dc2626; color: white;
+        font-size: 0.65rem; border: 1px solid #991b1b;
+    }
+
+    /* Carousel Styles */
+    .carousel-container { position: relative; width: 100%; height: 100%; overflow: hidden; }
+    .carousel-slide { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; animation: fadeIn 0.5s; }
+    .carousel-slide.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    /* Custom Scrollbar for Modal */
+    .modal-scroll::-webkit-scrollbar { width: 8px; }
+    .modal-scroll::-webkit-scrollbar-track { background: #111827; border-radius: 4px; }
+    .modal-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; border: 2px solid #111827; }
+    .modal-scroll::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+    /* Header Container Responsiveness */
+    @media (max-width: 768px) { .header-container { flex-direction: column; gap: 0.25rem; } }
+    [v-cloak] { display: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-overlay"></div>
+
+<div id="app" v-cloak>
+
+  <main class="container mx-auto px-4 py-4 md:py-6">
+    
+    <div class="text-center mb-6" data-aos="fade-down">
+        <span class="bg-red-600 text-white px-3 py-1 rounded retro-font text-xs mb-4 inline-block pixel-border">
+            SEASON 1 • WEEK 1
+        </span>
+        <h1 class="retro-font text-3xl md:text-5xl text-yellow-400 mt-2 text-shadow tracking-tight leading-normal">
+            GAME OF THE WEEK
+        </h1>
+        <p class="text-gray-400 mt-4 max-w-2xl lg:max-w-5xl mx-auto text-sm md:text-base">
+            Every week we play a retro classic together. Join the community, vote for the next title, and share your high scores!
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+        
+        <div class="lg:col-span-3 order-2 lg:order-1 flex flex-col justify-start" data-aos="fade-right" data-aos-delay="100">
+            <div class="bg-gray-800 p-6 rounded-lg pixel-border text-center opacity-70 hover:opacity-100 transition-opacity duration-300 border border-gray-700 hover:border-gray-500 h-full flex flex-col">
+                <h3 class="retro-font text-[10px] text-gray-400 mb-4 tracking-widest">LAST WEEK</h3>
+                
+                <div class="relative w-3/4 mx-auto aspect-[3/4] mb-4 bg-black rounded overflow-hidden shadow-lg group">
+                    <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png')] bg-cover bg-center blur-sm opacity-50 scale-110"></div>
+                    <img src="https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png" 
+                         alt="Last Week Game" class="relative z-10 w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-20 pointer-events-none"></div>
+                </div>
+                
+                <h4 class="retro-font text-sm text-white mb-1">Zelda: Minish Cap</h4>
+                <p class="text-xs text-gray-500 mb-4">GBA • 2004</p>
+                
+                <div class="flip-container mt-auto" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-inner">
+                        <div class="flip-front bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-300 text-xs retro-font">
+                            VIEW ARCHIVE
+                        </div>
+                        <div class="flip-back retro-font">
+                            BUTTON UNDER CONSTRUCTION 🚧
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="lg:col-span-6 order-1 lg:order-2" data-aos="zoom-in">
+            <div class="bg-gray-800 rounded-xl pixel-border overflow-hidden relative border-t-4 border-yellow-500 shadow-[0_0_50px_-12px_rgba(234,179,8,0.2)]">
+                <div class="absolute inset-0 bg-[url('https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png')] bg-cover bg-center opacity-10 blur-md pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-gray-900/80 via-gray-900/95 to-gray-900 pointer-events-none"></div>
+
+                <div class="p-6 md:p-8 relative z-10 flex flex-col md:flex-row lg:flex-col xl:flex-row items-center gap-6 md:gap-8 h-full">
+                    
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 flex-shrink-0 flex flex-col items-center">
+                        <a href="https://en.wikipedia.org/wiki/Monster_Boy_and_the_Cursed_Kingdom" target="_blank" class="block mx-auto w-48 md:w-64 lg:w-56 xl:w-64 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500 cursor-pointer group">
+                            <div class="pixel-border rounded-lg overflow-hidden scanlines bg-black relative">
+                                <img src="https://cdn.mobygames.com/covers/8962211-monster-boy-and-the-cursed-kingdom-nintendo-switch-front-cover.png" 
+                                     alt="Monster Boy and the Cursed Kingdom" class="w-full h-auto block">
+                            </div>
+                        </a>
+                        
+                        <button @click="showHandheldModal = true" class="mt-4 w-48 md:w-64 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[4px_4px_0_0_rgba(0,0,0,0.5)] transition-all">
+                            <i data-feather="smartphone" class="w-4 h-4"></i>
+                            <span>HANDHELDS</span>
+                        </button>
+                    </div>
+
+                    <div class="w-full md:w-1/2 lg:w-full xl:w-1/2 text-center md:text-left lg:text-center xl:text-left flex flex-col justify-center">
+                        <h2 class="retro-font text-xl md:text-2xl text-white mb-4 leading-snug">
+                            MONSTER BOY AND THE CURSED KINGDOM
+                        </h2>
+                        
+                        <div class="flex flex-wrap justify-center md:justify-start lg:justify-center xl:justify-start gap-2 mb-6">
+                            <span class="bg-blue-900/50 text-blue-200 border border-blue-800 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">MODERN RETRO</span>
+                            <span class="bg-purple-900/50 text-purple-200 border border-purple-800 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">ACTION ADVENTURE</span>
+                            <span class="bg-gray-800 text-gray-400 border border-gray-700 px-3 py-1 rounded text-[10px] md:text-xs font-bold tracking-wide">2018</span>
+                        </div>
+
+                        <div class="flex justify-center md:justify-start lg:justify-center xl:justify-start gap-4 mb-8 text-gray-400">
+                            <div class="group relative cursor-pointer hover:text-red-500 transition-colors">
+                                <i data-feather="tv" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-blue-500 transition-colors">
+                                <i data-feather="monitor" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">PS4 / PS5</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-green-500 transition-colors">
+                                <i data-feather="box" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Xbox</span>
+                            </div>
+                            <div class="group relative cursor-pointer hover:text-cyan-400 transition-colors">
+                                <i data-feather="hard-drive" class="w-5 h-5"></i>
+                                <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Windows PC</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-black/60 p-4 rounded-lg border border-gray-700 mb-0 backdrop-blur-sm w-full">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-[10px] font-bold text-red-400 uppercase tracking-widest flex items-center">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                                    Time Remaining
+                                </span>
+                                <span id="timer-text" class="retro-font text-yellow-400 text-xs tabular-nums">--:--:--</span>
+                            </div>
+                            
+                            <div class="w-full bg-gray-900 h-6 rounded-full border border-gray-600 relative overflow-hidden">
+                                <div id="progress-bar" class="h-full bg-gradient-to-r from-red-600 to-yellow-500 w-0 transition-all duration-1000 ease-linear relative">
+                                    <div class="absolute inset-0 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjIHFBmlpYWIDphIkCVAAAddQj/6W1NQQAAAABJRU5ErkJggg==')] opacity-20"></div>
+                                </div>
+                            </div>
+                            
+                            <p class="text-[10px] text-gray-500 mt-2 text-right">Next game: Monday 00:00 GMT</p>
+                        </div>
+                        
+                        <a href="https://ryan-retro.link/gotw" target="_blank" rel="noopener noreferrer" 
+                           class="mt-4 group relative w-full block bg-[#5865F2] hover:bg-[#4752C4] text-white pixel-border rounded transition-all duration-200 hover:-translate-y-1 active:translate-y-0 shadow-[4px_4px_0_0_rgba(0,0,0,0.3)]">
+                            <div class="p-3 flex items-center justify-between relative z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-black/20 p-2 rounded group-hover:bg-black/30 transition-colors">
+                                        <i data-feather="message-circle" class="w-5 h-5"></i>
+                                    </div>
+                                    <div class="flex flex-col items-start text-left">
+                                        <span class="text-[8px] uppercase tracking-widest font-bold opacity-80 mb-0.5">Patrons Only</span>
+                                        <span class="retro-font text-[10px] md:text-xs">JOIN THE CONVERSATION</span>
+                                    </div>
+                                </div>
+                                <i data-feather="arrow-right" class="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-3 order-3 flex flex-col justify-start" data-aos="fade-left" data-aos-delay="200">
+            <div class="bg-gray-800 p-6 rounded-lg pixel-border text-center border border-gray-700 flex flex-col h-full relative group/card">
+                <h3 class="retro-font text-[10px] text-blue-400 mb-4 tracking-widest">VOTE: NEXT WEEK</h3>
+                
+                <div id="vote-carousel" class="flex-grow w-full relative mb-4">
+    
+                    <div class="carousel-slide active" data-game="Golf Story">
+                        <a href="https://en.wikipedia.org/wiki/Golf_Story" target="_blank" rel="noopener noreferrer" 
+                           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+                            <img src="https://m.media-amazon.com/images/M/MV5BYjI2Y2JhZDMtMDRhZC00YjZmLWE2MTctYjFiY2M4MmVlNTQ3XkEyXkFqcGc@._V1_.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">GOLF STORY</div>
+                        </a>
+                        <p class="text-[10px] text-gray-400 mb-2">Sports/RPG • 2017</p>
+                        <div class="flex justify-center gap-3 text-gray-500">
+                            <div class="group/icon relative cursor-pointer hover:text-red-500 transition-colors">
+                                <i data-feather="tv" class="w-4 h-4"></i>
+                                <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/icon:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none border border-gray-700">Nintendo Switch</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-slide" data-game="Megabonk">
+                        <a href="https://en.wikipedia.org/wiki/Megabonk" target="_blank" rel="noopener noreferrer" 
+                           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzG2QDyhRyjx7n2O4eYEh5-_QC__Id9eFe3EH4dta4lcvO7O8KILuEyDt0soUyvA2bYiwNJg&s=10" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">MEGABONK</div>
+                        </a>
+                        <p class="text-[10px] text-gray-400 mb-2">Roguelike • 2025</p>
+                        <div class="flex justify-center gap-3 text-gray-500">
+                            <div class="group/icon relative cursor-pointer hover:text-cyan-400 transition-colors">
+                                <i data-feather="hard-drive" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-slide" data-game="Gris">
+                        <a href="https://en.wikipedia.org/wiki/Gris" target="_blank" rel="noopener noreferrer" 
+                           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+                            <img src="https://image.api.playstation.com/vulcan/ap/rnd/202211/1801/PMjvy3y1p6gkPsBwCUuaFnfv.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">GRIS</div>
+                        </a>
+                        <p class="text-[10px] text-gray-400 mb-2">Platformer • 2018</p>
+                        <div class="flex justify-center gap-3 text-gray-500">
+                            <i data-feather="tv" class="w-4 h-4 hover:text-red-500"></i>
+                            <i data-feather="monitor" class="w-4 h-4 hover:text-blue-500"></i>
+                            <i data-feather="hard-drive" class="w-4 h-4 hover:text-cyan-400"></i>
+                        </div>
+                    </div>
+
+                    <div class="carousel-slide" data-game="Mega Man X">
+                        <a href="https://en.wikipedia.org/wiki/Mega_Man_X_%28video_game%29" target="_blank" rel="noopener noreferrer" 
+                           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg group cursor-pointer hover:border-blue-400 transition-colors">
+                            <img src="https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png" 
+                                 class="relative z-10 w-full h-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font z-20">MEGA MAN X</div>
+                        </a>
+                        <p class="text-[10px] text-gray-400 mb-2">Action • 1993</p>
+                        <div class="flex justify-center gap-3 text-gray-500">
+                            <i data-feather="tv" class="w-4 h-4 hover:text-red-500"></i>
+                            <i data-feather="hard-drive" class="w-4 h-4 hover:text-cyan-400"></i>
+                        </div>
+                    </div>
+
+                    <div class="carousel-slide" data-game="Sonic the Hedgehog 2">
+                        <a href="https://en.wikipedia.org/wiki/Sonic_the_Hedgehog_2" target="_blank" rel="noopener noreferrer" 
+                           class="block w-3/4 mx-auto aspect-[3/4] bg-black rounded border-2 border-gray-700 overflow-hidden mb-3 relative shadow-lg cursor-pointer hover:border-blue-400 transition-colors">
+                            <img src="https://upload.wikimedia.org/wikipedia/en/0/0c/Sonic_2_US_Cover.jpg" class="w-full h-full object-cover opacity-80 group-hover/card:opacity-100 transition-opacity">
+                            <div class="absolute bottom-0 left-0 right-0 bg-black/70 p-2 text-[10px] text-white font-bold retro-font">SONIC 2</div>
+                        </a>
+                        <p class="text-[10px] text-gray-400 mb-2">Platformer • 1992</p>
+                        <div class="flex justify-center gap-3 text-gray-500">
+                            <i data-feather="tv" class="w-4 h-4 hover:text-gray-300"></i>
+                            <i data-feather="smartphone" class="w-4 h-4 hover:text-purple-400"></i>
+                        </div>
+                    </div>
+
+                    <button class="absolute top-1/2 left-0 -translate-y-1/2 -ml-2 bg-black/50 hover:bg-black text-white p-1 rounded-full border border-gray-600 z-10" onclick="window.changeSlide(-1)">
+                        <i data-feather="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <button class="absolute top-1/2 right-0 -translate-y-1/2 -mr-2 bg-black/50 hover:bg-black text-white p-1 rounded-full border border-gray-600 z-10" onclick="window.changeSlide(1)">
+                        <i data-feather="chevron-right" class="w-4 h-4"></i>
+                    </button>
+
+                </div>
+
+                <div class="bg-orange-900/20 border border-orange-500/30 p-4 rounded mt-auto">
+                    <p class="text-[10px] text-orange-200 mb-3 leading-relaxed">
+                        Patrons vote on next week's game!
+                    </p>
+                    <a href="https://patreon.com/ryanretro" target="_blank" 
+                       class="block w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded pixel-btn retro-font text-[10px] flex items-center justify-center">
+                        <i data-feather="check-circle" class="mr-2 w-3 h-3"></i> VOTE FOR THIS
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+  </main>
+
+  <div v-if="showHandheldModal" class="fixed inset-0 z-50 flex items-center justify-center p-4" aria-modal="true" role="dialog">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" @click="showHandheldModal = false"></div>
+    
+    <div class="relative bg-gray-800 rounded-lg pixel-border border-4 border-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto z-10 shadow-2xl animate-fade-in-up modal-scroll">
+        
+        <div class="bg-gray-900 p-4 border-b-4 border-black flex justify-between items-center sticky top-0 z-20">
+            <h2 class="retro-font text-yellow-400 text-sm md:text-lg flex items-center gap-2">
+                <i data-feather="smartphone" class="w-5 h-5"></i>
+                HANDHELD SELECTOR
+            </h2>
+            <button @click="showHandheldModal = false" class="text-gray-400 hover:text-white transition-colors">
+                <i data-feather="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div class="p-5 md:p-6 space-y-6">
+            
+            <section>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-2 h-8 bg-blue-500 rounded"></div>
+                    <h3 class="retro-font text-white text-xs md:text-sm">RYAN'S RECOMMENDED HANDHELDS</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                    <div v-for="device in recommendedHandhelds" :key="device.name" class="bg-gray-900 p-4 rounded border border-gray-700 hover:border-blue-500 transition-colors group flex flex-col h-full">
+                        <div class="bg-black/50 rounded p-2 mb-3 aspect-square flex items-center justify-center relative overflow-hidden border border-gray-800">
+                            <img :src="device.heroImg" :alt="device.name" class="w-full h-auto object-contain max-h-full transition-transform group-hover:scale-110">
+                        </div>
+                        <h4 class="retro-font text-[9px] md:text-[10px] text-gray-300 text-center mb-1 leading-tight">{{ device.name }}</h4>
+                        <div class="mt-auto pt-3">
+                             <a :href="device.affiliateHref" target="_blank" class="block w-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] py-2 px-2 rounded text-center retro-font transition-colors pixel-btn">
+                                VIEW INFO
+                             </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-gradient-to-r from-gray-900 to-gray-800 rounded-xl p-1 pixel-border border-yellow-500/50">
+                <div class="bg-black/40 p-6 md:p-8 rounded-lg">
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="w-full md:w-1/2 flex justify-center order-2 md:order-1">
+                            <div class="relative w-full max-w-sm">
+                                <div class="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full animate-pulse"></div>
+                                <img :src="ryansChoice.heroImg" :alt="ryansChoice.name" class="relative z-10 w-full h-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                            </div>
+                        </div>
+                        
+                        <div class="w-full md:w-1/2 text-center md:text-left order-1 md:order-2">
+                            <div class="inline-block bg-yellow-500 text-black px-3 py-1 rounded retro-font text-[10px] mb-3 font-bold">
+                                ★ RYAN'S CHOICE
+                            </div>
+                            <h3 class="retro-font text-xl md:text-3xl text-white mb-2">{{ ryansChoice.name }}</h3>
+                            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                                This is the handheld I'm personally using to play this week's game. It offers the perfect balance of performance and comfort for this title.
+                            </p>
+                            
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <a :href="ryansChoice.affiliateHref" target="_blank" class="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn">
+                                    <i data-feather="shopping-bag" class="w-4 h-4"></i>
+                                    GRAB YOURS
+                                </a>
+                                <a :href="ryansChoice.videosLinkHref" target="_blank" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-3 px-6 rounded retro-font text-xs flex items-center justify-center gap-2 pixel-btn">
+                                    <i data-feather="youtube" class="w-5 h-5 text-white"></i>
+                                    WATCH VIDEOS
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<script>
+    // --- CAROUSEL LOGIC ---
+    let currentSlide = 0;
+    
+    // Explicitly attach to window
+    window.changeSlide = function(direction) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        if(!slides.length) return;
+        const totalSlides = slides.length;
+        
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+        slides[currentSlide].classList.add('active');
+        
+        // Refresh icons
+        setTimeout(() => { if(window.feather) feather.replace(); }, 50);
+    }
+
+    // --- VUE APP ---
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                showHandheldModal: false,
+                recommendedHandhelds: [
+                    { name: "Retroid Pocket 5", heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png", affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT" },
+                    { name: "Retroid Pocket G2", heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png", affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT" },
+                    { name: "Ayaneo Konkr Pocket Fit", heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkr-pocket-fit-3.jpg", affiliateHref: "https://www.indiegogo.com/projects/pocket-fit-premier-hi-performance-android-handheld/x/38203815#/" },
+                    { name: "Odin 3", heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png", affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td" }
+                ],
+                ryansChoice: {
+                    name: "Odin 3",
+                    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
+                    affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
+                    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin 3"
+                }
+            }
+        },
+        watch: {
+            showHandheldModal(newVal) {
+                if (newVal) {
+                    document.body.style.overflow = 'hidden';
+                    this.$nextTick(() => { if(window.feather) feather.replace(); });
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
+        },
+        mounted() {
+            // Feather is already initialized in layout, but safe to re-run
+            if(window.feather) feather.replace();
+            
+            this.initTimer();
+            this.initCarouselSwipe();
+        },
+        methods: {
+            initTimer() {
+                const timerText = document.getElementById('timer-text');
+                const progressBar = document.getElementById('progress-bar');
+                if(!timerText || !progressBar) return;
+
+                const update = () => {
+                    const now = new Date();
+                    const prevMonday = new Date(now);
+                    const day = prevMonday.getUTCDay(); 
+                    const diff = prevMonday.getUTCDate() - day + (day === 0 ? -6 : 1); 
+                    prevMonday.setUTCDate(diff);
+                    prevMonday.setUTCHours(0,0,0,0);
+
+                    if (prevMonday > now) prevMonday.setUTCDate(prevMonday.getUTCDate() - 7);
+                    
+                    const nextMonday = new Date(prevMonday);
+                    nextMonday.setUTCDate(prevMonday.getUTCDate() + 7);
+
+                    const totalDuration = nextMonday - prevMonday;
+                    const timeElapsed = now - prevMonday;
+                    const timeRemaining = nextMonday - now;
+
+                    if (timeRemaining <= 0) {
+                        timerText.innerText = "STARTING SOON...";
+                        progressBar.style.width = "100%";
+                        return;
+                    }
+
+                    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+                    
+                    const pad = (n) => n < 10 ? '0'+n : n;
+                    timerText.innerText = `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+                    const pct = Math.min(100, Math.max(0, (timeElapsed / totalDuration) * 100));
+                    progressBar.style.width = `${pct}%`;
+                }
+                update();
+                setInterval(update, 1000); 
+            },
+            initCarouselSwipe() {
+                const container = document.getElementById('vote-carousel');
+                if(!container) return;
+                let touchstartX = 0;
+                let touchendX = 0;
+
+                container.addEventListener('touchstart', e => {
+                    touchstartX = e.changedTouches[0].screenX;
+                });
+
+                container.addEventListener('touchend', e => {
+                    touchendX = e.changedTouches[0].screenX;
+                    if (touchendX < touchstartX - 50) window.changeSlide(1);
+                    if (touchendX > touchstartX + 50) window.changeSlide(-1);
+                });
+            }
+        }
+    }).mount('#app');
+</script>
+{% endblock %}
