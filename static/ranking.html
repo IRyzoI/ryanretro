@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro - Ranking Transition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-dark: #111827;
+            --text-main: #d1d5db;
+            --accent-yellow: #facc15; 
+            --card-width: 350px;
+            --gap: 4rem; 
+            --timeline-top: 85%;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .retro-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        /* The horizontal track line */
+        .timeline-track {
+            position: absolute;
+            top: var(--timeline-top);
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            z-index: 0;
+        }
+
+        /* Container for the handhelds */
+        .handheld-container {
+            display: flex;
+            align-items: flex-end;
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% - var(--timeline-top)); 
+            gap: var(--gap);
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateX(100vw); 
+            z-index: 10;
+        }
+
+        /* Individual Card Style */
+        .handheld-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+            width: var(--card-width); 
+            flex-shrink: 0;
+            padding-bottom: 20px;
+            transform-origin: center center; 
+            cursor: grab; /* Indicate draggable */
+        }
+        
+        .handheld-card:active {
+            cursor: grabbing;
+        }
+
+        .handheld-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.9);
+            filter: grayscale(100%);
+        }
+
+        /* Badge Container to hold swapped badges */
+        .badge-container {
+            min-height: 100px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        /* BASE RANK BADGE (15-4) */
+        .rank-badge {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 4px solid #000;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.5);
+            transform: skew(-5deg); 
+            z-index: 20;
+            font-weight: bold;
+            background-color: var(--accent-yellow);
+            color: #000;
+        }
+
+        /* MEDAL STYLE (3, 2 & 1) */
+        .rank-medal {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #000;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+            z-index: 20;
+            position: relative;
+        }
+        
+        .rank-medal::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 40px;
+            height: 20px;
+            background: #ef4444; 
+            z-index: -1;
+            border: 2px solid #000;
+        }
+
+        /* Bronze */
+        .rank-bronze {
+            background: linear-gradient(135deg, #e6ac78 0%, #cd7f32 50%, #8c531b 100%);
+            color: #fff;
+            text-shadow: 2px 2px 0 #5c3a1e;
+        }
+
+        /* Silver */
+        .rank-silver {
+            background: linear-gradient(135deg, #f3f4f6 0%, #9ca3af 50%, #4b5563 100%);
+            color: #fff;
+            text-shadow: 2px 2px 0 #374151;
+        }
+
+        /* Gold (#1) */
+        .rank-gold {
+            background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #d97706 100%);
+            color: #fff;
+            text-shadow: 2px 2px 0 #b45309;
+        }
+
+        /* The Image Wrapper */
+        .img-wrapper {
+            height: 250px;
+            display: flex;
+            align-items: center; 
+            justify-content: center;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+            transition: filter 0.8s ease, opacity 0.8s ease;
+            pointer-events: none; /* Let clicks pass through to card for dragging */
+        }
+
+        .img-wrapper img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* --- ANIMATION STATES --- */
+
+        .handheld-card.inactive {
+            transform: scale(0.8);
+            z-index: 10;
+        }
+        
+        .handheld-card.inactive .img-wrapper {
+            opacity: 0.5; 
+            filter: blur(15px) grayscale(100%) contrast(1.5); 
+        }
+
+        .handheld-card.inactive.revealed .img-wrapper {
+            opacity: 0.7; 
+            filter: blur(0) grayscale(0); 
+        }
+
+        .handheld-card.mystery-target {
+            transform: scale(0.95); 
+            z-index: 50;
+        }
+
+        .handheld-card.mystery-target .img-wrapper {
+            filter: blur(25px) grayscale(100%) brightness(0.6); 
+        }
+
+        .handheld-card.active {
+            transform: scale(1.15); 
+            z-index: 60;
+        }
+        
+        .handheld-card.active .img-wrapper {
+            filter: blur(0) grayscale(0);
+            opacity: 1;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4));
+        }
+
+        .float-slow { animation: float 6s ease-in-out infinite; }
+        .float-med  { animation: float 5s ease-in-out infinite; animation-delay: 0.5s; }
+        .float-fast { animation: float 7s ease-in-out infinite; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floater { 
+            width: 100%; 
+            display:flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="absolute inset-0 opacity-5 pointer-events-none" 
+         style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
+
+    <div class="timeline-track"></div>
+
+    <div class="handheld-container" id="main-container">
+        
+        <!-- RANK 15: QRD Vortex F5 -->
+        <div class="handheld-card mystery-target" draggable="true" data-initial-rank="15">
+            <div class="floater float-slow">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-3xl">#15</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/f5.png" alt="Rank 15" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 14: MagicX Zero 40 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="14">
+            <div class="floater float-med">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#14</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/magicxzero40.png" alt="Rank 14" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 13: GKD Pixel 2 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="13">
+            <div class="floater float-fast">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#13</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/pixel2.png" alt="Rank 13" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 12: XuRetro XU20 V32 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="12">
+            <div class="floater float-slow">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#12</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/xuretroxu20v32.png" alt="Rank 12" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 11: Anbernic RG34XX -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="11">
+            <div class="floater float-med">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#11</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rg34xx.png" alt="Rank 11" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 10: Retroid Pocket Classic -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="10">
+            <div class="floater float-fast">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#10</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rpclassic.png" alt="Rank 10" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 9: Odin 2 Portal -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="9">
+            <div class="floater float-slow">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#9</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/portal.png" alt="Rank 9" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 8: Retroid Pocket Flip 2 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="8">
+            <div class="floater float-med">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#8</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/flip2.png" alt="Rank 8" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 7: Mangmi Air X -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="7">
+            <div class="floater float-fast">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#7</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/mangmiairx.png" alt="Rank 7" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 6: Odin 3 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="6">
+            <div class="floater float-slow">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#6</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/odin3.png" alt="Rank 6" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 5: Retroid Pocket Mini -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="5">
+            <div class="floater float-med">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#5</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rpmini.png" alt="Rank 5" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 4: Retroid Pocket G2 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="4">
+            <div class="floater float-fast">
+                <div class="badge-container">
+                    <div class="rank-badge retro-font text-2xl">#4</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rpg2.png" alt="Rank 4" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 3: Retroid Pocket 5 -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="3">
+            <div class="floater float-slow">
+                <div class="badge-container">
+                    <div class="rank-medal rank-bronze retro-font text-2xl">#3</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/rp5.png" alt="Rank 3" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 2: Konkr Pocket Fit -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="2">
+            <div class="floater float-med">
+                <div class="badge-container">
+                    <div class="rank-medal rank-silver retro-font text-2xl">#2</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/konkr.png" alt="Rank 2" draggable="false">
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK 1: TrimUI Brick -->
+        <div class="handheld-card inactive" draggable="true" data-initial-rank="1">
+            <div class="floater float-fast">
+                <div class="badge-container">
+                    <div class="rank-medal rank-gold retro-font text-3xl">#1</div>
+                </div>
+                <div class="img-wrapper">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/carousel/brick.png" alt="Rank 1" draggable="false">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('main-container');
+        let cards = Array.from(document.querySelectorAll('.handheld-card'));
+        
+        const CARD_WIDTH = 350;
+        const GAP = 64; 
+        const HALF_CARD = CARD_WIDTH / 2;
+        const TOTAL_ITEM_WIDTH = CARD_WIDTH + GAP;
+
+        let currentIndex = 0;
+        let revealStates = new Array(cards.length).fill(false);
+
+        // --- VISUAL UPDATE LOGIC ---
+
+        function getRankHTML(rank) {
+            // Helper to generate correct HTML for each rank style
+            if (rank === 1) {
+                return `<div class="rank-medal rank-gold retro-font text-3xl">#1</div>`;
+            } else if (rank === 2) {
+                return `<div class="rank-medal rank-silver retro-font text-2xl">#2</div>`;
+            } else if (rank === 3) {
+                return `<div class="rank-medal rank-bronze retro-font text-2xl">#3</div>`;
+            } else {
+                return `<div class="rank-badge retro-font text-2xl">#${rank}</div>`;
+            }
+        }
+
+        function refreshRanks() {
+            // Re-fetch cards from DOM as order might have changed due to DnD
+            cards = Array.from(document.querySelectorAll('.handheld-card'));
+            
+            // Loop through DOM order. Index 0 = Rank 15. Index 14 = Rank 1.
+            const total = cards.length;
+            cards.forEach((card, index) => {
+                const rank = total - index; // 15 - 0 = 15; 15 - 14 = 1
+                const badgeContainer = card.querySelector('.badge-container');
+                badgeContainer.innerHTML = getRankHTML(rank);
+            });
+        }
+
+        function updateCarousel() {
+            const offsetX = -HALF_CARD - (currentIndex * TOTAL_ITEM_WIDTH);
+            container.style.transform = `translateX(${offsetX}px)`;
+
+            cards.forEach((card, index) => {
+                card.classList.remove('active', 'mystery-target', 'inactive', 'revealed');
+                
+                // We need to map the reveal states to the CURRENT DOM order
+                // Note: revealStates tracks by index position (0=Leftmost, 14=Rightmost)
+                // So if we swapped cards, the reveal state for that SLOT applies to whatever card is there.
+                
+                if (revealStates[index]) {
+                    card.classList.add('revealed');
+                }
+
+                if (index === currentIndex) {
+                    if (revealStates[index]) {
+                        card.classList.add('active');
+                    } else {
+                        card.classList.add('mystery-target');
+                    }
+                } else {
+                    card.classList.add('inactive');
+                }
+            });
+        }
+
+        // --- DRAG AND DROP LOGIC ---
+        
+        let draggedItem = null;
+        let placeholder = document.createElement('div');
+        placeholder.className = 'handheld-card placeholder';
+        placeholder.style.width = '350px';
+        placeholder.style.flexShrink = '0';
+        placeholder.style.visibility = 'hidden';
+
+        cards.forEach(card => {
+            addDragEvents(card);
+        });
+
+        function addDragEvents(card) {
+            card.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                setTimeout(() => {
+                    this.style.display = 'none';
+                    // We can insert a placeholder if we want, or just let gap close
+                    // container.insertBefore(placeholder, this.nextSibling);
+                }, 0);
+                this.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', function() {
+                setTimeout(() => {
+                    this.style.display = 'flex';
+                    this.classList.remove('dragging');
+                    draggedItem = null;
+                    
+                    // Re-calculate everything
+                    refreshRanks();
+                    updateCarousel();
+                }, 0);
+            });
+            
+            card.addEventListener('dragover', function(e) {
+                e.preventDefault(); // Allow drop
+            });
+
+            card.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+                if (this !== draggedItem) {
+                    // Logic to swap visually
+                    // Get all children of container
+                    const siblings = Array.from(container.querySelectorAll('.handheld-card:not(.dragging)'));
+                    // Find where we are hovering
+                    let target = this;
+                    
+                    // Simple swap logic: Insert dragged item before or after target
+                    // To do this right, we need to compare indices
+                    const draggedIndex = cards.indexOf(draggedItem);
+                    const targetIndex = cards.indexOf(target);
+                    
+                    if (targetIndex !== -1) {
+                         if (draggedIndex < targetIndex) {
+                            container.insertBefore(draggedItem, target.nextSibling);
+                         } else {
+                            container.insertBefore(draggedItem, target);
+                         }
+                         // Update local array reference to match DOM immediately for smoother interaction
+                         cards = Array.from(document.querySelectorAll('.handheld-card'));
+                    }
+                }
+            });
+        }
+
+
+        // --- CAROUSEL CONTROLS ---
+
+        function toggleReveal() {
+            revealStates[currentIndex] = !revealStates[currentIndex];
+            updateCarousel(); 
+        }
+
+        function hideCurrent() {
+            revealStates[currentIndex] = false;
+            updateCarousel();
+        }
+
+        function moveRight() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        }
+
+        function moveLeft() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                refreshRanks(); // Ensure ranks match DOM
+                updateCarousel();
+            }, 100);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    toggleReveal();
+                    break;
+                case 'ArrowRight':
+                    moveRight();
+                    break;
+                case 'ArrowLeft':
+                    moveLeft();
+                    break;
+                case 'KeyR':
+                    hideCurrent();
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
