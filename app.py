@@ -489,16 +489,54 @@ def admin_seed_data(request: Request, force: int = 0, token: str = ""):
 # --------------------------------------------------------------------------------------
 # Page Routes & Static
 # --------------------------------------------------------------------------------------
-@app.get("/patrons", response_class=FileResponse)
-def patrons_page():
-    return FileResponse(os.path.join(REPO_DIR, "static", "patrons.html"))
 
-@app.get("/gameoftheweek", response_class=FileResponse)
-@app.get("/gotw", response_class=FileResponse)
-def game_of_the_week_page():
-    p = os.path.join(REPO_DIR, "static", "gameoftheweek.html")
-    return FileResponse(p) if os.path.exists(p) else HTMLResponse("<h1>Not Found</h1>", 404)
+# 1. Initialize Templates (Do this before defining routes that use it)
+templates = Jinja2Templates(directory="templates")
 
+# 2. Define Main Routes (Using Templates)
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("index.html", {
+        "request": request, 
+        "active_page": "home"
+    })
+
+@app.get("/handheld", response_class=HTMLResponse)
+async def handheld_page(request: Request):
+    return templates.TemplateResponse("handheld.html", {
+        "request": request, 
+        "active_page": "handheld"
+    })
+
+@app.get("/patrons", response_class=HTMLResponse)
+async def patrons_page(request: Request):
+    return templates.TemplateResponse("patrons.html", {
+        "request": request, 
+        "active_page": "patrons"
+    })
+
+@app.get("/gameoftheweek", response_class=HTMLResponse)
+@app.get("/gotw", response_class=HTMLResponse)
+async def gotw_page(request: Request):
+    return templates.TemplateResponse("gotw.html", {
+        "request": request, 
+        "active_page": "gotw"
+    })
+
+# 3. Define Static Pages (Not yet converted)
+@app.get("/benchmarks", response_class=FileResponse)
+def benchmarks_page(): 
+    return FileResponse(os.path.join(REPO_DIR, "static", "benchmarks.html"))
+
+@app.get("/store", response_class=FileResponse)
+def store_page(): 
+    return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
+
+@app.get("/ranking", response_class=FileResponse)
+def ranking_page(): 
+    return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
+
+# 4. Helper Routes (Guides)
 @app.get("/guides/{slug}", response_class=HTMLResponse)
 def serve_guide(slug: str):
     md_path = os.path.join("guides", f"{slug}.md")
@@ -506,60 +544,15 @@ def serve_guide(slug: str):
         return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
     with open(md_path, "r", encoding="utf-8") as f: content = f.read()
     html = markdown.markdown(content, extensions=["fenced_code", "tables"])
-    return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>{slug}</title>
+    # Simple wrapper for Markdown content
+    return f"""
+    <!DOCTYPE html><html><head><meta charset="utf-8"><title>{slug}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    </head><body class="bg-gray-900 text-white p-8"><article class="prose prose-invert mx-auto">{html}</article></body></html>"""
+    <style>body {{ background: #111827; color: white; }} a {{ color: #facc15; }}</style>
+    </head><body class="p-8"><article class="prose prose-invert mx-auto">{html}</article></body></html>
+    """
 
-@app.get("/", response_class=FileResponse)
-def root(): return FileResponse(os.path.join(REPO_DIR, "static", "index.html"))
-
-@app.get("/handheld", response_class=FileResponse)
-def handheld_page(): return FileResponse(os.path.join(REPO_DIR, "static", "handheld.html"))
-
-@app.get("/benchmarks", response_class=FileResponse)
-def benchmarks_page(): return FileResponse(os.path.join(REPO_DIR, "static", "benchmarks.html"))
-
-@app.get("/store", response_class=FileResponse)
-def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
-
-@app.get("/ranking", response_class=FileResponse)
-def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
-
-# --------------------------------------------------------------------------------------
-# Page Routes & Static (continued)
-# --------------------------------------------------------------------------------------
-
-# 1. Initialize Templates (Do this before defining routes that use it)
-templates = Jinja2Templates(directory="templates")
-
-# 2. Define Specific Routes FIRST
-@app.get("/test-new", response_class=HTMLResponse)
-async def test_new_home(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request, 
-        "active_page": "home"
-    })
-
-@app.get("/test-gotw", response_class=HTMLResponse)
-async def test_gotw(request: Request):
-    return templates.TemplateResponse("gotw.html", {
-        "request": request, 
-        "active_page": "gotw"
-    })
-
-@app.get("/test-patrons", response_class=HTMLResponse)
-async def test_patrons(request: Request):
-    return templates.TemplateResponse("patrons.html", {
-        "request": request, 
-        "active_page": "patrons"
-    })
-
-# (Fix: Renamed this function to ranking_page to avoid duplicate name)
-@app.get("/ranking", response_class=FileResponse)
-def ranking_page(): 
-    return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
-
-# 3. Mount Static Files (Best to do this before the catch-all too)
+# 5. Mount Static Files
 app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
 app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
@@ -575,7 +568,7 @@ KNOWN_IDS = {
     "gamesir_g8p", "sd_card"
 }
 
-# 4. The "Catch-All" Route (MUST BE LAST)
+# 6. The "Catch-All" Route (MUST BE LAST)
 @app.get("/{product_id}", response_class=FileResponse)
 def serve_pretty_product_url(product_id: str):
     # Check if the URL matches a known product ID
