@@ -540,6 +540,13 @@ async def test_new_home(request: Request):
         "active_page": "home"
     })
 
+@app.get("/test-gotw", response_class=HTMLResponse)
+async def test_gotw(request: Request):
+    return templates.TemplateResponse("gameoftheweek.html", {
+        "request": request, 
+        "active_page": "gotw"
+    })
+
 # (Fix: Renamed this function to ranking_page to avoid duplicate name)
 @app.get("/ranking", response_class=FileResponse)
 def ranking_page(): 
