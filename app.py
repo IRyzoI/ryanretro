@@ -526,43 +526,50 @@ def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "shop.htm
 def store_page(): return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
 
 # --------------------------------------------------------------------------------------
+# Page Routes & Static (continued)
+# --------------------------------------------------------------------------------------
+
+# 1. Initialize Templates (Do this before defining routes that use it)
+templates = Jinja2Templates(directory="templates")
+
+# 2. Define Specific Routes FIRST
+@app.get("/test-new", response_class=HTMLResponse)
+async def test_new_home(request: Request):
+    return templates.TemplateResponse("index.html", {
+        "request": request, 
+        "active_page": "home"
+    })
+
+# (Fix: Renamed this function to ranking_page to avoid duplicate name)
+@app.get("/ranking", response_class=FileResponse)
+def ranking_page(): 
+    return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
+
+# 3. Mount Static Files (Best to do this before the catch-all too)
+app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
+app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
+
+# --------------------------------------------------------------------------------------
 # Pretty URL Routing (Dynamic Handheld/Accessory IDs)
 # --------------------------------------------------------------------------------------
-# This set matches the IDs in your store.html script to prevent random 404s for legitimate requests
+# This set matches the IDs in your store.html script
 KNOWN_IDS = {
     "anbernic_rg477v", "trimui_brick_hammer", "trimui_brick", "rp6",
     "steam_deck", "rp5", "rp_mini2", "rp_classic", "rp_flip2", "rpg2",
     "miyoo_mini_v4", "miyoo_mini_plus", "odin3", "odin2_portal", "ayn_thor",
-    # Accessories
     "anker_power", "ugreen_power", "ugreen_dock", "rp_ds_addon", 
     "gamesir_g8p", "sd_card"
 }
 
+# 4. The "Catch-All" Route (MUST BE LAST)
 @app.get("/{product_id}", response_class=FileResponse)
 def serve_pretty_product_url(product_id: str):
     # Check if the URL matches a known product ID
     if product_id in KNOWN_IDS:
-        # Serve the shop.html. The JS in shop.html will read the URL and display the correct item.
         return FileResponse(os.path.join(REPO_DIR, "static", "shop.html"))
     
-    # If it's not a known ID, let FastAPI return a 404 (or pass through to static if configured below, 
-    # but usually this catches everything not defined above)
+    # If not found, raise 404
     raise HTTPException(status_code=404, detail="Page not found")
-
-# Static mounts must come last so they don't override specific routes
-app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
-app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
-
-# ADD THIS LINE:
-templates = Jinja2Templates(directory="templates")
-
-# --- TEMPORARY TEST ROUTE ---
-@app.get("/test-new", response_class=HTMLResponse)
-async def test_new_home(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "active_page": "home"
-    })
 
 if __name__ == "__main__":
     import uvicorn
