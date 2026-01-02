@@ -26,6 +26,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background-color 0.5s;
         }
 
         .retro-font {
@@ -42,6 +43,7 @@
             background: #fff;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
             z-index: 0;
+            transition: opacity 0.5s;
         }
 
         /* Container for the handhelds */
@@ -52,7 +54,7 @@
             left: 50%;
             bottom: calc(100% - var(--timeline-top)); 
             gap: var(--gap);
-            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s;
             transform: translateX(100vw); 
             z-index: 10;
         }
@@ -68,7 +70,7 @@
             flex-shrink: 0;
             padding-bottom: 20px;
             transform-origin: center center; 
-            cursor: grab; /* Indicate draggable */
+            cursor: grab; 
         }
         
         .handheld-card:active {
@@ -81,15 +83,16 @@
             filter: grayscale(100%);
         }
 
-        /* Badge Container to hold swapped badges */
+        /* Badge Container */
         .badge-container {
             min-height: 100px;
             display: flex;
             align-items: flex-end;
             justify-content: center;
+            transition: all 0.5s;
         }
 
-        /* BASE RANK BADGE (15-4) */
+        /* RANK BADGES */
         .rank-badge {
             padding: 1rem 1.5rem;
             margin-bottom: 1rem;
@@ -102,7 +105,7 @@
             color: #000;
         }
 
-        /* MEDAL STYLE (3, 2 & 1) */
+        /* MEDAL STYLES */
         .rank-medal {
             width: 80px;
             height: 80px;
@@ -128,36 +131,33 @@
             border: 2px solid #000;
         }
 
-        /* Bronze */
         .rank-bronze {
             background: linear-gradient(135deg, #e6ac78 0%, #cd7f32 50%, #8c531b 100%);
             color: #fff;
             text-shadow: 2px 2px 0 #5c3a1e;
         }
 
-        /* Silver */
         .rank-silver {
             background: linear-gradient(135deg, #f3f4f6 0%, #9ca3af 50%, #4b5563 100%);
             color: #fff;
             text-shadow: 2px 2px 0 #374151;
         }
 
-        /* Gold (#1) */
         .rank-gold {
             background: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #d97706 100%);
             color: #fff;
             text-shadow: 2px 2px 0 #b45309;
         }
 
-        /* The Image Wrapper */
+        /* Image Wrapper */
         .img-wrapper {
             height: 250px;
             display: flex;
             align-items: center; 
             justify-content: center;
             filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
-            transition: filter 0.8s ease, opacity 0.8s ease;
-            pointer-events: none; /* Let clicks pass through to card for dragging */
+            transition: filter 0.8s ease, opacity 0.8s ease, height 0.5s;
+            pointer-events: none; 
         }
 
         .img-wrapper img {
@@ -166,42 +166,14 @@
             object-fit: contain;
         }
 
-        /* --- ANIMATION STATES --- */
-
-        .handheld-card.inactive {
-            transform: scale(0.8);
-            z-index: 10;
-        }
-        
-        .handheld-card.inactive .img-wrapper {
-            opacity: 0.5; 
-            filter: blur(15px) grayscale(100%) contrast(1.5); 
-        }
-
-        .handheld-card.inactive.revealed .img-wrapper {
-            opacity: 0.7; 
-            filter: blur(0) grayscale(0); 
-        }
-
-        .handheld-card.mystery-target {
-            transform: scale(0.95); 
-            z-index: 50;
-        }
-
-        .handheld-card.mystery-target .img-wrapper {
-            filter: blur(25px) grayscale(100%) brightness(0.6); 
-        }
-
-        .handheld-card.active {
-            transform: scale(1.15); 
-            z-index: 60;
-        }
-        
-        .handheld-card.active .img-wrapper {
-            filter: blur(0) grayscale(0);
-            opacity: 1;
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4));
-        }
+        /* --- ANIMATION STATES (CAROUSEL) --- */
+        .handheld-card.inactive { transform: scale(0.8); z-index: 10; }
+        .handheld-card.inactive .img-wrapper { opacity: 0.5; filter: blur(15px) grayscale(100%) contrast(1.5); }
+        .handheld-card.inactive.revealed .img-wrapper { opacity: 0.7; filter: blur(0) grayscale(0); }
+        .handheld-card.mystery-target { transform: scale(0.95); z-index: 50; }
+        .handheld-card.mystery-target .img-wrapper { filter: blur(25px) grayscale(100%) brightness(0.6); }
+        .handheld-card.active { transform: scale(1.15); z-index: 60; }
+        .handheld-card.active .img-wrapper { filter: blur(0) grayscale(0); opacity: 1; filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4)); }
 
         .float-slow { animation: float 6s ease-in-out infinite; }
         .float-med  { animation: float 5s ease-in-out infinite; animation-delay: 0.5s; }
@@ -212,11 +184,85 @@
             50% { transform: translateY(-10px); }
         }
 
-        .floater { 
-            width: 100%; 
-            display:flex; 
-            flex-direction: column; 
-            align-items: center;
+        .floater { width: 100%; display:flex; flex-direction: column; align-items: center; }
+
+        /* --- GRID MODE STYLES (Activated by Enter) --- */
+        
+        .grid-elements {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px 20px;
+        }
+
+        body.grid-mode .grid-elements { opacity: 1; }
+        body.grid-mode .timeline-track { opacity: 0; }
+        
+        body.grid-mode .handheld-container {
+            /* Reset positioning */
+            position: relative;
+            left: auto; bottom: auto;
+            transform: none !important;
+            
+            /* Compact Grid Layout */
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            /* Increased vertical gap from 0.5rem to 2rem to fill space */
+            gap: 2rem 0.5rem; 
+            width: 95%;
+            max-width: 1200px; /* Increased max-width slightly */
+            padding-top: 75px; 
+            margin: 0 auto;
+            align-content: start; 
+            height: 100%;
+        }
+
+        body.grid-mode .handheld-card {
+            width: auto;
+            transform: none !important;
+            opacity: 1 !important;
+            padding-bottom: 0;
+            cursor: default;
+        }
+
+        body.grid-mode .img-wrapper {
+            /* Increased height from 80px to 100px to fill space */
+            height: 100px; 
+            opacity: 1 !important;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)) !important;
+        }
+
+        body.grid-mode .floater {
+            animation: none; /* Stop floating */
+        }
+
+        body.grid-mode .badge-container {
+            min-height: 50px; /* Slightly increased for better spacing */
+            margin-bottom: 5px;
+        }
+        
+        /* Resize badges for grid - slightly larger than before */
+        body.grid-mode .rank-badge {
+            padding: 0.35rem 0.85rem;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            border-width: 2px;
+        }
+        body.grid-mode .rank-medal {
+            width: 50px; height: 50px;
+            font-size: 1rem;
+            margin-bottom: 0;
+            border-width: 2px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.5);
+        }
+        body.grid-mode .rank-medal::before {
+             width: 28px; height: 14px; top: -7px; border-width: 1px;
         }
 
     </style>
@@ -225,6 +271,15 @@
 
     <div class="absolute inset-0 opacity-5 pointer-events-none" 
          style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 40px 40px;">
+    </div>
+
+    <!-- Title & Footer (Hidden until Grid Mode) -->
+    <div class="grid-elements">
+        <h1 class="retro-font text-2xl md:text-3xl text-yellow-400 text-center drop-shadow-[3px_3px_0_rgba(0,0,0,1)] mt-2">MY HANDHELD RANKING</h1>
+        <div class="text-center mb-2">
+            <p class="text-gray-400 font-bold tracking-wider uppercase text-[10px]">What's yours? Try at</p>
+            <p class="text-white font-bold text-sm tracking-widest">WWW.RYANRETRO.COM/RANKING</p>
+        </div>
     </div>
 
     <div class="timeline-track"></div>
@@ -424,6 +479,7 @@
 
         let currentIndex = 0;
         let revealStates = new Array(cards.length).fill(false);
+        let isGridMode = false;
 
         // --- VISUAL UPDATE LOGIC ---
 
@@ -441,19 +497,27 @@
         }
 
         function refreshRanks() {
-            // Re-fetch cards from DOM as order might have changed due to DnD
-            cards = Array.from(document.querySelectorAll('.handheld-card'));
+            // In Grid Mode, order is Rank 1 -> 15 (Top left to bottom right)
+            // In Carousel, order is Rank 15 -> 1 (Left to Right)
             
-            // Loop through DOM order. Index 0 = Rank 15. Index 14 = Rank 1.
+            cards = Array.from(document.querySelectorAll('.handheld-card'));
             const total = cards.length;
+
             cards.forEach((card, index) => {
-                const rank = total - index; // 15 - 0 = 15; 15 - 14 = 1
+                let rank;
+                if (isGridMode) {
+                    rank = index + 1; // 0=1, 14=15
+                } else {
+                    rank = total - index; // 0=15, 14=1
+                }
                 const badgeContainer = card.querySelector('.badge-container');
                 badgeContainer.innerHTML = getRankHTML(rank);
             });
         }
 
         function updateCarousel() {
+            if (isGridMode) return;
+
             const offsetX = -HALF_CARD - (currentIndex * TOTAL_ITEM_WIDTH);
             container.style.transform = `translateX(${offsetX}px)`;
 
@@ -480,14 +544,25 @@
             });
         }
 
+        // --- GRID MODE LOGIC ---
+
+        function toggleGridMode() {
+            if (isGridMode) return; // Optional: Toggle back if needed, but for now just one way
+            isGridMode = true;
+            document.body.classList.add('grid-mode');
+            
+            // REVERSE DOM ORDER for the grid (so #1 is first/top-left)
+            // Current DOM is 15 -> 1. We want 1 -> 15.
+            const reversedCards = Array.from(container.children).reverse();
+            reversedCards.forEach(card => container.appendChild(card));
+            
+            // Re-calc ranks (now that DOM is reversed)
+            refreshRanks();
+        }
+
         // --- DRAG AND DROP LOGIC ---
         
         let draggedItem = null;
-        let placeholder = document.createElement('div');
-        placeholder.className = 'handheld-card placeholder';
-        placeholder.style.width = '350px';
-        placeholder.style.flexShrink = '0';
-        placeholder.style.visibility = 'hidden';
 
         cards.forEach(card => {
             addDragEvents(card);
@@ -495,52 +570,42 @@
 
         function addDragEvents(card) {
             card.addEventListener('dragstart', function(e) {
+                if (isGridMode) { e.preventDefault(); return; } // Disable drag in grid
                 draggedItem = this;
                 setTimeout(() => {
-                    this.style.display = 'none';
-                    // We can insert a placeholder if we want, or just let gap close
-                    // container.insertBefore(placeholder, this.nextSibling);
+                    this.style.opacity = '0';
                 }, 0);
                 this.classList.add('dragging');
             });
 
             card.addEventListener('dragend', function() {
                 setTimeout(() => {
-                    this.style.display = 'flex';
+                    this.style.opacity = '1';
                     this.classList.remove('dragging');
                     draggedItem = null;
                     
-                    // Re-calculate everything
                     refreshRanks();
                     updateCarousel();
                 }, 0);
             });
             
             card.addEventListener('dragover', function(e) {
-                e.preventDefault(); // Allow drop
+                e.preventDefault(); 
             });
 
             card.addEventListener('dragenter', function(e) {
                 e.preventDefault();
-                if (this !== draggedItem) {
-                    // Logic to swap visually
-                    // Get all children of container
-                    const siblings = Array.from(container.querySelectorAll('.handheld-card:not(.dragging)'));
-                    // Find where we are hovering
-                    let target = this;
-                    
-                    // Simple swap logic: Insert dragged item before or after target
-                    // To do this right, we need to compare indices
+                if (this !== draggedItem && draggedItem) {
+                    // Swap logic
                     const draggedIndex = cards.indexOf(draggedItem);
-                    const targetIndex = cards.indexOf(target);
+                    const targetIndex = cards.indexOf(this);
                     
                     if (targetIndex !== -1) {
                          if (draggedIndex < targetIndex) {
-                            container.insertBefore(draggedItem, target.nextSibling);
+                            container.insertBefore(draggedItem, this.nextSibling);
                          } else {
-                            container.insertBefore(draggedItem, target);
+                            container.insertBefore(draggedItem, this);
                          }
-                         // Update local array reference to match DOM immediately for smoother interaction
                          cards = Array.from(document.querySelectorAll('.handheld-card'));
                     }
                 }
@@ -551,16 +616,19 @@
         // --- CAROUSEL CONTROLS ---
 
         function toggleReveal() {
+            if(isGridMode) return;
             revealStates[currentIndex] = !revealStates[currentIndex];
             updateCarousel(); 
         }
 
         function hideCurrent() {
+            if(isGridMode) return;
             revealStates[currentIndex] = false;
             updateCarousel();
         }
 
         function moveRight() {
+            if(isGridMode) return;
             if (currentIndex < cards.length - 1) {
                 currentIndex++;
                 updateCarousel();
@@ -568,6 +636,7 @@
         }
 
         function moveLeft() {
+            if(isGridMode) return;
             if (currentIndex > 0) {
                 currentIndex--;
                 updateCarousel();
@@ -576,7 +645,7 @@
 
         window.addEventListener('load', () => {
             setTimeout(() => {
-                refreshRanks(); // Ensure ranks match DOM
+                refreshRanks(); 
                 updateCarousel();
             }, 100);
         });
@@ -595,6 +664,9 @@
                     break;
                 case 'KeyR':
                     hideCurrent();
+                    break;
+                case 'Enter':
+                    toggleGridMode();
                     break;
             }
         });
