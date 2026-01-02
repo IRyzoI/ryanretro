@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}Ryan Retro Shop - Best Deals & Gear{% endblock %}
+{% block title %}Shop{% endblock %}
 
 {% block head_styles %}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
     
-    /* --- CRITICAL: RESTORED ORIGINAL VARIABLES & STYLES --- */
+    /* --- RESTORED ORIGINAL VARIABLES --- */
     :root {
+      /* LIGHT MODE (Default) - GAMEBOY COLORS */
       --gb-grey: #e0e0e0;
       --gb-dark-grey: #c4c4c4;
       --gb-shadow: #9e9e9e;
@@ -15,7 +16,6 @@
       --gb-accent: #6b7280;
       
       --bg-body: #f0f0f0;
-      --bg-panel: #e5e7eb; 
       --text-main: #111827;
       --text-muted: #4b5563;
       --border-color: #000000;
@@ -30,14 +30,12 @@
       --gb-accent: #9ca3af;
       
       --bg-body: #111827;        
-      --bg-panel: #1f2937;       
       --text-main: #d1d5db;      
       --text-muted: #9ca3af;
       --border-color: #000000;   
     }
 
     .retro-font { font-family: 'Press Start 2P', cursive; }
-    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
     
     /* BACKGROUND TEXTURE */
     .bg-overlay {
@@ -58,7 +56,7 @@
     }
     .cart-animate {
         animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        opacity: 0;
+        opacity: 0; /* Ensures it starts invisible then pops in */
     }
     
     /* GAMEBOY CARTRIDGE STYLES */
@@ -122,6 +120,13 @@
         letter-spacing: 1px;
         transition: color 0.3s;
     }
+    
+    /* Text overrides for Dark Mode */
+    body.dark-mode .gb-header-text,
+    body.dark-mode .big-pak-text {
+        color: #e5e7eb !important;
+        text-shadow: 2px 2px 0 rgba(0,0,0,0.9), -1px -1px 0 rgba(255,255,255,0.2) !important;
+    }
 
     .gb-sticker {
         background: #222;
@@ -134,44 +139,24 @@
         flex-shrink: 0;
         margin-bottom: 10px;
     }
-    .gb-sticker img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+    .gb-sticker img { width: 100%; height: 100%; object-fit: cover; }
     
-    .gb-content {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
+    .gb-content { flex-grow: 1; display: flex; flex-direction: column; }
     
-    /* INSERT BUTTON STYLES */
+    /* INSERT BUTTON */
     .gb-insert-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: auto;
-        padding-top: 8px;
-        padding-bottom: 4px;
-        opacity: 0.5;
-        transition: all 0.2s;
-        cursor: pointer;
-        border-top: 1px solid transparent;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        margin-top: auto; padding-top: 8px; padding-bottom: 4px; opacity: 0.5;
+        transition: all 0.2s; cursor: pointer; border-top: 1px solid transparent;
     }
     .gb-insert-btn:hover {
-        opacity: 1;
-        background: rgba(255,255,255,0.3);
-        border-top: 1px solid rgba(255,255,255,0.8);
-        border-radius: 4px;
+        opacity: 1; background: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.8); border-radius: 4px;
     }
     body.dark-mode .gb-insert-btn:hover {
-        background: rgba(255,255,255,0.1);
-        border-top: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.1); border-top: 1px solid rgba(255,255,255,0.2);
     }
     
-    /* BIG WIDESCREEN PAK (MODAL) STYLES */
+    /* BIG RYAN PAK (MODAL) */
     #bigRyanPak {
         background-color: var(--gb-grey);
         border-radius: 20px 20px 60px 20px; 
@@ -184,14 +169,12 @@
         position: relative;
         transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s;
     }
-    
     body.dark-mode #bigRyanPak {
         box-shadow: 
             inset 4px 4px 10px var(--gb-highlight), 
             inset -6px -6px 15px rgba(0,0,0,0.5),
             0 50px 100px rgba(0,0,0,0.9);
     }
-    
     .pak-active { transform: translateY(0) !important; }
     
     .big-pak-depression {
@@ -202,11 +185,8 @@
         box-shadow: 
             inset 3px 3px 8px rgba(0,0,0,0.15),
             inset -2px -2px 4px var(--gb-highlight);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: background-color 0.3s;
+        display: flex; align-items: center; justify-content: center;
+        border: 1px solid rgba(0,0,0,0.05); transition: background-color 0.3s;
     }
     body.dark-mode .big-pak-depression {
         box-shadow: 
@@ -214,433 +194,144 @@
             inset -2px -2px 4px rgba(255,255,255,0.1);
         border: none;
     }
-
     .big-pak-text {
-        font-family: sans-serif;
-        font-weight: 900;
-        font-style: italic;
-        color: var(--gb-grey);
-        text-shadow: 
-            2px 2px 0 var(--gb-highlight), 
-            -2px -2px 0 rgba(0,0,0,0.1);
-        font-size: 24px;
-        letter-spacing: 4px;
-        transition: color 0.3s;
+        font-family: sans-serif; font-weight: 900; font-style: italic; color: var(--gb-grey);
+        text-shadow: 2px 2px 0 var(--gb-highlight), -2px -2px 0 rgba(0,0,0,0.1);
+        font-size: 24px; letter-spacing: 4px; transition: color 0.3s;
     }
     
     .big-pak-sticker-area {
-        background: #111;
-        border-radius: 12px;
-        border: 2px solid #888;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        position: relative;
+        background: #111; border-radius: 12px; border: 2px solid #888;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.8); display: flex; flex-direction: column;
+        overflow: hidden; position: relative;
     }
-    
     .pak-split-layout { display: flex; flex-direction: column; height: 100%; }
     @media (min-width: 768px) { .pak-split-layout { flex-direction: row; } }
     
-    .pak-media-side {
-        flex: 1;
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        min-height: 250px;
-        border-right: 2px solid #333;
-    }
+    .pak-media-side { flex: 1; background: #000; display: flex; align-items: center; justify-content: center; position: relative; min-height: 250px; border-right: 2px solid #333; }
     .pak-info-side {
-        flex: 1;
-        background: #fdfdfd; 
-        padding: 24px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        color: #000;
-        box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); 
-        transition: background-color 0.3s, color 0.3s;
+        flex: 1; background: #fdfdfd; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; color: #000;
+        box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); transition: background-color 0.3s, color 0.3s;
     }
-    body.dark-mode .pak-info-side {
-        background-color: #1f2937;
-        color: #d1d5db;
-    }
-    
-    .pak-grips {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 16px;
-        padding-bottom: 8px;
-        opacity: 0.3;
-    }
-    .pak-grip-line {
-        width: 6px;
-        height: 40px;
-        background: #000;
-        border-radius: 4px;
-        box-shadow: 1px 1px 0 rgba(255,255,255,0.5);
-    }
+    body.dark-mode .pak-info-side { background-color: #1f2937; color: #d1d5db; }
     
     .retro-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* Brand Colors */
-    .store-brand.active { background: #3B82F6; }
-    .store-ali.active { background: #EF4444; }
-    .store-amz.active { background: #F59E0B; color: black; }
-    .store-pow.active { background: #008c69; }
-    
     .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: inherit; margin-right: 1.5rem; width: 100px; text-align: right; flex-shrink: 0; font-weight: bold; }
     
-    /* --- COUPON STYLES (EXACTLY AS REQUESTED) --- */
-    .link-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        width: 100%;
-    }
+    /* --- COUPON STYLES --- */
+    .link-group { display: flex; flex-direction: column; align-items: center; margin-bottom: 0.5rem; width: 100%; }
     .coupon-badge {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 0.6rem;
-        padding: 6px 8px 4px 8px;
-        border-left: 1px solid #000;
-        border-right: 1px solid #000;
-        border-bottom: 1px solid #000;
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
-        text-align: center;
-        width: 90%;
-        margin-top: -4px;
-        position: relative;
-        z-index: 0;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 6px;
-        transition: transform 0.1s;
+        font-family: 'Press Start 2P', cursive; font-size: 0.6rem; padding: 6px 8px 4px 8px;
+        border-left: 1px solid #000; border-right: 1px solid #000; border-bottom: 1px solid #000;
+        border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; text-align: center; width: 90%;
+        margin-top: -4px; position: relative; z-index: 0; cursor: pointer; display: flex;
+        justify-content: center; align-items: center; gap: 6px; transition: transform 0.1s;
     }
     .coupon-badge:hover { transform: translateY(2px); }
     .coupon-badge:active { transform: translateY(4px); }
     
-    /* Power Switch Styles */
-    .power-switch-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        margin-bottom: 8px;
-        width: 100%; 
-    }
+    /* --- POWER SWITCH --- */
+    .power-switch-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; margin-bottom: 8px; width: 100%; }
     .power-switch-track {
-        width: 360px;
-        max-width: 100%; 
-        height: 32px;
-        background-color: #d1d5db;
-        border-radius: 4px;
-        border: 2px solid #9ca3af;
-        position: relative;
-        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
-        display: flex;
-        cursor: pointer;
-        overflow: hidden;
-        transition: background-color 0.3s, border-color 0.3s;
+        width: 360px; max-width: 100%; height: 32px; background-color: #d1d5db; border-radius: 4px;
+        border: 2px solid #9ca3af; position: relative; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+        display: flex; cursor: pointer; overflow: hidden; transition: background-color 0.3s, border-color 0.3s;
     }
-    body.dark-mode .power-switch-track {
-        background-color: #4b5563; 
-        border-color: #000000;
-    }
+    body.dark-mode .power-switch-track { background-color: #4b5563; border-color: #000000; }
 
     .power-switch-thumb {
-        width: 33.33%; 
-        height: calc(100% + 2px); 
-        background-color: #374151;
-        border-radius: 2px;
-        position: absolute;
-        top: -1px;
-        left: 33.33%; 
-        transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
-        box-shadow: 
-            2px 2px 5px rgba(0,0,0,0.3),
-            inset 1px 1px 2px rgba(255,255,255,0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2;
+        width: 33.33%; height: calc(100% + 2px); background-color: #374151; border-radius: 2px;
+        position: absolute; top: -1px; left: 33.33%; transition: left 0.3s, background-color 0.3s;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.2);
+        display: flex; align-items: center; justify-content: center; z-index: 2;
     }
-    body.dark-mode .power-switch-thumb {
-        background-color: #1f2937;
-        box-shadow: 
-            2px 2px 5px rgba(0,0,0,0.5),
-            inset 1px 1px 2px rgba(255,255,255,0.05);
-    }
+    body.dark-mode .power-switch-thumb { background-color: #1f2937; box-shadow: 2px 2px 5px rgba(0,0,0,0.5), inset 1px 1px 2px rgba(255,255,255,0.05); }
 
     .thumb-ridges { display: flex; flex-direction: column; gap: 3px; }
-    .thumb-ridge {
-        width: 30px;
-        height: 2px;
-        background-color: #1f2937;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .power-label-container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        pointer-events: none;
-    }
+    .thumb-ridge { width: 30px; height: 2px; background-color: #1f2937; box-shadow: 0 1px 0 rgba(255,255,255,0.1); }
+    .power-label-container { position: absolute; width: 100%; height: 100%; display: flex; justify-content: space-between; pointer-events: none; }
     .power-label {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 8px;
-        color: #6b7280;
-        transition: all 0.3s;
-        width: 33.33%; 
-        z-index: 3;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%; 
-        padding-bottom: 3px;
+        font-family: 'Press Start 2P', cursive; font-size: 8px; color: #6b7280;
+        transition: all 0.3s; width: 33.33%; z-index: 3; font-weight: bold;
+        display: flex; align-items: center; justify-content: center; height: 100%; padding-bottom: 3px;
     }
     body.dark-mode .power-label { color: #9ca3af; }
-    
-    .power-label.active { 
-        color: #d1d5db;
-        text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-    }
+    .power-label.active { color: #d1d5db; text-shadow: 0 1px 0 rgba(0,0,0,0.5); }
     body.dark-mode .power-label.active { color: #f3f4f6; }
 
-    .switch-title {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 10px;
-        color: #374151;
-        margin-bottom: 2px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: color 0.3s;
-    }
+    .switch-title { font-family: 'Press Start 2P', cursive; font-size: 10px; color: #374151; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; transition: color 0.3s; }
     body.dark-mode .switch-title { color: #d1d5db; }
+    .led-indicator { width: 8px; height: 8px; border-radius: 50%; background: #9ca3af; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2); transition: background 0.3s, box-shadow 0.3s; }
+    .led-indicator.on { background: #ef4444; box-shadow: 0 0 5px #ef4444, inset -1px -1px 2px rgba(0,0,0,0.2); }
 
-    .led-indicator {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        background: #9ca3af;
-        box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
-        transition: background 0.3s, box-shadow 0.3s;
-    }
-    .led-indicator.on {
-        background: #ef4444;
-        box-shadow: 0 0 5px #ef4444, inset -1px -1px 2px rgba(0,0,0,0.2);
-    }
-
-    /* Unified Filter Dropdown */
+    /* --- FILTER MENU STYLES --- */
     .unified-filter-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        margin-top: 0.5rem;
-        width: 300px;
-        background-color: var(--gb-grey);
-        border: 4px solid #999;
-        z-index: 100;
-        box-shadow: 12px 12px 0 rgba(0,0,0,0.2);
-        max-height: 80vh;
-        overflow-y: auto;
-        color: var(--text-main);
+        display: none; position: absolute; top: 100%; left: 0; margin-top: 0.5rem; width: 300px;
+        background-color: var(--gb-grey); border: 4px solid #999; z-index: 100;
+        box-shadow: 12px 12px 0 rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto; color: var(--text-main);
     }
     body.dark-mode .unified-filter-menu { border-color: #4b5563; }
     .unified-filter-menu.open { display: block; }
     
     .filter-section-header {
-        background: #c0c0c0;
-        padding: 10px 16px;
-        font-family: 'Press Start 2P', cursive;
-        font-size: 9px;
-        color: #000;
-        border-bottom: 2px solid #999;
-        letter-spacing: 1px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        background: #c0c0c0; /* OLD STYLE SILVER */
+        padding: 10px 16px; font-family: 'Press Start 2P', cursive; font-size: 9px;
+        color: #000; border-bottom: 2px solid #999; letter-spacing: 1px;
+        display: flex; justify-content: space-between; align-items: center;
     }
     body.dark-mode .filter-section-header { background: #4b5563; color: #fff; border-bottom-color: #1f2937; }
 
     .filter-option {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px;
-        cursor: pointer;
-        transition: all 0.1s;
-        border-bottom: 1px solid #ccc;
-        font-family: 'Press Start 2P', cursive;
-        font-size: 8px;
-        text-transform: uppercase;
-        color: #333;
+        display: flex; align-items: center; padding: 12px 16px; cursor: pointer; transition: all 0.1s;
+        border-bottom: 1px solid #ccc; font-family: 'Press Start 2P', cursive; font-size: 8px; text-transform: uppercase; color: #333;
     }
     body.dark-mode .filter-option { border-bottom-color: #4b5563; color: #d1d5db; }
-
     .filter-option:hover { background-color: #fff; color: #000; }
     body.dark-mode .filter-option:hover { background-color: #1f2937; color: #fff; }
-
     .filter-option.active { color: #000; background-color: #fff; font-weight: bold; }
     body.dark-mode .filter-option.active { background-color: #111827; color: #fff; }
 
     /* Slider styling */
-    .retro-slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        background: #999;
-        outline: none;
-        border: 2px solid #555;
-        margin: 10px 0;
-    }
-    .retro-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        background: #e0e0e0;
-        cursor: pointer;
-        border: 2px solid #000;
-        box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-    }
-    .filter-checkbox, .filter-radio {
-        appearance: none;
-        width: 14px;
-        height: 14px;
-        border: 2px solid #555;
-        background: white;
-        margin-right: 12px;
-        position: relative;
-        cursor: pointer;
-        flex-shrink: 0;
-    }
+    .retro-slider { -webkit-appearance: none; width: 100%; height: 8px; background: #999; outline: none; border: 2px solid #555; margin: 10px 0; }
+    .retro-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #e0e0e0; cursor: pointer; border: 2px solid #000; box-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+    .filter-checkbox, .filter-radio { appearance: none; width: 14px; height: 14px; border: 2px solid #555; background: white; margin-right: 12px; position: relative; cursor: pointer; flex-shrink: 0; }
     .filter-radio { border-radius: 50%; }
     .filter-checkbox:checked, .filter-radio:checked { background: #000; border-color: #000; }
-    .filter-checkbox:checked::after {
-        content: '✓';
-        position: absolute;
-        top: -3px; left: 1px;
-        color: #fff;
-        font-weight: bold;
-        font-size: 10px;
-    }
+    .filter-checkbox:checked::after { content: '✓'; position: absolute; top: -3px; left: 1px; color: #fff; font-weight: bold; font-size: 10px; }
     
-    /* DARK MODE SPECIFIC OVERRIDES FOR CONTROLS */
-    body.dark-mode #mainControlPanel {
-        background-color: var(--gb-grey) !important;
-        border-color: var(--gb-dark-grey) !important;
-    }
-    
-    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: #fff !important; }
-    body.dark-mode p { color: #d1d5db !important; }
-    
-    /* Input/Select overrides in dark mode */
-    body.dark-mode input, body.dark-mode select {
-        background-color: #1f2937 !important; /* gray-800 */
-        color: #fff !important;
-        border-color: #4b5563 !important; /* gray-600 */
-    }
-    
-    /* Button overrides in dark mode */
-    body.dark-mode .bg-gray-100 {
-        background-color: #1f2937 !important;
-        color: #fff !important;
-    }
-    body.dark-mode .bg-gray-100:hover {
-        background-color: #374151 !important;
-    }
-    
-    /* Flash Deals Modal Dark Mode */
-    body.dark-mode .bg-gray-200 {
-        background-color: #374151 !important;
-        border-color: #1f2937 !important;
-    }
-    body.dark-mode .bg-white {
-        background-color: #1f2937 !important;
-        border-color: #4b5563 !important;
-        color: #fff !important;
-    }
-    
+    /* --- DARK MODE OVERRIDES FOR CONTROLS --- */
+    body.dark-mode #mainControlPanel { background-color: var(--gb-grey) !important; border-color: var(--gb-dark-grey) !important; }
     body.dark-mode .gb-content h3 { color: #fff !important; }
     body.dark-mode .gb-content p { color: #d1d5db !important; }
     body.dark-mode .gb-insert-btn span { color: #d1d5db !important; }
+    body.dark-mode svg.fill-black { fill: #fff !important; }
     
-    /* RYAN BOY Header Text Color Override for Dark Mode */
-    body.dark-mode .gb-header-text,
-    body.dark-mode .big-pak-text {
-        color: #e5e7eb !important;
-        text-shadow: 2px 2px 0 rgba(0,0,0,0.9), -1px -1px 0 rgba(255,255,255,0.2) !important;
-    }
-    
-    /* Affiliate Banner Dark Mode Override */
-    body.dark-mode .bg-yellow-50 {
-        background-color: #362F08 !important; 
-        border-color: #facc15 !important;
-        color: #fef08a !important; 
-    }
-    body.dark-mode .bg-yellow-50 p,
-    body.dark-mode .bg-yellow-50 h3 {
-        color: #fef08a !important; 
-    }
-    body.dark-mode .bg-yellow-400 {
-        background-color: #facc15 !important; 
-        color: #000 !important;
-    }
+    /* Affiliate Banner */
+    body.dark-mode .bg-yellow-50 { background-color: #362F08 !important; border-color: #facc15 !important; color: #fef08a !important; }
+    body.dark-mode .bg-yellow-50 p, body.dark-mode .bg-yellow-50 h3 { color: #fef08a !important; }
+    body.dark-mode .bg-yellow-400 { background-color: #facc15 !important; color: #000 !important; }
 
-    body.dark-mode #tierLabel,
-    body.dark-mode #budgetLabel {
-        color: #fff !important;
-    }
-    body.dark-mode .text-gray-600 {
-        color: #d1d5db !important; 
-    }
+    /* Flash Deals Modal */
+    body.dark-mode #flashDealsModal .bg-gray-200 { background-color: #374151 !important; border-color: #1f2937 !important; }
+    body.dark-mode #flashDealsModal .bg-white { background-color: #1f2937 !important; border-color: #4b5563 !important; color: #fff !important; }
+    
+    /* Control Buttons */
+    body.dark-mode .bg-gray-100 { background-color: #1f2937 !important; color: #fff !important; }
+    body.dark-mode .bg-gray-100:hover { background-color: #374151 !important; }
+    body.dark-mode input, body.dark-mode select { background-color: #1f2937 !important; color: #fff !important; border-color: #4b5563 !important; }
 
     @media (max-width: 768px) {
-      .header-container { flex-direction: column; gap: 0.25rem; }
-      .c-stores { display: none; }
-      .c-price { display: block; margin-right: 0.5rem; width: auto; font-size: 0.55rem; }
-      
-      .unified-filter-menu {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        max-width: 320px;
-        margin-top: 0;
-        box-shadow: 0 0 100px rgba(0,0,0,0.9);
-        border: 4px solid #000;
-        max-height: 80vh; 
-        overflow-y: auto;
-      }
-      
-      #bigRyanPak {
-        height: 90vh;
-        border-radius: 10px;
-        border-right-width: 6px;
-        border-bottom-width: 6px;
-      }
+      .unified-filter-menu { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 320px; box-shadow: 0 0 100px rgba(0,0,0,0.9); border: 4px solid #000; max-height: 80vh; overflow-y: auto; }
+      #bigRyanPak { height: 90vh; border-radius: 10px; border-right-width: 6px; border-bottom-width: 6px; }
       .pak-split-layout { flex-direction: column; }
       .pak-media-side { min-height: 200px; flex: 0 0 200px; }
-      
-      /* Mobile Scale for Power Switch Container */
-      .power-switch-container {
-        transform: scale(0.95);
-        transform-origin: center;
-      }
+      .power-switch-container { transform: scale(0.95); }
     }
+    
+    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
 </style>
 {% endblock %}
 
@@ -670,7 +361,6 @@
               </svg>
           </div>
       </div>
-      
   </div>
 </div>
 
@@ -1206,7 +896,7 @@
       ]
     }
   ];
-  
+
   // --- FLASH DEALS ---
   const flashDeals = [
     { title: "Samsung EVO 512GB MicroSD", price: "$34.99", discount: "40% OFF", link: "https://amzn.to/example", store: "Amazon" },
@@ -1386,32 +1076,34 @@
       let badgeBg = 'bg-gray-700 text-gray-300';
       const s = l.store.toLowerCase();
       if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-         btnBg = 'bg-blue-600 text-white';
+         btnBg = 'bg-blue-600 text-white hover:bg-blue-500';
          badgeBg = 'bg-blue-800 text-blue-100';
       }
       else if(s.includes('ali')) {
-         btnBg = 'bg-red-600 text-white';
+         btnBg = 'bg-red-600 text-white hover:bg-red-500';
          badgeBg = 'bg-red-800 text-red-100';
       }
       else if(s.includes('amazon')) {
-         btnBg = 'bg-yellow-500 text-black';
+         btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400';
          badgeBg = 'bg-yellow-700 text-yellow-100';
       }
       else if(s.includes('powkiddy')) {
-         btnBg = 'bg-[#008c69] text-white';
+         btnBg = 'bg-[#008c69] text-white hover:bg-[#00a87d]';
          badgeBg = 'bg-[#004d3a] text-green-100';
       }
       const couponHtml = l.coupon 
-        ? `<div class="coupon-badge ${badgeBg}" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
+        ? `<div class="coupon-badge ${badgeBg} mt-1 w-fit mx-0" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
              <span>CODE: ${l.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
            </div>` 
         : '';
 
       const wrapperHtml = `
         <div class="link-group">
-          <a href="${l.url}" target="_blank" class="${btnBg} w-full px-3 py-2 rounded pixel-btn border border-black flex items-center justify-between relative z-10 shadow-sm">
-            <span class="retro-font text-[8px] uppercase">${l.store}</span>
-            <span class="retro-font text-[8px] font-bold">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
+          <a href="${l.url}" target="_blank" class="${btnBg} px-4 py-3 rounded pixel-btn border-2 border-black flex justify-between items-center group transition-colors shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
+            <div class="flex flex-col">
+                <span class="retro-font text-[10px] uppercase">${l.store}</span>
+            </div>
+            <span class="retro-font text-xs font-bold">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
           </a>
           ${couponHtml}
         </div>
