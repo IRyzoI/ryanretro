@@ -32,7 +32,7 @@
     }
     .cart-animate { animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; opacity: 0; }
 
-    /* Flash Deals Modal Styles */
+    /* Flash Deals Modal Styles (Kept for Shop Page Logic compatibility if reused) */
     .bg-gray-200.flash-modal { background-color: #e5e7eb; border-color: #9ca3af; }
     body.dark-mode .bg-gray-200.flash-modal { background-color: #374151 !important; border-color: #1f2937 !important; }
 
@@ -101,12 +101,7 @@
               <h1 id="device-heading" class="retro-font text-3xl md:text-4xl">Device</h1>
             </div>
             
-            <button id="openFlashDealsBtn" 
-                    class="px-3 py-2 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center gap-2 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-                <i data-feather="zap" class="w-4 h-4"></i>
-                <span>FLASH DEALS</span>
-            </button>
-        </div>
+            </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <div class="md:col-span-2" data-aos="fade-right">
@@ -252,33 +247,11 @@
   </main>
 </section>
 
-<div id="flashDealsModal" class="fixed inset-0 z-[80] hidden">
-  <div id="flashDealsBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-gray-200 flash-modal rounded-lg border-4 border-gray-400 w-full max-w-2xl overflow-hidden relative shadow-2xl flex flex-col max-h-[80vh]">
-      <div class="p-4 border-b-4 border-gray-400 flex items-center justify-between bg-red-600 text-white">
-        <h2 class="retro-font text-sm uppercase flex items-center gap-2"><i data-feather="zap" class="w-4 h-4"></i> CURRENT FLASH DEALS</h2>
-        <button id="closeFlashDeals" class="pixel-btn bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-white">CLOSE</button>
-      </div>
-      <div class="p-6 overflow-y-auto custom-scrollbar space-y-4" id="flashDealsList">
-        </div>
-    </div>
-  </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script>
-  // Flash Deals Logic
-  const flashDeals = [
-    { title: "Samsung EVO 512GB MicroSD", price: "$34.99", discount: "40% OFF", link: "https://amzn.to/example", store: "Amazon" },
-    { title: "Anbernic RG35XX Plus", price: "$55.00", discount: "FLASH SALE", link: "https://aliexpress.com/example", store: "AliExpress", coupon: "RG35XXDEAL" },
-    { title: "Miyoo Mini Plus (Purple)", price: "$58.00", discount: "LIMITED STOCK", link: "https://aliexpress.com/example", store: "AliExpress" }
-  ];
-  const flashDealsModal = document.getElementById('flashDealsModal');
-  const flashDealsList = document.getElementById('flashDealsList');
-  
   function showToast(message) {
       const toast = document.getElementById("toast");
       toast.innerText = message;
@@ -286,71 +259,12 @@
       setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
   }
 
-  window.copyCoupon = function(code) {
-      navigator.clipboard.writeText(code);
-      showToast('Code copied: ' + code);
-  }
-
-  const openFlashBtn = document.getElementById('openFlashDealsBtn');
-  if (openFlashBtn) {
-      openFlashBtn.onclick = () => {
-          renderFlashDeals();
-          flashDealsModal.classList.remove('hidden');
-      };
-  }
-  
-  document.getElementById('closeFlashDeals').onclick = () => { flashDealsModal.classList.add('hidden'); };
-  document.getElementById('flashDealsBackdrop').onclick = () => { flashDealsModal.classList.add('hidden'); };
-
-  function renderFlashDeals() {
-      flashDealsList.innerHTML = '';
-      if(flashDeals.length === 0) {
-          flashDealsList.innerHTML = '<div class="text-center p-4 retro-font text-xs text-gray-500">NO FLASH DEALS RIGHT NOW. CHECK BACK SOON!</div>';
-          return;
-      }
-      
-      flashDeals.forEach(deal => {
-          let btnBg = 'bg-gray-800 text-white';
-          const s = deal.store.toLowerCase();
-          
-          if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) { btnBg = 'bg-blue-600 text-white hover:bg-blue-500'; }
-          else if(s.includes('ali')) { btnBg = 'bg-red-600 text-white hover:bg-red-500'; }
-          else if(s.includes('amazon')) { btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400'; }
-
-          const couponHtml = deal.coupon 
-            ? `<div class="bg-gray-100 border border-gray-400 px-2 py-1 rounded text-[10px] font-bold text-red-600 flex items-center gap-1 cursor-pointer hover:bg-gray-200" onclick="copyCoupon('${deal.coupon}')">
-                 <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
-               </div>` 
-            : '';
-
-          const itemHtml = `
-            <div class="bg-white border-4 border-gray-300 p-4 rounded flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div class="flex-1 text-center md:text-left">
-                    <h3 class="retro-font text-xs font-bold mb-1 text-black">${deal.title}</h3>
-                    <div class="flex items-center justify-center md:justify-start gap-2">
-                        <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-red-200">${deal.discount}</span>
-                        ${couponHtml}
-                    </div>
-                </div>
-                <div class="flex flex-col items-end gap-1 w-full md:w-auto">
-                    <a href="${deal.link}" target="_blank" class="${btnBg} px-4 py-2 rounded pixel-btn border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-                        <span class="retro-font text-[10px] uppercase">${deal.store}</span>
-                        <span class="retro-font text-[10px] font-bold bg-black/20 px-2 py-0.5 rounded">${deal.price}</span>
-                    </a>
-                </div>
-            </div>
-          `;
-          flashDealsList.insertAdjacentHTML('beforeend', itemHtml);
-      });
-      feather.replace();
-  }
-
   // --- APP LOGIC (Device Config, Tables, Etc) ---
   const DEVICE_CONFIG = {
   "Retroid Pocket 5": {
     label: "Retroid Pocket 5",
     heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
+    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
     affiliateText: "PURCHASE",
     youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
     youtubeQuery: "retroid pocket 5",
