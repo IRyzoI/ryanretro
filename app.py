@@ -547,6 +547,13 @@ async def test_gotw(request: Request):
         "active_page": "gotw"
     })
 
+@app.get("/test-patrons", response_class=HTMLResponse)
+async def test_patrons(request: Request):
+    return templates.TemplateResponse("patrons.html", {
+        "request": request, 
+        "active_page": "patrons"
+    })
+
 # (Fix: Renamed this function to ranking_page to avoid duplicate name)
 @app.get("/ranking", response_class=FileResponse)
 def ranking_page(): 
