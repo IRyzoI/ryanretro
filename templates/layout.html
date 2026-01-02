@@ -3,84 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Ryan Retro{% endblock %} | Ryan Retro</title>
-    
+    <title>{% block title %}Ryan Retro{% endblock %} - Retro Gaming Channel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
+    <link rel="dns-prefetch" href="//i.ytimg.com">
+    <link rel="preconnect" href="https://huggingface.co" crossorigin>
+    <link rel="dns-prefetch" href="//huggingface.co">
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
     <style>
-        body { font-family: 'Roboto', sans-serif; }
-        .retro-font { font-family: 'Press Start 2P', cursive; }
-        .pixel-border { border: 4px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap');
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-        
-        /* Nav Item Hover/Active States */
-        .nav-item { position: relative; transition: color 0.3s; }
-        .nav-item::after {
-            content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px;
-            background-color: #facc15; transition: width 0.3s;
+        :root {
+            /* LIGHT MODE (Default) */
+            --bg-body: #f3f4f6;          /* Light Gray Background */
+            --bg-panel: #e5e7eb;        /* Panel Gray */
+            --text-main: #111827;       /* Dark Text */
+            --text-muted: #4b5563;
+            --border-color: #000000;
+            
+            /* Scrollbar Colors (Light) */
+            --scrollbar-track: #e5e7eb;
+            --scrollbar-thumb: #fbbf24;
         }
-        .nav-item:hover::after, .nav-item.active::after { width: 100%; }
-        .nav-item.active { color: #facc15; }
+
+        /* DARK MODE VARIABLES */
+        body.dark-mode {
+            --bg-body: #111827;         /* Very dark background */
+            --bg-panel: #1f2937;        
+            --text-main: #d1d5db;       /* Light text */
+            --text-muted: #9ca3af;
+            --border-color: #000000;    
+
+            /* Scrollbar Colors (Dark) */
+            --scrollbar-track: #1f2937; 
+        }
+
+        html, body { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Roboto', sans-serif; 
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .retro-font { font-family: 'Press Start 2P', cursive; font-display: block; }
+        .pixel-border { border: 4px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
+        .pixel-btn { transition: all 0.2s ease; cursor: pointer; }
+        .pixel-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+
+        /* --- DARK MODE OVERRIDES --- */
+        body.dark-mode header,
+        body.dark-mode footer,
+        body.dark-mode section {
+            background-color: var(--bg-body) !important;
+            border-color: #000 !important;
+        }
+        
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: #fff !important; }
+        body.dark-mode .text-gray-800 { color: #fff !important; }
+        body.dark-mode .text-gray-900 { color: #fff !important; }
+        body.dark-mode .text-gray-700 { color: #d1d5db !important; } 
+        body.dark-mode .text-gray-500 { color: #9ca3af !important; }
+        body.dark-mode p { color: #d1d5db !important; }
+
+        /* Header & Navigation */
+        body.dark-mode header#site-header { 
+            background-color: #1f2937 !important; 
+            border-color: #000 !important;
+        } 
+        
+        /* Nav Box Logic */
+        body.dark-mode #navBox {
+            background-color: #374151 !important;
+            border-color: #1f2937 !important;
+        }
+        body.dark-mode #navBox .pause-menu-header {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-bottom-color: #000 !important;
+        }
+
+        /* Nav Items Dark Mode */
+        body.dark-mode #navBox .nav-item .text-gray-800 { color: #fff !important; }
+        body.dark-mode .nav-item:not(.active-page-item):not(:hover) {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: transparent;
+        }
+        /* Active Item Dark Mode */
+        body.dark-mode .active-page-item {
+            /* Keep original color but ensure text is readable */
+            border-color: #000 !important;
+            color: #000 !important;
+        }
+
+        /* Header Buttons Dark Mode */
+        body.dark-mode #navToggle {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: #000 !important;
+        }
+
+        /* Info Boxes Dark Mode */
+        body.dark-mode .info-box {
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: #000 !important;
+        }
+        body.dark-mode .info-label {
+            background-color: #1f2937 !important;
+            color: #9ca3af !important;
+            border-color: #4b5563 !important;
+        }
+
+        /* JS Content Overrides */
+        body.dark-mode .video-item, body.dark-mode .device-item {
+            background-color: #1f2937 !important; 
+            border-color: #000 !important;
+        }
+        body.dark-mode .video-info-area { background-color: #111827 !important; }
+        body.dark-mode .video-title { color: #fff !important; }
+        body.dark-mode .filter-btn-default {
+            background-color: #374151 !important;
+            color: #fff !important;
+        }
+
+        /* Header Styling */
+        header#site-header {
+            width: 100%;
+            z-index: 50;
+            background-color: #f3f4f6; 
+            border-bottom: 4px solid #9ca3af;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+        }
+
+        /* Scrollbars */
+        .custom-scrollbar {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
+        .video-scrollbar { scrollbar-color: #ef4444 var(--scrollbar-track); }
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { 
+            background: var(--scrollbar-track); 
+            border-radius: 10px; 
+            margin: 0 20px; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb { 
+            background: var(--scrollbar-thumb); 
+            border: 2px solid var(--scrollbar-track);
+            border-radius: 10px; 
+        }
+        .video-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; }
+
+        .marquee-container { width: 100%; position: relative; padding-bottom: 12px; }
+        .marquee-track { display: flex; width: max-content; }
+        .device-item, .video-item { flex-shrink: 0; width: 18rem; margin-right: 1.5rem; transition: transform 0.3s ease; }
+        .device-item:hover, .video-item:hover { transform: translateY(-5px); }
+
+        .play-trigger {
+            display: flex; align-items: center; justify-content: center;
+            width: 42px; height: 42px; transition: all 0.2s;
+        }
+        .play-trigger svg { width: 20px; height: 20px; fill: currentColor; }
+        .play-trigger.active { background: #4ade80 !important; color: black !important; border-color: black !important; }
+
+        /* Additional Styles Block */
+        {% block head_styles %}{% endblock %}
     </style>
-    {% block head %}{% endblock %}
 </head>
-<body class="bg-gray-900 text-white flex flex-col min-h-screen">
+<body class="bg-gray-100 text-gray-800 font-sans overflow-x-hidden">
 
-    <header class="bg-gray-900/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-3 group">
-                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
-                     alt="Logo" class="w-10 h-10 rounded-full pixel-border group-hover:scale-110 transition-transform">
-                <span class="retro-font text-yellow-400 text-sm md:text-base hidden sm:block">RYAN RETRO</span>
+<script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || !savedTheme) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    })();
+</script>
+
+<div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
+    <div class="absolute inset-0" onclick="toggleNav()"></div>
+    
+    <div class="bg-white border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
+        
+        <div class="pause-menu-header bg-gray-200 text-black p-2 mb-1 flex justify-between items-center border-b-2 border-black">
+            <span class="retro-font text-xs">PAUSE MENU</span>
+            <button onclick="toggleNav()" class="text-black hover:text-red-500">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-1" id="navLinksList">
+            <a href="/benchmarks" class="nav-item flex items-center justify-between px-4 py-3 border-2 cursor-pointer group transition-colors {% if active_page == 'benchmarks' %}bg-green-600 border-black active-page-item{% else %}bg-white border-transparent hover:border-black hover:bg-green-600{% endif %}">
+                <span class="retro-font text-[10px] {% if active_page == 'benchmarks' %}text-white{% else %}text-gray-800 group-hover:text-white{% endif %}">BENCHMARKS</span>
+                <i data-feather="cpu" class="w-4 h-4 {% if active_page == 'benchmarks' %}text-white{% else %}text-gray-400 group-hover:text-white{% endif %}"></i>
             </a>
 
-            <nav class="hidden md:flex gap-8 retro-font text-xs">
-                <a href="/" class="nav-item hover:text-yellow-400 {% if active_page == 'home' %}active{% endif %}">HOME</a>
-                <a href="/#videos" class="nav-item hover:text-yellow-400">VIDEOS</a>
-                <a href="/#guides" class="nav-item hover:text-yellow-400">GUIDES</a>
-                <a href="/benchmarks" class="nav-item hover:text-yellow-400 {% if active_page == 'benchmarks' %}active{% endif %}">BENCHMARKS</a>
-                <a href="/store" class="nav-item hover:text-yellow-400 {% if active_page == 'store' %}active{% endif %}">STORE</a>
-            </nav>
+            <a href="/gotw" class="nav-item flex items-center justify-between px-4 py-3 border-2 cursor-pointer group transition-colors {% if active_page == 'gotw' %}bg-red-600 border-black active-page-item{% else %}bg-white border-transparent hover:border-black hover:bg-red-600{% endif %}">
+                <span class="retro-font text-[10px] {% if active_page == 'gotw' %}text-white{% else %}text-gray-800 group-hover:text-white{% endif %}">GOTW</span>
+                <i data-feather="crosshair" class="w-4 h-4 {% if active_page == 'gotw' %}text-white{% else %}text-gray-400 group-hover:text-white{% endif %}"></i>
+            </a>
 
-            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="md:hidden text-yellow-400">
-                <i data-feather="youtube"></i>
+            <a href="/handheld" class="nav-item flex items-center justify-between px-4 py-3 border-2 cursor-pointer group transition-colors {% if active_page == 'handheld' %}bg-sky-500 border-black active-page-item{% else %}bg-white border-transparent hover:border-black hover:bg-sky-500{% endif %}">
+                <span class="retro-font text-[10px] {% if active_page == 'handheld' %}text-white{% else %}text-gray-800 group-hover:text-white{% endif %}">HANDHELDS</span>
+                <i data-feather="smartphone" class="w-4 h-4 {% if active_page == 'handheld' %}text-white{% else %}text-gray-400 group-hover:text-white{% endif %}"></i>
+            </a>
+
+            <a href="/" class="nav-item flex items-center justify-between px-4 py-3 border-2 cursor-pointer group transition-colors {% if active_page == 'home' %}bg-yellow-400 border-black active-page-item{% else %}bg-white border-transparent hover:border-black hover:bg-yellow-400{% endif %}">
+                <span class="retro-font text-[10px] {% if active_page == 'home' %}text-black{% else %}text-gray-800 group-hover:text-black{% endif %}">HOME</span>
+                <i data-feather="home" class="w-4 h-4 {% if active_page == 'home' %}text-black{% else %}text-gray-400 group-hover:text-black{% endif %}"></i>
+            </a>
+
+            <a href="/patrons" class="nav-item flex items-center justify-between px-4 py-3 border-2 cursor-pointer group transition-colors {% if active_page == 'patrons' %}bg-orange-500 border-black active-page-item{% else %}bg-white border-transparent hover:border-black hover:bg-orange-500{% endif %}">
+                <span class="retro-font text-[10px] {% if active_page == 'patrons' %}text-white{% else %}text-gray-800 group-hover:text-white{% endif %}">PATRONS</span>
+                <i data-feather="users" class="w-4 h-4 {% if active_page == 'patrons' %}text-white{% else %}text-gray-400 group-hover:text-white{% endif %}"></i>
+            </a>
+
+            <a href="/store" class="nav-item flex items-center justify-between px-4 py-3 border-2 cursor-pointer group transition-colors {% if active_page == 'store' %}bg-purple-600 border-black active-page-item{% else %}bg-white border-transparent hover:border-black hover:bg-purple-600{% endif %}">
+                <span class="retro-font text-[10px] {% if active_page == 'store' %}text-white{% else %}text-gray-800 group-hover:text-white{% endif %}">STORE</span>
+                <i data-feather="shopping-cart" class="w-4 h-4 {% if active_page == 'store' %}text-white{% else %}text-gray-400 group-hover:text-white{% endif %}"></i>
             </a>
         </div>
-    </header>
+        
+        <div class="h-0.5 bg-gray-400 my-1"></div>
 
-    <main class="flex-grow">
-        {% block content %}{% endblock %}
-    </main>
-
-    <footer class="bg-black py-8 border-t border-gray-800 mt-auto">
-        <div class="container mx-auto px-4 text-center">
-            <div class="flex items-center justify-center mb-4">
-                <span class="retro-font text-yellow-400 text-lg">RYAN RETRO</span>
-            </div>
-            <p class="text-gray-500 text-xs mb-4">Retro Gaming, Handhelds, and Technology.</p>
-            <div class="flex justify-center gap-6 text-gray-400">
-                <a href="#" class="hover:text-yellow-400 transition"><i data-feather="youtube" class="w-5 h-5"></i></a>
-                <a href="#" class="hover:text-yellow-400 transition"><i data-feather="twitter" class="w-5 h-5"></i></a>
-                <a href="#" class="hover:text-yellow-400 transition"><i data-feather="github" class="w-5 h-5"></i></a>
-            </div>
-            <p class="text-gray-600 text-[10px] mt-6">© 2025 Ryan Retro. All rights reserved.</p>
+        <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
+             <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
+             <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
         </div>
-    </footer>
+    </div>
+</div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration: 800, once: true });
-        feather.replace();
-    </script>
-    {% block scripts %}{% endblock %}
+<header id="site-header">
+  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+    
+    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+        <button id="navToggle" class="p-3 bg-white text-black hover:bg-gray-200 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
+            <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+            <span class="retro-font text-[10px] hidden md:block">MENU</span>
+        </button>
+        <a href="/" class="flex items-center gap-3 md:gap-4">
+            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
+                class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-400 bg-gray-800" alt="Ryan Retro Logo">
+            <div class="flex flex-col">
+                <h1 class="retro-font text-xs md:text-sm text-gray-800 leading-tight">RYAN RETRO</h1>
+                <span class="retro-font text-[8px] text-gray-500 uppercase">Gaming Channel</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto mt-2 md:mt-0">
+      <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
+        <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
+          FIND ME
+        </span>
+        <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
+           <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
+             <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
+           </a>
+           <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
+              <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+           </a>
+           <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
+             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+           </a>
+        </div>
+      </div>
+      <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
+        <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
+          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
+        </span>
+        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer" 
+           class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
+          <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+          </svg>
+          <span class="tracking-tight">JOIN PATREON</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="min-h-screen">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-gray-200 py-12 border-t-2 border-gray-300">
+  <div class="container mx-auto px-4 text-center">
+    <div class="flex items-center justify-center mb-4">
+        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Logo" class="w-10 h-10 rounded-full mr-3">
+        <h3 class="retro-font text-lg text-yellow-400">RYAN RETRO</h3>
+    </div>
+    <a href="mailto:ryanretro.contact@gmail.com" class="text-gray-700 hover:text-yellow-500 text-sm flex items-center justify-center">
+      <i data-feather="mail" class="w-4 h-4 mr-2"></i> ryanretro.contact@gmail.com
+    </a>
+    <p class="text-gray-600 text-[10px] mt-4 uppercase">© 2025 Ryan Retro.</p>
+  </div>
+</footer>
+
+<script>
+// GLOBAL NAVIGATION & THEME LOGIC
+document.addEventListener('DOMContentLoaded', function() {
+  AOS.init({ duration: 800, once: true });
+  feather.replace();
+
+  // DARK MODE TOGGLE LOGIC
+  const body = document.body;
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+
+  // Set Initial Icon
+  if (body.classList.contains('dark-mode')) {
+      if(themeIcon) themeIcon.setAttribute('data-feather', 'sun');
+  } else {
+      if(themeIcon) themeIcon.setAttribute('data-feather', 'moon');
+  }
+  if(window.feather) feather.replace();
+
+  if(darkModeToggle) {
+      darkModeToggle.addEventListener('click', () => {
+          body.classList.toggle('dark-mode');
+          const isDark = body.classList.contains('dark-mode');
+          
+          if (isDark) {
+              localStorage.setItem('theme', 'dark');
+              if(themeIcon) {
+                  themeIcon.setAttribute('data-feather', 'sun');
+                  feather.replace();
+              }
+          } else {
+              localStorage.setItem('theme', 'light');
+              if(themeIcon) {
+                  themeIcon.setAttribute('data-feather', 'moon');
+                  feather.replace();
+              }
+          }
+      });
+  }
+});
+
+// Navigation Toggle Function (Global)
+const navToggle = document.getElementById('navToggle');
+const navOverlay = document.getElementById('navOverlay');
+const navBox = document.getElementById('navBox');
+
+window.toggleNav = () => {
+    if (!navOverlay || !navBox) return;
+    const isHidden = navOverlay.classList.contains('hidden');
+    if (isHidden) {
+        navOverlay.classList.remove('hidden');
+        setTimeout(() => {
+            navBox.classList.remove('scale-95', 'opacity-0');
+            navBox.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    } else {
+        navBox.classList.remove('scale-100', 'opacity-100');
+        navBox.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            navOverlay.classList.add('hidden');
+        }, 200);
+    }
+};
+if(navToggle) navToggle.addEventListener('click', toggleNav);
+
+// Helper for Marquees (Global Definition)
+const activeMarquees = new Map();
+window.initMarquee = function(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const track = container.querySelector('.marquee-track');
+    if(!track) return;
+
+    const content = track.innerHTML;
+    const CLONES = 4; // Reduced clones for safety
+    let newHTML = content;
+    for(let i = 0; i < CLONES - 1; i++) {
+        newHTML += content;
+    }
+    track.innerHTML = newHTML;
+
+    activeMarquees.set(containerId, {
+        isPaused: true, 
+        manuallyPaused: true, 
+        scrollSpeed: 0.8,
+        container: container,
+        track: track,
+        clones: CLONES
+    });
+
+    container.addEventListener('mouseenter', () => {
+        const state = activeMarquees.get(containerId);
+        if(state && !state.manuallyPaused) state.isPaused = true;
+    });
+    container.addEventListener('mouseleave', () => {
+        const state = activeMarquees.get(containerId);
+        if(state && !state.manuallyPaused) state.isPaused = false;
+    });
+    
+    if (!window.marqueeLoopStarted) {
+        window.marqueeLoopStarted = true;
+        requestAnimationFrame(globalAnimate);
+    }
+}
+
+window.globalAnimate = function() {
+    activeMarquees.forEach((state, id) => {
+        if (!state.isPaused && state.container) {
+            state.container.scrollLeft += state.scrollSpeed;
+            if (state.track) {
+                const singleSetWidth = state.track.scrollWidth / state.clones;
+                if (state.container.scrollLeft >= singleSetWidth) {
+                    state.container.scrollLeft -= singleSetWidth;
+                }
+            }
+        }
+    });
+    requestAnimationFrame(globalAnimate);
+}
+
+window.toggleMarquee = function(id) {
+    const state = activeMarquees.get(id);
+    if (!state) return;
+    
+    // Page specific triggers handled in page scripts
+    if (typeof window.onMarqueeToggle === 'function') {
+        window.onMarqueeToggle(id);
+    }
+
+    state.manuallyPaused = !state.manuallyPaused;
+    state.isPaused = state.manuallyPaused;
+    
+    const triggerId = id.replace('-marquee', '-trigger');
+    const trigger = document.getElementById(triggerId);
+    if(trigger) {
+        if(!state.manuallyPaused) {
+            trigger.classList.add('active');
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        } else {
+            trigger.classList.remove('active');
+            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        }
+    }
+}
+</script>
+
+{% block scripts %}{% endblock %}
+
 </body>
 </html>
