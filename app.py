@@ -12,11 +12,10 @@ from datetime import datetime
 
 import httpx
 import markdown
-from fastapi import FastAPI, HTTPException, Response, Request, Header
-from fastapi.responses import RedirectResponse, HTMLResponse, FileResponse, JSONResponse
+from fastapi import FastAPI, HTTPException, Response, Request
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
@@ -63,6 +62,7 @@ _locks: Dict[str, threading.Lock] = {}
 # --------------------------------------------------------------------------------------
 REPO_DIR = os.path.dirname(__file__)
 DEFAULT_DATA_DIR = os.path.join(REPO_DIR, "data")
+STATIC_DIR = os.path.join(REPO_DIR, "static")
 
 # If DATA_DIR is set in env (Railway), use it. Otherwise use local repo folder (Mac).
 DATA_DIR = os.getenv("DATA_DIR", os.path.join(REPO_DIR, "data"))
@@ -487,68 +487,50 @@ def admin_seed_data(request: Request, force: int = 0, token: str = ""):
     return {"ok": True, "copied": copied}
 
 # --------------------------------------------------------------------------------------
-# Page Routes & Static
+# Page Routes & Static (SERVED AS DIRECT FILES)
 # --------------------------------------------------------------------------------------
 
-# 1. Initialize Templates (Do this before defining routes that use it)
-templates = Jinja2Templates(directory="templates")
+# 1. Mount Static Files
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
 
-# 2. Define Main Routes (Using Templates)
+# 2. Main Page Routes (Returning FileResponse)
 @app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request, 
-        "active_page": "home"
-    })
+async def root():
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 @app.get("/handheld", response_class=HTMLResponse)
-async def handheld_page(request: Request):
-    return templates.TemplateResponse("handheld.html", {
-        "request": request, 
-        "active_page": "handheld"
-    })
+async def handheld_page():
+    return FileResponse(os.path.join(STATIC_DIR, "handheld.html"))
 
 @app.get("/patrons", response_class=HTMLResponse)
-async def patrons_page(request: Request):
-    return templates.TemplateResponse("patrons.html", {
-        "request": request, 
-        "active_page": "patrons"
-    })
+async def patrons_page():
+    return FileResponse(os.path.join(STATIC_DIR, "patrons.html"))
 
 @app.get("/gameoftheweek", response_class=HTMLResponse)
 @app.get("/gotw", response_class=HTMLResponse)
-async def gotw_page(request: Request):
-    return templates.TemplateResponse("gotw.html", {
-        "request": request, 
-        "active_page": "gotw"
-    })
+async def gotw_page():
+    return FileResponse(os.path.join(STATIC_DIR, "gotw.html"))
 
 @app.get("/benchmarks", response_class=HTMLResponse)
-async def benchmarks_page(request: Request):
-    return templates.TemplateResponse("benchmarks.html", {
-        "request": request, 
-        "active_page": "benchmarks"
-    })
+async def benchmarks_page():
+    return FileResponse(os.path.join(STATIC_DIR, "benchmarks.html"))
 
 @app.get("/reviews/retroid-pocket-g2", response_class=HTMLResponse)
-async def rpg2_review_page(request: Request):
-    return templates.TemplateResponse("rpg2-review.html", {
-        "request": request,
-        "active_page": "handheld"
-    })
+async def rpg2_review_page():
+    # Maps to the specific HTML file for this review
+    return FileResponse(os.path.join(STATIC_DIR, "rpg2review.html"))
 
 @app.get("/store", response_class=HTMLResponse)
-async def store_page(request: Request):
-    return templates.TemplateResponse("store.html", {
-        "request": request, 
-        "active_page": "store"
-    })
+async def store_page():
+    # Pointing to shop.html as per your file structure
+    return FileResponse(os.path.join(STATIC_DIR, "shop.html"))
 
 @app.get("/ranking", response_class=FileResponse)
 def ranking_page(): 
-    return FileResponse(os.path.join(REPO_DIR, "static", "ranking.html"))
+    return FileResponse(os.path.join(STATIC_DIR, "ranking.html"))
 
-# 4. Helper Routes (Guides)
+# 3. Helper Routes (Guides)
 @app.get("/guides/{slug}", response_class=HTMLResponse)
 def serve_guide(slug: str):
     md_path = os.path.join("guides", f"{slug}.md")
@@ -564,14 +546,10 @@ def serve_guide(slug: str):
     </head><body class="p-8"><article class="prose prose-invert mx-auto">{html}</article></body></html>
     """
 
-# 5. Mount Static Files
-app.mount("/static", StaticFiles(directory=os.path.join(REPO_DIR, "static")), name="static")
-app.mount("/data", StaticFiles(directory=DATA_DIR), name="data")
-
 # --------------------------------------------------------------------------------------
 # Pretty URL Routing (Dynamic Handheld/Accessory IDs)
 # --------------------------------------------------------------------------------------
-# This set matches the IDs in your store.html script
+# This set matches the IDs in your shop.html script
 KNOWN_IDS = {
     "anbernic_rg477v", "trimui_brick_hammer", "trimui_brick", "rp6",
     "steam_deck", "rp5", "rp_mini2", "rp_classic", "rp_flip2", "rpg2",
@@ -580,25 +558,21 @@ KNOWN_IDS = {
     "gamesir_g8p", "sd_card"
 }
 
-# 6. The "Catch-All" Route (MUST BE LAST)
+# 4. The "Catch-All" Route (MUST BE LAST)
 @app.get("/{product_id}", response_class=HTMLResponse)
-async def serve_pretty_product_url(request: Request, product_id: str):
+async def serve_pretty_product_url(product_id: str):
     # Check if the URL matches a known product ID
     if product_id in KNOWN_IDS:
-        return templates.TemplateResponse("store.html", {
-            "request": request, 
-            "active_page": "store"
-        })
+        # Return the shop page; the JS there can handle highlighting if needed, 
+        # or it just serves as a valid entry point.
+        return FileResponse(os.path.join(STATIC_DIR, "shop.html"))
     
     # If not found, raise 404
     raise HTTPException(status_code=404, detail="Page not found")
 
 @app.get("/test-store", response_class=HTMLResponse)
-async def test_store(request: Request):
-    return templates.TemplateResponse("store.html", {
-        "request": request, 
-        "active_page": "store"
-    })
+async def test_store():
+    return FileResponse(os.path.join(STATIC_DIR, "shop.html"))
 
 if __name__ == "__main__":
     import uvicorn
