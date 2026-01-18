@@ -287,13 +287,13 @@
     <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
         <div class="container mx-auto px-4 h-24 flex justify-between items-center">
             
-            <a href="#" class="flex items-center gap-3 group shrink-0">
+            <a href="/" class="flex items-center gap-3 group shrink-0">
                 <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
                 </div>
                 <div class="hidden sm:flex flex-col">
                     <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
-                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Tech & Gaming</span>
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
                 </div>
             </a>
             
@@ -321,7 +321,7 @@
                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
                 </div>
 
-                <a href="#" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
+                <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
                     <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
                 </a>
                 
@@ -890,7 +890,7 @@
         // Affiliate
         const btn = document.getElementById('affiliate-btn');
         btn.href = DEVICE.link;
-        document.getElementById('header-shop-btn').href = DEVICE.link;
+        // document.getElementById('header-shop-btn').href = DEVICE.link; 
         document.getElementById('channel-link').href = DEVICE.ytUrl;
 
         // 2. Setup Review Card
