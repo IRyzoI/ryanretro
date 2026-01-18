@@ -3,875 +3,693 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan Retro - Retro Gaming Channel</title>
+    <title>Ryan Retro | Home</title>
+    
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
-    <link rel="dns-prefetch" href="//i.ytimg.com">
-    <link rel="preconnect" href="https://huggingface.co" crossorigin>
-    <link rel="dns-prefetch" href="//huggingface.co">
-
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Kanit:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap');
-        
+        /* --- THEME FROM REFERENCE --- */
         :root {
-            /* LIGHT MODE (Default) */
-            --bg-body: #f3f4f6;          /* Light Gray Background */
-            --bg-panel: #e5e7eb;        /* Panel Gray */
-            --text-main: #111827;       /* Dark Text */
-            --text-muted: #4b5563;
-            --border-color: #000000;
+            --bg-deep: #1a0b2e;
+            --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
             
-            /* Scrollbar Colors (Light) */
-            --scrollbar-track: #e5e7eb;
-            --scrollbar-thumb: #fbbf24;
+            --card-border: rgba(255, 255, 255, 0.2); 
+            --card-border-hover: rgba(255, 255, 255, 0.5);
+            
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444; 
+            --accent-purple: #a855f7;
+            --accent-cyan: #22d3ee;
+            
+            --text-main: #ffffff;
+            --text-sub: #e2e8f0;
+
+            --bg-card: #3D255D;
         }
 
-        /* DARK MODE VARIABLES */
-        body.dark-mode {
-            --bg-body: #111827;         /* Very dark background */
-            --bg-panel: #1f2937;        
-            --text-main: #d1d5db;       /* Light text */
-            --text-muted: #9ca3af;
-            --border-color: #000000;    
-
-            /* Scrollbar Colors (Dark) */
-            --scrollbar-track: #1f2937; 
+        body {
+            background-color: var(--bg-deep);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        html, body { max-width: 100%; overflow-x: hidden; scroll-behavior: smooth; }
-        body { 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            font-family: 'Roboto', sans-serif; 
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .retro-font { font-family: 'Press Start 2P', cursive; font-display: block; }
-        .pixel-border { border: 4px solid #000; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
-        .pixel-btn { transition: all 0.2s ease; cursor: pointer; }
-        .pixel-btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
-
-        /* --- DARK MODE OVERRIDES --- */
+        /* Typography */
+        .font-display { font-family: 'Outfit', sans-serif; }
+        .font-logo { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+        .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+        .font-pixel { font-family: 'VT323', monospace; }
         
-        /* 1. Global Sections */
-        body.dark-mode header,
-        body.dark-mode footer,
-        body.dark-mode section {
-            background-color: var(--bg-body) !important;
-            border-color: #000 !important;
+        /* Bento Card Base Styles */
+        .bento-card {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3); 
         }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
+        }
+
+        /* --- BRAND SPECIFIC CARD COLORS --- */
+        .card-retroid { background-color: #dc2626; border-color: rgba(255, 255, 255, 0.2); }
+        .card-retroid:hover { background-color: #ef4444; border-color: rgba(255, 255, 255, 0.5); }
+
+        .card-ayn { background-color: #2563eb; border-color: rgba(255, 255, 255, 0.2); }
+        .card-ayn:hover { background-color: #3b82f6; border-color: rgba(255, 255, 255, 0.5); }
+
+        .card-ayaneo { background-color: #7c3aed; border-color: rgba(255, 255, 255, 0.2); }
+        .card-ayaneo:hover { background-color: #8b5cf6; border-color: rgba(255, 255, 255, 0.5); }
         
-        /* 2. Typography */
-        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: #fff !important; }
-        body.dark-mode .text-gray-800 { color: #fff !important; }
-        body.dark-mode .text-gray-900 { color: #fff !important; }
-        body.dark-mode .text-gray-700 { color: #d1d5db !important; } /* Footer Text */
-        body.dark-mode .text-gray-500 { color: #9ca3af !important; }
-        body.dark-mode p { color: #d1d5db !important; }
+        .card-anbernic { background-color: #ea580c; border-color: rgba(255, 255, 255, 0.2); }
+        .card-anbernic:hover { background-color: #f97316; border-color: rgba(255, 255, 255, 0.5); }
 
-        /* 3. Header & Navigation (MATCHING RANKING PAGE) */
-        body.dark-mode header#site-header { 
-            background-color: #1f2937 !important; 
-            border-color: #000 !important;
-        } 
-        
-        /* Nav Box Logic */
-        body.dark-mode #navBox {
-            background-color: #374151 !important;
-            border-color: #1f2937 !important;
-        }
-        body.dark-mode #navBox .pause-menu-header {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-            border-bottom-color: #000 !important;
-        }
+        .card-magicx { background-color: #db2777; border-color: rgba(255, 255, 255, 0.2); }
+        .card-magicx:hover { background-color: #ec4899; border-color: rgba(255, 255, 255, 0.5); }
 
-        /* Nav Items Dark Mode */
-        body.dark-mode #navBox .nav-item .text-gray-800 {
-            color: #fff !important;
-        }
-        body.dark-mode .nav-item:not(.bg-yellow-400):not(:hover) {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-            border-color: transparent;
-        }
-        /* Active Home Button in Dark Mode */
-        body.dark-mode .nav-item.bg-yellow-400 {
-            background-color: #facc15 !important;
-            color: #000 !important;
-            border-color: #000 !important;
-        }
-        body.dark-mode .nav-item.bg-yellow-400 span,
-        body.dark-mode .nav-item.bg-yellow-400 i {
-            color: #000 !important;
-        }
+        .card-trimui { background-color: #0891b2; border-color: rgba(255, 255, 255, 0.2); }
+        .card-trimui:hover { background-color: #06b6d4; border-color: rgba(255, 255, 255, 0.5); }
 
-        /* Header Buttons Dark Mode */
-        body.dark-mode #navToggle {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-            border-color: #000 !important;
+        .card-gkd { background-color: #16a34a; border-color: rgba(255, 255, 255, 0.2); }
+        .card-gkd:hover { background-color: #22c55e; border-color: rgba(255, 255, 255, 0.5); }
+
+        .card-vortex { background-color: #0d9488; border-color: rgba(255, 255, 255, 0.2); }
+        .card-vortex:hover { background-color: #14b8a6; border-color: rgba(255, 255, 255, 0.5); }
+
+        .card-mangmi { background-color: #4f46e5; border-color: rgba(255, 255, 255, 0.2); }
+        .card-mangmi:hover { background-color: #6366f1; border-color: rgba(255, 255, 255, 0.5); }
+
+        .card-generic { background-color: #1e293b; border-color: rgba(255, 255, 255, 0.2); }
+        .card-generic:hover { background-color: #334155; border-color: rgba(255, 255, 255, 0.5); }
+
+        .card-video { background-color: #dc2626; border-color: rgba(255, 255, 255, 0.2); }
+        .card-video:hover { background-color: #ef4444; border-color: rgba(255, 255, 255, 0.5); }
+
+        /* Nav Pills */
+        .nav-pill {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Added gap for icon spacing */
+        }
+        .nav-pill:hover, .nav-pill.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
         }
 
-        /* Info Boxes (Find Me / Support Me) Dark Mode */
-        body.dark-mode .info-box {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-            border-color: #000 !important;
-        }
-        body.dark-mode .info-label {
-            background-color: #1f2937 !important;
-            color: #9ca3af !important;
-            border-color: #4b5563 !important;
-        }
-
-        /* 4. JS GENERATED CONTENT OVERRIDES */
-        
-        /* Video Cards */
-        body.dark-mode .video-item {
-            background-color: #1f2937 !important; 
-            border-color: #000 !important;
-        }
-        body.dark-mode .video-info-area {
-            background-color: #111827 !important; 
-        }
-        body.dark-mode .video-title {
-            color: #fff !important;
-        }
-
-        /* Filter Buttons (Inactive State) */
-        body.dark-mode .filter-btn-default {
-            background-color: #374151 !important; /* Dark Gray */
-            color: #fff !important;
-        }
-
-        /* Game Cards */
-        body.dark-mode .device-item {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-        }
-
-        /* --- END DARK MODE --- */
-
-        /* Header specific styles to match ranking page */
-        header#site-header {
-            width: 100%;
-            z-index: 50;
-            background-color: #f3f4f6; /* Default Light Header */
-            border-bottom: 4px solid #9ca3af;
-            padding: 1rem;
-            position: relative; /* Changed from sticky to match ranking page style if needed, or keep sticky */
-        }
-        /* Restore sticky behavior for home page UX if desired, but ranking page uses relative/standard flow usually. 
-           Let's keep sticky for Home Page UX but use ranking styles */
-        header#site-header {
-            position: sticky;
-            top: 0;
-        }
-
-        /* Beautiful Custom Scrollbars (Updated to use Variables) */
-        .custom-scrollbar {
-            overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-        }
-        .video-scrollbar {
-            scrollbar-color: #ef4444 var(--scrollbar-track);
-        }
-        .custom-scrollbar::-webkit-scrollbar { height: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-track { 
-            background: var(--scrollbar-track); 
-            border-radius: 10px; 
-            margin: 0 20px; 
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb { 
-            background: var(--scrollbar-thumb); 
-            border: 2px solid var(--scrollbar-track);
-            border-radius: 10px; 
-        }
-        .video-scrollbar::-webkit-scrollbar-thumb { background: #ef4444; }
-
-        .marquee-container {
-            width: 100%; position: relative;
-            padding-bottom: 12px;
-        }
-        .marquee-track { display: flex; width: max-content; }
-
-        .device-item, .video-item {
-            flex-shrink: 0; width: 18rem; margin-right: 1.5rem; transition: transform 0.3s ease;
-        }
-        .device-item:hover, .video-item:hover { transform: translateY(-5px); }
-
-        .play-trigger {
+        /* Social Buttons */
+        .social-btn {
+            width: 36px; height: 36px;
             display: flex; align-items: center; justify-content: center;
-            width: 42px; height: 42px; transition: all 0.2s;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
         }
-        .play-trigger svg { width: 20px; height: 20px; fill: currentColor; }
-        .play-trigger.active { background: #4ade80 !important; color: black !important; border-color: black !important; }
+        .social-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
 
-        /* Achievement Notification Styles */
+        /* Scroll Wrapper (Fixes Scrollbar Border Issue) */
+        .scroll-wrapper {
+            width: 100%;
+            position: relative;
+            padding: 24px; /* Space inside the border */
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            background: rgba(0,0,0,0.1);
+            overflow: hidden; /* Clips scrollbar to border radius */
+        }
+
+        .scroll-container {
+            width: 100%; 
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+        
+        .scroll-track { 
+            display: flex; 
+            width: max-content; 
+            gap: 24px;
+            padding: 20px 4px; /* Increased top/bottom padding to prevent hover cut-off */
+        }
+        
+        /* Card variations */
+        .device-card, .video-card {
+            width: 260px; /* Slightly narrower to fit more */
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        /* Filter Buttons */
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3);
+            color: var(--text-sub);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: white;
+            color: #1a0b2e;
+            border-color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+        }
+
+        /* Achievement Popup */
         #achievement-popup {
-            position: fixed;
-            bottom: -150px;
-            left: 50%;
+            position: fixed; bottom: -200px; left: 50%;
             transform: translateX(-50%);
             z-index: 9999;
-            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 400px;
         }
-        #achievement-popup.show { bottom: 30px; }
+        #achievement-popup.show { bottom: 40px; }
 
-        /* Flip Card 3D Styles */
-        .flip-card { perspective: 1000px; cursor: pointer; }
-        .flip-card-inner {
-            position: relative; width: 100%; height: 100%; text-align: center;
-            transition: transform 0.6s; transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back {
-            position: absolute; width: 100%; height: 100%;
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
-            top: 0; left: 0;
-        }
-        .flip-card-back { transform: rotateY(180deg); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-purple); }
 
-        /* Holo/Rare Card Effect */
-        @keyframes foil-shine {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Play Trigger Button */
+        .play-trigger {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s;
+            color: white;
         }
-        .rare-holo-bg {
-            background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 25%, #be185d 50%, #4c1d95 75%, #1e1b4b 100%);
-            background-size: 300% 300%;
-            animation: foil-shine 6s ease infinite;
-        }
-        .sparkle-overlay {
-            background-image: radial-gradient(white 1px, transparent 0);
-            background-size: 30px 30px;
-            opacity: 0.15;
-            animation: sparkle-twinkle 4s linear infinite;
-        }
-        @keyframes sparkle-twinkle {
-            0% { opacity: 0.15; transform: translateY(0); }
-            50% { opacity: 0.25; }
-            100% { opacity: 0.15; transform: translateY(-10px); }
+        .play-trigger:hover {
+            background: var(--accent-yellow);
+            color: #451a03;
+            transform: scale(1.1);
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans overflow-x-hidden">
+<body>
 
-<!-- CRITICAL FIX: Script to prevent White Flash on Dark Mode refresh -->
-<script>
-    (function() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark' || !savedTheme) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-    })();
-</script>
+    <div class="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#4c1d95]/40 to-transparent -z-10 pointer-events-none"></div>
+    <div class="fixed top-[-200px] right-[-200px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
 
-<!-- NAVIGATION OVERLAY (Identical structure to Ranking Page) -->
-<div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
-    <div class="absolute inset-0" onclick="toggleNav()"></div>
-    
-    <div class="bg-white border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
-        
-        <div class="pause-menu-header bg-gray-200 text-black p-2 mb-1 flex justify-between items-center border-b-2 border-black">
-            <span class="retro-font text-xs">PAUSE MENU</span>
-            <button onclick="toggleNav()" class="text-black hover:text-red-500">
-                <i data-feather="x" class="w-4 h-4"></i>
-            </button>
-        </div>
-
-        <div class="flex flex-col gap-1" id="navLinksList">
-            <!-- BENCHMARKS (Green) -->
-            <a href="/benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-green-600 cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">BENCHMARKS</span>
-                <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+    <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
+        <div class="container mx-auto px-4 h-24 flex justify-between items-center">
+            
+            <a href="/" class="flex items-center gap-3 group shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <div class="hidden sm:flex flex-col">
+                    <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
+                </div>
             </a>
+            
+            <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
+                <a href="/reviews" class="nav-pill"><i data-lucide="star" class="w-3.5 h-3.5"></i> Reviews</a>
+                <a href="/benchmarks" class="nav-pill"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Benchmarks</a>
+                <a href="/compatibility" class="nav-pill"><i data-lucide="arrow-right-left" class="w-3.5 h-3.5"></i> Comparisons</a>
+                <a href="/gotw" class="nav-pill"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> GOTW</a>
+                <a href="/patrons" class="nav-pill"><i data-lucide="heart" class="w-3.5 h-3.5"></i> Patrons</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="social-btn" title="Instagram"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="social-btn" title="TikTok">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="social-btn" title="Discord"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                </div>
 
-            <!-- GOTW (Red) -->
-            <a href="/gotw" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">GOTW</span>
-                <i data-feather="crosshair" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <!-- HANDHELDS (Sky Blue) -->
-            <a href="/handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-sky-500 cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">HANDHELDS</span>
-                <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <!-- HOME (Yellow - Illuminated/Active) -->
-            <!-- Note: Background set to yellow-400, border black to show active state -->
-            <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-yellow-400 border-2 border-black cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] text-black">HOME</span>
-                <i data-feather="home" class="w-4 h-4 text-black"></i>
-            </a>
-
-            <!-- PATRONS (Orange) -->
-            <a href="/patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-orange-500 cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">PATRONS</span>
-                <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <!-- STORE (Purple) -->
-            <a href="/store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-purple-600 cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">STORE</span>
-                <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-        </div>
-        
-        <div class="h-0.5 bg-gray-400 my-1"></div>
-
-        <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
-             <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
-             <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
-        </div>
-    </div>
-</div>
-
-<!-- SITE HEADER (Identical structure to Ranking Page) -->
-<header id="site-header">
-  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-    
-    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-        <button id="navToggle" class="p-3 bg-white text-black hover:bg-gray-200 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
-            <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-            <span class="retro-font text-[10px] hidden md:block">MENU</span>
-        </button>
-        <a href="/" class="flex items-center gap-3 md:gap-4">
-            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-                class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-400 bg-gray-800" alt="Ryan Retro Logo">
-            <div class="flex flex-col">
-                <h1 class="retro-font text-xs md:text-sm text-gray-800 leading-tight">RYAN RETRO</h1>
-                <span class="retro-font text-[8px] text-gray-500 uppercase">Gaming Channel</span>
+                <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
+                </a>
+                
+                <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
             </div>
-        </a>
-    </div>
-
-    <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto mt-2 md:mt-0">
-      <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
-        <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
-          FIND ME
-        </span>
-        <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-           <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
-             <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
-             <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-           </a>
-           <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
-              <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-           </a>
-           <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#1877F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Facebook">
-             <i data-feather="facebook" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
-           </a>
-           <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-           </a>
         </div>
-      </div>
-      <div class="info-box border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
-        <span class="info-label absolute -top-2.5 left-1/2 -translate-x-1/2 bg-white px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
-          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
-        </span>
-        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-          <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-          </svg>
-          <span class="tracking-tight">JOIN PATREON</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- ACHIEVEMENT NOTIFICATION (Secret reveal after 5 clicks) -->
-<div id="achievement-popup" class="w-[90%] max-w-md">
-    <div class="bg-yellow-400 border-4 border-black p-4 pixel-border flex items-center gap-4 shadow-[0_0_20px_rgba(250,204,21,0.4)]">
-        <div class="bg-black p-2 border-2 border-black">
-            <i data-feather="star" class="text-yellow-400 w-8 h-8 fill-yellow-400 animate-[spin_3s_linear_infinite]"></i>
+        
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
+             <div class="grid grid-cols-2 gap-2 mb-2">
+                 <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="star" class="w-4 h-4"></i> Reviews</a>
+                 <a href="/benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Benchmarks</a>
+                 <a href="/compatibility" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="arrow-right-left" class="w-4 h-4"></i> Comparisons</a>
+                 <a href="/store" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop</a>
+                 <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="gamepad-2" class="w-4 h-4"></i> GOTW</a>
+                 <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i> Patrons</a>
+             </div>
+             
+             <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
+                 <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
+                 <div class="flex gap-3 flex-wrap justify-end">
+                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                     <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                     <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                     <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+                 </div>
+             </div>
         </div>
-        <div class="flex-1">
-            <p class="retro-font text-[10px] text-black uppercase mb-1">Achievement Unlocked!</p>
-            <p class="retro-font text-[8px] text-gray-900 uppercase leading-snug">You're persistent! I like that about you too.</p>
-        </div>
-        <button onclick="closeAchievement()" class="text-black hover:text-white transition-colors">
-            <i data-feather="x" class="w-4 h-4"></i>
-        </button>
-    </div>
-</div>
+    </header>
 
-<section id="games" class="py-16 bg-gray-200">
-  <div class="container mx-auto px-4">
-    <div class="flex items-center justify-center gap-4 mb-8" data-aos="fade-down">
-        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 text-center drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">PLAY RETRO GAMES</h2>
-        <!-- Target play button for 5-click secret -->
-        <button id="device-trigger" class="play-trigger pixel-btn bg-yellow-400 text-black border-2 border-black rounded" onclick="toggleMarquee('device-marquee')" title="Pause/Resume Scroll">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-    </div>
-    
-    <div class="flex flex-wrap justify-center items-center gap-2 mb-12">
-      <button class="filter-btn filter-btn-default bg-gray-300 text-black px-4 py-2 rounded retro-font text-sm" data-filter="all">ALL</button>
-      <button class="filter-btn filter-btn-default bg-gray-300 text-black px-4 py-2 rounded retro-font text-sm" data-filter="retroid">RETROID</button>
-      <button class="filter-btn filter-btn-default bg-gray-300 text-black px-4 py-2 rounded retro-font text-sm" data-filter="ayn">AYN</button>
-      <button class="filter-btn filter-btn-default bg-gray-300 text-black px-4 py-2 rounded retro-font text-sm" data-filter="ayaneo">AYANEO</button>
-    </div>
-  </div>
+    <main class="container mx-auto px-4 py-8 overflow-hidden flex-grow">
 
-  <div class="marquee-container custom-scrollbar" id="device-marquee">
-      <div class="marquee-track py-4">
-        <a href="/static/handheld.html?device=Retroid%20Pocket%206" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="retroid">
-          <img src="https://www.goretroid.com/cdn/shop/files/bbe4c9ab94f9be237637709704cd2056_2048x.jpg?v=1761899314" class="w-full h-48 object-cover" alt="RP6">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Retroid Pocket 6</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20G2" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="retroid">
-          <img src="https://www.goretroid.com/cdn/shop/files/1_c52206d5-1a34-4947-b743-15a06041a963_2048x.jpg?v=1761373135" class="w-full h-48 object-cover" alt="RPG2">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Retroid Pocket G2</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%205" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5square.png" class="w-full h-48 object-cover" alt="RP5">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Retroid Pocket 5</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Odin%202%20Portal" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/o2psquare.png" class="w-full h-48 object-cover" alt="O2P">
-          <div class="p-6">
-            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Odin 2 Portal</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Odin%203" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3.png" class="w-full h-48 object-cover" alt="Odin 3">
-          <div class="p-6">
-            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Odin 3</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="ayaneo">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkrpocketfitsquare.jpg" class="w-full h-48 object-cover" alt="Konkr">
-          <div class="p-6">
-            <span class="bg-indigo-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYANEO</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Konkr Pocket Fit</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/fliip%2043.png" class="w-full h-48 object-cover" alt="Flip 2">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Pocket Flip 2</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=AYN%20Thor" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="ayn">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/aynthorwhite.png" class="w-full h-48 object-cover" alt="Thor">
-          <div class="p-6">
-            <span class="bg-blue-500 text-black text-[10px] px-2 py-1 rounded retro-font">AYN</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">AYN Thor</h3>
-          </div>
-        </a>
-
-        <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic" class="group device-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block" data-brand="retroid">
-          <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20pkm.png" class="w-full h-48 object-cover" alt="Classic">
-          <div class="p-6">
-            <span class="bg-red-500 text-black text-[10px] px-2 py-1 rounded retro-font">RETROID</span>
-            <h3 class="text-xl font-bold mt-2 text-gray-800">Pocket Classic</h3>
-          </div>
-        </a>
-      </div>
-  </div>
-</section>
-
-<section id="videos" class="py-16 bg-gray-100">
-  <div class="container mx-auto px-4 text-center">
-    <div class="flex items-center justify-center gap-4 mb-12" data-aos="fade-down">
-        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">LATEST VIDEOS</h2>
-        <button id="video-trigger" class="play-trigger pixel-btn bg-red-600 text-white border-2 border-black rounded" onclick="toggleMarquee('video-marquee')" title="Pause/Resume Scroll">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        </button>
-    </div>
-  </div>
-
-  <div class="marquee-container custom-scrollbar video-scrollbar" id="video-marquee">
-      <div id="latest-videos-track" class="marquee-track py-4">
-        <p class="w-full text-center text-gray-500 py-10">Loading latest videos...</p>
-      </div>
-  </div>
-
-  <div class="text-center mt-12">
-    <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="inline-block bg-gray-700 hover:bg-gray-600 text-white px-8 py-3 rounded pixel-btn retro-font">VIEW ALL VIDEOS</a>
-  </div>
-</section>
-
-<section id="guides" class="py-16 bg-gray-200">
-  <div class="container mx-auto px-4">
-    <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-12 text-center drop-shadow-[2px_2px_0_rgba(0,0,0,1)]" data-aos="fade-down">RETRO GUIDES</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <a href="/guides/steam-android" class="bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block video-item" data-aos="fade-up" data-aos-delay="0">
-        <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-48 object-cover" alt="Steam Guide">
-        <div class="p-6 video-info-area bg-gray-50">
-          <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
-          <h3 class="text-xl font-bold mt-2 video-title text-gray-900">Steam on Android</h3>
-        </div>
-      </a>
-      <a href="/guides/switch-android" class="bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block video-item" data-aos="fade-up" data-aos-delay="100">
-        <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-48 object-cover" alt="Switch Guide">
-        <div class="p-6 video-info-area bg-gray-50">
-          <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
-          <h3 class="text-xl font-bold mt-2 video-title text-gray-900">Switch on Android</h3>
-        </div>
-      </a>
-      <a href="/guides/ps3-android" class="bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block video-item" data-aos="fade-up" data-aos-delay="200">
-        <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-48 object-cover" alt="PS3 Guide">
-        <div class="p-6 video-info-area bg-gray-50">
-          <span class="bg-green-500 text-black text-[10px] px-2 py-1 rounded retro-font">ANDROID</span>
-          <h3 class="text-xl font-bold mt-2 video-title text-gray-900">PS3 on Android</h3>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="py-16 bg-gray-100">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-col md:flex-row items-center gap-10">
-      <div class="md:w-1/2" data-aos="fade-right">
-        <!-- FLIP CARD INTERACTION -->
-        <div class="flip-card w-full aspect-square max-w-[400px] mx-auto" onclick="this.classList.toggle('flipped')">
-            <div class="flip-card-inner h-full">
-                <!-- FRONT: Logo -->
-                <div class="flip-card-front">
-                    <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Ryan Retro" class="rounded-lg pixel-border w-full h-full object-cover bg-gray-800">
-                    <div class="absolute bottom-4 right-4 text-white/40 text-[9px] retro-font flex items-center gap-2 pointer-events-none">
-                        FLIP <i data-feather="refresh-cw" class="w-3 h-3"></i>
-                    </div>
+        <!-- GAMES SECTION -->
+        <section id="games" class="mb-20" data-aos="fade-up">
+            <div class="flex flex-col items-center text-center gap-6 mb-8">
+                <div>
+                    <h2 class="font-display font-black text-4xl md:text-5xl text-white drop-shadow-lg mb-2">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">PLAY</span> RETRO
+                    </h2>
+                    <p class="text-white/60 font-medium max-w-md mx-auto">Discover the best handhelds for your favorite retro games.</p>
                 </div>
                 
-                <!-- BACK: TCG Style Message -->
-                <div class="flip-card-back rounded-lg pixel-border rare-holo-bg border-[6px] border-yellow-400 p-4 flex flex-col justify-between relative overflow-hidden shadow-[0_0_15px_rgba(234,179,8,0.4)]">
-                    <div class="absolute inset-0 sparkle-overlay pointer-events-none"></div>
-                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-30 pointer-events-none"></div>
-                    
-                    <div class="flex justify-between items-center border-b-2 border-yellow-400 pb-2 mb-2 relative z-10">
-                        <span class="retro-font text-xs text-white drop-shadow-md">RYAN RETRO</span>
-                        <div class="flex gap-1">
-                            <i data-feather="star" class="w-3 h-3 text-yellow-300 fill-yellow-300 drop-shadow-sm"></i>
-                            <i data-feather="star" class="w-3 h-3 text-yellow-300 fill-yellow-300 drop-shadow-sm"></i>
-                            <i data-feather="star" class="w-3 h-3 text-yellow-300 fill-yellow-300 drop-shadow-sm"></i>
-                            <i data-feather="star" class="w-3 h-3 text-yellow-300 fill-yellow-300 drop-shadow-sm"></i>
-                            <i data-feather="star" class="w-3 h-3 text-yellow-300 fill-yellow-300 drop-shadow-sm"></i>
-                        </div>
-                    </div>
+                <div class="flex items-center justify-center gap-2 overflow-x-auto pb-4 custom-scrollbar w-full">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="retroid">Retroid</button>
+                    <button class="filter-btn" data-filter="ayn">AYN</button>
+                    <button class="filter-btn" data-filter="ayaneo">Ayaneo</button>
+                    <button class="filter-btn" data-filter="anbernic">Anbernic</button>
+                    <button class="filter-btn" data-filter="magicx">MagicX</button>
+                    <button class="filter-btn" data-filter="trimui">TrimUI</button>
+                    <button class="filter-btn" data-filter="gkd">GKD</button>
+                    <button class="filter-btn" data-filter="vortex">Vortex</button>
+                    <button class="filter-btn" data-filter="mangmi">Mangmi</button>
+                </div>
+            </div>
 
-                    <div class="bg-black/70 border-2 border-yellow-400/50 p-3 rounded flex-grow flex items-center justify-center relative z-10 backdrop-blur-sm">
-                        <p class="text-white text-xs sm:text-sm md:text-sm leading-relaxed font-sans text-center drop-shadow-md w-full">
-                            I truly appreciate everyone who takes the time to watch my youtube videos and visit my website. This is such a wholesome community and you make it lovely to continue to upload videos. Sometimes I'm very tired after work and want to just take a rest but knowing so many awesome people will come to see my videos and leave nice comments encourages me to always keep going and creating more, even when I'm tired. I hope everyone reading this finds something useful from my content and I hope you stay happy and healthy.
-                        </p>
-                    </div>
+            <!-- Scroll Wrapper with Border -->
+            <div class="scroll-wrapper">
+                <div class="scroll-container" id="device-scroll">
+                    <div class="scroll-track">
+                        
+                        <!-- Retroid Devices (Red) -->
+                        <a href="/static/handheld.html?device=Retroid%20Pocket%205" class="bento-card card-retroid device-card group block p-4" data-brand="retroid">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/rp5.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Retroid Pocket 5</h3>
+                        </a>
 
-                    <div class="mt-2 pt-2 border-t-2 border-yellow-400 flex justify-between text-[10px] retro-font text-white drop-shadow-md relative z-10">
-                        <span>ATK/∞</span>
-                        <span>DEF/∞</span>
+                        <a href="/static/handheld.html?device=Retroid%20Pocket%20G2" class="bento-card card-retroid device-card group block p-4" data-brand="retroid">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/rpg2.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Retroid Pocket G2</h3>
+                        </a>
+
+                        <a href="/static/handheld.html?device=Retroid%20Pocket%20Classic" class="bento-card card-retroid device-card group block p-4" data-brand="retroid">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/rpclassic.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Retroid Pocket Classic</h3>
+                        </a>
+
+                        <a href="/static/handheld.html?device=Retroid%20Pocket%20Mini" class="bento-card card-retroid device-card group block p-4" data-brand="retroid">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/rpmini.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Retroid Pocket Mini</h3>
+                        </a>
+
+                        <a href="/static/handheld.html?device=Retroid%20Pocket%20Flip%202" class="bento-card card-retroid device-card group block p-4" data-brand="retroid">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/flip2.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Retroid Pocket Flip 2</h3>
+                        </a>
+
+                        <!-- AYN Devices (Blue) -->
+                        <a href="/static/handheld.html?device=AYN%20Odin%202%20Portal" class="bento-card card-ayn device-card group block p-4" data-brand="ayn">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/portal.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">AYN Odin 2 Portal</h3>
+                        </a>
+
+                        <a href="/static/handheld.html?device=AYN%20Odin%203" class="bento-card card-ayn device-card group block p-4" data-brand="ayn">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/odin3.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">AYN Odin 3</h3>
+                        </a>
+
+                        <!-- Ayaneo Devices (Purple) -->
+                        <a href="/static/handheld.html?device=Ayaneo%20Konkr%20Pocket%20Fit" class="bento-card card-ayaneo device-card group block p-4" data-brand="ayaneo">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/konkr.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Ayaneo Konkr Pocket Fit</h3>
+                        </a>
+
+                        <!-- Anbernic Devices (Orange) -->
+                        <a href="/static/handheld.html?device=Anbernic%20RG34XX" class="bento-card card-anbernic device-card group block p-4" data-brand="anbernic">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/rg34xx.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Anbernic RG34XX</h3>
+                        </a>
+
+                        <!-- MagicX Devices (Pink) -->
+                        <a href="/static/handheld.html?device=MagicX%20Zero%2040" class="bento-card card-magicx device-card group block p-4" data-brand="magicx">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/magicxzero40.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">MagicX Zero 40</h3>
+                        </a>
+
+                        <a href="/static/handheld.html?device=MagicX%20XU20%20V32" class="bento-card card-magicx device-card group block p-4" data-brand="magicx">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/xuretroxu20v32.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">MagicX XU20 V32</h3>
+                        </a>
+
+                        <!-- TrimUI (Cyan) -->
+                        <a href="/static/handheld.html?device=TrimUI%20Brick" class="bento-card card-trimui device-card group block p-4" data-brand="trimui">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/brick.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">TrimUI Brick</h3>
+                        </a>
+
+                        <!-- Vortex (Teal) -->
+                        <a href="/static/handheld.html?device=Vortex%20F5" class="bento-card card-vortex device-card group block p-4" data-brand="vortex">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/f5.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Vortex F5</h3>
+                        </a>
+
+                        <!-- Mangmi (Indigo) -->
+                        <a href="/static/handheld.html?device=Mangmi%20Air%20X" class="bento-card card-mangmi device-card group block p-4" data-brand="mangmi">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/mangmiairx.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">Mangmi Air X</h3>
+                        </a>
+
+                        <!-- GKD (Green) -->
+                        <a href="/static/handheld.html?device=GKD%20Pixel%202" class="bento-card card-gkd device-card group block p-4" data-brand="gkd">
+                            <div class="h-40 rounded-2xl overflow-hidden mb-4 relative shadow-lg bg-black/20">
+                                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/carousel/pixel2.png" class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-white text-center transition-colors">GKD Pixel 2</h3>
+                        </a>
+
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- VIDEOS SECTION -->
+        <section id="videos" class="mb-20" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex flex-col items-center text-center gap-6 mb-8">
+                <div>
+                    <h2 class="font-display font-black text-4xl md:text-5xl text-white drop-shadow-lg mb-2">
+                        LATEST <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500">VIDEOS</span>
+                    </h2>
+                    <p class="text-white/60 font-medium">Fresh content from the channel.</p>
+                </div>
+            </div>
+
+            <!-- Scroll Wrapper for Videos -->
+            <div class="scroll-wrapper">
+                <div class="scroll-container" id="video-scroll">
+                    <div id="latest-videos-track" class="scroll-track">
+                        <div class="text-center w-full text-white/30 py-10 font-mono">Connecting to YouTube...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Channel Button -->
+            <div class="flex justify-center mt-8">
+                 <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="nav-pill border border-white/20 hover:bg-white hover:text-black hover:border-white px-6 py-3 text-sm">
+                    View Channel <i data-lucide="external-link" class="inline w-4 h-4 ml-1"></i>
+                 </a>
+            </div>
+        </section>
+
+        <!-- GUIDES SECTION -->
+        <section id="guides" class="mb-20">
+            <h2 class="font-display font-black text-3xl text-white text-center mb-10 uppercase tracking-widest border-b border-white/10 pb-4 mx-auto max-w-2xl">
+                <span class="text-green-400">Essential</span> Guides
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="/guides/steam-android" class="bento-card group block p-4 bg-[#2a475e]" data-aos="fade-up" data-aos-delay="0">
+                    <div class="h-40 rounded-2xl overflow-hidden mb-4 relative">
+                        <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-lg">Steam on Android</h3>
+                        <div class="bg-white/10 p-2 rounded-full text-white/50 group-hover:bg-green-500 group-hover:text-black transition-colors">
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/guides/switch-android" class="bento-card group block p-4 bg-[#e60012]" data-aos="fade-up" data-aos-delay="100">
+                    <div class="h-40 rounded-2xl overflow-hidden mb-4 relative">
+                        <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-lg">Switch on Android</h3>
+                        <div class="bg-white/10 p-2 rounded-full text-white/50 group-hover:bg-white group-hover:text-red-600 transition-colors">
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="/guides/ps3-android" class="bento-card group block p-4 bg-[#003791]" data-aos="fade-up" data-aos-delay="200">
+                    <div class="h-40 rounded-2xl overflow-hidden mb-4 relative">
+                        <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-lg">PS3 on Android</h3>
+                        <div class="bg-white/10 p-2 rounded-full text-white/50 group-hover:bg-white group-hover:text-blue-900 transition-colors">
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section class="mb-12" data-aos="fade-up">
+            <div class="bento-card p-6 md:p-10 bg-gradient-to-br from-[#1a0b2e] to-[#2e1065] relative overflow-hidden">
+                <!-- Background decoration -->
+                <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                
+                <div class="flex flex-col md:flex-row items-stretch gap-8 md:gap-12 relative z-10">
+                    
+                    <!-- Static Image -->
+                    <div class="md:w-5/12 w-full flex flex-col">
+                        <div class="w-full h-full min-h-[300px] rounded-[24px] overflow-hidden shadow-2xl border-4 border-[#fbbf24]/30 relative group">
+                             <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryancow.jpg" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Ryan with a cow">
+                        </div>
+                        <p class="mt-3 text-white/40 text-xs font-retro text-center">Here's me with a cow</p>
+                    </div>
+
+                    <!-- Text Content -->
+                    <div class="md:w-7/12 flex flex-col justify-center text-center md:text-left">
+                        <h2 class="font-display font-black text-3xl md:text-4xl text-white mb-6 uppercase drop-shadow-md">ABOUT RYAN RETRO</h2>
+                        <div class="text-base md:text-lg text-white/80 mb-8 leading-relaxed font-medium space-y-4">
+                            <p>
+                                HELLO everyone and welcome back to the Ryan Retro WEBSITE! I created this website as a resource for anyone who enjoys the same retro gaming handhelds I do.
+                            </p>
+                            <p>
+                                I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid. Gaming connects us to nostalgic memories while bringing new joy.
+                            </p>
+                            <p class="text-white/90">
+                                If you'd like to support me and help me make my dream of doing this full time a reality, please Subscribe to me on YouTube and consider using my Affiliate Links when you purchase something and supporting me on Patreon. I greatly appreciate everybody who helps me. Thank you so much.
+                            </p>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="flex flex-wrap gap-3 justify-center md:justify-start mt-auto">
+                            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="flex items-center gap-2 bg-[#FF0000] hover:bg-[#ff4444] text-white px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-1 shadow-lg shadow-red-900/20 text-sm uppercase tracking-wide">
+                                <i data-lucide="play" class="w-4 h-4 fill-current"></i> YouTube
+                            </a>
+                            <a href="/store" target="_blank" class="flex items-center gap-2 bg-[#fbbf24] hover:bg-[#fcd34d] text-[#451a03] px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-1 shadow-lg shadow-amber-900/20 text-sm uppercase tracking-wide">
+                                <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
+                            </a>
+                            <a href="https://patreon.com/ryanretro" target="_blank" class="flex items-center gap-2 bg-[#f96854] hover:bg-[#ff7d6b] text-white px-6 py-3 rounded-xl font-bold transition-all hover:-translate-y-1 shadow-lg shadow-orange-900/20 text-sm uppercase tracking-wide">
+                                <i data-lucide="heart" class="w-4 h-4 fill-current"></i> Patreon
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Achievement Popup -->
+    <div id="achievement-popup">
+        <div class="bento-card bg-[#fbbf24] border-yellow-200 p-4 flex items-center gap-4 shadow-[0_0_30px_rgba(251,191,36,0.3)]">
+            <div class="bg-black/10 p-2 rounded-full">
+                <i data-lucide="trophy" class="w-8 h-8 text-[#451a03]"></i>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-retro text-[#451a03] text-sm mb-1">Achievement Unlocked!</h4>
+                <p class="text-[#451a03]/80 text-xs font-bold leading-tight">You're persistent! I like that.</p>
+            </div>
+            <button onclick="document.getElementById('achievement-popup').classList.remove('show')" class="text-[#451a03]/50 hover:text-[#451a03]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
         </div>
-      </div>
-      <div class="md:w-1/2" data-aos="fade-left">
-        <h2 class="retro-font text-3xl md:text-4xl text-yellow-400 mb-6 drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">ABOUT RYAN RETRO</h2>
-        <p class="text-gray-600 text-lg mb-4 leading-relaxed">HELLO everyone and welcome back to the Ryan Retro WEBSITE! I created this website as a resource for anyone who enjoys the same retro gaming handhelds I do.</p>
-        <p class="text-gray-600 text-lg mb-8 leading-relaxed">I've loved games since I got my purple Game Boy Color and Pokemon Red as a little kid. Gaming connects us to nostalgic memories while bringing new joy.</p>
+    </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <a href="https://patreon.com/ryanretro" target="_blank" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
-            <i data-feather="star" class="mr-2 w-4 h-4"></i> PATREON
-          </a>
-          <a href="https://ko-fi.com/ryanretro" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
-            <i data-feather="coffee" class="mr-2 w-4 h-4"></i> KO-FI
-          </a>
-          <a href="https://discord.gg/USNwF4N4VH" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
-            <i data-feather="message-circle" class="mr-2 w-4 h-4"></i> DISCORD
-          </a>
-          <a href="https://www.youtube.com/@RyanRetro?sub_confirmation=1" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded pixel-btn retro-font text-xs flex items-center justify-center">
-            <i data-feather="youtube" class="mr-2 w-4 h-4"></i> SUBSCRIBE
-          </a>
+    <footer class="bg-black/20 py-10 text-center border-t border-white/5 mt-auto">
+        <div class="flex justify-center flex-wrap gap-4 mb-6">
+            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+            <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="X (Twitter)"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="TikTok"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <p class="text-xs font-bold text-white/20 uppercase tracking-widest">Ryan Retro • 2026</p>
+    </footer>
 
-<footer class="bg-gray-200 py-12">
-  <div class="container mx-auto px-4 text-center">
-    <div class="flex items-center justify-center mb-4">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Logo" class="w-10 h-10 rounded-full mr-3">
-        <h3 class="retro-font text-lg text-yellow-400">RYAN RETRO</h3>
-    </div>
-    <a href="mailto:ryanretro.contact@gmail.com" class="text-gray-700 hover:text-yellow-500 text-sm flex items-center justify-center">
-      <i data-feather="mail" class="w-4 h-4 mr-2"></i> ryanretro.contact@gmail.com
-    </a>
-    <p class="text-gray-600 text-[10px] mt-4 uppercase">© 2025 Ryan Retro.</p>
-  </div>
-</footer>
+    <script>
+        // Init Icons & AOS
+        lucide.createIcons();
+        AOS.init({ once: true, offset: 50, duration: 800 });
 
-<script>
-// NAVIGATION LOGIC
-const navToggle = document.getElementById('navToggle');
-const navOverlay = document.getElementById('navOverlay');
-const navBox = document.getElementById('navBox');
-
-window.toggleNav = () => {
-    const isHidden = navOverlay.classList.contains('hidden');
-    if (isHidden) {
-        navOverlay.classList.remove('hidden');
-        setTimeout(() => {
-            navBox.classList.remove('scale-95', 'opacity-0');
-            navBox.classList.add('scale-100', 'opacity-100');
-        }, 10);
-    } else {
-        navBox.classList.remove('scale-100', 'opacity-100');
-        navBox.classList.add('scale-95', 'opacity-0');
-        setTimeout(() => {
-            navOverlay.classList.add('hidden');
-        }, 200);
-    }
-};
-if(navToggle) navToggle.addEventListener('click', toggleNav);
-
-
-// State management for Marquees
-const activeMarquees = new Map();
-let deviceTriggerClicks = 0;
-
-// Initialize Infinite Auto-Scroll Marquee
-function initMarquee(containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const track = container.querySelector('.marquee-track');
-    if(!track) return;
-
-    const content = track.innerHTML;
-    const CLONES = 8; 
-    let newHTML = content;
-    for(let i = 0; i < CLONES - 1; i++) {
-        newHTML += content;
-    }
-    track.innerHTML = newHTML;
-
-    activeMarquees.set(containerId, {
-        isPaused: true, 
-        manuallyPaused: true, 
-        scrollSpeed: 0.8,
-        container: container,
-        track: track,
-        clones: CLONES
-    });
-
-    container.addEventListener('mouseenter', () => {
-        const state = activeMarquees.get(containerId);
-        if(state && !state.manuallyPaused) state.isPaused = true;
-    });
-    container.addEventListener('mouseleave', () => {
-        const state = activeMarquees.get(containerId);
-        if(state && !state.manuallyPaused) state.isPaused = false;
-    });
-    
-    if (!window.marqueeLoopStarted) {
-        window.marqueeLoopStarted = true;
-        requestAnimationFrame(globalAnimate);
-    }
-}
-
-function globalAnimate() {
-    activeMarquees.forEach((state, id) => {
-        if (!state.isPaused) {
-            state.container.scrollLeft += state.scrollSpeed;
-            const singleSetWidth = state.track.scrollWidth / state.clones;
-            if (state.container.scrollLeft >= singleSetWidth) {
-                state.container.scrollLeft -= singleSetWidth;
+        // --- Video Fetching ---
+        async function loadVideos() {
+            const track = document.getElementById('latest-videos-track');
+            try {
+                // Simulate API or use your endpoint
+                const res = await fetch('/api/latest-videos?limit=10');
+                if(!res.ok) throw new Error("No API");
+                const data = await res.json();
+                
+                if (data && data.length) {
+                    track.innerHTML = data.map(v => `
+                        <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="bento-card card-video video-card group block p-4">
+                            <div class="h-32 rounded-xl overflow-hidden mb-3 relative shadow-lg bg-black/20">
+                                <img src="${v.thumb}" class="absolute h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100">
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 transition-all duration-300">
+                                    <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur border border-white/50 flex items-center justify-center">
+                                        <i data-lucide="play" class="text-white w-4 h-4 fill-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col">
+                                <h3 class="font-display font-bold text-sm text-white leading-tight line-clamp-2 transition-colors">${v.title}</h3>
+                            </div>
+                        </a>`).join('');
+                    lucide.createIcons();
+                }
+            } catch(e) {
+                // Fallback Content
+                track.innerHTML = `
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="bento-card card-video video-card group block p-4">
+                        <div class="h-32 rounded-xl overflow-hidden mb-3 relative shadow-lg bg-black/20">
+                            <div class="absolute inset-0 bg-gradient-to-br from-red-900 to-black flex items-center justify-center">
+                                <i data-lucide="youtube" class="w-10 h-10 text-white/50"></i>
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <h3 class="font-display font-bold text-sm text-white leading-tight transition-colors">Visit RyanRetro on YouTube</h3>
+                        </div>
+                    </a>
+                `;
+                lucide.createIcons();
             }
         }
-    });
-    requestAnimationFrame(globalAnimate);
-}
 
-function toggleMarquee(id) {
-    const state = activeMarquees.get(id);
-    if (!state) return;
+        // --- Filter Logic ---
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Visuals
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Logic
+                const filter = btn.dataset.filter;
+                const cards = document.querySelectorAll('.device-card');
+                
+                cards.forEach(card => {
+                    if (filter === 'all' || card.dataset.brand === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
 
-    if (id === 'device-marquee') {
-        deviceTriggerClicks++;
-        if (deviceTriggerClicks === 5) {
-            showAchievement();
+        // Initialize Videos
+        loadVideos();
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
         }
-    }
-
-    state.manuallyPaused = !state.manuallyPaused;
-    state.isPaused = state.manuallyPaused;
-    
-    const triggerId = id.replace('-marquee', '-trigger');
-    const trigger = document.getElementById(triggerId);
-    if(trigger) {
-        if(!state.manuallyPaused) {
-            trigger.classList.add('active');
-            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-        } else {
-            trigger.classList.remove('active');
-            trigger.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        }
-    }
-}
-
-function showAchievement() {
-    const popup = document.getElementById('achievement-popup');
-    popup.classList.add('show');
-    setTimeout(() => {
-        popup.classList.remove('show');
-    }, 6000);
-}
-
-function closeAchievement() {
-    document.getElementById('achievement-popup').classList.remove('show');
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  AOS.init({ duration: 800, once: true });
-  feather.replace();
-
-  // DARK MODE TOGGLE LOGIC (Button Click)
-  const body = document.body;
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const themeIcon = document.getElementById('themeIcon');
-
-  // Set Initial Icon based on current body class (set by the script in head)
-  if (body.classList.contains('dark-mode')) {
-      if(themeIcon) themeIcon.setAttribute('data-feather', 'sun');
-  } else {
-      if(themeIcon) themeIcon.setAttribute('data-feather', 'moon');
-  }
-  if(window.feather) feather.replace();
-
-  if(darkModeToggle) {
-      darkModeToggle.addEventListener('click', () => {
-          body.classList.toggle('dark-mode');
-          const isDark = body.classList.contains('dark-mode');
-          
-          if (isDark) {
-              localStorage.setItem('theme', 'dark');
-              if(themeIcon) {
-                  themeIcon.setAttribute('data-feather', 'sun');
-                  feather.replace();
-              }
-          } else {
-              localStorage.setItem('theme', 'light');
-              if(themeIcon) {
-                  themeIcon.setAttribute('data-feather', 'moon');
-                  feather.replace();
-              }
-          }
-      });
-  }
-
-  initMarquee('device-marquee');
-
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const ACTIVE_MAP = { 
-      all: 'bg-yellow-400 text-black', 
-      retroid: 'bg-red-600 text-white', 
-      ayn: 'bg-blue-600 text-white', 
-      ayaneo: 'bg-indigo-600 text-white' 
-  };
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter;
-      const allItems = document.querySelectorAll('.device-item');
-      
-      // CRITICAL FIX: Reset button classes using classList to avoid overwriting robust logic
-      filterBtns.forEach(b => {
-          // Remove active brand classes
-          b.classList.remove('active-brand', 'bg-white', 'bg-red-600', 'bg-blue-600', 'bg-indigo-600', 'text-white', 'bg-yellow-400', 'text-black');
-          // Add default classes AND explicitly add the dark-mode override class
-          b.classList.add('bg-gray-300', 'text-black', 'filter-btn-default');
-      });
-      
-      // Apply active style to clicked button
-      // Remove defaults AND the dark-mode override class so the active color shines through
-      btn.classList.remove('bg-gray-300', 'text-black', 'filter-btn-default');
-      const activeClasses = (ACTIVE_MAP[filter] || 'bg-white text-black').split(' ');
-      btn.classList.add(...activeClasses, 'active-brand');
-      
-      allItems.forEach(item => {
-          item.style.display = (filter === 'all' || item.dataset.brand === filter) ? 'block' : 'none';
-      });
-
-      const state = activeMarquees.get('device-marquee');
-      if (state) {
-          state.container.scrollLeft = 0; 
-      }
-    });
-  });
-
-  // Init filter
-  document.querySelector('.filter-btn[data-filter="all"]').click();
-
-  async function loadVideos() {
-    const track = document.getElementById('latest-videos-track');
-    try {
-      const res = await fetch('/api/latest-videos?limit=10');
-      const data = await res.json();
-      if (data && data.length) {
-        track.innerHTML = data.map(v => `
-          <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="video-item bg-white border-2 border-gray-300 rounded-lg overflow-hidden pixel-btn block group">
-            <div class="relative pb-[56.25%] bg-black">
-              <img src="${v.thumb}" class="absolute h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]" alt="${(v.title || '').replace(/"/g,'&quot;')}">
-              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 transition-opacity">
-                  <i data-feather="play" class="text-white w-12 h-12"></i>
-              </div>
-            </div>
-            <div class="p-4 h-20 video-info-area bg-gray-50">
-              <h3 class="video-title font-bold text-xs line-clamp-2 text-gray-900">${v.title}</h3>
-            </div>
-          </a>`).join('');
-        feather.replace();
-        initMarquee('video-marquee');
-      }
-    } catch(e) {
-      track.innerHTML = '<p class="text-center w-full py-10 text-gray-500">Visit YouTube for updates</p>';
-    }
-  }
-  loadVideos();
-});
-</script>
+    </script>
 </body>
 </html>
