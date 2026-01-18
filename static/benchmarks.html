@@ -1,1356 +1,1165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Value Benchmarks | Ryan Retro</title>
-
-  <!-- Libraries -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
-
-  <style>
-    /* --- SHARED VARIABLES & HEADER STYLES --- */
-    :root {
-        /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
-        --gb-grey: #e0e0e0;
-        --gb-dark-grey: #c4c4c4;
-        --gb-shadow: #9e9e9e;
-        --gb-highlight: #ffffff;
-        --gb-accent: #6b7280;
-        
-        --bg-body: #f0f0f0;
-        --bg-panel: #e5e7eb; /* gray-200 */
-        --text-main: #111827;
-        --text-muted: #4b5563;
-        --border-color: #000000;
-    }
-
-    /* DARK MODE VARIABLES */
-    body.dark-mode {
-        --gb-grey: #4b5563;         /* Gray 600 - Lighter face for contrast */
-        --gb-dark-grey: #111827;    /* Gray 900 - Dark sides/thickness */
-        --gb-shadow: #000000;       /* Deep shadow */
-        --gb-highlight: rgba(255,255,255,0.15); /* Sharp edge highlight */
-        --gb-accent: #9ca3af;
-        
-        --bg-body: #111827;         /* Very dark background for page */
-        --bg-panel: #1f2937;        
-        --text-main: #d1d5db;       /* Light text */
-        --text-muted: #9ca3af;
-        --border-color: #000000;    
-    }
-
-    body { 
-        font-family: 'Roboto', system-ui, sans-serif; 
-        background-color: var(--bg-body);
-        color: var(--text-main);
-        transition: background-color 0.3s, color 0.3s;
-    }
-    .retro-font { font-family: 'Press Start 2P', cursive; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro | Benchmarks</title>
     
-    .pixel-border { 
-      border: 4px solid #000; 
-      box-shadow: 8px 8px 0 rgba(0,0,0,0.2); 
-    }
-    
-    .pixel-btn {
-      transition: all 0.2s ease;
-    }
-    .pixel-btn:hover {
-      transform: translate(2px, 2px);
-      box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    /* DARK MODE OVERRIDES FOR HEADER ELEMENTS */
-    body.dark-mode header {
-        background-color: #1f2937 !important; /* Matches Find Me/Support Me Panels */
-        border-color: var(--gb-dark-grey) !important;
-    }
-    body.dark-mode header h1 { color: #fff !important; }
-    body.dark-mode header .text-gray-800 { color: #fff !important; }
-    body.dark-mode header .text-gray-500 { color: #d1d5db !important; }
-    body.dark-mode header .bg-gray-100 { background-color: #1f2937 !important; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Kanit:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
-    /* Nav Menu Dark Mode */
-    body.dark-mode #navBox {
-        background-color: #374151 !important;
-        border-color: #1f2937 !important;
-    }
-    body.dark-mode .nav-item {
-        background-color: #1f2937 !important;
-        color: #fff !important;
-        border-color: transparent;
-    }
-    body.dark-mode .nav-item:hover {
-        background-color: #dc2626 !important;
-        color: #fff !important;
-        border-color: #000 !important;
-    }
-
-    /* Active nav item override for dark mode */
-    body.dark-mode .nav-item.bg-red-600 {
-        background-color: #dc2626 !important;
-        border-color: #000 !important;
-    }
-
-    /* --- BENCHMARK SPECIFIC STYLES --- */
-    /* Scrollbar */
-    .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-
-    /* Table Specifics */
-    .rr-table {
-      width: 100%;
-      border-collapse: separate; 
-      border-spacing: 0;
-    }
-    .rr-table th {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: 0.75rem;
-      border-bottom: 4px solid #000;
-    }
-    .rr-table td {
-      border-bottom: 1px solid #374151;
-      padding: 0.75rem 1rem;
-      white-space: nowrap;
-    }
-
-    /* Vertical column dividers for all modes */
-    .rr-table tbody tr td:not(:first-child) {
-      border-left: 1px solid #374151;
-    }
-    .rr-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-    
-    /* Device Header Colors (Subtle backgrounds for headers) */
-    .th-device { background-color: #1f2937; color: #fff; vertical-align: bottom; padding: 1rem; }
-    
-    /* Sortable Headers */
-    .rr-table th.sortable { cursor: pointer; user-select: none; }
-    .rr-table th.sortable::after { content: ''; margin-left: 5px; opacity: 0.5; }
-    .rr-table th.sortable[data-sort-dir="asc"]::after { content: '▲'; }
-    .rr-table th.sortable[data-sort-dir="desc"]::after { content: '▼'; }
-
-    /* Highlight best value cell */
-    .rr-table td.best-cell {
-      background-color: rgba(74, 222, 128, 0.2) !important;
-      color: #4ade80 !important;
-      font-weight: 700;
-      border-left: 2px solid #4ade80;
-    }
-
-    /* Runs Great highlight */
-    .rr-table td.runs-great {
-      background-color: rgba(16, 185, 129, 0.18) !important;
-      box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.9);
-      color: #6ee7b7;
-      font-weight: 700;
-    }
-
-    /* Mini mode for mobile */
-    .mini-mode .rr-table th, 
-    .mini-mode .rr-table td {
-      padding: 0.5rem 0.5rem;
-      font-size: 0.7rem;
-    }
-    /* Reduce vertical padding even more for header in mini mode */
-    .mini-mode .rr-table th.th-device {
-      padding-top: 0.25rem;
-      padding-bottom: 0.25rem;
-      vertical-align: middle;
-    }
-    .mini-mode .chipset-label { display: none; }
-    
-    /* Remove bottom margin from device name in mini mode to save vertical space */
-    .mini-mode .rr-table th span.mb-1 { margin-bottom: 0; }
-
-    /* Toggle Button States */
-    .toggle-btn.off { opacity: 0.5; filter: grayscale(100%); }
-    .toggle-btn.on { opacity: 1; filter: none; border-color: #facc15; color: #facc15; }
-
-    /* Header Responsive Fixes */
-    @media (max-width: 768px) {
-      .header-container { flex-direction: column; gap: 0.25rem; }
-    }
-  </style>
-</head>
-
-<body class="overflow-x-hidden min-h-screen flex flex-col dark-mode">
-
-    <!-- NAVIGATION OVERLAY -->
-    <div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
-        <div class="absolute inset-0" onclick="toggleNav()"></div>
-        
-        <div class="bg-gray-200 border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
+    <style>
+        /* --- THEME --- */
+        :root {
+            --bg-deep: #1a0b2e;
+            --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
             
-            <div class="bg-gray-800 text-white p-2 mb-1 flex justify-between items-center border-b-2 border-black">
-                <span class="retro-font text-xs">PAUSE MENU</span>
-                <button onclick="toggleNav()" class="text-white hover:text-red-400">
-                    <i data-feather="x" class="w-4 h-4"></i>
+            --card-border: rgba(255, 255, 255, 0.2); 
+            --card-border-hover: rgba(255, 255, 255, 0.5);
+            
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444; 
+            --accent-purple: #a855f7;
+            --accent-cyan: #22d3ee;
+            
+            --text-main: #ffffff;
+            --text-sub: #e2e8f0;
+
+            --bg-card: #3D255D;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Typography */
+        .font-display { font-family: 'Outfit', sans-serif; }
+        .font-logo { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+        .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+        .font-pixel { font-family: 'VT323', monospace; }
+        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Bento Card Styles (Flat Theme) */
+        .bento-card {
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            transition: all 0.2s ease-in-out;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3); 
+            transform: translateY(0);
+            background-color: var(--bg-card); /* Default card bg */
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
+        }
+
+        /* Nav Pills */
+        .nav-pill {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-pill:hover, .nav-pill.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Social Buttons */
+        .social-btn {
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+        }
+        .social-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* --- BENCHMARK SPECIFIC --- */
+        
+        /* Controls Panel Dynamic Colors */
+        #controlsPanel {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Mode Colors */
+        .panel-yellow {
+            background-color: #fbbf24 !important; /* Yellow */
+            color: #451a03 !important;
+            border-color: #f59e0b !important;
+        }
+        .panel-red {
+            background-color: #be123c !important; /* Rose/Red */
+            color: white !important;
+            border-color: #9f1239 !important;
+        }
+        .panel-blue {
+            background-color: #2563eb !important; /* Darker Blue (Royal Blue) */
+            color: white !important;
+            border-color: #1d4ed8 !important;
+        }
+
+        /* Toggle Buttons inside colored panel */
+        .toggle-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.2); /* Semi-transparent */
+            color: inherit;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .toggle-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        .toggle-btn.active {
+            background: white;
+            color: black;
+            border-color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .toggle-btn.off {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        /* Adjust internal text for dark/light modes */
+        .panel-yellow .text-white\/50 { color: rgba(0,0,0,0.5); }
+        .panel-red .text-white\/50, .panel-blue .text-white\/50 { color: rgba(255,255,255,0.6); }
+
+        /* Table Styling */
+        .rr-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            color: var(--text-sub);
+        }
+        
+        .rr-table th {
+            background: #2E1A47; /* Matching dark theme header from handheld logic */
+            padding: 16px;
+            text-align: center;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50; 
+            vertical-align: bottom;
+            color: var(--accent-cyan);
+        }
+        
+        .rr-table th:first-child {
+            text-align: left;
+            position: sticky;
+            left: 0;
+            z-index: 60;
+            background: #2E1A47;
+            border-right: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .rr-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-family: 'VT323', monospace;
+            font-size: 18px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .rr-table td:first-child {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: left;
+            color: white;
+            position: sticky;
+            left: 0;
+            background: #2a1540; /* Slightly different for row header */
+            border-right: 2px solid rgba(255,255,255,0.1);
+            z-index: 40; 
+        }
+
+        /* Row hover effect */
+        .rr-table tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .rr-table tbody tr:hover td {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Highlight Cells */
+        .best-cell {
+            background: rgba(16, 185, 129, 0.2) !important;
+            color: #34d399 !important;
+            font-weight: bold;
+            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.5);
+        }
+        .runs-great {
+            background: rgba(132, 204, 22, 0.2) !important;
+            color: #a3e635 !important;
+        }
+
+        /* Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 5px; border: 2px solid var(--bg-deep); }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+        /* Sortable */
+        th.sortable { cursor: pointer; user-select: none; transition: color 0.2s; }
+        th.sortable:hover { color: white; }
+        th.sortable::after { content: '↕'; display: inline-block; margin-left: 5px; opacity: 0.3; font-size: 10px; }
+        th.sortable[data-sort-dir="asc"]::after { content: '▲'; opacity: 1; color: var(--accent-yellow); }
+        th.sortable[data-sort-dir="desc"]::after { content: '▼'; opacity: 1; color: var(--accent-yellow); }
+
+        /* Mini Mode */
+        .mini-mode .rr-table th, .mini-mode .rr-table td { padding: 8px; font-size: 12px; }
+        .mini-mode .chipset-label { display: none; }
+
+        /* Animations */
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-popIn { animation: popIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body>
+
+    <div class="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#4c1d95]/40 to-transparent -z-10 pointer-events-none"></div>
+    <div class="fixed top-[-200px] right-[-200px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
+
+    <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
+        <div class="container mx-auto px-4 h-24 flex justify-between items-center">
+            
+            <a href="/" class="flex items-center gap-3 group shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <div class="hidden sm:flex flex-col">
+                    <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
+                </div>
+            </a>
+            
+            <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
+                <a href="/reviews" class="nav-pill"><i data-lucide="star" class="w-3.5 h-3.5"></i> Reviews</a>
+                <a href="/benchmarks" class="nav-pill active"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Benchmarks</a>
+                <a href="/comparisons" class="nav-pill"><i data-lucide="arrow-right-left" class="w-3.5 h-3.5"></i> Comparisons</a>
+                <a href="/gotw" class="nav-pill"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> GOTW</a>
+                <a href="/patrons" class="nav-pill"><i data-lucide="heart" class="w-3.5 h-3.5"></i> Patrons</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="social-btn" title="Instagram"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="social-btn" title="TikTok">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="social-btn" title="Discord"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                </div>
+    
+                <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
+                </a>
+                
+                <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
-
-            <div class="flex flex-col gap-1" id="navLinksList">
-                <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px] group-hover:text-white">GAME OF THE WEEK</span>
-                    <i data-feather="crosshair" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-                </a>
-
-                <!-- ACTIVE PAGE -->
-                <a href="benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-red-600 border-2 border-black text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px]">BENCHMARKS</span>
-                    <i data-feather="cpu" class="w-4 h-4 text-white"></i>
-                </a>
-
-                <a href="handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px] group-hover:text-white">HANDHELDS</span>
-                    <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-                </a>
-
-                <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px] group-hover:text-white">HOME</span>
-                    <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-                </a>
-
-                <a href="patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px] group-hover:text-white">PATRONS</span>
-                    <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-                </a>
-
-                <a href="store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px] group-hover:text-white">STORE</span>
-                    <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-                </a>
-            </div>
-            
-            <div class="h-0.5 bg-gray-400 my-1"></div>
-
-            <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
-                 <span class="retro-font text-[10px] group-hover:text-white">SWITCH THEME</span>
-                 <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
-            </div>
-
-            <div class="mt-1 text-center pb-1">
-                <span class="text-[8px] retro-font text-gray-500">SELECT OPTION</span>
-            </div>
         </div>
-    </div>
-
-    <!-- NEW HEADER -->
-    <header class="bg-gray-100 py-3 md:py-6 border-b-4 border-gray-400 shadow-md transition-colors duration-300 relative z-50">
-      <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container gap-4">
         
-        <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-            
-            <button id="navToggle" class="p-3 bg-gray-800 text-white hover:bg-gray-700 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
-                <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-                <span class="retro-font text-[10px] hidden md:block">MENU</span>
-            </button>
-
-            <a href="/" class="flex items-center gap-3 md:gap-4">
-                <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-                     class="w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-gray-400 bg-gray-200" alt="Ryan Retro Logo">
-                <div class="flex flex-col">
-                    <h1 class="retro-font text-sm md:text-xl text-gray-800 leading-tight">RYAN RETRO</h1>
-                    <span class="retro-font text-[8px] text-gray-500 uppercase">BENCHMARKS</span>
-                </div>
-            </a>
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
+             <div class="grid grid-cols-2 gap-2 mb-2">
+                 <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="star" class="w-4 h-4"></i> Reviews</a>
+                 <a href="/benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Benchmarks</a>
+                 <a href="/comparisons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="arrow-right-left" class="w-4 h-4"></i> Comparisons</a>
+                 <a href="/store" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop</a>
+                 <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="gamepad-2" class="w-4 h-4"></i> GOTW</a>
+                 <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i> Patrons</a>
+             </div>
+             
+             <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
+                 <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
+                 <div class="flex gap-3 flex-wrap justify-end">
+                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                     <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                     <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                     <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+                 </div>
+             </div>
         </div>
-
-        <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto order-3 md:order-3 mt-2 md:mt-0">
-          
-          <button id="openFlashDealsBtn" 
-                  class="px-3 py-2 md:py-4 md:px-4 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] w-full md:w-auto hidden">
-              <i data-feather="zap" class="w-4 h-4 md:w-5 md:h-5"></i>
-              <span>DEALS</span>
-          </button>
-
-          <!-- FIND ME BLOCK -->
-          <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-gray-100 w-full md:w-auto flex justify-center">
-            <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
-              FIND ME
-            </span>
-            <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-               <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
-                 <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
-               </a>
-               <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
-                 <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
-               </a>
-               <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
-                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-               </a>
-               <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
-                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-               </a>
-               <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
-                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
-               </a>
-               <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
-                 <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-               </a>
-            </div>
-          </div>
-
-          <!-- SUPPORT ME BLOCK -->
-          <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-gray-100 w-full md:w-auto flex justify-center mt-2 md:mt-0">
-            <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
-              SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
-            </span>
-            <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-               class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-              <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-              </svg>
-              <span class="tracking-tight">JOIN PATREON</span>
-            </a>
-          </div>
-        </div>
-      </div>
     </header>
 
-  <main class="flex-grow py-10 md:py-14">
-    <div class="mx-auto w-full max-w-[1900px] px-2 sm:px-4">
-      
-      <div class="text-center mb-10" data-aos="fade-down">
-        <h1 class="retro-font text-3xl md:text-5xl text-yellow-400 mb-4 text-shadow">BENCHMARKS</h1>
-        <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">
-          Comparing average FPS across popular handhelds. Toggle devices and modes below to compare the power of the Snapdragon chipsets.
-        </p>
-      </div>
+    <main class="container mx-auto px-4 py-8 flex-grow">
 
-      <div class="bg-gray-800 pixel-border rounded-lg p-6 mb-8" data-aos="fade-up">
-        
-        <div class="flex flex-wrap items-center justify-center gap-3 mb-6 border-b border-gray-700 pb-6">
-          <span class="retro-font text-xs text-gray-400 mr-2">SYSTEM:</span>
-          <button class="mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs bg-yellow-400 text-black shadow-lg ring-2 ring-yellow-300" data-mode="combined">ALL</button>
-          <button class="mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs bg-gray-700 text-gray-300 hover:bg-gray-600" data-mode="switch">SWITCH</button>
-          <button class="mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs bg-gray-700 text-gray-300 hover:bg-gray-600" data-mode="windows">WINDOWS</button>
-        </div>
+        <section class="mb-8 text-center" data-aos="fade-down">
+            <h1 class="font-display font-black text-4xl md:text-5xl text-white drop-shadow-lg mb-2">
+                VALUE <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">BENCHMARKS</span>
+            </h1>
+            <p class="text-white/60 font-medium max-w-2xl mx-auto">
+                Compare FPS across handhelds. Click any row to see full details and box art.
+            </p>
+        </section>
 
-        <div class="flex flex-wrap items-center justify-center gap-2 mb-6">
-          <span class="retro-font text-xs text-gray-400 mr-2 w-full md:w-auto text-center md:text-left mb-2 md:mb-0">DEVICES:</span>
-          
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="1">
-            <span class="w-2 h-2 rounded-full bg-green-500"></span> RP5
-          </button>
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="2">
-            <span class="w-2 h-2 rounded-full bg-yellow-400"></span> RPG2
-          </button>
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="3">
-            <span class="w-2 h-2 rounded-full bg-blue-400"></span> Odin 2 Portal
-          </button>
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="4">
-            <span class="w-2 h-2 rounded-full bg-orange-400"></span> Konkr
-          </button>
-          <button type="button" class="device-toggle toggle-btn off border border-gray-700 text-gray-600 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="5">
-            <span class="w-2 h-2 rounded-full" style="background-color: #374151;"></span> Fold 7
-          </button>
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="6">
-            <span class="w-2 h-2 rounded-full bg-purple-400"></span> Odin 3
-          </button>
-          <button type="button" class="device-toggle toggle-btn on border border-gray-600 bg-gray-900 px-3 py-2 rounded text-xs font-bold flex items-center gap-2 transition-all" data-col-index="7">
-            <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Steam Deck
-          </button>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <button id="toggleHighlight" class="px-3 py-1.5 rounded border border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
-            <i data-feather="zap" class="w-3 h-3"></i> Highlight Best
-          </button>
-          <button id="toggleColorMode" class="px-3 py-1.5 rounded border border-fuchsia-500 text-fuchsia-400 hover:bg-fuchsia-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
-            <i data-feather="bar-chart" class="w-3 h-3"></i> Ranking Mode
-          </button>
-          <button id="toggleValueMode" class="px-3 py-1.5 rounded border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
-            <i data-feather="dollar-sign" class="w-3 h-3"></i> Value Mode
-          </button>
-          <button id="toggleRunsGreat" class="px-3 py-1.5 rounded border border-green-400 text-green-300 hover:bg-green-400 hover:text-black transition text-xs font-bold flex items-center gap-2">
-            <i data-feather="check-circle" class="w-3 h-3"></i> Runs Great
-          </button>
-          <button id="toggleMiniMode" class="px-3 py-1.5 rounded border border-sky-500 text-sky-400 hover:bg-sky-500 hover:text-black transition text-xs font-bold flex items-center gap-2">
-            <i data-feather="smartphone" class="w-3 h-3"></i> Mini View
-          </button>
-        </div>
-      </div>
-
-      <div id="benchCard" class="bg-gray-800 pixel-border rounded-lg overflow-hidden shadow-2xl" data-aos="fade-up" data-aos-delay="100">
-        <div class="overflow-x-auto custom-scrollbar w-full">
-          
-          <!-- COMBINED TABLE -->
-          <table class="rr-table w-full text-left" data-mode="combined">
-            <thead class="bg-black text-yellow-400 retro-font">
-              <tr>
-                <th class="p-4 min-w-[200px] sortable bg-gray-900 z-20">Game</th>
-                <th class="th-device device-col-1 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-green-400 block mb-1">Retroid Pocket 5</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">865</span>
-                </th>
-                <th class="th-device device-col-2 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-yellow-400 block mb-1">Retroid Pocket G2</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">G2 Gen 2</span>
-                </th>
-                <th class="th-device device-col-3 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-blue-400 block mb-1">AYN Odin 2 Portal</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Gen 2</span>
-                </th>
-                <th class="th-device device-col-4 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-orange-400 block mb-1">Konkr Pocket Fit</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">G3 Gen 3</span>
-                </th>
-                <th class="th-device device-col-5 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-pink-400 block mb-1">Samsung Fold 7</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Elite</span>
-                </th>
-                <th class="th-device device-col-6 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-purple-400 block mb-1">AYN Odin 3</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Elite</span>
-                </th>
-                <th class="th-device device-col-7 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-cyan-400 block mb-1">Steam Deck</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">AMD APU</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="text-sm font-mono text-gray-300 divide-y divide-gray-700 bg-gray-900">
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Captain Toad: Treasure Tracker</td>
-                <td class="text-center">45</td><td class="text-center">75</td><td class="text-center">80</td><td class="text-center">155</td><td class="text-center">75</td><td class="text-center">160</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Cuphead</td>
-                <td class="text-center">130</td><td class="text-center">175</td><td class="text-center">-</td><td class="text-center">280</td><td class="text-center">140</td><td class="text-center">318</td><td class="text-center">60</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Cyberpunk 2077</td>
-                <td class="text-center">-</td><td class="text-center">11</td><td class="text-center">15</td><td class="text-center">16</td><td class="text-center">7</td><td class="text-center">14</td><td class="text-center">30</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Donut County</td>
-                <td class="text-center">38</td><td class="text-center">80</td><td class="text-center">76</td><td class="text-center">156</td><td class="text-center">75</td><td class="text-center">85</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Elden Ring</td>
-                <td class="text-center">11</td><td class="text-center">15</td><td class="text-center">19</td><td class="text-center">25</td><td class="text-center">5</td><td class="text-center">30</td><td class="text-center">40</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">FIFA 18</td>
-                <td class="text-center">60</td><td class="text-center">73</td><td class="text-center">86</td><td class="text-center">150</td><td class="text-center">82</td><td class="text-center">100</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Golf Story</td>
-                <td class="text-center">126</td><td class="text-center">126</td><td class="text-center">175</td><td class="text-center">185</td><td class="text-center">180</td><td class="text-center">240</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Gris</td>
-                <td class="text-center">61</td><td class="text-center">115</td><td class="text-center">110</td><td class="text-center">260</td><td class="text-center">126</td><td class="text-center">130</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">GTA V</td>
-                <td class="text-center">20</td><td class="text-center">44</td><td class="text-center">47</td><td class="text-center">57</td><td class="text-center">-</td><td class="text-center">67</td><td class="text-center">76</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Hades 2</td>
-                <td class="text-center">51</td><td class="text-center">67</td><td class="text-center">-</td><td class="text-center">124</td><td class="text-center">105</td><td class="text-center">190</td><td class="text-center">150</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Hollow Knight Silksong</td>
-                <td class="text-center">80</td><td class="text-center">120</td><td class="text-center">-</td><td class="text-center">190</td><td class="text-center">122</td><td class="text-center">220</td><td class="text-center">250</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Megabonk</td>
-                <td class="text-center">-</td><td class="text-center">40</td><td class="text-center">-</td><td class="text-center">68</td><td class="text-center">40</td><td class="text-center">90</td><td class="text-center">240</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Monster Boy and the Cursed Kingdom</td>
-                <td class="text-center">115</td><td class="text-center">100</td><td class="text-center">160</td><td class="text-center">165</td><td class="text-center">120</td><td class="text-center">220</td><td class="text-center">250</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
-                <td class="text-center">-</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
-                <td class="text-center">40</td><td class="text-center">70</td><td class="text-center">84</td><td class="text-center">123</td><td class="text-center">95</td><td class="text-center">130</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
-                <td class="text-center">30</td><td class="text-center">33</td><td class="text-center">50</td><td class="text-center">53</td><td class="text-center">50</td><td class="text-center">68</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
-                <td class="text-center">25</td><td class="text-center">36</td><td class="text-center">57</td><td class="text-center">57</td><td class="text-center">47</td><td class="text-center">57</td><td class="text-center">60</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Slay the Spire</td>
-                <td class="text-center">110</td><td class="text-center">115</td><td class="text-center">142</td><td class="text-center">145</td><td class="text-center">200</td><td class="text-center">240</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Tennis in the Face</td>
-                <td class="text-center">124</td><td class="text-center">106</td><td class="text-center">124</td><td class="text-center">124</td><td class="text-center">124</td><td class="text-center">125</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Breath of the Wild</td>
-                <td class="text-center">25</td><td class="text-center">41</td><td class="text-center">37</td><td class="text-center">48</td><td class="text-center">38</td><td class="text-center">45</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Echoes of Wisdom</td>
-                <td class="text-center">38</td><td class="text-center">35</td><td class="text-center">58</td><td class="text-center">55</td><td class="text-center">-</td><td class="text-center">82</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Tears of the Kingdom</td>
-                <td class="text-center">22</td><td class="text-center">35</td><td class="text-center">44</td><td class="text-center">46</td><td class="text-center">-</td><td class="text-center">-</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
-                <td class="text-center">14</td><td class="text-center">30</td><td class="text-center">42</td><td class="text-center">35</td><td class="text-center">41</td><td class="text-center">75</td><td class="text-center">Untested</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- SWITCH TABLE -->
-          <table class="rr-table w-full text-left" data-mode="switch" style="display:none;">
-            <thead class="bg-black text-red-500 retro-font">
-              <tr>
-                <th class="p-4 min-w-[200px] sortable bg-gray-900 z-20">Game</th>
-                <th class="th-device device-col-1 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-green-400 block mb-1">Retroid Pocket 5</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">865</span>
-                </th>
-                <th class="th-device device-col-2 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-yellow-400 block mb-1">Retroid Pocket G2</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">G2 Gen 2</span>
-                </th>
-                <th class="th-device device-col-3 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-blue-400 block mb-1">AYN Odin 2 Portal</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Gen 2</span>
-                </th>
-                <th class="th-device device-col-4 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-orange-400 block mb-1">Konkr Pocket Fit</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">G3 Gen 3</span>
-                </th>
-                <th class="th-device device-col-5 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-pink-400 block mb-1">Samsung Fold 7</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Elite</span>
-                </th>
-                <th class="th-device device-col-6 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-purple-400 block mb-1">AYN Odin 3</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Elite</span>
-                </th>
-                <th class="th-device device-col-7 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-cyan-400 block mb-1">Steam Deck</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">AMD APU</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="text-sm font-mono text-gray-300 divide-y divide-gray-700 bg-gray-900">
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Captain Toad: Treasure Tracker</td>
-                <td class="text-center">45</td><td class="text-center">75</td><td class="text-center">80</td><td class="text-center">155</td><td class="text-center">75</td><td class="text-center">160</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Donut County</td>
-                <td class="text-center">38</td><td class="text-center">80</td><td class="text-center">76</td><td class="text-center">156</td><td class="text-center">75</td><td class="text-center">85</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">FIFA 18</td>
-                <td class="text-center">60</td><td class="text-center">73</td><td class="text-center">86</td><td class="text-center">150</td><td class="text-center">82</td><td class="text-center">100</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Golf Story</td>
-                <td class="text-center">126</td><td class="text-center">126</td><td class="text-center">175</td><td class="text-center">185</td><td class="text-center">180</td><td class="text-center">240</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Gris</td>
-                <td class="text-center">61</td><td class="text-center">115</td><td class="text-center">110</td><td class="text-center">260</td><td class="text-center">126</td><td class="text-center">130</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (In Battle)</td>
-                <td class="text-center">40</td><td class="text-center">70</td><td class="text-center">84</td><td class="text-center">123</td><td class="text-center">95</td><td class="text-center">130</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Pokémon Sword (Open Areas)</td>
-                <td class="text-center">30</td><td class="text-center">33</td><td class="text-center">50</td><td class="text-center">53</td><td class="text-center">50</td><td class="text-center">68</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Slay the Spire</td>
-                <td class="text-center">110</td><td class="text-center">115</td><td class="text-center">142</td><td class="text-center">145</td><td class="text-center">200</td><td class="text-center">240</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Tennis in the Face</td>
-                <td class="text-center">124</td><td class="text-center">106</td><td class="text-center">124</td><td class="text-center">124</td><td class="text-center">124</td><td class="text-center">125</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Breath of the Wild</td>
-                <td class="text-center">25</td><td class="text-center">41</td><td class="text-center">37</td><td class="text-center">48</td><td class="text-center">38</td><td class="text-center">45</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Echoes of Wisdom</td>
-                <td class="text-center">38</td><td class="text-center">35</td><td class="text-center">58</td><td class="text-center">55</td><td class="text-center">-</td><td class="text-center">82</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Legend of Zelda: Tears of the Kingdom</td>
-                <td class="text-center">22</td><td class="text-center">35</td><td class="text-center">44</td><td class="text-center">46</td><td class="text-center">-</td><td class="text-center">-</td><td class="text-center">Untested</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">The Witcher 3</td>
-                <td class="text-center">14</td><td class="text-center">30</td><td class="text-center">42</td><td class="text-center">35</td><td class="text-center">41</td><td class="text-center">75</td><td class="text-center">Untested</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- WINDOWS TABLE -->
-          <table class="rr-table w-full text-left" data-mode="windows" style="display:none;">
-            <thead class="bg-black text-blue-400 retro-font">
-              <tr>
-                <th class="p-4 min-w-[200px] sortable bg-gray-900 z-20">Game</th>
-                <th class="th-device device-col-1 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-green-400 block mb-1">Retroid Pocket 5</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">865</span>
-                </th>
-                <th class="th-device device-col-2 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-yellow-400 block mb-1">Retroid Pocket G2</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">G2 Gen 2</span>
-                </th>
-                <th class="th-device device-col-3 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-blue-400 block mb-1">AYN Odin 2 Portal</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Gen 2</span>
-                </th>
-                <th class="th-device device-col-4 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-orange-400 block mb-1">Konkr Pocket Fit</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">G3 Gen 3</span>
-                </th>
-                <th class="th-device device-col-5 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-pink-400 block mb-1">Samsung Fold 7</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Elite</span>
-                </th>
-                <th class="th-device device-col-6 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-purple-400 block mb-1">AYN Odin 3</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">8 Elite</span>
-                </th>
-                <th class="th-device device-col-7 sortable min-w-[140px] text-center border-l border-gray-800">
-                  <span class="text-cyan-400 block mb-1">Steam Deck</span>
-                  <span class="text-[12px] text-gray-500 font-sans chipset-label">AMD APU</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="text-sm font-mono text-gray-300 divide-y divide-gray-700 bg-gray-900">
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Cuphead</td>
-                <td class="text-center">130</td><td class="text-center">175</td><td class="text-center">-</td><td class="text-center">280</td><td class="text-center">140</td><td class="text-center">318</td><td class="text-center">60</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Cyberpunk 2077</td>
-                <td class="text-center">-</td><td class="text-center">11</td><td class="text-center">15</td><td class="text-center">16</td><td class="text-center">7</td><td class="text-center">14</td><td class="text-center">30</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Elden Ring</td>
-                <td class="text-center">11</td><td class="text-center">15</td><td class="text-center">19</td><td class="text-center">25</td><td class="text-center">5</td><td class="text-center">30</td><td class="text-center">40</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">GTA V</td>
-                <td class="text-center">20</td><td class="text-center">44</td><td class="text-center">47</td><td class="text-center">57</td><td class="text-center">-</td><td class="text-center">67</td><td class="text-center">76</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Hades 2</td>
-                <td class="text-center">51</td><td class="text-center">67</td><td class="text-center">-</td><td class="text-center">124</td><td class="text-center">105</td><td class="text-center">190</td><td class="text-center">150</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Hollow Knight Silksong</td>
-                <td class="text-center">80</td><td class="text-center">120</td><td class="text-center">-</td><td class="text-center">190</td><td class="text-center">122</td><td class="text-center">220</td><td class="text-center">250</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Megabonk</td>
-                <td class="text-center">-</td><td class="text-center">40</td><td class="text-center">-</td><td class="text-center">68</td><td class="text-center">40</td><td class="text-center">90</td><td class="text-center">240</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Monster Boy and the Cursed Kingdom</td>
-                <td class="text-center">115</td><td class="text-center">100</td><td class="text-center">160</td><td class="text-center">165</td><td class="text-center">120</td><td class="text-center">220</td><td class="text-center">250</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Need for Speed Rivals</td>
-                <td class="text-center">-</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td><td class="text-center">30</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Skyrim</td>
-                <td class="text-center">25</td><td class="text-center">36</td><td class="text-center">57</td><td class="text-center">57</td><td class="text-center">47</td><td class="text-center">57</td><td class="text-center">60</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Tomb Raider</td>
-                <td class="text-center">-</td><td class="text-center">-</td><td class="text-center">-</td><td class="text-center">-</td><td class="text-center">87</td><td class="text-center">-</td><td class="text-center">148</td>
-              </tr>
-              <tr class="hover:bg-gray-800 transition-colors even:bg-gray-800/30">
-                <td class="font-bold text-white bg-gray-800/50">Traveller’s Rest</td>
-                <td class="text-center">-</td><td class="text-center">40</td><td class="text-center">30</td><td class="text-center">50</td><td class="text-center">40</td><td class="text-center">70</td><td class="text-center">78</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
-        
-        <div class="bg-gray-950 p-4 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div class="flex items-center gap-3 text-xs">
-            <span class="text-gray-400">FPS RANKING:</span>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-500"></span><span class="text-gray-500">Bad</span></div>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-orange-400"></span></div>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-amber-300"></span></div>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-yellow-200"></span><span class="text-gray-500">Mid</span></div>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-lime-300"></span></div>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-green-400"></span></div>
-            <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-emerald-400"></span><span class="text-gray-500">Good</span></div>
-          </div>
-          <div class="text-xs text-gray-500 text-center md:text-right">
-            Values represent average FPS. Tested in identical conditions.
-          </div>
-        </div>
-      </div>
-
-      <!-- NOTES SECTION -->
-      <div class="mt-12 text-center" data-aos="fade-up">
-        <button id="toggleNotes" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded pixel-btn retro-font text-[10px] md:text-xs border-2 border-black flex items-center justify-center gap-3 mx-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]">
-          <i data-feather="info" class="w-4 h-4"></i>
-          <span>SHOW NOTES</span>
-        </button>
-        
-        <div id="notesContent" class="hidden mt-8 text-left bg-gray-900 border-4 border-black p-6 md:p-8 rounded-lg max-w-4xl mx-auto shadow-[8px_8px_0_0_rgba(0,0,0,0.2)]">
-          <div class="space-y-6">
-            <section>
-              <h3 class="retro-font text-yellow-400 text-xs md:text-sm mb-3 flex items-center gap-2">
-                <i data-feather="eye" class="w-4 h-4"></i> PERFORMANCE MEASUREMENT
-              </h3>
-              <p class="text-gray-400 text-sm leading-relaxed">
-                Please note that these tests utilize "eyeballed" FPS averages observed during active gameplay. They were not captured using scientific frame-time analysis tools or specialized benchmarking software. These values should be viewed as rough guidelines and performance estimates rather than precise scientific measurements.
-              </p>
-            </section>
-
-            <div class="grid md:grid-cols-2 gap-8">
-              <section>
-                <h3 class="retro-font text-blue-400 text-xs mb-3 flex items-center gap-2">
-                  <i data-feather="dollar-sign" class="w-4 h-4"></i> VALUE MODE
-                </h3>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                  Value Mode displays the "Price per Frame" for each device. This is calculated by taking the cost of the handheld at the time of filming and dividing it by the average FPS achieved in that specific game ($/FPS). Lower values indicate better cost-to-performance efficiency.
-                </p>
-              </section>
-
-              <section>
-                <h3 class="retro-font text-green-400 text-xs mb-3 flex items-center gap-2">
-                  <i data-feather="check-circle" class="w-4 h-4"></i> RUNS GREAT
-                </h3>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                  The "Runs Great" highlight indicates that the handheld achieved the expected playable target for that title. This threshold is typically 30 FPS for demanding AAA/3D games and 60 FPS for lighter or 2D titles.
-                </p>
-              </section>
+        <div id="controlsPanel" class="bento-card p-6 mb-8 panel-yellow" data-aos="fade-up">
+            
+            <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-white/20">
+                <div class="flex items-center gap-3">
+                    <span class="font-retro text-xs text-white/50 uppercase tracking-widest">System:</span>
+                    <button class="toggle-btn mode-toggle active" data-mode="combined">ALL</button>
+                    <button class="toggle-btn mode-toggle" data-mode="switch">Switch</button>
+                    <button class="toggle-btn mode-toggle" data-mode="windows">Windows</button>
+                </div>
             </div>
 
-            <!-- HANDHELD SPECIFICATIONS -->
-            <section class="border-t border-gray-700 pt-6">
-              <h3 class="retro-font text-purple-400 text-xs md:text-sm mb-4 flex items-center gap-2">
-                <i data-feather="cpu" class="w-4 h-4"></i> HANDHELD SPECIFICATIONS
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-[10px] md:text-xs">
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-green-400 block mb-1">Retroid Pocket 5</span>
-                  <p class="text-gray-300 font-bold mb-1">Snapdragon 865</p>
-                  <p class="text-gray-400">8GB RAM / 128GB Storage</p>
-                  <p class="text-gray-400 mt-1">$199</p>
+            <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 mb-8">
+                <span class="font-retro text-xs text-white/50 uppercase tracking-widest">Devices:</span>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button class="toggle-btn active device-toggle" data-col-index="1"><span class="w-2 h-2 rounded-full bg-green-500"></span> RP5</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="2"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> RPG2</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="3"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Odin2P</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="4"><span class="w-2 h-2 rounded-full bg-orange-400"></span> Konkr</button>
+                    <button class="toggle-btn off device-toggle" data-col-index="5"><span class="w-2 h-2 rounded-full bg-pink-400"></span> Fold7</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="6"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Odin3</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="7"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> SteamDeck</button>
                 </div>
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-yellow-400 block mb-1">Retroid Pocket G2</span>
-                  <p class="text-gray-300 font-bold mb-1">Snapdragon G2 Gen 2</p>
-                  <p class="text-gray-400">8GB RAM / 128GB Storage</p>
-                  <p class="text-gray-400 mt-1">$219</p>
-                </div>
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-blue-400 block mb-1">AYN Odin 2 Portal</span>
-                  <p class="text-gray-300 font-bold mb-1">Snapdragon 8 Gen 2</p>
-                  <p class="text-gray-400">8GB RAM / 128GB Storage</p>
-                  <p class="text-gray-400 mt-1">$329</p>
-                </div>
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-orange-400 block mb-1">Konkr Pocket Fit</span>
-                  <p class="text-gray-300 font-bold mb-1">Snapdragon G3 Gen 3</p>
-                  <p class="text-gray-400">12GB RAM / 256GB Storage</p>
-                  <p class="text-gray-400 mt-1">$329</p>
-                </div>
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-pink-400 block mb-1">Samsung Fold 7</span>
-                  <p class="text-gray-300 font-bold mb-1">Snapdragon 8 Elite</p>
-                  <p class="text-gray-400">12GB RAM / 512GB Storage</p>
-                  <p class="text-gray-400 mt-1">$1719</p>
-                </div>
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-purple-400 block mb-1">AYN Odin 3</span>
-                  <p class="text-gray-300 font-bold mb-1">Snapdragon 8 Elite</p>
-                  <p class="text-gray-400">16GB RAM / 512GB Storage</p>
-                  <p class="text-gray-400 mt-1">$449</p>
-                </div>
-                <div class="bg-gray-800/50 p-3 rounded border border-gray-700">
-                  <span class="text-cyan-400 block mb-1">Steam Deck</span>
-                  <p class="text-gray-300 font-bold mb-1">AMD Custom APU</p>
-                  <p class="text-gray-400">16GB RAM / 512GB Storage</p>
-                  <p class="text-gray-400 mt-1">$399</p>
-                </div>
-              </div>
-              <p class="text-gray-600 text-[16px] mt-4 tracking-tighter">
-                Note: All prices shown were accurate at the time of filming and may have changed.
-              </p>
-            </section>
-          </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <button id="toggleHighlight" class="toggle-btn feat-highlight"><i data-lucide="zap" class="w-3 h-3"></i> Highlight Best</button>
+                <button id="toggleColorMode" class="toggle-btn feat-ranking"><i data-lucide="bar-chart" class="w-3 h-3"></i> Ranking Mode</button>
+                <button id="toggleValueMode" class="toggle-btn feat-value"><i data-lucide="dollar-sign" class="w-3 h-3"></i> Value Mode</button>
+                <button id="toggleRunsGreat" class="toggle-btn feat-great"><i data-lucide="check-circle" class="w-3 h-3"></i> Runs Great</button>
+                <button id="toggleMiniMode" class="toggle-btn feat-mini"><i data-lucide="smartphone" class="w-3 h-3"></i> Mini View</button>
+            </div>
         </div>
-      </div>
 
-    </div>
-  </main>
+        <div id="benchCard" class="bento-card p-0 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+            <div class="overflow-x-auto custom-scrollbar w-full max-h-[800px]">
+                
+                <table class="rr-table" data-mode="combined">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-col="0">Game</th>
+                            <th data-col-index="1"><span class="text-green-400">RP5</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400">RPG2</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400">Odin 2 P</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400">Konkr</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400">Fold 7</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400">Odin 3</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">AMD APU</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Captain Toad: Treasure Tracker</td><td>45</td><td>75</td><td>80</td><td>155</td><td>75</td><td>160</td><td>Untested</td></tr>
+                        <tr><td>Cuphead</td><td>130</td><td>175</td><td>-</td><td>280</td><td>140</td><td>318</td><td>60</td></tr>
+                        <tr><td>Cyberpunk 2077</td><td>-</td><td>11</td><td>15</td><td>16</td><td>7</td><td>14</td><td>30</td></tr>
+                        <tr><td>Donut County</td><td>38</td><td>80</td><td>76</td><td>156</td><td>75</td><td>85</td><td>Untested</td></tr>
+                        <tr><td>Elden Ring</td><td>11</td><td>15</td><td>19</td><td>25</td><td>5</td><td>30</td><td>40</td></tr>
+                        <tr><td>FIFA 18</td><td>60</td><td>73</td><td>86</td><td>150</td><td>82</td><td>100</td><td>Untested</td></tr>
+                        <tr><td>Golf Story</td><td>126</td><td>126</td><td>175</td><td>185</td><td>180</td><td>240</td><td>Untested</td></tr>
+                        <tr><td>Gris</td><td>61</td><td>115</td><td>110</td><td>260</td><td>126</td><td>130</td><td>Untested</td></tr>
+                        <tr><td>GTA V</td><td>20</td><td>44</td><td>47</td><td>57</td><td>-</td><td>67</td><td>76</td></tr>
+                        <tr><td>Hades 2</td><td>51</td><td>67</td><td>-</td><td>124</td><td>105</td><td>190</td><td>150</td></tr>
+                        <tr><td>Hollow Knight Silksong</td><td>80</td><td>120</td><td>-</td><td>190</td><td>122</td><td>220</td><td>250</td></tr>
+                        <tr><td>Megabonk</td><td>-</td><td>40</td><td>-</td><td>68</td><td>40</td><td>90</td><td>240</td></tr>
+                        <tr><td>Monster Boy</td><td>115</td><td>100</td><td>160</td><td>165</td><td>120</td><td>220</td><td>250</td></tr>
+                        <tr><td>Need for Speed Rivals</td><td>-</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td></tr>
+                        <tr><td>Pokémon Sword (Battle)</td><td>40</td><td>70</td><td>84</td><td>123</td><td>95</td><td>130</td><td>Untested</td></tr>
+                        <tr><td>Pokémon Sword (Open)</td><td>30</td><td>33</td><td>50</td><td>53</td><td>50</td><td>68</td><td>Untested</td></tr>
+                        <tr><td>Skyrim</td><td>25</td><td>36</td><td>57</td><td>57</td><td>47</td><td>57</td><td>60</td></tr>
+                        <tr><td>Slay the Spire</td><td>110</td><td>115</td><td>142</td><td>145</td><td>200</td><td>240</td><td>Untested</td></tr>
+                        <tr><td>Tennis in the Face</td><td>124</td><td>106</td><td>124</td><td>124</td><td>124</td><td>125</td><td>Untested</td></tr>
+                        <tr><td>Tomb Raider</td><td>-</td><td>-</td><td>-</td><td>-</td><td>87</td><td>-</td><td>148</td></tr>
+                        <tr><td>Traveller’s Rest</td><td>-</td><td>40</td><td>30</td><td>50</td><td>40</td><td>70</td><td>78</td></tr>
+                        <tr><td>Zelda: BOTW</td><td>25</td><td>41</td><td>37</td><td>48</td><td>38</td><td>45</td><td>Untested</td></tr>
+                        <tr><td>Zelda: Echoes</td><td>38</td><td>35</td><td>58</td><td>55</td><td>-</td><td>82</td><td>Untested</td></tr>
+                        <tr><td>Zelda: TOTK</td><td>22</td><td>35</td><td>44</td><td>46</td><td>-</td><td>-</td><td>Untested</td></tr>
+                        <tr><td>The Witcher 3</td><td>14</td><td>30</td><td>42</td><td>35</td><td>41</td><td>75</td><td>Untested</td></tr>
+                    </tbody>
+                </table>
+                
+                <table class="rr-table hidden" data-mode="switch">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-col="0">Game</th>
+                            <th data-col-index="1"><span class="text-green-400">RP5</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400">RPG2</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400">Odin 2 P</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400">Konkr</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400">Fold 7</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400">Odin 3</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">AMD APU</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Captain Toad</td><td>45</td><td>75</td><td>80</td><td>155</td><td>75</td><td>160</td><td>Untested</td></tr>
+                        <tr><td>Donut County</td><td>38</td><td>80</td><td>76</td><td>156</td><td>75</td><td>85</td><td>Untested</td></tr>
+                        <tr><td>FIFA 18</td><td>60</td><td>73</td><td>86</td><td>150</td><td>82</td><td>100</td><td>Untested</td></tr>
+                        <tr><td>Golf Story</td><td>126</td><td>126</td><td>175</td><td>185</td><td>180</td><td>240</td><td>Untested</td></tr>
+                        <tr><td>Gris</td><td>61</td><td>115</td><td>110</td><td>260</td><td>126</td><td>130</td><td>Untested</td></tr>
+                        <tr><td>Pokémon Sword (Battle)</td><td>40</td><td>70</td><td>84</td><td>123</td><td>95</td><td>130</td><td>Untested</td></tr>
+                        <tr><td>Pokémon Sword (Open)</td><td>30</td><td>33</td><td>50</td><td>53</td><td>50</td><td>68</td><td>Untested</td></tr>
+                        <tr><td>Slay the Spire</td><td>110</td><td>115</td><td>142</td><td>145</td><td>200</td><td>240</td><td>Untested</td></tr>
+                        <tr><td>Tennis in the Face</td><td>124</td><td>106</td><td>124</td><td>124</td><td>124</td><td>125</td><td>Untested</td></tr>
+                        <tr><td>Zelda: BOTW</td><td>25</td><td>41</td><td>37</td><td>48</td><td>38</td><td>45</td><td>Untested</td></tr>
+                        <tr><td>Zelda: Echoes</td><td>38</td><td>35</td><td>58</td><td>55</td><td>-</td><td>82</td><td>Untested</td></tr>
+                        <tr><td>Zelda: TOTK</td><td>22</td><td>35</td><td>44</td><td>46</td><td>-</td><td>-</td><td>Untested</td></tr>
+                        <tr><td>The Witcher 3</td><td>14</td><td>30</td><td>42</td><td>35</td><td>41</td><td>75</td><td>Untested</td></tr>
+                    </tbody>
+                </table>
 
-  <footer class="bg-black py-8 mt-auto border-t border-gray-800">
-    <div class="container mx-auto px-4 text-center text-gray-500 text-xs retro-font">
-      <p class="mb-2">© 2025 RYAN RETRO. ALL RIGHTS RESERVED.</p>
-      <a href="mailto:rowdyrake@gmail.com" class="hover:text-yellow-400 transition-colors">CONTACT</a>
-    </div>
-  </footer>
+                <table class="rr-table hidden" data-mode="windows">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-col="0">Game</th>
+                            <th data-col-index="1"><span class="text-green-400">RP5</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400">RPG2</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400">Odin 2 P</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400">Konkr</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400">Fold 7</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400">Odin 3</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">AMD APU</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Cuphead</td><td>130</td><td>175</td><td>-</td><td>280</td><td>140</td><td>318</td><td>60</td></tr>
+                        <tr><td>Cyberpunk 2077</td><td>-</td><td>11</td><td>15</td><td>16</td><td>7</td><td>14</td><td>30</td></tr>
+                        <tr><td>Elden Ring</td><td>11</td><td>15</td><td>19</td><td>25</td><td>5</td><td>30</td><td>40</td></tr>
+                        <tr><td>GTA V</td><td>20</td><td>44</td><td>47</td><td>57</td><td>-</td><td>67</td><td>76</td></tr>
+                        <tr><td>Hades 2</td><td>51</td><td>67</td><td>-</td><td>124</td><td>105</td><td>190</td><td>150</td></tr>
+                        <tr><td>Hollow Knight Silksong</td><td>80</td><td>120</td><td>-</td><td>190</td><td>122</td><td>220</td><td>250</td></tr>
+                        <tr><td>Megabonk</td><td>-</td><td>40</td><td>-</td><td>68</td><td>40</td><td>90</td><td>240</td></tr>
+                        <tr><td>Monster Boy</td><td>115</td><td>100</td><td>160</td><td>165</td><td>120</td><td>220</td><td>250</td></tr>
+                        <tr><td>Need for Speed Rivals</td><td>-</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td><td>30</td></tr>
+                        <tr><td>Skyrim</td><td>25</td><td>36</td><td>57</td><td>57</td><td>47</td><td>57</td><td>60</td></tr>
+                        <tr><td>Tomb Raider</td><td>-</td><td>-</td><td>-</td><td>-</td><td>87</td><td>-</td><td>148</td></tr>
+                        <tr><td>Traveller’s Rest</td><td>-</td><td>40</td><td>30</td><td>50</td><td>40</td><td>70</td><td>78</td></tr>
+                    </tbody>
+                </table>
 
-  <script>
-    // --- NAVIGATION & DARK MODE LOGIC ---
-    const body = document.body;
-    
-    // Check Local Storage for Theme
-    if (localStorage.getItem('theme') === 'light') {
-        body.classList.remove('dark-mode');
-    } else {
-        body.classList.add('dark-mode');
-    }
+            </div>
 
-    // Explicitly attach toggleNav to window so HTML onclicks work
-    window.toggleNav = function() {
-        const navOverlay = document.getElementById('navOverlay');
-        const navBox = document.getElementById('navBox');
-        
-        if (!navOverlay || !navBox) return;
+            <div class="bg-black/40 p-4 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-white/50">
+                <div class="flex items-center gap-3">
+                    <span>RANKING:</span>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-500"></span> Low</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-yellow-400"></span> Mid</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-green-400"></span> High</div>
+                </div>
+                <div>Values represent Average FPS estimates.</div>
+            </div>
+        </div>
 
-        const isHidden = navOverlay.classList.contains('hidden');
-        if (isHidden) {
-            navOverlay.classList.remove('hidden');
-            setTimeout(() => {
-                navBox.classList.remove('scale-95', 'opacity-0');
-                navBox.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        } else {
-            navBox.classList.remove('scale-100', 'opacity-100');
-            navBox.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                navOverlay.classList.add('hidden');
-            }, 200);
-        }
-    };
-    
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize AOS
-      if(window.AOS) AOS.init({ once: true, duration: 600 });
-      if(window.feather) feather.replace();
-
-      // --- NAV LOGIC ---
-      const navToggleBtn = document.getElementById('navToggle');
-      if(navToggleBtn) {
-          navToggleBtn.addEventListener('click', window.toggleNav);
-      }
-      
-      // Dark Mode Toggle Logic
-      const darkModeToggle = document.getElementById('darkModeToggle');
-      const themeIcon = document.getElementById('themeIcon');
-      
-      // Set initial icon
-      if(themeIcon) {
-          themeIcon.setAttribute('data-feather', body.classList.contains('dark-mode') ? 'sun' : 'moon');
-          if(window.feather) feather.replace();
-      }
-
-      if(darkModeToggle) {
-          darkModeToggle.addEventListener('click', () => {
-              body.classList.toggle('dark-mode');
-              const isDark = body.classList.contains('dark-mode');
-              
-              if (isDark) {
-                  localStorage.setItem('theme', 'dark');
-                  if(themeIcon) themeIcon.setAttribute('data-feather', 'sun');
-              } else {
-                  localStorage.setItem('theme', 'light');
-                  if(themeIcon) themeIcon.setAttribute('data-feather', 'moon');
-              }
-              
-              if(window.feather) feather.replace();
-          });
-      }
-
-      // --- BENCHMARK LOGIC ---
-      const DEVICE_COUNT = 7;
-      // Provided Prices (at time of filming)
-      const prices = {
-        1: 199,  // RP5
-        2: 219,  // RPG2
-        3: 329,  // Odin 2 Portal
-        4: 329,  // Konkr
-        5: 1719, // Fold 7
-        6: 449,  // Odin 3
-        7: 399   // Steam Deck
-      };
-
-      // State
-      let activeMode = 'combined';
-      let highlightOn = false;
-      let colorModeOn = false;
-      let valueModeOn = false;
-      let runsGreatOn = false;
-      let miniModeOn = false;
-      const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: false, 6: true, 7: true };
-
-      // Selectors
-      const tables = document.querySelectorAll('.rr-table');
-      const modeButtons = document.querySelectorAll('.mode-toggle');
-      const deviceButtons = document.querySelectorAll('.device-toggle');
-      const highlightBtn = document.getElementById('toggleHighlight');
-      const colorBtn = document.getElementById('toggleColorMode');
-      const valueBtn = document.getElementById('toggleValueMode');
-      const runsBtn = document.getElementById('toggleRunsGreat');
-      const miniBtn = document.getElementById('toggleMiniMode');
-      const benchCard = document.getElementById('benchCard');
-      const notesBtn = document.getElementById('toggleNotes');
-      const notesContent = document.getElementById('notesContent');
-
-      // Notes Toggle
-      if(notesBtn) {
-        notesBtn.addEventListener('click', () => {
-          const isHidden = notesContent.classList.contains('hidden');
-          if (isHidden) {
-            notesContent.classList.remove('hidden');
-            notesBtn.querySelector('span').innerText = 'HIDE NOTES';
-            notesContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          } else {
-            notesContent.classList.add('hidden');
-            notesBtn.querySelector('span').innerText = 'SHOW NOTES';
-          }
-        });
-      }
-
-      function getActiveTable() {
-        return document.querySelector(`.rr-table[data-mode="${activeMode}"]`);
-      }
-
-      function updateTableVisibility() {
-        tables.forEach(t => t.style.display = 'none');
-        getActiveTable().style.display = 'table';
-      }
-
-      function clearEffects() {
-        document.querySelectorAll('.best-cell').forEach(el => el.classList.remove('best-cell'));
-        document.querySelectorAll('.runs-great').forEach(el => el.classList.remove('runs-great'));
-        document.querySelectorAll('.rr-table td').forEach(el => {
-          el.style.color = '';
-          el.style.fontWeight = '';
-          if (el.dataset.original) {
-            el.innerHTML = el.dataset.original; 
-            if(!el.dataset.original.includes('<')) el.innerText = el.dataset.original;
-            delete el.dataset.original;
-          }
-        });
-      }
-
-      function updateColumnVisibility() {
-        tables.forEach(table => {
-          const headRow = table.querySelector('thead tr');
-          const bodyRows = table.querySelectorAll('tbody tr');
-
-          for (let i = DEVICE_COUNT; i >= 1; i--) {
-            const th = headRow.children[i];
-            if (th) th.style.display = columnVisibility[i] ? '' : 'none';
-          }
-
-          bodyRows.forEach(row => {
-            for (let i = DEVICE_COUNT; i >= 1; i--) {
-              const td = row.children[i];
-              if (td) td.style.display = columnVisibility[i] ? '' : 'none';
-            }
-          });
-        });
-        
-        if (highlightOn) applyHighlight();
-        if (colorModeOn) applyColorMode();
-        if (valueModeOn) applyValueMode();
-        if (runsGreatOn) applyRunsGreat();
-      }
-
-      function applyHighlight() {
-        clearEffects();
-        const table = getActiveTable();
-        const rows = table.querySelectorAll('tbody tr');
-
-        rows.forEach(row => {
-          let maxVal = -Infinity;
-          let cells = [];
-
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            if (!columnVisibility[i]) continue;
-            const cell = row.children[i];
-            const val = parseFloat(cell.innerText);
-            if (!isNaN(val)) {
-              if (val > maxVal) maxVal = val;
-              cells.push(cell);
-            }
-          }
-
-          if (maxVal > 0) {
-            cells.forEach(cell => {
-              if (parseFloat(cell.innerText) === maxVal) {
-                cell.classList.add('best-cell');
-              }
-            });
-          }
-        });
-      }
-
-      function applyColorMode() {
-        clearEffects();
-        const table = getActiveTable();
-        const rows = table.querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-          let vals = [];
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            if (!columnVisibility[i]) continue;
-            const val = parseFloat(row.children[i].innerText);
-            if (!isNaN(val)) vals.push(val);
-          }
-
-          if (vals.length === 0) return;
-          const min = Math.min(...vals);
-          const max = Math.max(...vals);
-          const range = max - min || 1;
-
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            if (!columnVisibility[i]) continue;
-            const cell = row.children[i];
-            const val = parseFloat(cell.innerText);
-            if (isNaN(val)) continue;
-
-            const t = (val - min) / range;
-            if (t < 0.33) {
-              cell.style.color = '#f87171';
-            } else if (t < 0.66) {
-              cell.style.color = '#facc15';
-            } else {
-              cell.style.color = '#4ade80';
-              cell.style.fontWeight = 'bold';
-            }
-          }
-        });
-      }
-
-      function applyValueMode() {
-        clearEffects();
-        const table = getActiveTable();
-        const rows = table.querySelectorAll('tbody tr');
-
-        rows.forEach(row => {
-          let minCost = Infinity;
-          let calculatedCosts = {};
-
-          // First pass: Find minimum cost among visible columns
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            const cell = row.children[i];
-            // Ensure dataset.original is set
-            const originalText = cell.dataset.original || cell.innerText.trim();
-            if (!cell.dataset.original) {
-              cell.dataset.original = originalText;
-            }
-
-            if (!columnVisibility[i]) continue;
-
-            const val = parseFloat(originalText);
-
-            if (!isNaN(val) && val > 0) {
-              const cost = prices[i] / val;
-              calculatedCosts[i] = cost;
-              if (cost < minCost) {
-                minCost = cost;
-              }
-            }
-          }
-
-          // Second pass: Apply styling
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            const cell = row.children[i];
-            const originalText = cell.dataset.original;
-            const val = parseFloat(originalText);
-
-            if (!isNaN(val) && val > 0) {
-              const cost = prices[i] / val;
-              
-              // Check if best value (must be visible to be minCost, but if hidden we still calculate)
-              const isBest = (calculatedCosts[i] !== undefined && Math.abs(cost - minCost) < 0.0001);
-
-              if (isBest) {
-                cell.innerHTML = `<span class="text-green-400 font-bold">$${cost.toFixed(2)}</span>`;
-                cell.classList.add('best-cell');
-              } else {
-                cell.innerHTML = `<span class="text-yellow-400 font-bold">$${cost.toFixed(2)}</span>`;
-              }
-            }
-          }
-        });
-      }
-
-      function applyRunsGreat() {
-        clearEffects();
-        const table = getActiveTable();
-        const rows = table.querySelectorAll('tbody tr');
-
-        rows.forEach(row => {
-          const nameCell = row.children[0];
-          const gameName = nameCell.dataset.fullName || nameCell.innerText.trim();
-          
-          const demanding = (
-            gameName === 'Elden Ring' || 
-            gameName === 'Cyberpunk 2077' || 
-            gameName === 'Need for Speed Rivals' ||
-            gameName === 'Pokémon Sword (Open Areas)' ||
-            gameName === 'Pokémon Sword (In Battle)' ||
-            gameName === 'The Legend of Zelda: Breath of the Wild' ||
-            gameName === 'The Legend of Zelda: Tears of the Kingdom' ||
-            gameName === 'The Witcher 3'
-          );
-          const threshold = demanding ? 30 : 60;
-
-          for (let i = 1; i <= DEVICE_COUNT; i++) {
-            if (!columnVisibility[i]) continue;
-            const cell = row.children[i];
-            const val = parseFloat(cell.innerText);
-            if (!isNaN(val) && val >= threshold) {
-              cell.classList.add('runs-great');
-            }
-          }
-        });
-      }
-
-      function updateGameNamesForMiniMode() {
-        const rows = document.querySelectorAll('.rr-table tbody tr');
-        rows.forEach(row => {
-          const cell = row.children[0]; 
-          if (!cell.dataset.fullName) {
-            cell.dataset.fullName = cell.innerText.trim();
-          }
-
-          if (miniModeOn) {
-            const originalName = cell.dataset.fullName;
-            if (originalName === 'Monster Boy and the Cursed Kingdom') {
-              cell.innerText = 'Monster Boy';
-            } else if (originalName === 'Captain Toad: Treasure Tracker') {
-              cell.innerText = 'Captain Toad';
-            } else if (originalName.startsWith('The Legend of Zelda: ')) {
-              cell.innerText = originalName.replace('The Legend of Zelda: ', '');
-            }
-          } else {
-            if (cell.dataset.fullName) {
-              cell.innerText = cell.dataset.fullName;
-            }
-          }
-        });
-      }
-
-      // Universal reset for filter buttons
-      function resetFilterButtons() {
-        const btns = [highlightBtn, colorBtn, valueBtn, runsBtn];
-        btns.forEach(b => {
-          b.classList.remove('bg-emerald-500', 'bg-fuchsia-500', 'bg-yellow-500', 'bg-green-500', 'text-black', 'shadow-lg');
-          const originalBorder = b.id === 'toggleHighlight' ? 'border-emerald-500 text-emerald-400' :
-                                b.id === 'toggleColorMode' ? 'border-fuchsia-500 text-fuchsia-400' :
-                                b.id === 'toggleValueMode' ? 'border-yellow-500 text-yellow-400' :
-                                'border-green-400 text-green-300';
-          b.className = `px-3 py-1.5 rounded border transition text-xs font-bold flex items-center gap-2 ${originalBorder}`;
-        });
-      }
-
-      // Mode Toggles
-      modeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          modeButtons.forEach(b => {
-            b.className = 'mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs bg-gray-700 text-gray-300 hover:bg-gray-600';
-          });
-
-          const mode = btn.dataset.mode;
-          let activeClass = '';
-
-          if (mode === 'combined') {
-            activeClass = 'bg-yellow-400 text-black shadow-lg ring-2 ring-yellow-300';
-          } else if (mode === 'switch') {
-            activeClass = 'bg-red-600 text-white shadow-lg ring-2 ring-red-400';
-          } else if (mode === 'windows') {
-            activeClass = 'bg-blue-600 text-white shadow-lg ring-2 ring-blue-400';
-          }
-
-          btn.className = `mode-toggle px-4 py-2 rounded pixel-btn retro-font text-xs ${activeClass}`;
-          
-          activeMode = mode;
-          updateTableVisibility();
-          
-          if (highlightOn) applyHighlight();
-          if (colorModeOn) applyColorMode();
-          if (valueModeOn) applyValueMode();
-          if (runsGreatOn) applyRunsGreat();
-          
-          if (miniModeOn) updateGameNamesForMiniMode();
-        });
-      });
-
-      // Device Toggles
-      deviceButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = parseInt(btn.dataset.colIndex);
-          const isOn = !btn.classList.contains('off');
-          
-          if (isOn) {
-            btn.classList.add('off', 'border-gray-700', 'text-gray-600');
-            btn.classList.remove('on', 'border-gray-600', 'bg-gray-900');
-            btn.querySelector('span').style.backgroundColor = '#374151';
-            columnVisibility[idx] = false;
-          } else {
-            btn.classList.remove('off', 'border-gray-700', 'text-gray-600');
-            btn.classList.add('on', 'border-gray-600', 'bg-gray-900');
-            const colors = ['', 'bg-green-500', 'bg-yellow-400', 'bg-blue-400', 'bg-orange-400', 'bg-pink-400', 'bg-purple-400', 'bg-cyan-400'];
-            btn.querySelector('span').style.backgroundColor = '';
-            btn.querySelector('span').className = `w-2 h-2 rounded-full ${colors[idx]}`;
-            columnVisibility[idx] = true;
-          }
-          updateColumnVisibility();
-        });
-      });
-
-      // Feature Toggles
-      highlightBtn.addEventListener('click', () => {
-        const state = !highlightOn;
-        resetFilterButtons();
-        clearEffects();
-        highlightOn = state; colorModeOn = false; valueModeOn = false; runsGreatOn = false;
-        if (highlightOn) {
-          applyHighlight();
-          highlightBtn.classList.add('bg-emerald-500', 'text-black', 'shadow-lg');
-          highlightBtn.classList.remove('border-emerald-500', 'text-emerald-400');
-        }
-      });
-
-      colorBtn.addEventListener('click', () => {
-        const state = !colorModeOn;
-        resetFilterButtons();
-        clearEffects();
-        colorModeOn = state; highlightOn = false; valueModeOn = false; runsGreatOn = false;
-        if (colorModeOn) {
-          applyColorMode();
-          colorBtn.classList.add('bg-fuchsia-500', 'text-black', 'shadow-lg');
-          colorBtn.classList.remove('border-fuchsia-500', 'text-fuchsia-400');
-        }
-      });
-
-      valueBtn.addEventListener('click', () => {
-        const state = !valueModeOn;
-        resetFilterButtons();
-        clearEffects();
-        valueModeOn = state; highlightOn = false; colorModeOn = false; runsGreatOn = false;
-        if (valueModeOn) {
-          applyValueMode();
-          valueBtn.classList.add('bg-yellow-500', 'text-black', 'shadow-lg');
-          valueBtn.classList.remove('border-yellow-500', 'text-yellow-400');
-        }
-      });
-
-      runsBtn.addEventListener('click', () => {
-        const state = !runsGreatOn;
-        resetFilterButtons();
-        clearEffects();
-        runsGreatOn = state; highlightOn = false; colorModeOn = false; valueModeOn = false;
-        if (runsGreatOn) {
-          applyRunsGreat();
-          runsBtn.classList.add('bg-green-500', 'text-black', 'shadow-lg');
-          runsBtn.classList.remove('border-green-400', 'text-green-300');
-        }
-      });
-
-      miniBtn.addEventListener('click', () => {
-        miniModeOn = !miniModeOn;
-        if (miniModeOn) {
-          benchCard.classList.add('mini-mode');
-          miniBtn.classList.add('bg-sky-500', 'text-black', 'shadow-lg');
-          miniBtn.classList.remove('border-sky-500', 'text-sky-400');
-        } else {
-          benchCard.classList.remove('mini-mode');
-          miniBtn.classList.remove('bg-sky-500', 'text-black', 'shadow-lg');
-          miniBtn.classList.add('border-sky-500', 'text-sky-400');
-        }
-        updateGameNamesForMiniMode(); 
-      });
-
-      // Sorting Logic (Handles Dollar Values)
-      document.querySelectorAll('th.sortable').forEach(th => {
-        th.addEventListener('click', function() {
-          const table = th.closest('table');
-          const tbody = table.querySelector('tbody');
-          const rowsArray = Array.from(tbody.rows);
-          const colIndex = Array.from(th.parentNode.children).indexOf(th);
-          const isAsc = th.dataset.sortDir === 'asc';
-          
-          table.querySelectorAll('th').forEach(h => h.removeAttribute('data-sort-dir'));
-          th.dataset.sortDir = isAsc ? 'desc' : 'asc';
-          
-          rowsArray.sort((a, b) => {
-            const cellA = a.children[colIndex];
-            const cellB = b.children[colIndex];
+        <div class="mt-8 text-center" data-aos="fade-up">
+            <button id="toggleNotes" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-xl font-retro text-xs transition-all">
+                <i data-lucide="info" class="inline w-4 h-4 mr-2"></i> SHOW NOTES
+            </button>
             
-            // Clean values for comparison (remove $, etc)
-            const getCleanVal = (cell) => {
-              let val = cell.innerText.trim();
-              if (val.startsWith('$')) val = val.substring(1);
-              if (val === '-' || val.toLowerCase() === 'untested') return -1;
-              const n = parseFloat(val);
-              return isNaN(n) ? val : n;
-            };
+            <div id="notesContent" class="hidden mt-6 bento-card p-8 text-left max-w-4xl mx-auto">
+                 <div class="grid md:grid-cols-2 gap-8 mb-8">
+                     <div>
+                         <h3 class="font-retro text-yellow-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Performance Measurement</h3>
+                         <p class="text-white/60 text-sm leading-relaxed">
+                            Please note that these tests utilize "eyeballed" FPS averages observed during active gameplay. They were not captured using scientific frame-time analysis tools or specialized benchmarking software. These values should be viewed as rough guidelines and performance estimates rather than precise scientific measurements.
+                         </p>
+                     </div>
+                     <div>
+                        <h3 class="font-retro text-green-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Value Mode</h3>
+                        <p class="text-white/60 text-sm leading-relaxed">
+                            Value Mode displays the "Price per Frame" for each device. This is calculated by taking the cost of the handheld at the time of filming and dividing it by the average FPS achieved in that specific game ($/FPS). Lower values indicate better cost-to-performance efficiency.
+                        </p>
+                     </div>
+                     <div>
+                        <h3 class="font-retro text-blue-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Runs Great</h3>
+                        <p class="text-white/60 text-sm leading-relaxed">
+                            The "Runs Great" highlight indicates that the handheld achieved the expected playable target for that title. This threshold is typically 30 FPS for demanding AAA/3D games and 60 FPS for lighter or 2D titles.
+                        </p>
+                     </div>
+                 </div>
+                 
+                 <div class="mt-8 pt-8 border-t border-white/10">
+                     <h3 class="font-retro text-purple-400 text-sm mb-4">Device Specs & Pricing (Time of Filming)</h3>
+                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 text-xs">
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-green-400 font-bold block mb-1 text-sm">Retroid Pocket 5 ($199)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> Snapdragon 865</span>
+                                <span><span class="text-white/30">RAM:</span> 8GB</span>
+                                <span><span class="text-white/30">Storage:</span> 128GB</span>
+                             </div>
+                         </div>
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-yellow-400 font-bold block mb-1 text-sm">Retroid Pocket G2 ($219)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> Snapdragon G2 Gen 2</span>
+                                <span><span class="text-white/30">RAM:</span> 8GB</span>
+                                <span><span class="text-white/30">Storage:</span> 128GB</span>
+                             </div>
+                         </div>
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-blue-400 font-bold block mb-1 text-sm">AYN Odin 2 Portal ($329)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> Snapdragon 8 Gen 2</span>
+                                <span><span class="text-white/30">RAM:</span> 8GB</span>
+                                <span><span class="text-white/30">Storage:</span> 128GB</span>
+                             </div>
+                         </div>
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-orange-400 font-bold block mb-1 text-sm">Konkr Pocket Fit ($329)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> Snapdragon G3 Gen 3</span>
+                                <span><span class="text-white/30">RAM:</span> 12GB</span>
+                                <span><span class="text-white/30">Storage:</span> 256GB</span>
+                             </div>
+                         </div>
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-pink-400 font-bold block mb-1 text-sm">Samsung Fold 7 ($1719)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> Snapdragon 8 Elite</span>
+                                <span><span class="text-white/30">RAM:</span> 12GB</span>
+                                <span><span class="text-white/30">Storage:</span> 512GB</span>
+                             </div>
+                         </div>
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-purple-400 font-bold block mb-1 text-sm">AYN Odin 3 ($449)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> Snapdragon 8 Elite</span>
+                                <span><span class="text-white/30">RAM:</span> 16GB</span>
+                                <span><span class="text-white/30">Storage:</span> 512GB</span>
+                             </div>
+                         </div>
+                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                             <span class="text-cyan-400 font-bold block mb-1 text-sm">Steam Deck ($399)</span>
+                             <div class="text-white/60 flex flex-col gap-1">
+                                <span><span class="text-white/30">Chip:</span> AMD Custom APU</span>
+                                <span><span class="text-white/30">RAM:</span> 16GB</span>
+                                <span><span class="text-white/30">Storage:</span> 512GB</span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+        </div>
 
-            const valA = getCleanVal(cellA);
-            const valB = getCleanVal(cellB);
+    </main>
+    
+    <div id="game-details-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="game-modal-bg"></div>
+        <div id="game-card-wrapper" class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl w-full max-w-2xl shadow-2xl animate-popIn flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b border-white/10 bg-black/20 shrink-0">
+                <span class="font-retro text-white/50 text-sm pl-2">BENCHMARK DETAILS</span>
+                <div class="flex gap-2">
+                    <button id="screenshot-game-modal" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex items-center gap-2" title="Save Card">
+                        <i data-lucide="camera" class="w-5 h-5"></i>
+                        <span class="font-bold text-xs hidden sm:inline">SAVE</span>
+                    </button>
+                    <button id="close-game-modal" class="text-white/70 hover:text-white hover:bg-red-500/20 p-2 rounded-lg transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow">
+                </div>
+        </div>
+    </div>
 
-            if (typeof valA === 'number' && typeof valB === 'number') {
-              return isAsc ? valB - valA : valA - valB;
-            } else {
-              return isAsc ? valB.toString().localeCompare(valA) : valA.toString().localeCompare(valB);
-            }
-          });
-          tbody.append(...rowsArray);
+    <footer class="bg-black/20 py-10 text-center border-t border-white/5 mt-auto">
+        <div class="flex justify-center flex-wrap gap-4 mb-6">
+            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+            <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="X (Twitter)"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="TikTok"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+        </div>
+        <p class="text-xs font-bold text-white/20 uppercase tracking-widest">Ryan Retro • 2026</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        AOS.init({ once: true, offset: 50, duration: 800 });
+
+        // --- BENCHMARK LOGIC ---
+        const DEVICE_COUNT = 7;
+        const prices = {
+            1: 199,  // RP5
+            2: 219,  // RPG2
+            3: 329,  // Odin 2 Portal
+            4: 329,  // Konkr
+            5: 1719, // Fold 7
+            6: 449,  // Odin 3
+            7: 399   // Steam Deck
+        };
+        const deviceNames = {
+            1: "Retroid Pocket 5",
+            2: "Retroid Pocket G2",
+            3: "AYN Odin 2 Portal",
+            4: "Konkr Pocket Fit",
+            5: "Samsung Fold 7",
+            6: "AYN Odin 3",
+            7: "Steam Deck"
+        };
+        const deviceColors = {
+            1: "text-green-400",
+            2: "text-yellow-400",
+            3: "text-blue-400",
+            4: "text-orange-400",
+            5: "text-pink-400",
+            6: "text-purple-400",
+            7: "text-cyan-400"
+        };
+
+        let activeMode = 'combined';
+        let highlightOn = false;
+        let colorModeOn = false;
+        let valueModeOn = false;
+        let runsGreatOn = false;
+        let miniModeOn = false;
+        const columnVisibility = { 1: true, 2: true, 3: true, 4: true, 5: false, 6: true, 7: true };
+
+        const tables = document.querySelectorAll('.rr-table');
+        const benchCard = document.getElementById('benchCard');
+        const controlsPanel = document.getElementById('controlsPanel');
+
+        function getActiveTable() {
+            return document.querySelector(`.rr-table[data-mode="${activeMode}"]`);
+        }
+
+        function updateTableVisibility() {
+            tables.forEach(t => t.classList.add('hidden'));
+            getActiveTable().classList.remove('hidden');
+        }
+
+        function clearEffects() {
+            document.querySelectorAll('.best-cell').forEach(el => el.classList.remove('best-cell'));
+            document.querySelectorAll('.runs-great').forEach(el => el.classList.remove('runs-great'));
+            document.querySelectorAll('.rr-table td').forEach(el => {
+                el.style.color = '';
+                el.style.fontWeight = '';
+                if (el.dataset.original) {
+                    el.innerHTML = el.dataset.original; 
+                    delete el.dataset.original;
+                }
+            });
+        }
+
+        function updateColumnVisibility() {
+            tables.forEach(table => {
+                const headRow = table.querySelector('thead tr');
+                const bodyRows = table.querySelectorAll('tbody tr');
+
+                // Headers
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    const th = headRow.querySelector(`th[data-col-index="${i}"]`);
+                    if (th) th.style.display = columnVisibility[i] ? '' : 'none';
+                }
+
+                // Cells
+                bodyRows.forEach(row => {
+                    const cells = row.children;
+                    for (let i = 1; i <= DEVICE_COUNT; i++) {
+                        if (cells[i]) cells[i].style.display = columnVisibility[i] ? '' : 'none';
+                    }
+                });
+            });
+
+            if (highlightOn) applyHighlight();
+            if (colorModeOn) applyColorMode();
+            if (valueModeOn) applyValueMode();
+            if (runsGreatOn) applyRunsGreat();
+        }
+
+        function applyHighlight() {
+            clearEffects();
+            const table = getActiveTable();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                let maxVal = -Infinity;
+                let cells = [];
+
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    if (!columnVisibility[i]) continue;
+                    const cell = row.children[i];
+                    if(!cell) continue;
+                    const val = parseFloat(cell.innerText);
+                    if (!isNaN(val)) {
+                        if (val > maxVal) maxVal = val;
+                        cells.push(cell);
+                    }
+                }
+
+                if (maxVal > 0) {
+                    cells.forEach(cell => {
+                        if (parseFloat(cell.innerText) === maxVal) {
+                            cell.classList.add('best-cell');
+                        }
+                    });
+                }
+            });
+        }
+
+        function applyColorMode() {
+            clearEffects();
+            const table = getActiveTable();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                let vals = [];
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    if (!columnVisibility[i]) continue;
+                    const cell = row.children[i];
+                    if(!cell) continue;
+                    const val = parseFloat(cell.innerText);
+                    if (!isNaN(val)) vals.push(val);
+                }
+
+                if (vals.length === 0) return;
+                const min = Math.min(...vals);
+                const max = Math.max(...vals);
+                const range = max - min || 1;
+
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    if (!columnVisibility[i]) continue;
+                    const cell = row.children[i];
+                    if(!cell) continue;
+                    const val = parseFloat(cell.innerText);
+                    if (isNaN(val)) continue;
+
+                    const t = (val - min) / range;
+                    if (t < 0.33) {
+                        cell.style.color = '#f87171'; // Red
+                    } else if (t < 0.66) {
+                        cell.style.color = '#facc15'; // Yellow
+                    } else {
+                        cell.style.color = '#4ade80'; // Green
+                        cell.style.fontWeight = 'bold';
+                    }
+                }
+            });
+        }
+
+        function applyValueMode() {
+            clearEffects();
+            const table = getActiveTable();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                let minCost = Infinity;
+                let calculatedCosts = {};
+
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    if (!columnVisibility[i]) continue;
+                    const cell = row.children[i];
+                    if(!cell) continue;
+
+                    if (!cell.dataset.original) {
+                        cell.dataset.original = cell.innerText.trim();
+                    }
+                    
+                    const val = parseFloat(cell.dataset.original);
+                    if (!isNaN(val) && val > 0) {
+                        const cost = prices[i] / val;
+                        calculatedCosts[i] = cost;
+                        if (cost < minCost) minCost = cost;
+                    }
+                }
+
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    if (!columnVisibility[i]) continue;
+                    const cell = row.children[i];
+                    if(!cell) continue;
+
+                    const val = parseFloat(cell.dataset.original);
+                    if (!isNaN(val) && val > 0) {
+                        const cost = prices[i] / val;
+                        const isBest = (Math.abs(cost - minCost) < 0.0001);
+                        
+                        if (isBest) {
+                            cell.innerHTML = `<span class="text-green-400 font-bold">$${cost.toFixed(2)}</span>`;
+                            cell.classList.add('best-cell');
+                        } else {
+                            cell.innerHTML = `<span class="text-yellow-400">$${cost.toFixed(2)}</span>`;
+                        }
+                    }
+                }
+            });
+        }
+
+        function applyRunsGreat() {
+            clearEffects();
+            const table = getActiveTable();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const nameCell = row.children[0];
+                const gameName = nameCell.innerText.trim();
+                
+                const demanding = [
+                    'Elden Ring','Cyberpunk 2077','Need for Speed Rivals',
+                    'Pokémon Sword (Open)','Pokémon Sword (Battle)',
+                    'Zelda: BOTW','Zelda: TOTK','The Witcher 3'
+                ].includes(gameName);
+                
+                const threshold = demanding ? 30 : 60;
+
+                for (let i = 1; i <= DEVICE_COUNT; i++) {
+                    if (!columnVisibility[i]) continue;
+                    const cell = row.children[i];
+                    if(!cell) continue;
+                    const val = parseFloat(cell.innerText);
+                    if (!isNaN(val) && val >= threshold) {
+                        cell.classList.add('runs-great');
+                    }
+                }
+            });
+        }
+
+        // --- HANDLERS ---
+        
+        // Modes
+        document.querySelectorAll('.mode-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-toggle').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeMode = btn.dataset.mode;
+                
+                // Update Control Panel Style
+                controlsPanel.classList.remove('panel-yellow', 'panel-red', 'panel-blue');
+                if (activeMode === 'combined') controlsPanel.classList.add('panel-yellow');
+                else if (activeMode === 'switch') controlsPanel.classList.add('panel-red');
+                else if (activeMode === 'windows') controlsPanel.classList.add('panel-blue');
+
+                updateTableVisibility();
+                
+                // Re-apply current feature
+                if (highlightOn) applyHighlight();
+                if (colorModeOn) applyColorMode();
+                if (valueModeOn) applyValueMode();
+                if (runsGreatOn) applyRunsGreat();
+            });
         });
-      });
 
-      // Initial check for mobile
-      if (window.innerWidth < 768) {
-        miniModeOn = true;
-        benchCard.classList.add('mini-mode');
-        miniBtn.classList.add('bg-sky-500', 'text-black', 'shadow-lg');
-        miniBtn.classList.remove('border-sky-500', 'text-sky-400');
-        updateGameNamesForMiniMode();
-      }
+        // Device Toggles
+        document.querySelectorAll('.device-toggle').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const idx = parseInt(btn.dataset.colIndex);
+                if (btn.classList.contains('active')) {
+                    btn.classList.remove('active');
+                    btn.classList.add('off');
+                    columnVisibility[idx] = false;
+                } else {
+                    btn.classList.remove('off');
+                    btn.classList.add('active');
+                    columnVisibility[idx] = true;
+                }
+                updateColumnVisibility();
+            });
+        });
 
-      updateTableVisibility();
-      updateColumnVisibility();
-    });
-  </script>
+        // Feature Toggles (Radio behavior)
+        const feats = ['highlight', 'ranking', 'value', 'great'];
+        feats.forEach(f => {
+            document.querySelector(`.feat-${f}`).addEventListener('click', (e) => {
+                const btn = e.target.closest('button');
+                const wasActive = btn.classList.contains('active');
+                
+                // Reset all
+                feats.forEach(x => {
+                    document.querySelector(`.feat-${x}`).classList.remove('active');
+                    if(x === 'highlight') highlightOn = false;
+                    if(x === 'ranking') colorModeOn = false;
+                    if(x === 'value') valueModeOn = false;
+                    if(x === 'great') runsGreatOn = false;
+                });
+                
+                clearEffects();
+                
+                if (!wasActive) {
+                    btn.classList.add('active');
+                    if(f === 'highlight') { highlightOn = true; applyHighlight(); }
+                    if(f === 'ranking') { colorModeOn = true; applyColorMode(); }
+                    if(f === 'value') { valueModeOn = true; applyValueMode(); }
+                    if(f === 'great') { runsGreatOn = true; applyRunsGreat(); }
+                }
+            });
+        });
+
+        // Mini Mode Toggle
+        document.getElementById('toggleMiniMode').addEventListener('click', function() {
+            this.classList.toggle('active');
+            miniModeOn = !miniModeOn;
+            if(miniModeOn) benchCard.classList.add('mini-mode');
+            else benchCard.classList.remove('mini-mode');
+        });
+
+        // Notes Toggle
+        document.getElementById('toggleNotes').addEventListener('click', () => {
+            document.getElementById('notesContent').classList.toggle('hidden');
+        });
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        
+        // Sorting Logic
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', function() {
+                const table = th.closest('table');
+                const tbody = table.querySelector('tbody');
+                const rowsArray = Array.from(tbody.rows);
+                const colIndex = Array.from(th.parentNode.children).indexOf(th);
+                const isAsc = th.dataset.sortDir === 'asc';
+                
+                table.querySelectorAll('th').forEach(h => h.removeAttribute('data-sort-dir'));
+                th.dataset.sortDir = isAsc ? 'desc' : 'asc';
+                
+                rowsArray.sort((a, b) => {
+                    const cellA = a.children[colIndex];
+                    const cellB = b.children[colIndex];
+                    
+                    const getCleanVal = (cell) => {
+                        let val = cell.innerText.trim();
+                        if (val.startsWith('$')) val = val.substring(1);
+                        if (val === '-' || val.toLowerCase() === 'untested') return -1;
+                        const n = parseFloat(val);
+                        return isNaN(n) ? val : n;
+                    };
+
+                    const valA = getCleanVal(cellA);
+                    const valB = getCleanVal(cellB);
+
+                    if (typeof valA === 'number' && typeof valB === 'number') {
+                        return isAsc ? valB - valA : valA - valB;
+                    } else {
+                        return isAsc ? valB.toString().localeCompare(valA) : valA.toString().localeCompare(valB);
+                    }
+                });
+                tbody.append(...rowsArray);
+            });
+        });
+
+        // --- GAME MODAL LOGIC ---
+        
+        const modal = document.getElementById('game-details-modal');
+        const modalContent = document.getElementById('game-modal-content');
+        const closeBtn = document.getElementById('close-game-modal');
+        const bg = document.getElementById('game-modal-bg');
+
+        // Add Click listeners to all rows
+        function attachRowListeners() {
+            document.querySelectorAll('.rr-table tbody tr').forEach(row => {
+                row.addEventListener('click', () => openBenchmarkModal(row));
+            });
+        }
+
+        function openBenchmarkModal(row) {
+            // 1. Get Game Name
+            const gameName = row.children[0].innerText.trim();
+            
+            // Determine Suffix based on Mode or Game Name
+            let suffix = " box art";
+            
+            // Check for Nintendo-specific titles first
+            const nintendoTitles = ["Zelda", "Pokémon", "Mario", "Metroid", "Smash Bros", "Animal Crossing"];
+            const isNintendo = nintendoTitles.some(t => gameName.includes(t));
+
+            if (activeMode === 'switch' || isNintendo) {
+                suffix = " Nintendo Switch box art";
+            } else if (activeMode === 'windows') {
+                suffix = " PC box art";
+            } else if (activeMode === 'combined') {
+                // Heuristic fallback for combined mode
+                 suffix = isNintendo ? " Nintendo Switch box art" : " PC box art";
+            }
+
+            // 2. Fetch/Mock Art (Using logic from handheld.html)
+            const initials = gameName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+            const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
+            // Simple approach: fallback to placeholder, real logic needs API
+            const boxArtUrl = `https://tse2.mm.bing.net/th?q=${encodeURIComponent(gameName + suffix)}&w=300&h=450&c=7&rs=1&p=0`;
+
+            // 3. Build List of Results
+            let resultsHtml = '';
+            for(let i=1; i<=DEVICE_COUNT; i++) {
+                if(!columnVisibility[i]) continue; // Skip hidden columns if you want, or show all? 
+                // Let's show all in modal even if hidden in table for full context
+                
+                const cell = row.children[i];
+                if(!cell) continue;
+                
+                // Get value (handle current mode states like Value Mode)
+                let val = cell.innerText.trim();
+                // If in Value Mode, the innerText is price, we want the original FPS usually
+                // But if dataset.original exists, use that for FPS
+                if(cell.dataset.original) val = cell.dataset.original;
+                
+                const deviceName = deviceNames[i];
+                const colorClass = deviceColors[i];
+                
+                resultsHtml += `
+                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/5">
+                        <span class="font-bold text-sm ${colorClass}">${deviceName}</span>
+                        <span class="font-mono text-white text-lg">${val} <span class="text-xs text-white/30">FPS</span></span>
+                    </div>
+                `;
+            }
+
+            // 4. Populate Modal
+            modalContent.innerHTML = `
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="w-full md:w-1/3">
+                        <div class="rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 aspect-[2/3] bg-black/50 relative group">
+                            <img src="${boxArtUrl}" crossorigin="anonymous" class="w-full h-full object-cover" onerror="this.src='${fallbackArt}'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#1a0b2e] to-transparent opacity-60"></div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-2/3 flex flex-col">
+                        <h2 class="font-display font-black text-3xl text-white mb-1 leading-tight">${gameName}</h2>
+                        <span class="text-white/40 text-xs font-bold uppercase tracking-widest mb-6">Benchmark Results</span>
+                        
+                        <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                            ${resultsHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+        }
+
+        // Close Modal
+        const closeModal = () => modal.classList.add('hidden');
+        closeBtn.addEventListener('click', closeModal);
+        bg.addEventListener('click', closeModal);
+
+        // Screenshot Feature (Bonus)
+        document.getElementById('screenshot-game-modal').addEventListener('click', function() {
+            const btn = this;
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i>`;
+            lucide.createIcons();
+
+            // Create temporary container for capture (like in handheld.html)
+            const captureContainer = document.createElement('div');
+            Object.assign(captureContainer.style, {
+                position: 'fixed',
+                top: '-9999px',
+                left: '-9999px',
+                width: '800px', // Fixed width for consistent capture
+                backgroundColor: '#1a0b2e', // Solid deep purple background
+                backgroundImage: 'radial-gradient(circle at top center, #3b0764, #1a0b2e)',
+                padding: '40px',
+                borderRadius: '20px',
+                zIndex: '-1'
+            });
+
+            // Reconstruct content for capture with solid styles
+            const content = document.getElementById('game-modal-content').innerHTML;
+            captureContainer.innerHTML = `
+                <div class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl p-8 shadow-2xl flex flex-col text-white font-sans">
+                    ${content}
+                    <div class="mt-8 pt-4 border-t border-white/10 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="font-display font-bold text-xl tracking-tight">Ryan Retro</span>
+                        </div>
+                        <span class="font-mono text-white/50 text-xs">ryanretro.com</span>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(captureContainer);
+
+            html2canvas(captureContainer, {
+                backgroundColor: '#1a0b2e',
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                width: 800,
+                windowWidth: 800
+            }).then(canvas => {
+                document.body.removeChild(captureContainer);
+                const link = document.createElement('a');
+                link.download = 'RyanRetro-Benchmark.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = originalIcon;
+                lucide.createIcons();
+            }).catch(err => {
+                console.error("Capture failed:", err);
+                document.body.removeChild(captureContainer);
+                btn.innerHTML = originalIcon;
+                lucide.createIcons();
+                alert("Capture failed. Try again.");
+            });
+        });
+
+        // Init visibility & listeners
+        attachRowListeners();
+        updateTableVisibility();
+        updateColumnVisibility();
+
+    </script>
 </body>
 </html>
