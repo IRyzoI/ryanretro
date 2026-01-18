@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro | Comparisons</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Kanit:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        /* --- THEME --- */
+        :root {
+            --bg-deep: #1a0b2e;
+            --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
+            
+            --card-border: rgba(255, 255, 255, 0.2); 
+            --card-border-hover: rgba(255, 255, 255, 0.5);
+            
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444; 
+            --accent-purple: #a855f7;
+            --accent-cyan: #22d3ee;
+            
+            --text-main: #ffffff;
+            --text-sub: #e2e8f0;
+
+            --bg-card: #3D255D;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Typography */
+        .font-display { font-family: 'Outfit', sans-serif; }
+        .font-logo { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+        .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+        .font-pixel { font-family: 'VT323', monospace; }
+        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Navigation Pills (Updated from Template) */
+        .nav-pill {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Icon spacing */
+        }
+        .nav-pill:hover, .nav-pill.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+        
+        /* Social Buttons (Updated from Template) */
+        .social-btn {
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+        }
+        .social-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* --- BENTO CARD STYLES --- */
+        .bento-card {
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            transition: all 0.2s ease-in-out;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3); 
+            transform: translateY(0);
+            background-color: #5b21b6; /* Default violet base */
+            height: 100%; /* Ensure full height in flex container */
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
+        }
+
+        .card-violet { background-color: #5b21b6; }
+
+        /* Device Stats Pills */
+        .stat-pill {
+            background: rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.15);
+            padding: 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 2px;
+            color: var(--text-sub);
+            font-weight: 700;
+            height: 100%;
+            min-height: 50px;
+            line-height: 1.1;
+        }
+        .stat-pill i { color: var(--accent-cyan); width: 14px; height: 14px; margin-bottom: 2px; }
+
+        /* Buttons */
+        .btn-yellow {
+            background: var(--accent-yellow);
+            color: #451a03;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px;
+            border-radius: 16px;
+            width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            transition: all 0.2s;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 0 #d97706; 
+            font-size: 0.9rem;
+        }
+        .btn-yellow:hover { background: #fcd34d; transform: translateY(-2px); box-shadow: 0 6px 0 #d97706; }
+        .btn-yellow:active { transform: translateY(4px); box-shadow: 0 0 0 #d97706; }
+
+        /* Selector Styling */
+        .device-selector-btn {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            color: rgba(255,255,255,0.6);
+            font-family: 'Kanit', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .device-selector-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .device-selector-btn.selected {
+            background: var(--accent-purple);
+            border-color: rgba(255,255,255,0.4);
+            color: white;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Video Area in Card */
+        .video-embed-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .video-embed-container iframe { width: 100%; height: 100%; }
+
+        /* Animation */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 50;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 50%;
+            width: 30px; 
+            height: 30px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .remove-btn:hover { background: var(--accent-red); border-color: transparent; }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 12px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 6px; margin: 0 20px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 6px; border: 2px solid rgba(0,0,0,0); background-clip: padding-box; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+        /* Hide scrollbar for top selector */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body>
+
+    <div class="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#4c1d95]/40 to-transparent -z-10 pointer-events-none"></div>
+    <div class="fixed top-[-200px] right-[-200px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
+
+    <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
+        <div class="container mx-auto px-4 h-24 flex justify-between items-center">
+            
+            <a href="/" class="flex items-center gap-3 group shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <div class="hidden sm:flex flex-col">
+                    <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Comparisons</span>
+                </div>
+            </a>
+            
+            <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
+                <a href="/reviews" class="nav-pill"><i data-lucide="star" class="w-3.5 h-3.5"></i> Reviews</a>
+                <a href="/benchmarks" class="nav-pill"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Benchmarks</a>
+                <a href="/compatibility" class="nav-pill active"><i data-lucide="arrow-right-left" class="w-3.5 h-3.5"></i> Comparisons</a>
+                <a href="/gotw" class="nav-pill"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> GOTW</a>
+                <a href="/patrons" class="nav-pill"><i data-lucide="heart" class="w-3.5 h-3.5"></i> Patrons</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="social-btn" title="Instagram"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="social-btn" title="TikTok">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="social-btn" title="Discord"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                </div>
+
+                <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
+                </a>
+                
+                <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
+             <div class="grid grid-cols-2 gap-2 mb-2">
+                 <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="star" class="w-4 h-4"></i> Reviews</a>
+                 <a href="/benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Benchmarks</a>
+                 <a href="/handheld" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="arrow-right-left" class="w-4 h-4"></i> Comparisons</a>
+                 <a href="/store" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop</a>
+                 <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="gamepad-2" class="w-4 h-4"></i> GOTW</a>
+                 <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i> Patrons</a>
+             </div>
+             
+             <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
+                 <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
+                 <div class="flex gap-3 flex-wrap justify-end">
+                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                     <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                     <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                     <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+                 </div>
+             </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 pb-20 max-w-7xl flex-grow">
+
+        <!-- Header Section -->
+        <div class="text-center mb-8" data-aos="fade-down">
+            <h1 class="font-display font-black text-4xl md:text-5xl text-white mb-2">HEAD TO HEAD</h1>
+            <p class="text-white/50 max-w-xl mx-auto">Select devices below to compare specs, performance, and see my latest videos side-by-side. Scroll horizontally to add more!</p>
+        </div>
+
+        <!-- Sticky Selector -->
+        <div class="sticky top-24 z-40 bg-[#1a0b2e]/95 backdrop-blur-md py-4 border-b border-white/10 mb-8 -mx-4 px-4 shadow-xl">
+            <div class="flex items-center gap-4 max-w-7xl mx-auto">
+                <span class="text-xs font-bold text-white/40 uppercase tracking-widest shrink-0 hidden md:block">Add Device:</span>
+                <div id="device-selector" class="flex gap-2 overflow-x-auto scrollbar-hide w-full pb-1">
+                    <!-- Buttons injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Scrolling Container -->
+        <!-- Added pt-4 to prevent hover clipping -->
+        <div id="comparison-container" class="flex flex-nowrap gap-6 overflow-x-auto pb-12 pt-4 custom-scrollbar items-stretch px-2 snap-x">
+            <!-- Cards injected via JS -->
+            <div class="min-w-[320px] max-w-[320px] shrink-0 py-20 text-center text-white/30 border-2 border-dashed border-white/10 rounded-3xl mx-auto w-full" data-aos="fade-up">
+                <p class="font-display text-xl">Select devices from the list above to start comparing.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-black/20 py-10 text-center border-t border-white/5 mt-auto">
+        <div class="flex justify-center flex-wrap gap-4 mb-6">
+            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+            <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="X (Twitter)"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="TikTok"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+        </div>
+        <p class="text-xs font-bold text-white/20 uppercase tracking-widest">Ryan Retro • 2026</p>
+    </footer>
+
+    <script>
+        const IMG_BASE_URL = "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/";
+
+        // --- DATA CONFIGURATION ---
+        // Using filenames from user request mapped to device names
+        const DEVICE_CONFIG = {
+            "Retroid Pocket 5": {
+                name: "Retroid Pocket 5",
+                img: IMG_BASE_URL + "rp5.png",
+                link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
+                chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
+                score: 9.5, ytQuery: "retroid pocket 5", hubLink: "/handheld?device=Retroid Pocket 5"
+            },
+            "Retroid Pocket 6": {
+                name: "Retroid Pocket 6", // Using generic placeholder if no image explicit, but assuming RP6 might share RP5 or similar style
+                img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png", // Kept original URL as it wasn't in the new list but likely needed
+                link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
+                chipset: "SD 8 Gen 2", screen: "5.5\" OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
+                score: 9.8, ytQuery: "retroid pocket 6", hubLink: "/handheld?device=Retroid Pocket 6"
+            },
+            "Retroid Pocket Mini": {
+                name: "Retroid Pocket Mini",
+                img: IMG_BASE_URL + "rpmini.png",
+                link: "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT",
+                chipset: "Snapdragon 865", screen: "3.7\" OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
+                score: 9.0, ytQuery: "retroid pocket mini", hubLink: "/handheld?device=Retroid Pocket Mini"
+            },
+            "Retroid Pocket Classic": {
+                name: "Retroid Pocket Classic",
+                img: IMG_BASE_URL + "rpclassic.png",
+                link: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
+                chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
+                score: 9.4, ytQuery: "retroid pocket classic", hubLink: "/handheld?device=Retroid Pocket Classic"
+            },
+            "Retroid Pocket G2": {
+                name: "Retroid Pocket G2",
+                img: IMG_BASE_URL + "rpg2.png",
+                link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
+                chipset: "SD G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
+                score: 8.5, ytQuery: "retroid pocket g2", hubLink: "/handheld?device=Retroid Pocket G2"
+            },
+            "Retroid Pocket Flip 2": {
+                name: "Retroid Pocket Flip 2",
+                img: IMG_BASE_URL + "flip2.png",
+                link: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
+                chipset: "TBD", screen: "4.7\" LCD", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
+                score: 9.2, ytQuery: "retroid pocket flip 2", hubLink: "/handheld?device=Retroid Pocket Flip 2"
+            },
+            "AYN Odin 2 Portal": {
+                name: "AYN Odin 2 Portal",
+                img: IMG_BASE_URL + "portal.png",
+                link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
+                chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
+                score: 9.7, ytQuery: "odin 2 portal", hubLink: "/handheld?device=Odin 2 Portal"
+            },
+            "AYN Odin 3": {
+                name: "AYN Odin 3",
+                img: IMG_BASE_URL + "odin3.png",
+                link: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
+                chipset: "SD 8 Gen 3 (Est)", screen: "6\" OLED", battery: "8500 mAh", os: "Android", ram: "16GB", storage: "512GB",
+                score: 9.9, ytQuery: "ayn odin 3", hubLink: "/handheld?device=AYN Odin 3"
+            },
+            "Ayaneo Konkr Pocket Fit": {
+                name: "Ayaneo Konkr Fit",
+                img: IMG_BASE_URL + "konkr.png",
+                link: "https://www.ayaneo.com",
+                chipset: "AMD 6800U", screen: "5.5\" IPS", battery: "45Wh", os: "Windows 11", ram: "16GB", storage: "512GB",
+                score: 8.8, ytQuery: "ayaneo pocket fit", hubLink: "/handheld?device=Ayaneo Konkr Pocket Fit"
+            },
+            "TrimUI Brick": {
+                name: "TrimUI Brick",
+                img: IMG_BASE_URL + "brick.png",
+                link: "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
+                chipset: "Allwinner A133", screen: "3.2\" IPS", battery: "3000 mAh", os: "Linux", ram: "2GB", storage: "32GB",
+                score: 8.0, ytQuery: "trimui brick", hubLink: "/handheld?device=TrimUI Brick"
+            },
+            "Vortex F5": {
+                name: "Vortex F5",
+                img: IMG_BASE_URL + "f5.png",
+                link: "#",
+                chipset: "RK3588", screen: "5\" IPS", battery: "5500 mAh", os: "Android", ram: "8GB", storage: "128GB",
+                score: 8.5, ytQuery: "vortex f5 handheld", hubLink: "/handheld?device=Vortex F5"
+            },
+            "MagicX Zero 40": {
+                name: "MagicX Zero 40",
+                img: IMG_BASE_URL + "magicxzero40.png",
+                link: "#",
+                chipset: "RK3566", screen: "4\" 1:1", battery: "3500 mAh", os: "Linux", ram: "2GB", storage: "64GB",
+                score: 7.5, ytQuery: "magicx zero 40", hubLink: "/handheld?device=MagicX Zero 40"
+            },
+            "MagicX XU20 V32": {
+                name: "MagicX XU20",
+                img: IMG_BASE_URL + "xuretroxu20v32.png",
+                link: "#",
+                chipset: "TBD", screen: "3.5\" IPS", battery: "3000 mAh", os: "Linux", ram: "1GB", storage: "64GB",
+                score: 7.0, ytQuery: "magicx xu20", hubLink: "/handheld?device=MagicX XU20"
+            },
+            "Mangmi Air X": {
+                name: "Mangmi Air X",
+                img: IMG_BASE_URL + "mangmiairx.png",
+                link: "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr",
+                chipset: "Dimensity 1200", screen: "5.5\" AMOLED", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
+                score: 8.7, ytQuery: "mangmi air x", hubLink: "/handheld?device=Mangmi Air X"
+            },
+            "GKD Pixel 2": {
+                name: "GKD Pixel 2",
+                img: IMG_BASE_URL + "pixel2.png",
+                link: "#",
+                chipset: "Ingenic X1830", screen: "2.4\" IPS", battery: "1500 mAh", os: "Linux", ram: "512MB", storage: "16GB",
+                score: 8.2, ytQuery: "gkd pixel 2", hubLink: "/handheld?device=GKD Pixel 2"
+            },
+            "Anbernic RG34XX": {
+                name: "Anbernic RG34XX",
+                img: IMG_BASE_URL + "rg34xx.png",
+                link: "https://s.click.aliexpress.com/e/_c3cp23I9",
+                chipset: "H700", screen: "3.5\" IPS", battery: "3300 mAh", os: "Linux", ram: "1GB", storage: "64GB",
+                score: 8.4, ytQuery: "anbernic rg34xx", hubLink: "/handheld?device=Anbernic RG34XX"
+            }
+        };
+
+        // --- STATE ---
+        // Defaults
+        let selectedKeys = ["Retroid Pocket 5", "Retroid Pocket Mini"]; 
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSelector();
+            renderContent();
+            lucide.createIcons();
+            
+            // Mobile Menu Toggle Logic
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            if (menuBtn && menu) {
+                menuBtn.addEventListener('click', () => {
+                    menu.classList.toggle('hidden');
+                });
+            }
+
+            setTimeout(() => { AOS.init({ once: true, offset: 50 }); }, 50);
+        });
+
+        // --- RENDER SELECTOR ---
+        function renderSelector() {
+            const container = document.getElementById('device-selector');
+            container.innerHTML = '';
+
+            Object.keys(DEVICE_CONFIG).forEach(key => {
+                const btn = document.createElement('button');
+                const isSelected = selectedKeys.includes(key);
+                btn.className = `device-selector-btn ${isSelected ? 'selected' : ''}`;
+                btn.textContent = key;
+                btn.onclick = () => toggleDevice(key);
+                container.appendChild(btn);
+            });
+        }
+
+        // --- TOGGLE LOGIC ---
+        function toggleDevice(key) {
+            if (selectedKeys.includes(key)) {
+                selectedKeys = selectedKeys.filter(k => k !== key);
+            } else {
+                // REMOVED LIMIT CHECK - "allow as many as desired"
+                selectedKeys.push(key);
+            }
+            renderSelector();
+            renderContent();
+            
+            // Re-run icons and animation scan
+            lucide.createIcons();
+            setTimeout(() => { AOS.refreshHard(); }, 100);
+        }
+
+        // --- RATING COLOR HELPER ---
+        function getRatingColor(score) {
+            if (score >= 9.0) return 'bg-[#4ade80] text-[#1a0b2e] shadow-md'; // Green
+            if (score >= 8.0) return 'bg-[#facc15] text-[#1a0b2e] shadow-md'; // Yellow
+            if (score >= 7.0) return 'bg-[#fb923c] text-[#1a0b2e] shadow-md'; // Orange
+            return 'bg-[#f87171] text-[#1a0b2e] shadow-md'; // Red
+        }
+
+        // --- RENDER CONTENT ---
+        function renderContent() {
+            const container = document.getElementById('comparison-container');
+            container.innerHTML = '';
+
+            if (selectedKeys.length === 0) {
+                container.innerHTML = `
+                    <div class="min-w-[320px] max-w-[320px] shrink-0 mx-auto py-20 text-center text-white/30 border-2 border-dashed border-white/10 rounded-3xl" data-aos="fade-up">
+                        <p class="font-display text-xl">Select devices from the list above to start comparing.</p>
+                    </div>`;
+                return;
+            }
+
+            selectedKeys.forEach((key, index) => {
+                const device = DEVICE_CONFIG[key];
+                const delay = index * 50; 
+                
+                // Get dynamic rating color
+                const ratingClass = getRatingColor(device.score);
+
+                // HTML Template
+                const cardHtml = `
+                    <div class="min-w-[300px] max-w-[320px] shrink-0 snap-center" data-aos="fade-right" data-aos-delay="${delay}">
+                        <div class="bento-card card-violet p-6 flex flex-col relative overflow-hidden h-full">
+                            <button class="remove-btn" onclick="toggleDevice('${key}')"><i data-lucide="x" class="w-4 h-4"></i></button>
+
+                            <a href="${device.hubLink}" class="block group cursor-pointer">
+                                <div class="flex justify-between items-start mb-4 relative z-10 gap-4">
+                                    <h3 class="font-display font-black text-2xl text-white uppercase leading-none drop-shadow-md group-hover:text-[#fbbf24] transition-colors min-h-[3.2rem] flex items-center">
+                                        ${device.name}
+                                    </h3>
+                                    <div class="${ratingClass} px-3 py-1.5 rounded-xl shrink-0 flex items-center justify-center self-center">
+                                        <span class="text-xs font-black whitespace-nowrap">★ ${device.score}</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-center py-6 relative z-10 h-40 w-full">
+                                    <img src="${device.img}" class="h-full w-full object-contain animate-float drop-shadow-2xl group-hover:scale-110 transition-transform duration-300" 
+                                         alt="${device.name}"
+                                         onerror="this.src='https://placehold.co/400x300/2a1b3d/FFF?text=No+Image';">
+                                </div>
+                            </a>
+
+                            <div class="grid grid-cols-2 gap-2 mb-6 relative z-10">
+                                <div class="stat-pill"><i data-lucide="cpu"></i> <span>${device.chipset}</span></div>
+                                <div class="stat-pill"><i data-lucide="monitor"></i> <span>${device.screen}</span></div>
+                                <div class="stat-pill"><i data-lucide="memory-stick"></i> <span>${device.ram}</span></div>
+                                <div class="stat-pill"><i data-lucide="hard-drive"></i> <span>${device.storage}</span></div>
+                                <div class="stat-pill"><i data-lucide="battery"></i> <span>${device.battery}</span></div>
+                                <div class="stat-pill"><i data-lucide="smartphone"></i> <span>${device.os}</span></div>
+                            </div>
+
+                            <a href="${device.link}" target="_blank" class="btn-yellow relative z-10 mb-4">
+                                <span>Buy Now</span> <i data-lucide="external-link" class="w-4 h-4"></i>
+                            </a>
+
+                            <div class="border-t border-white/10 pt-4 mt-auto">
+                                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Latest Video</p>
+                                <div class="video-embed-container relative group cursor-pointer" id="video-${index}">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
+                                        <i data-lucide="youtube" class="w-8 h-8 text-white/50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = cardHtml.trim(); 
+                container.appendChild(wrapper.firstElementChild);
+                
+                loadVideo(device, index);
+            });
+        }
+
+        function loadVideo(device, index) {
+            const container = document.getElementById(`video-${index}`);
+            const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent("Ryan Retro " + device.ytQuery)}`;
+            
+            container.innerHTML = `
+                <a href="${searchUrl}" target="_blank" class="block w-full h-full relative group">
+                    <img src="https://i.ytimg.com/vi/placeholder/hqdefault.jpg" 
+                         class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" 
+                         onerror="this.src='https://placehold.co/600x400/2a1b3d/FFF?text=Watch+Review'" />
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                         <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                            <i data-lucide="play" class="w-4 h-4 text-white fill-current ml-0.5"></i>
+                         </div>
+                         <span class="text-[10px] font-bold text-white mt-2 uppercase tracking-widest">Watch Review</span>
+                    </div>
+                </a>
+            `;
+        }
+
+    </script>
+</body>
+</html>
