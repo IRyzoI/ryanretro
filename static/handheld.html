@@ -1,1505 +1,1345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Compatibility | Ryan Retro</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
-  <link rel="preconnect" href="https://www.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://huggingface.co" crossorigin>
-  <link rel="dns-prefetch" href="//huggingface.co">
-  <link rel="icon" href="data:,">
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-
-    :root {
-      /* --- HEADER / GAMEBOY COLORS (From Shop) --- */
-      --gb-grey: #e0e0e0;
-      --gb-dark-grey: #c4c4c4;
-      --gb-shadow: #9e9e9e;
-      --gb-highlight: #ffffff;
-      --gb-accent: #6b7280;
-      
-      --bg-body: #f0f0f0;
-      --bg-panel: #e5e7eb; 
-      --text-main: #111827;
-      --border-color: #000000;
-
-      /* --- COMPATIBILITY PAGE VARIABLES --- */
-      --bg-box: #ffffff;
-      --text-muted: #9ca3af;
-      --border-main: #9ca3af;
-    }
-
-    /* DARK MODE VARIABLES */
-    body.dark-mode {
-      /* Header Colors */
-      --gb-grey: #4b5563;        
-      --gb-dark-grey: #111827;   
-      --gb-shadow: #000000;      
-      --gb-highlight: rgba(255,255,255,0.15); 
-      --gb-accent: #9ca3af;
-      
-      /* Page Colors */
-      --bg-body: #111827;        
-      --bg-panel: #1f2937;        
-      --text-main: #d1d5db;      
-      --text-muted: #9ca3af;
-      --border-color: #000000;
-      --bg-box: #1f2937;
-      --border-main: #1f2937;
-    }
-
-    .retro-font { font-family: 'Press Start 2P', cursive; }
-
-    /* Main Body Background */
-    body {
-        background-color: var(--bg-body);
-        color: var(--text-main);
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .bg-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
-        pointer-events: none;
-        z-index: -1;
-    }
-
-    /* --- HEADER SPECIFIC STYLES --- */
-    .pixel-btn { transition: all 0.1s ease; }
-    .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro | Device Hub</title>
     
-    @keyframes popIn {
-        0% { opacity: 0; transform: translateY(10px) scale(0.98); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .cart-animate {
-        animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        opacity: 0; 
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
-    /* DARK MODE OVERRIDES FOR HEADER/TAILWIND */
-    body.dark-mode header,
-    body.dark-mode footer {
-        background-color: var(--gb-grey) !important;
-        border-color: var(--gb-dark-grey) !important;
-    }
-    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: #fff !important; }
-    body.dark-mode p { color: #d1d5db !important; }
-    
-    /* Input/Select overrides in dark mode */
-    body.dark-mode input, body.dark-mode select {
-        background-color: #1f2937 !important; color: #fff !important; border-color: #4b5563 !important;
-    }
-    /* Button overrides in dark mode */
-    body.dark-mode .bg-gray-100 { background-color: #1f2937 !important; color: #fff !important; }
-    body.dark-mode .bg-gray-100:hover { background-color: #374151 !important; }
-    /* Flash Deals Modal Dark Mode */
-    body.dark-mode .bg-gray-200 { background-color: #374151 !important; border-color: #1f2937 !important; }
-    body.dark-mode .bg-white { background-color: #1f2937 !important; border-color: #4b5563 !important; color: #fff !important; }
-    body.dark-mode svg.fill-black { fill: #fff !important; }
-    /* Affiliate Banner Dark Mode Override */
-    body.dark-mode .bg-yellow-50 { background-color: #362F08 !important; border-color: #facc15 !important; color: #fef08a !important; }
-    body.dark-mode .bg-yellow-50 p, body.dark-mode .bg-yellow-50 h3 { color: #fef08a !important; }
-    body.dark-mode .bg-yellow-400 { background-color: #facc15 !important; color: #000 !important; }
-    body.dark-mode .text-gray-600 { color: #d1d5db !important; }
-    body.dark-mode .text-gray-700 { color: #d1d5db !important; }
-    body.dark-mode .text-gray-700:hover { color: #facc15 !important; }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Kanit:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
-    /* --- COMPATIBILITY PAGE STYLES (Restored) --- */
-    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-    .perf-perfect, .status-perfect { color: #4ade80; }
-    .perf-great, .status-great { color: #38bdf8; }
-    .perf-playable, .status-playable { color: #fb923c; }
-    .perf-unplayable, .status-unplayable { color: #f87171; }
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    #compatibility-table thead th { position: sticky; top: 0; z-index: 10; }
+    <style>
+        /* --- THEME --- */
+        :root {
+            --bg-deep: #1a0b2e;
+            --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
+            
+            /* Friendly Outlined Theme Colors */
+            --card-border: rgba(255, 255, 255, 0.2); 
+            --card-border-hover: rgba(255, 255, 255, 0.5);
+            
+            --accent-yellow: #fbbf24;
+            --accent-red: #ef4444; 
+            --accent-purple: #a855f7;
+            --accent-cyan: #22d3ee;
+            
+            --text-main: #ffffff;
+            --text-sub: #e2e8f0;
 
-    .form-input {
-      background-color: #374151; border: 2px solid #1f2937; border-radius: .25rem;
-      padding: .5rem .75rem; color: #d1d5db; width: 100%; transition: border-color .2s;
-    }
-    .form-input:focus { outline: none; border-color: #facc15; }
-    
-    body.dark-mode .form-input {
-        background-color: #1f2937 !important; color: #fff !important; border-color: #4b5563 !important;
-    }
+            /* Table Specific Vars */
+            --bg-card: #3D255D; /* Darker purple for table card */
+        }
 
-    .custom-scrollbar::-webkit-scrollbar { height: 8px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        body {
+            background-color: var(--bg-deep);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-    select.form-input.perf-perfect    { background-color: rgba(74, 222, 128, .10); }
-    select.form-input.perf-great      { background-color: rgba(56, 189, 248, .10); }
-    select.form-input.perf-playable   { background-color: rgba(251, 146, 60, .10); }
-    select.form-input.perf-unplayable { background-color: rgba(248, 113, 113, .10); }
-
-    .island { content-visibility: auto; contain-intrinsic-size: 800px; }
-    
-    /* --- UPDATED FLAT FILTER STYLES (No Glow) --- */
-    
-    /* Default active fallback (All) */
-    .filter-active {
-        background-color: #ffffff !important;
-        color: #000000 !important;
-    }
-
-    /* Specific Flat Colors for Active Filters */
-    button.perf-perfect.filter-active {
-        background-color: #4ade80 !important; /* Green-400 */
-        color: #000000 !important;
-    }
-    button.perf-great.filter-active {
-        background-color: #38bdf8 !important; /* Sky-400 */
-        color: #000000 !important;
-    }
-    button.perf-playable.filter-active {
-        background-color: #fb923c !important; /* Orange-400 */
-        color: #000000 !important;
-    }
-    button.perf-unplayable.filter-active {
-        background-color: #f87171 !important; /* Red-400 */
-        color: #000000 !important;
-    }
-
-    /* Toast Notification */
-    #toast {
-      visibility: hidden;
-      min-width: 250px;
-      margin-left: -125px;
-      background-color: #333;
-      color: #fff;
-      text-align: center;
-      border-radius: 2px;
-      padding: 16px;
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      bottom: 30px;
-      font-size: 12px;
-      font-family: 'Press Start 2P', cursive;
-      border: 4px solid #000;
-      box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
-    }
-    #toast.show {
-      visibility: visible;
-      animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    }
-    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-    @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-
-    /* ADDED DARK MODE NAV SUPPORT */
-    body.dark-mode #navBox {
-        background-color: #1f2937 !important;
-        border-color: #000 !important;
-    }
-    body.dark-mode .pause-menu-header {
-        background-color: #374151 !important;
-        color: #fff !important;
-        border-color: #000 !important;
-    }
-    body.dark-mode .pause-menu-header button {
-        color: #fff !important;
-    }
-    /* Default Inactive Item in Dark Mode */
-    body.dark-mode .nav-item.bg-white {
-        background-color: #1f2937 !important;
-        border-color: transparent;
-    }
-    body.dark-mode .nav-item.bg-white span {
-        color: #d1d5db !important;
-    }
-    body.dark-mode .nav-item.bg-white i {
-        color: #9ca3af !important;
-    }
-    /* Hover States in Dark Mode (Allowing colors to show through) */
-    body.dark-mode .nav-item:hover {
-        border-color: #000 !important;
-    }
-    /* Specific Hovers need to force background color over the dark mode override */
-    body.dark-mode .nav-item.hover\:bg-green-600:hover { background-color: #16a34a !important; }
-    body.dark-mode .nav-item.hover\:bg-red-600:hover { background-color: #dc2626 !important; }
-    body.dark-mode .nav-item.hover\:bg-sky-500:hover { background-color: #0ea5e9 !important; }
-    body.dark-mode .nav-item.hover\:bg-yellow-400:hover { background-color: #facc15 !important; }
-    body.dark-mode .nav-item.hover\:bg-orange-500:hover { background-color: #f97316 !important; }
-    body.dark-mode .nav-item.hover\:bg-purple-600:hover { background-color: #9333ea !important; }
-    
-    /* Hover Text Colors in Dark Mode */
-    body.dark-mode .nav-item:hover span,
-    body.dark-mode .nav-item:hover i {
-        color: #fff !important;
-    }
-    /* Home (Yellow) Hover Text Black */
-    body.dark-mode .nav-item.hover\:bg-yellow-400:hover span,
-    body.dark-mode .nav-item.hover\:bg-yellow-400:hover i {
-        color: #000 !important;
-    }
-
-    /* Active Item (Yellow) in Dark Mode */
-    body.dark-mode .nav-item.bg-yellow-400 {
-        background-color: #facc15 !important;
-        border-color: #000 !important;
-    }
-    body.dark-mode .nav-item.bg-yellow-400 span,
-    body.dark-mode .nav-item.bg-yellow-400 i {
-        color: #000 !important;
-    }
-
-    @media (max-width: 768px) {
-      /* Increased gap to prevent badge overlap */
-      .header-container { flex-direction: column; gap: 1.5rem; }
-    }
-  </style>
-</head>
-
-<body class="font-sans overflow-x-hidden dark-mode pb-8">
-  <div class="bg-overlay"></div>
-  <div id="toast">Code Copied!</div>
-
-  <!-- NEW HEADER NAV OVERLAY -->
-  <div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
-      <div class="absolute inset-0" onclick="toggleNav()"></div>
-      
-      <div class="bg-white border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
-          
-          <div class="pause-menu-header bg-gray-200 text-black p-2 mb-1 flex justify-between items-center border-b-2 border-black">
-              <span class="retro-font text-xs">PAUSE MENU</span>
-              <button onclick="toggleNav()" class="text-black hover:text-red-500">
-                  <i data-feather="x" class="w-4 h-4"></i>
-              </button>
-          </div>
-
-          <div class="flex flex-col gap-1" id="navLinksList">
-              <!-- 1. BENCHMARKS (Green) -->
-              <a href="/benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-green-600 cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">BENCHMARKS</span>
-                  <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-              </a>
-
-              <!-- 2. GOTW (Red) -->
-              <a href="/gotw" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">GOTW</span>
-                  <i data-feather="crosshair" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-              </a>
-
-              <!-- 3. HANDHELDS (Active/Illuminated - Yellow) -->
-              <a href="/handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-yellow-400 border-2 border-black cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] text-black">HANDHELDS</span>
-                  <i data-feather="smartphone" class="w-4 h-4 text-black"></i>
-              </a>
-
-              <!-- 4. HOME (Yellow Hover) -->
-              <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-yellow-400 cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-black">HOME</span>
-                  <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-black"></i>
-              </a>
-
-              <!-- 5. PATRONS (Orange) -->
-              <a href="/patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-orange-500 cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">PATRONS</span>
-                  <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-              </a>
-
-              <!-- 6. STORE (Purple) -->
-              <a href="/store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-purple-600 cursor-pointer group transition-colors">
-                  <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">STORE</span>
-                  <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-              </a>
-          </div>
-          
-          <div class="h-0.5 bg-gray-400 my-1"></div>
-
-          <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
-               <span class="retro-font text-[10px] text-gray-800 group-hover:text-white">SWITCH THEME</span>
-               <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
-          </div>
-
-          <div class="mt-1 text-center pb-1">
-              <span class="text-[8px] retro-font text-gray-500">SELECT OPTION</span>
-          </div>
-      </div>
-  </div>
-
-  <!-- NEW HEADER -->
-  <header class="bg-gray-100 py-3 md:py-6 border-b-4 border-gray-400 shadow-md transition-colors duration-300 relative z-50">
-    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container gap-4">
-      
-      <!-- Logo Section: Added shrink-0 to prevent compression -->
-      <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start shrink-0">
-          
-          <button id="navToggle" class="p-3 bg-gray-800 text-white hover:bg-gray-700 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
-              <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-              <span class="retro-font text-[10px] hidden md:block">MENU</span>
-          </button>
-
-          <a href="/" class="flex items-center gap-3 md:gap-4">
-              <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-                  class="w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-gray-400 bg-gray-200" alt="Ryan Retro Logo">
-              <div class="flex flex-col">
-                  <h1 class="retro-font text-sm md:text-xl text-gray-800 leading-tight">HANDHELDS</h1>
-                  <span class="retro-font text-[8px] text-gray-500 uppercase">Compatibility Reports</span>
-              </div>
-          </a>
-      </div>
-
-      <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto order-3 md:order-3 mt-2 md:mt-0">
+        /* Typography */
+        .font-display { font-family: 'Outfit', sans-serif; }
+        .font-logo { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+        .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+        .font-pixel { font-family: 'VT323', monospace; }
+        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
         
-        <button id="openFlashDealsBtn"
-                class="px-3 py-2 md:py-4 md:px-4 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] w-full md:w-auto hidden">
-            <i data-feather="zap" class="w-4 h-4 md:w-5 md:h-5"></i>
-            <span>DEALS</span>
-        </button>
+        /* --- BENTO GRID COMPONENTS --- */
+        
+        .bento-card {
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            transition: all 0.2s ease-in-out;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3); 
+            transform: translateY(0);
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
+        }
 
-        <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
-        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
-          FIND ME
-        </span>
-        <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-           <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
-             <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
-             <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-           </a>
-           <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-           </a>
-           <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
-           </a>
-           <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-           </a>
-        </div>
-      </div>
+        /* Distinct Card Colors */
+        .card-violet { background-color: #5b21b6; }
+        .card-teal   { background-color: #0f766e; }
+        .card-rose   { background-color: #be123c; }
+        .card-blue   { background-color: #1e40af; }
+        .card-slate  { background-color: #1e293b; }
 
-      <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
-        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
-          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
-        </span>
-        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-          <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-          </svg>
-          <span class="tracking-tight">JOIN PATREON</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</header>
+        /* Video Area */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .video-container iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
 
-<!-- ORIGINAL CONTENT SECTION (Restored) -->
-<section id="mainContentSection" class="py-8 container mx-auto px-4">
-  <main class="py-12">
-    <div class="mx-auto w-full max-w-[1900px] px-2 sm:px-4">
-      <div class="max-w-full mx-auto">
-        <div class="flex items-center mb-8">
-          <span class="bg-red-500 text-black text-xs px-2 py-1 rounded retro-font mr-4">HANDHELD</span>
-          <h1 id="device-heading" class="retro-font text-3xl md:text-4xl">Device</h1>
-        </div>
+        /* Device Stats Pills */
+        .stat-pill {
+            background: rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.15);
+            padding: 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column; /* Vertical Stack */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 4px;
+            color: var(--text-sub);
+            font-weight: 700;
+            height: 100%;
+            min-height: 64px; /* Ensure height */
+            line-height: 1.2;
+        }
+        .stat-pill i { color: var(--accent-cyan); width: 18px; height: 18px; margin-bottom: 2px; }
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div class="md:col-span-2" data-aos="fade-right">
-            <div class="bg-gray-800 rounded-lg overflow-hidden pixel-border h-full p-4 relative group hover:border-gray-500 transition-colors duration-300">
-               <a id="hero-link" href="#" target="_blank" class="flex w-full h-full items-center justify-center">
-                  <img id="hero-img" src="" alt="Device" class="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105" decoding="async" fetchpriority="high">
-               </a>
+        /* Flat Score Badge */
+        .score-badge {
+            background: var(--accent-yellow);
+            color: #451a03;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 0 #d97706;
+        }
+
+        /* Buttons */
+        .btn-yellow {
+            background: var(--accent-yellow);
+            color: #451a03;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px;
+            border-radius: 20px;
+            width: 100%;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            transition: all 0.2s;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 6px 0 #d97706; 
+        }
+        .btn-yellow:hover { 
+            background: #fcd34d; 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 0 #d97706; 
+        }
+        .btn-yellow:active { 
+            transform: translateY(4px); 
+            box-shadow: 0 0 0 #d97706; 
+        }
+
+        /* Nav & Social Buttons */
+        .nav-pill {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .nav-pill:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+        
+        .social-btn {
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            transition: all 0.2s;
+        }
+        .social-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Inputs & Selects */
+        .friendly-input {
+            background: rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            color: white;
+            transition: all 0.2s;
+        }
+        .friendly-input:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            background: rgba(0,0,0,0.4);
+            box-shadow: 0 4px 0 rgba(168, 85, 247, 0.4);
+        }
+
+        /* Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 5px; border: 2px solid var(--bg-deep); }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+        /* Floating Animation */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        /* --- TABLE & COMPATIBILITY STYLES --- */
+        .text-shadow-md { text-shadow: 2px 2px 1px rgba(0,0,0,0.8); }
+
+        .card-3d {
+            background-color: var(--bg-card);
+            border: 2px solid var(--card-border);
+            border-radius: 32px;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+            transform: translateY(0);
+        }
+
+        .card-3d:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-border-hover);
+            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
+        }
+        
+        .shiny-btn { overflow: hidden; position: relative; }
+        @keyframes shine-sweep { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+        .shiny-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
+            transform: skewX(-25deg); animation: shine-sweep 4s infinite;
+        }
+
+        .perf-perfect { color: #4ade80; text-transform: uppercase; }
+        .perf-great { color: #38bdf8; text-transform: uppercase; }
+        .perf-playable { color: #facc15; text-transform: uppercase; }
+        .perf-unplayable { color: #f87171; text-transform: uppercase; }
+
+        .filter-active { background-color: #ffffff !important; color: #2E1A47 !important; font-weight: bold; }
+        button.perf-perfect.filter-active { background-color: #4ade80 !important; }
+        button.perf-great.filter-active { background-color: #38bdf8 !important; }
+        button.perf-playable.filter-active { background-color: #facc15 !important; }
+        button.perf-unplayable.filter-active { background-color: #f87171 !important; }
+
+        .form-input {
+            background-color: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.1);
+            color: white; border-radius: 0.5rem; padding: 0.75rem; width: 100%; transition: all 0.3s;
+        }
+        .form-input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); }
+        select.form-input option { background-color: var(--bg-card); color: white; }
+
+        /* Performance Select Colorization for Form */
+        select.form-input.perf-perfect      { color: #4ade80; background-color: rgba(74, 222, 128, .10); }
+        select.form-input.perf-great        { color: #38bdf8; background-color: rgba(56, 189, 248, .10); }
+        select.form-input.perf-playable     { color: #fb923c; background-color: rgba(251, 146, 60, .10); }
+        select.form-input.perf-unplayable   { color: #f87171; background-color: rgba(248, 113, 113, .10); }
+
+        /* Toast */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: var(--accent-cyan); color: #2E1A47;
+            text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000;
+            left: 50%; bottom: 30px; transform: translateX(-50%);
+            font-family: 'Press Start 2P', cursive; font-size: 10px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+    </style>
+</head>
+<body>
+
+    <div class="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#4c1d95]/40 to-transparent -z-10 pointer-events-none"></div>
+    <div class="fixed top-[-200px] right-[-200px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
+
+    <div id="toast">Code Copied!</div>
+
+    <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
+        <div class="container mx-auto px-4 h-24 flex justify-between items-center">
+            
+            <a href="#" class="flex items-center gap-3 group shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <div class="hidden sm:flex flex-col">
+                    <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Tech & Gaming</span>
+                </div>
+            </a>
+            
+            <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
+                <a href="#reviews" class="nav-pill">Reviews</a>
+                <a href="#benchmarks" class="nav-pill">Benchmarks</a>
+                <a href="#compatibility" class="nav-pill">Comparisons</a>
+                <a href="#gotw" class="nav-pill">Game of the Week</a>
+                <a href="#patrons" class="nav-pill text-[#a855f7] hover:text-[#c084fc]">Patrons</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="social-btn" title="Instagram"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="social-btn" title="TikTok">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="social-btn" title="Discord"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                </div>
+
+                <a href="#" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
+                </a>
+                
+                <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
             </div>
-          </div>
-
-          <div id="sidebar-panel"
-               class="md:col-span-1 bg-gray-800 p-8 rounded-lg pixel-border flex flex-col" data-aos="fade-left">
-            <div id="cta-buttons" class="flex flex-col gap-4 h-full">
-              <a id="affiliate-link" href="#" target="_blank"
-                 class="group flex-grow bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded pixel-btn retro-font text-sm md:text-base
-                       flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="shopping-cart" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
-                <span class="btn-label">PURCHASE</span>
-              </a>
-
-              <a id="videos-link" href="#" target="_blank"
-                 class="group flex-grow bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="youtube" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> VIDEOS
-              </a>
-              <a id="review-or-compat-link"
-                 href="#compatibility"
-                 class="group flex-grow bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1">
-                <i data-feather="list" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i>
-                <span id="review-or-compat-label">PLAY GAMES</span>
-              </a>
-
-              <a href="/benchmarks"
-                 class="group flex-grow bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded pixel-btn retro-font text-sm md:text-base flex items-center justify-center transition-transform hover:scale-105 hover:-translate-y-1 whitespace-nowrap">
-                <i data-feather="bar-chart-2" class="mr-2 w-5 h-5 transition-transform group-hover:scale-110"></i> BENCHMARKS
-              </a>
-            </div>
-          </div>
         </div>
-
-        <section id="videos-section" class="mb-12 island">
-          <h2 class="retro-font text-2xl mb-6">Videos</h2>
-          <div id="videos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <p class="md:col-span-3">Loading videos...</p>
-          </div>
-        </section>
-
-        <div id="compatibility" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 island">
-          <h2 class="retro-font text-2xl mb-6">Game Compatibility</h2>
-
-          <div id="variant-tabs" class="mb-4 hidden">
-            <div class="inline-flex flex-wrap gap-2"></div>
-          </div>
-
-          <div id="system-buttons" class="mb-4 flex flex-wrap gap-2">
-            <button data-system="switch"    class="system-btn bg-yellow-400 text-black px-4 py-2 rounded-md retro-font text-xs">Switch</button>
-            <button data-system="ps2"       class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS2</button>
-            <button data-system="ps3"       class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS3</button>
-            <button data-system="psvita"    class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">PS Vita</button>
-            <button data-system="winlator" class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Winlator</button>
-            <button data-system="gamehub"  class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">GameHub</button>
-            <button data-system="wiiu"     class="system-btn bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs">Wii U</button>
-          </div>
-
-          <div id="perf-filters" class="mb-3 flex flex-wrap gap-2 text-xs">
-            <button data-perf=""            class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 border border-transparent filter-active">All</button>
-            <button data-perf="Perfect"     class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-perfect font-bold border border-transparent">Perfect</button>
-            <button data-perf="Great"       class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-great font-bold border border-transparent">Great</button>
-            <button data-perf="Playable"    class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-playable font-bold border border-transparent">Playable</button>
-            <button data-perf="Unplayable" class="px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 perf-unplayable font-bold border border-transparent">Unplayable</button>
-          </div>
-
-          <div class="mb-6 flex flex-col md:flex-row gap-4">
-            <div class="flex-grow">
-              <input type="text" id="game-search-box" class="form-input" placeholder="Search for a game...">
-            </div>
-            <div class="flex items-center justify-end gap-2">
-              <label for="rows-per-page" class="text-sm font-bold text-gray-400">Rows:</label>
-              <select id="rows-per-page" class="bg-gray-700 text-white border border-gray-600 rounded px-2 py-2 text-sm focus:outline-none focus:border-yellow-400">
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto custom-scrollbar">
-            <table id="compatibility-table" class="min-w-full text-sm text-left text-gray-300">
-              <thead class="bg-gray-700 text-gray-100 retro-font text-xs uppercase tracking-wider cursor-pointer"></thead>
-              <tbody class="divide-y divide-gray-700 align-baseline"></tbody>
-            </table>
-          </div>
+        
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
+             <div class="grid grid-cols-2 gap-2 mb-2">
+                 <a href="#reviews" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Reviews</a>
+                 <a href="#benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Benchmarks</a>
+                 <a href="#compatibility" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Comparisons</a>
+                 <a href="#shop" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Shop</a>
+                 <a href="#gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2">
+                     GOTW <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                 </a>
+                 <a href="#patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2">
+                     Patrons <i data-lucide="heart" class="w-4 h-4"></i>
+                 </a>
+             </div>
+             
+             <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
+                 <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
+                 <div class="flex gap-3 flex-wrap justify-end">
+                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/60 hover:text-white" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                     </a>
+                     <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/60 hover:text-white" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                     <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white" title="TikTok">
+                        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                     </a>
+                     <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/60 hover:text-white" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+                 </div>
+             </div>
         </div>
+    </header>
 
-        <div id="pagination-controls" class="mt-6 flex items-center justify-center gap-4">
-          <button id="prev-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Previous</button>
-          <span id="page-info" class="retro-font text-sm text-yellow-400">Page 1 of 1</span>
-          <button id="next-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md retro-font text-xs disabled:opacity-50" disabled>Next</button>
-        </div>
+    <main class="container mx-auto px-4 py-8 pb-8 max-w-7xl">
 
-        <div class="text-center mt-6">
-          <button id="add-entry-btn" class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-3 rounded retro-font">
-            ADD YOUR ENTRY
-          </button>
-        </div>
+        <section id="hub" class="mb-8" data-aos="fade-up">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <div class="lg:col-span-4 h-full">
+                    <div class="bento-card card-violet p-6 flex flex-col h-full relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <h3 id="device-name" class="font-display font-black text-3xl text-white uppercase leading-none drop-shadow-md">DEVICE<br>NAME</h3>
+                        </div>
 
-        <div id="add-entry-form-container" class="bg-gray-800 p-8 rounded-lg pixel-border mb-12 hidden mt-8" data-aos="fade-up">
-          <h2 class="retro-font text-2xl mb-6 text-yellow-400">Add New Compatibility Entry</h2>
+                        <div class="flex-grow flex items-center justify-center py-6 relative z-10 min-h-[150px]">
+                            <img id="device-img" src="" class="w-56 object-contain animate-float drop-shadow-2xl" alt="Device">
+                        </div>
 
-          <form id="compatibility-form">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label for="form-system-select" class="block mb-2 font-bold">System *</label>
-                <select id="form-system-select" class="form-input" required>
-                  <option value="switch">Nintendo Switch</option>
-                  <option value="ps2">PlayStation 2</option>
-                  <option value="ps3">PlayStation 3</option>
-                  <option value="psvita">PlayStation Vita</option>
-                  <option value="winlator">Winlator</option>
-                  <option value="gamehub">GameHub</option>
-                  <option value="wiiu">Wii U</option>
-                </select>
-              </div>
-            </div>
+                        <div class="grid grid-cols-2 gap-2 mb-6 relative z-10" id="stats-grid">
+                            <div class="stat-pill"><i data-lucide="cpu"></i> <span id="stat-chip">...</span></div>
+                            <div class="stat-pill"><i data-lucide="monitor"></i> <span id="stat-screen">...</span></div>
+                            <div class="stat-pill"><i data-lucide="memory-stick"></i> <span id="stat-ram">...</span></div>
+                            <div class="stat-pill"><i data-lucide="hard-drive"></i> <span id="stat-storage">...</span></div>
+                            <div class="stat-pill"><i data-lucide="battery"></i> <span id="stat-battery">...</span></div>
+                            <div class="stat-pill"><i data-lucide="smartphone"></i> <span id="stat-os">...</span></div>
+                        </div>
 
-            <div id="dynamic-fields" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"></div>
-
-            <div class="mb-6">
-              <label for="notes" class="block mb-2 font-bold">Notes (optional)</label>
-              <textarea id="notes" name="notes" rows="3" class="form-input" placeholder="Extra context, settings, caveats..."></textarea>
-            </div>
-
-            <input type="hidden" id="hidden-device" name="device" value="">
-            <input type="hidden" id="hidden-system" name="system" value="switch">
-
-            <div class="flex items-center justify-end gap-4">
-              <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded retro-font">CANCEL</button>
-              <button type="submit" class="bg-green-500 hover:bg-green-600 text-black px-6 py-3 rounded retro-font">SUBMIT</button>
-            </div>
-          </form>
-        </div>
-
-      </div>
-    </div>
-  </main>
-</section>
-
-<!-- FLASH DEALS MODAL (New) -->
-<div id="flashDealsModal" class="fixed inset-0 z-[80] hidden">
-  <div id="flashDealsBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-gray-200 rounded-lg border-4 border-gray-400 w-full max-w-2xl overflow-hidden relative shadow-2xl flex flex-col max-h-[80vh]">
-      <div class="p-4 border-b-4 border-gray-400 flex items-center justify-between bg-red-600 text-white">
-        <h2 class="retro-font text-sm uppercase flex items-center gap-2"><i data-feather="zap" class="w-4 h-4"></i> CURRENT FLASH DEALS</h2>
-        <button id="closeFlashDeals" class="pixel-btn bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-white">CLOSE</button>
-      </div>
-      <div class="p-6 overflow-y-auto custom-scrollbar space-y-4" id="flashDealsList">
-        </div>
-    </div>
-  </div>
-</div>
-
-<footer class="bg-gray-200 py-12 mt-12 border-t-4 border-gray-400 transition-colors duration-300">
-  <div class="container mx-auto px-4 text-center">
-    <div class="flex items-center justify-center mb-4">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" alt="Logo" class="w-10 h-10 rounded-full mr-3 border-2 border-gray-400">
-        <h3 class="retro-font text-lg text-yellow-400 drop-shadow-[1px_1px_0_rgba(0,0,0,1)]">RYAN RETRO</h3>
-    </div>
-    <a href="mailto:ryanretro.contact@gmail.com" class="text-gray-700 hover:text-yellow-500 text-sm flex items-center justify-center transition-colors">
-      <i data-feather="mail" class="w-4 h-4 mr-2"></i> ryanretro.contact@gmail.com
-    </a>
-    <p class="text-gray-600 text-[10px] mt-4 uppercase">© 2025 Ryan Retro.</p>
-  </div>
-</footer>
-
-<script>
-  // --- UI LOGIC (Dark Mode, Nav, Flash Deals) ---
-  const body = document.body;
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const themeIcon = document.getElementById('themeIcon');
-
-  // Check Local Storage
-  if (localStorage.getItem('theme') === 'light') {
-      body.classList.remove('dark-mode');
-      themeIcon.setAttribute('data-feather', 'moon');
-  } else {
-      body.classList.add('dark-mode');
-      themeIcon.setAttribute('data-feather', 'sun');
-  }
-
-  darkModeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-          localStorage.setItem('theme', 'dark');
-          themeIcon.setAttribute('data-feather', 'sun');
-      } else {
-          localStorage.setItem('theme', 'light');
-          themeIcon.setAttribute('data-feather', 'moon');
-      }
-      feather.replace();
-  });
-
-  // Navigation Logic
-  const navToggle = document.getElementById('navToggle');
-  const navOverlay = document.getElementById('navOverlay');
-  const navBox = document.getElementById('navBox');
-
-  window.toggleNav = () => {
-      const isHidden = navOverlay.classList.contains('hidden');
-      if (isHidden) {
-          navOverlay.classList.remove('hidden');
-          setTimeout(() => {
-              navBox.classList.remove('scale-95', 'opacity-0');
-              navBox.classList.add('scale-100', 'opacity-100');
-          }, 10);
-      } else {
-          navBox.classList.remove('scale-100', 'opacity-100');
-          navBox.classList.add('scale-95', 'opacity-0');
-          setTimeout(() => {
-              navOverlay.classList.add('hidden');
-          }, 200);
-      }
-  };
-
-  navToggle.addEventListener('click', toggleNav);
-
-  // Flash Deals Logic
-  const flashDeals = [
-    { title: "Samsung EVO 512GB MicroSD", price: "$34.99", discount: "40% OFF", link: "https://amzn.to/example", store: "Amazon" },
-    { title: "Anbernic RG35XX Plus", price: "$55.00", discount: "FLASH SALE", link: "https://aliexpress.com/example", store: "AliExpress", coupon: "RG35XXDEAL" },
-    { title: "Miyoo Mini Plus (Purple)", price: "$58.00", discount: "LIMITED STOCK", link: "https://aliexpress.com/example", store: "AliExpress" }
-  ];
-  const flashDealsModal = document.getElementById('flashDealsModal');
-  const flashDealsList = document.getElementById('flashDealsList');
-  
-  function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.innerText = message;
-      toast.className = "show";
-      setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
-  }
-
-  // Expose to window for inline clicks
-  window.copyCoupon = function(code) {
-      navigator.clipboard.writeText(code);
-      showToast('Code copied: ' + code);
-  }
-
-  document.getElementById('openFlashDealsBtn').onclick = () => {
-      renderFlashDeals();
-      flashDealsModal.classList.remove('hidden');
-  };
-  
-  document.getElementById('closeFlashDeals').onclick = () => {
-      flashDealsModal.classList.add('hidden');
-  };
-  
-  document.getElementById('flashDealsBackdrop').onclick = () => {
-      flashDealsModal.classList.add('hidden');
-  };
-
-  function renderFlashDeals() {
-      flashDealsList.innerHTML = '';
-      if(flashDeals.length === 0) {
-          flashDealsList.innerHTML = '<div class="text-center p-4 retro-font text-xs text-gray-500">NO FLASH DEALS RIGHT NOW. CHECK BACK SOON!</div>';
-          return;
-      }
-      
-      flashDeals.forEach(deal => {
-          let btnBg = 'bg-gray-800 text-white';
-          let badgeBg = 'bg-gray-700 text-gray-300';
-          const s = deal.store.toLowerCase();
-          
-          if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-             btnBg = 'bg-blue-600 text-white hover:bg-blue-500';
-             badgeBg = 'bg-blue-800 text-blue-100';
-          }
-          else if(s.includes('ali')) {
-             btnBg = 'bg-red-600 text-white hover:bg-red-500';
-             badgeBg = 'bg-red-800 text-red-100';
-          }
-          else if(s.includes('amazon')) {
-             btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400';
-             badgeBg = 'bg-yellow-700 text-yellow-100';
-          }
-
-          const couponHtml = deal.coupon 
-            ? `<div class="bg-gray-100 border border-gray-400 px-2 py-1 rounded text-[10px] font-bold text-red-600 flex items-center gap-1 cursor-pointer hover:bg-gray-200" onclick="copyCoupon('${deal.coupon}')">
-                 <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
-               </div>` 
-            : '';
-
-          const itemHtml = `
-            <div class="bg-white border-4 border-gray-300 p-4 rounded flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div class="flex-1 text-center md:text-left">
-                    <h3 class="retro-font text-xs font-bold mb-1 text-black">${deal.title}</h3>
-                    <div class="flex items-center justify-center md:justify-start gap-2">
-                        <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-red-200">${deal.discount}</span>
-                        ${couponHtml}
+                        <a id="affiliate-btn" href="#" target="_blank" class="btn-yellow relative z-10">
+                            <span>Buy Now</span> <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                        <p class="text-[10px] font-bold text-white/30 text-center mt-3 uppercase tracking-wider relative z-10">Affiliate Link • Supports Channel</p>
                     </div>
                 </div>
-                <div class="flex flex-col items-end gap-1 w-full md:w-auto">
-                    <a href="${deal.link}" target="_blank" class="${btnBg} px-4 py-2 rounded pixel-btn border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-                        <span class="retro-font text-[10px] uppercase">${deal.store}</span>
-                        <span class="retro-font text-[10px] font-bold bg-black/20 px-2 py-0.5 rounded">${deal.price}</span>
-                    </a>
+
+                <div class="lg:col-span-8 h-full">
+                    <div class="bento-card card-rose p-4 flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-4 px-2">
+                            <h2 class="font-display font-bold text-white text-xl flex items-center gap-2">
+                                <i data-lucide="play-circle" class="text-white w-6 h-6"></i> Video Review
+                            </h2>
+                            <a id="channel-link" href="#" target="_blank" class="text-xs font-bold text-white/80 hover:text-white transition-colors flex items-center gap-1 bg-black/20 px-4 py-2 rounded-lg border border-white/10 hover:border-white/30">
+                                More Videos <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                            </a>
+                        </div>
+
+                        <div id="main-video-embed" class="video-container mb-4 border-2 border-white/10 flex-grow min-h-[300px]">
+                            <div class="absolute inset-0 flex items-center justify-center text-white/20 font-display font-bold animate-pulse">LOADING VIDEO...</div>
+                        </div>
+                        
+                        <div class="px-2">
+                            <h2 id="video-title" class="text-2xl font-display font-bold text-white line-clamp-1 mb-1">Loading Video Title...</h2>
+                            <p class="text-sm font-medium text-white/60 font-mono" id="video-date">...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-12">
+                    <div class="bento-card card-teal p-8 flex flex-col md:flex-row gap-8">
+                        
+                        <div class="flex-1 flex flex-col">
+                            <div class="mb-4">
+                                <span class="text-white/70 font-bold text-xs uppercase tracking-widest border-b-2 border-white/20 pb-1">Ryan's Verdict</span>
+                                <h3 class="font-display font-bold text-3xl text-white leading-tight mt-2">Final Thoughts</h3>
+                            </div>
+                            
+                            <div class="relative pl-6 border-l-4 border-white/30 bg-black/20 p-6 rounded-r-2xl flex-grow">
+                                <p id="review-summary" class="text-lg font-medium text-white leading-relaxed">
+                                    "Loading review summary..."
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-96 shrink-0 flex flex-col gap-4">
+                            <div class="flex justify-end">
+                                <div class="score-badge shadow-lg">
+                                    <span class="text-xs uppercase font-bold text-black/50">RATING</span>
+                                    <span id="score-text" class="text-2xl">0.0</span>
+                                    <i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                                </div>
+                            </div>
+
+                            <div class="bg-black/20 border-2 border-white/10 p-4 rounded-2xl flex-1">
+                                <span class="block text-xs font-extrabold text-green-300 uppercase mb-3 flex items-center gap-2 border-b border-white/5 pb-2">
+                                    <i data-lucide="thumbs-up" class="w-4 h-4"></i> The Good
+                                </span>
+                                <ul class="text-sm font-medium text-white/90 list-disc list-inside space-y-2" id="pros-list"><li>Loading...</li></ul>
+                            </div>
+
+                            <div class="bg-black/20 border-2 border-white/10 p-4 rounded-2xl flex-1">
+                                <span class="block text-xs font-extrabold text-red-300 uppercase mb-3 flex items-center gap-2 border-b border-white/5 pb-2">
+                                    <i data-lucide="thumbs-down" class="w-4 h-4"></i> The Bad
+                                </span>
+                                <ul class="text-sm font-medium text-white/90 list-disc list-inside space-y-2" id="cons-list"><li>Loading...</li></ul>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="database" data-aos="fade-up" class="mb-0">
+            <div id="compatibility" class="card-3d rounded-3xl p-6 md:p-10 relative overflow-hidden">
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                    <h2 class="font-retro text-3xl text-white drop-shadow-md">Game Compatibility</h2>
+                    <div id="variant-tabs" class="hidden"><div class="inline-flex flex-wrap gap-2 bg-black/20 p-1 rounded-lg"></div></div>
+                </div>
+
+                <div id="system-buttons" class="mb-6 flex flex-wrap gap-2">
+                    <button data-system="switch" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">Switch</button>
+                    <button data-system="ps2" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">PS2</button>
+                    <button data-system="ps3" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">PS3</button>
+                    <button data-system="psvita" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">PS Vita</button>
+                    <button data-system="winlator" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">Winlator</button>
+                    <button data-system="gamehub" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">GameHub</button>
+                    <button data-system="wiiu" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">Wii U</button>
+                </div>
+
+                <div class="bg-black/20 rounded-xl p-4 mb-6 border border-white/5">
+                    <div class="flex flex-col md:flex-row gap-4 justify-between items-end md:items-center">
+                        <div id="perf-filters" class="flex flex-wrap gap-2 text-xs font-retro">
+                            <button data-perf="" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 border border-transparent filter-active transition-colors">All</button>
+                            <button data-perf="Perfect" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-perfect font-bold border border-transparent transition-colors">Perfect</button>
+                            <button data-perf="Great" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-great font-bold border border-transparent transition-colors">Great</button>
+                            <button data-perf="Playable" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-playable font-bold border border-transparent transition-colors">Playable</button>
+                            <button data-perf="Unplayable" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-unplayable font-bold border border-transparent transition-colors">Unplayable</button>
+                        </div>
+                        
+                        <div class="flex gap-4 w-full md:w-auto">
+                            <div class="relative flex-grow md:flex-grow-0 md:w-64">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                                <input type="text" id="game-search-box" class="form-input pl-10" placeholder="Search games...">
+                            </div>
+                            <select id="rows-per-page" class="form-input w-20 text-center font-mono">
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar rounded-lg border border-white/10">
+                    <table id="compatibility-table" class="min-w-full text-sm text-left text-gray-200">
+                        <thead class="bg-black/40 text-accent-cyan font-retro text-sm uppercase tracking-wider cursor-pointer select-none"></thead>
+                        <tbody class="divide-y divide-white/10 align-baseline bg-black/10"></tbody>
+                    </table>
+                </div>
+
+                <div id="pagination-controls" class="mt-8 flex items-center justify-center gap-4">
+                    <button id="prev-btn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-retro text-xs disabled:opacity-30 disabled:cursor-not-allowed transition-colors">Previous</button>
+                    <span id="page-info" class="font-retro text-sm text-white">Page 1 of 1</span>
+                    <button id="next-btn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-retro text-xs disabled:opacity-30 disabled:cursor-not-allowed transition-colors">Next</button>
+                </div>
+
+                <div class="text-center mt-10">
+                    <button id="add-entry-btn" class="shiny-btn bg-[#fbbf24] text-[#451a03] px-8 py-3 rounded-xl font-logo font-bold shadow-lg hover:bg-white hover:scale-105 transition-all">
+                        ADD YOUR ENTRY
+                    </button>
+                </div>
+
+                <div id="add-entry-form-container" class="hidden mt-8 bg-black/30 p-6 rounded-xl border border-white/10 animate-[popIn_0.3s_ease-out]">
+                     <h3 class="font-retro text-xl text-white mb-4">Submit Report</h3>
+                     <form id="compatibility-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label for="form-game-title" class="block text-xs font-bold text-gray-400 mb-1">Game Title *</label>
+                            <input type="text" id="form-game-title" name="game" class="form-input font-body" required placeholder="e.g. Super Mario Odyssey">
+                        </div>
+
+                        <div>
+                             <label for="form-system-select" class="block text-xs font-bold text-gray-400 mb-1">System *</label>
+                             <select id="form-system-select" name="system" class="form-input font-body" required>
+                                 <option value="switch">Nintendo Switch</option>
+                                 <option value="ps2">PlayStation 2</option>
+                                 <option value="ps3">PlayStation 3</option>
+                                 <option value="psvita">PS Vita</option>
+                                 <option value="winlator">Winlator</option>
+                                 <option value="gamehub">GameHub</option>
+                                 <option value="wiiu">Wii U</option>
+                             </select>
+                        </div>
+
+                        <div>
+                            <label for="form-performance" class="block text-xs font-bold text-gray-400 mb-1">Performance *</label>
+                            <select id="form-performance" name="performance" class="form-input font-body" required>
+                                <option value="Perfect">Perfect</option>
+                                <option value="Great">Great</option>
+                                <option value="Playable">Playable</option>
+                                <option value="Unplayable">Unplayable</option>
+                            </select>
+                        </div>
+
+                        <div id="dynamic-fields" class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-400 mb-1">Notes (Optional)</label>
+                            <textarea name="notes" class="form-input font-body" rows="2" placeholder="Any special settings?"></textarea>
+                        </div>
+                        
+                        <div class="md:col-span-2 flex justify-end gap-3 mt-4 pt-4 border-t border-white/10">
+                            <button type="button" id="cancel-btn" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-retro text-xs transition-colors">Cancel</button>
+                            <button type="submit" class="px-6 py-2 rounded bg-[#fbbf24] hover:bg-white text-[#451a03] font-retro text-xs shadow-lg transition-colors flex items-center justify-center gap-2">Submit</button>
+                        </div>
+                        <input type="hidden" id="hidden-device" name="device">
+                        <input type="hidden" id="hidden-system" name="system">
+                     </form>
                 </div>
             </div>
-          `;
-          flashDealsList.insertAdjacentHTML('beforeend', itemHtml);
-      });
-      feather.replace();
-  }
+        </section>
 
-  // --- APP LOGIC (Device Config, Tables, Etc) ---
-  const DEVICE_CONFIG = {
-  "Retroid Pocket 5": {
-    label: "Retroid Pocket 5",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket 5",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
-    aliases: ["Retroid Pocket5","RP5"],
-    variants: [{ id: "sd865", label: "Snapdragon 865" }]
-  },
-  "Retroid Pocket 6": {
-    label: "Retroid Pocket 6",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
-    affiliateHref: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket 6",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
-    aliases: ["Retroid 6","RP6","Retroid Pocket6"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2", pullsFrom: ["Odin 2 Portal", "Odin 2", "Odin 2 Mini", "AYN Thor"] }]
-  },
+    </main>
 
-  "Retroid Pocket G2": {
-    label: "Retroid Pocket G2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket g2",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
-    aliases: ["Retroid G2", "RP G2", "Retroid Pocket G2"],
-    variants: [{ id: "g2g2", label: "Snapdragon G2 Gen 2" }],
-    reviewHref: "/static/rpg2review.html",
-    reviewText: "REVIEW"
-  },
-
-  "Odin 2 Portal": {
-    label: "Odin 2 Portal",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/portal.png",
-    affiliateHref: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 2 portal",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
-    aliases: ["Odin2 Portal","Odin 2"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2" }]
-  },
-
-  "Odin 2": {
-    label: "Odin 2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
-    affiliateHref: "https://www.ayntec.com/collections/all",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 2",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin%202",
-    aliases: ["AYN Odin 2"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2" }]
-  },
-
-  "Odin 2 Mini": {
-    label: "Odin 2 Mini",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
-    affiliateHref: "https://www.ayntec.com/collections/all",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 2 mini",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20mini",
-    aliases: ["Odin2 Mini"],
-    variants: [{ id: "sd8g2", label: "Snapdragon 8 Gen 2" }]
-  },
-
-  "AYN Thor": {
-    label: "AYN Thor",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/thor.png",
-    affiliateHref: "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "ayn thor",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=ayn%20thor",
-    aliases: ["Thor","AYN THOR","AynThor"],
-    variants: [
-      { id: "sd865", label: "Snapdragon 865", pullsFrom: ["Retroid Pocket 5", "Retroid Pocket5", "RP5"] },
-      { id: "sd8g2", label: "Snapdragon 8 Gen 2", pullsFrom: ["Odin 2 Portal", "Odin2 Portal", "Odin 2", "Odin 2 Mini", "AYN Thor"] }
-    ],
-    hasVideos: false,
-    noVideosMessage: "Ryan hasn't made any videos on the AYN Thor yet. Get to work, Ryan!"
-  },
-
-  "Ayaneo Konkr Pocket Fit": {
-    label: "Ayaneo Konkr Pocket Fit",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/konkr-pocket-fit-3.jpg",
-    affiliateHref: "https://www.indiegogo.com/projects/pocket-fit-premier-hi-performance-android-handheld/x/38203815#/",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "Ayaneo Konkr Pocket Fit",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=Ayaneo%20Konkr%20Pocket%20Fit",
-    aliases: ["Konkr Pocket Fit","Ayaneo Konkr","Konkr Fit"],
-    hasVideos: false,
-    noVideosMessage: "Ryan hasn't made any videos on the Konkr Pocket Fit yet. Get to work, Ryan!",
-    variants: [
-      { id: "g3g3", label: "Snapdragon G3 Gen 3", pullsFrom: ["Ayaneo Konkr Pocket Fit"] },
-      { id: "sd8elite", label: "Snapdragon 8 Elite", pullsFrom: ["Odin 3", "AYN Odin 3", "Odin3", "Odin III", "Ayaneo Konkr Pocket Fit"] }
-    ]
-  },
-
-  "Retroid Pocket Flip 2": {
-    label: "Retroid Pocket Flip 2",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/flip%20hero.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket flip 2",
-    aliases: ["RP Flip 2", "Flip 2"],
-    variants: [{ id: "sd865", label: "Snapdragon 865", pullsFrom: ["Retroid Pocket Flip 2", "Retroid Pocket 5", "Retroid Pocket5", "RP5"] }]
-  },
-
-  "Odin 3": {
-    label: "Odin 3",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin3hero.png",
-    affiliateHref: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "odin 3",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=odin 3",
-    aliases: ["AYN Odin 3","Odin3","Odin III"],
-    hasVideos: false,
-    noVideosMessage: "Ryan hasn't made any videos on the Odin 3 yet. Get to work, Ryan!",
-    variants: [{ id: "sd8elite", label: "Snapdragon 8 Elite", pullsFrom: ["Odin 3", "Ayaneo Konkr Pocket Fit"] }]
-  },
-
-  "Retroid Pocket Classic": {
-    label: "Retroid Pocket Classic",
-    heroImg: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20colors.png",
-    affiliateHref: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
-    affiliateText: "PURCHASE",
-    youtubeChannelId: "UCh9GxjM-FNuSWv7xqn3UKVw",
-    youtubeQuery: "retroid pocket classic",
-    videosLinkHref: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
-    aliases: ["Retroid Classic","RP Classic","RPClassic","Retroid Pocket Classic"],
-    variants: [{ id: "g1g2", label: "Snapdragon G1 Gen 2" }]
-  },
-};
-
-
-/* ---------- URL/device resolution ---------- */
-const urlParams = new URLSearchParams(location.search);
-function resolveDeviceFromUrl() {
-  const param = (urlParams.get("device") || "").trim().toLowerCase();
-  if (!param) return "Retroid Pocket 5";
-  for (const key of Object.keys(DEVICE_CONFIG)) {
-    const dev = DEVICE_CONFIG[key];
-    const names = [key, dev.label, ...(dev.aliases || [])].map(s => s.trim().toLowerCase());
-    if (names.includes(param)) return key;
-  }
-  return "Retroid Pocket 5";
-}
-const CURRENT_DEVICE = resolveDeviceFromUrl();
-const DEVICE = DEVICE_CONFIG[CURRENT_DEVICE];
-
-/* active chipset variant (if any) */
-let currentVariant = (DEVICE.variants && DEVICE.variants[0]) || null;
-
-/* ---------- Helpers ---------- */
-const norm = s => (s || '').trim().toLowerCase();
-
-const esc = s => (s == null ? '' : String(s)
-  .replace(/&/g,'&amp;')
-  .replace(/</g,'&lt;')
-  .replace(/>/g,'&gt;'));
-
-function ymdKey(s){
-  const m = (s || '').trim().match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
-  if (!m) return -Infinity;
-  const y = +m[1], mo = +m[2], d = +m[3];
-  return y * 10000 + mo * 100 + d;
-}
-
-function normalizeDateDisplay(s){
-  const m = (s || '').trim().match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})$/);
-  if (!m) return s || '';
-  const y = m[1], mo = String(+m[2]).padStart(2,'0'), d = String(+m[3]).padStart(2,'0');
-  return `${y}/${mo}/${d}`;
-}
-
-const normSystemId = s => (s || '').toString().trim().toLowerCase().replace(/[\s_-]+/g, '');
-const ALLOWED_PERF = ['Perfect','Great','Playable','Unplayable'];
-const PERFORMANCE_ORDER = { 'Perfect':0, 'Great':1, 'Playable':2, 'Unplayable':3 };
-function getSortValue(row, colKey){
-  const raw = (row[colKey] ?? '').toString();
-  if (colKey === 'performance') return (raw in PERFORMANCE_ORDER ? PERFORMANCE_ORDER[raw] : 999);
-  if (colKey === 'date added' || colKey === 'date') return ymdKey(raw);
-  return raw.toLowerCase();
-}
-
-const PERF_CLASS = { 'Perfect':'perf-perfect', 'Great':'perf-great', 'Playable':'perf-playable', 'Unplayable':'perf-unplayable' };
-function colorizePerformanceSelects(container=document){
-  const selects = container.querySelectorAll('select[name="performance"]');
-  selects.forEach(sel=>{
-    const apply=()=>{
-      sel.classList.remove(...Object.values(PERF_CLASS),'font-bold');
-      const cls = PERF_CLASS[sel.value] || '';
-      if (cls) sel.classList.add(cls,'font-bold');
-    };
-    sel.addEventListener('change', apply);
-    apply();
-  });
-}
-function debounce(fn, delay=200){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), delay); }; }
-
-function ensureChipsetField() {
-  const form = document.getElementById('compatibility-form');
-  if (!form) return;
-  const old = form.querySelector('#chipset-field-wrap');
-  if (old) old.remove();
-  if (!DEVICE.variants || DEVICE.variants.length <= 1) return;
-  const wrap = document.createElement('div');
-  wrap.id = 'chipset-field-wrap';
-  wrap.className = 'grid grid-cols-1 md:grid-cols-2 gap-6 mb-6';
-  const inner = document.createElement('div');
-  inner.innerHTML = `
-    <label for="form-chipset-select" class="block mb-2 font-bold">Chipset *</label>
-    <select id="form-chipset-select" name="chipset" class="form-input" required>
-      ${DEVICE.variants.map(v => `<option value="${v.id || v.label}">${v.label}</option>`).join('')}
-    </select>
-  `;
-  wrap.appendChild(inner);
-  const dyn = document.getElementById('dynamic-fields');
-  dyn?.parentNode?.insertBefore(wrap, dyn);
-  const sel = document.getElementById('form-chipset-select');
-  if (sel && currentVariant) sel.value = currentVariant.id || currentVariant.label;
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-  AOS?.init({
-    once: true,
-    duration: 300,
-    easing: 'ease-out',
-    disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  });
-
-  // --- MISSING FORM SUBMISSION LOGIC ---
-  const compatForm = document.getElementById('compatibility-form');
-  
-  if (compatForm) {
-      compatForm.addEventListener('submit', async (e) => {
-          e.preventDefault(); // Stop page refresh
-          
-          const submitBtn = compatForm.querySelector('button[type="submit"]');
-          const originalText = submitBtn.textContent;
-          submitBtn.disabled = true;
-          submitBtn.textContent = "SENDING...";
-
-          // 1. Gather Data
-          const formData = new FormData(compatForm);
-          const data = Object.fromEntries(formData.entries());
-
-          // Ensure hidden fields are populated correctly
-          data.device = document.getElementById('hidden-device').value || DEVICE.label;
-          
-          // Handle Chipset if it wasn't in the form (fallback)
-          if (!data.chipset && currentVariant) {
-             data.chipset = currentVariant.id || currentVariant.label;
-          }
-
-          try {
-              // 2. Send to Backend
-              const res = await fetch('/api/compat/submit', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(data)
-              });
-
-              if (!res.ok) throw new Error("Submission failed");
-
-              // 3. Success Handling
-              showToast("Report added! Refreshing...");
-              
-              // Clear the cache for this system so the new entry shows up immediately
-              const sysId = data.system;
-              if (masterDataCache[sysId]) delete masterDataCache[sysId];
-
-              // Hide form and reload table
-              document.getElementById('add-entry-form-container').classList.add('hidden');
-              compatForm.reset();
-              loadSystemData(sysId);
-
-          } catch (err) {
-              console.error(err);
-              alert("Error submitting report. Please try again.");
-          } finally {
-              submitBtn.disabled = false;
-              submitBtn.textContent = originalText;
-          }
-      });
-  }
-
-  (function initVariantTabs(){
-    const wrap = document.getElementById('variant-tabs');
-    if (!DEVICE.variants || DEVICE.variants.length <= 1 || !wrap) return;
-    wrap.classList.remove('hidden');
-    const row = wrap.querySelector('div');
-    row.innerHTML = '';
-    DEVICE.variants.forEach((v, i) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = [
-        'px-3','py-1.5','rounded-md','retro-font','text-xs',
-        i === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-700 hover:bg-gray-600 text-white'
-      ].join(' ');
-      btn.textContent = v.label;
-      btn.dataset.variantId = v.id || v.label;
-      row.appendChild(btn);
-    });
-    row.addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-variant-id]');
-      if (!btn) return;
-      const id = btn.dataset.variantId;
-      const next = DEVICE.variants.find(v => (v.id || v.label) === id);
-      if (!next || (currentVariant && (next.id || next.label) === (currentVariant.id || currentVariant.label))) return;
-      [...row.children].forEach(b => b.classList.remove('bg-yellow-400','text-black'));
-      [...row.children].forEach(b => b.classList.add('bg-gray-700','text-white'));
-      btn.classList.remove('bg-gray-700','text-white');
-      btn.classList.add('bg-yellow-400','text-black');
-      currentVariant = next;
-      loadSystemData(currentSystemId);
-      const chipSel = document.getElementById('form-chipset-select');
-      if (chipSel) chipSel.value = currentVariant.id || currentVariant.label;
-    });
-  })();
-
-  document.title = `${DEVICE.label} Compatibility | Ryan Retro`;
-  document.getElementById('device-heading').textContent = DEVICE.label;
-  const hero = document.getElementById('hero-img');
-  hero.src = DEVICE.heroImg;
-  hero.alt = DEVICE.label;
-  const heroLink = document.getElementById('hero-link');
-  if (heroLink) heroLink.href = DEVICE.affiliateHref;
-  const buyBtn = document.getElementById('affiliate-link');
-  buyBtn.href = DEVICE.affiliateHref;
-  buyBtn.querySelector('.btn-label').textContent = DEVICE.affiliateText;
-  const videosLink = document.getElementById('videos-link');
-  videosLink.href = DEVICE.videosLinkHref;
-  document.getElementById('hidden-device').value = DEVICE.label;
-
-  const reviewBtn   = document.getElementById('review-or-compat-link');
-  const reviewLabel = document.getElementById('review-or-compat-label');
-  const reviewIcon  = reviewBtn ? reviewBtn.querySelector('[data-feather]') : null;
-
-  if (reviewBtn && reviewLabel && reviewIcon) {
-    if (DEVICE.reviewHref) {
-      reviewBtn.href = DEVICE.reviewHref;
-      reviewBtn.target = "_blank";
-      reviewLabel.textContent = DEVICE.reviewText || "REVIEW";
-      reviewIcon.setAttribute('data-feather', 'file-text');
-      reviewBtn.classList.remove('bg-blue-600','hover:bg-blue-700','text-white');
-      reviewBtn.classList.add('bg-yellow-400','hover:bg-yellow-500','text-black');
-    } else {
-      reviewBtn.href = "#compatibility";
-      reviewBtn.removeAttribute('target');
-      reviewLabel.textContent = "PLAY GAMES";
-      reviewIcon.setAttribute('data-feather', 'list');
-      reviewBtn.classList.remove('bg-yellow-400','hover:bg-yellow-500','text-black');
-      reviewBtn.classList.add('bg-blue-600','hover:bg-blue-700','text-white');
-    }
-  }
-  feather.replace();
-
-/* --------------------------- Videos --------------------------- */
-async function fetchYouTubeVideos() {
-  const videosContainer = document.getElementById('videos-container');
-  if (!videosContainer) return;
-  if (DEVICE.hasVideos === false) {
-    videosContainer.className = 'grid grid-cols-1';
-    videosContainer.innerHTML = `<p class="text-gray-300">${DEVICE.noVideosMessage}</p>`;
-    return;
-  }
-  const channelId  = DEVICE.youtubeChannelId;
-  const query      = (DEVICE.youtubeQuery || '').toLowerCase();
-  const maxResults = 18;
-  const aliases    = (DEVICE.aliases || []).join(',');
-  try {
-    const res = await fetch(`/api/youtube/latest?channel_id=${encodeURIComponent(channelId)}&q=${encodeURIComponent(query)}&aliases=${encodeURIComponent(aliases)}&limit=${maxResults}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const items = await res.json();
-    if (!Array.isArray(items) || items.length === 0) {
-      videosContainer.className = 'grid grid-cols-1';
-      videosContainer.innerHTML = `
-        <div class="text-gray-300 space-y-3">
-          <p>No videos found.</p>
-          <p class="text-sm opacity-75">
-            You can still browse on YouTube:
-            <a class="underline text-yellow-400" target="_blank" rel="noopener" href="${DEVICE.videosLinkHref}">Open device videos</a>
-          </p>
-        </div>`;
-      return;
-    }
-    videosContainer.className = 'flex overflow-x-auto space-x-8 py-4 custom-scrollbar';
-    videosContainer.innerHTML = '';
-    items.forEach(item => {
-      const id = item.videoId;
-      const title = item.title || '';
-      const card = document.createElement('div');
-      card.setAttribute('data-aos','fade-up');
-      card.className = 'flex-shrink-0 w-80 md:w-96 bg-gray-800 rounded-lg overflow-hidden pixel-border relative cursor-pointer';
-      card.dataset.videoId = id;
-      card.innerHTML = `
-        <div class="aspect-video relative group video-thumbnail-container">
-          <img src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="${title}" loading="lazy" class="w-full h-full object-cover">
-          <div class="absolute inset-0 flex items-center justify-center group-hover:bg-black/40 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-              <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm14.024-.983a1.125 1.125 0 010 1.966l-5.603 3.113A1.125 1.125 0 019 15.113V8.887c0-.857.921-1.4 1.671-.983l5.603 3.113z" clip-rule="evenodd" />
-            </svg>
-          </div>
+    <footer class="bg-black/20 py-10 text-center border-t border-white/5 mt-auto">
+        <div class="flex justify-center flex-wrap gap-4 mb-6">
+            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+            <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="X (Twitter)"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="TikTok"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
         </div>
-        <div class="p-4">
-          <h3 class="font-bold text-sm leading-tight text-gray-200 truncate" title="${title}">${title}</h3>
-        </div>`;
-      videosContainer.appendChild(card);
-    });
-    if (window.requestIdleCallback) { requestIdleCallback(() => AOS && AOS.refresh()); } 
-    else { setTimeout(() => AOS && AOS.refresh(), 0); }
-    videosContainer.addEventListener('click', (e) => {
-      const card = e.target.closest('[data-video-id]'); if (!card) return;
-      const container = card.querySelector('.video-thumbnail-container');
-      const id = card.dataset.videoId;
-      container.innerHTML = `
-        <div class="aspect-video">
-          <iframe src="https://www.youtube.com/embed/${id}?autoplay=1" title="YouTube video player" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen class="w-full h-full"></iframe>
-        </div>`;
-    });
-  } catch (e) {
-    videosContainer.className = 'grid grid-cols-1';
-    videosContainer.innerHTML = `<div class="text-gray-300"><p>Error loading videos.</p></div>`;
-  }
-}
+        <p class="text-xs font-bold text-white/20 uppercase tracking-widest">Ryan Retro • 2026</p>
+    </footer>
 
-const videosSection = document.getElementById('videos-section');
-if (videosSection) {
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      if (entries.some(e => e.isIntersecting)) {
-        fetchYouTubeVideos();
-        io.disconnect();
-      }
-    }, { rootMargin: '200px' });
-    io.observe(videosSection);
-  } else { fetchYouTubeVideos(); }
-}
+    <div id="game-details-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="game-modal-bg"></div>
+        <div id="game-card-wrapper" class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl w-full max-w-4xl shadow-2xl animate-[popIn_0.3s_ease-out] flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b border-white/10 bg-black/20 shrink-0">
+                <span class="font-retro text-white/50 text-sm pl-2">DETAILS</span>
+                <div class="flex gap-2">
+                    <button id="screenshot-game-modal" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex items-center gap-2" title="Save Card">
+                        <i data-lucide="camera" class="w-5 h-5"></i>
+                        <span class="font-bold text-xs hidden sm:inline">SAVE CARD</span>
+                    </button>
+                    <button id="close-game-modal" class="text-white/70 hover:text-white hover:bg-red-500/20 p-2 rounded-lg transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow"></div>
+        </div>
+    </div>
 
-  /* --------------------------- Compatibility table --------------------------- */
-  let rowsPerPage = 10;
-  const DATA_BASE = '/data/';
-  const SYSTEM_CONFIG = {
-    switch:{ path: `${DATA_BASE}switch.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'driver',label:'Driver'},{key:'emulator',label:'Emulator'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]},
-    ps2:{ path: `${DATA_BASE}ps2.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'emulator',label:'Emulator'},{key:'resolution',label:'Resolution'},
-      {key:'rom region',label:'ROM Region'},{key:'notes',label:'Notes',minWidth:'300px'},
-      {key:'date added',label:'Date'}
-    ]},
-    winlator:{ path: `${DATA_BASE}winlator.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'winlator version',label:'Winlator Version'},{key:'driver',label:'Driver'},
-      {key:'dx wrapper',label:'DX Wrapper'},{key:'notes',label:'Notes',minWidth:'300px'},
-      {key:'date added',label:'Date'}
-    ]},
-    gamehub:{ path: `${DATA_BASE}gamehub.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'game resolution',label:'Game Resolution'},{key:'driver',label:'Driver'},
-      {key:'dxvk version',label:'DXVK Version'},{key:'vkd3d version',label:'VKD3D Version'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]},
-    ps3:{ path: `${DATA_BASE}ps3.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'emulator',label:'Emulator'},{key:'resolution',label:'Resolution'},
-      {key:'driver',label:'Driver'},{key:'notes',label:'Notes',minWidth:'300px'},
-      {key:'date added',label:'Date'}
-    ]},
-    psvita:{ path: `${DATA_BASE}psvita.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'driver',label:'Driver'},{key:'game title id',label:'Game Title ID'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]},
-    wiiu:{ path: `${DATA_BASE}wiiu.csv`, columns:[
-      {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
-      {key:'driver',label:'Driver'},{key:'pre-compiled shaders',label:'Pre-compiled Shaders'},
-      {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
-    ]}
-  };
-
-  const FORM_CONFIG = {
-    switch: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'emulator', label: 'Emulator', required: true }
-    ],
-    ps2: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'emulator', label: 'Emulator', required: true },
-      { key: 'resolution', label: 'Resolution', required: true },
-      { key: 'rom region', label: 'ROM Region', required: true }
-    ],
-    winlator: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'winlator version', label: 'Winlator Version', required: true },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'dx wrapper', label: 'DX Wrapper', required: true }
-    ],
-    gamehub: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'game resolution', label: 'Game Resolution', required: true },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'dxvk version', label: 'DXVK Version', required: true },
-      { key: 'vkd3d version', label: 'VKD3D Version', required: true }
-    ],
-    ps3: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'emulator', label: 'Emulator', required: true },
-      { key: 'resolution', label: 'Resolution', required: true },
-      { key: 'driver', label: 'Driver', required: true }
-    ],
-    psvita: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'game title id', label: 'Game Title ID', required: true }
-    ],
-    wiiu: [
-      { key: 'game', label: 'Game', required: true },
-      { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
-      { key: 'driver', label: 'Driver', required: true },
-      { key: 'pre-compiled shaders', label: 'Pre-compiled Shaders', required: true, type: 'select', suggestions: ['Yes','No'] }
-    ]
-  };
-
-  let masterDataCache = {};
-  let activeDataSet = [];
-  let currentlyDisplayedGames = [];
-  const STORAGE_KEY = `rr:lastSystem:${CURRENT_DEVICE}`;
-  let currentSystemId = localStorage.getItem(STORAGE_KEY) && SYSTEM_CONFIG[localStorage.getItem(STORAGE_KEY)]
-    ? localStorage.getItem(STORAGE_KEY) : 'switch';
-  let currentPage = 1;
-  let sortColumn = SYSTEM_CONFIG[currentSystemId].columns[0].key;
-  let sortDirection = 'asc';
-  let perfFilter = '';
-
-  const tableBody = document.querySelector('#compatibility-table tbody');
-  const tableHead = document.querySelector('#compatibility-table thead');
-  const searchBox = document.getElementById('game-search-box');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const pageInfo = document.getElementById('page-info');
-  const formWrap = document.getElementById('add-entry-form-container');
-  const formSystemSelect = document.getElementById('form-system-select');
-  const rowsPerPageSelect = document.getElementById('rows-per-page');
-
-  async function fetchAndCacheData(systemId){
-    if (masterDataCache[systemId]) return masterDataCache[systemId];
-    const res = await fetch(`/api/compatibility/${systemId}`);
-    if (!res.ok) { masterDataCache[systemId] = []; return []; }
-    const payload = await res.json();
-    const rows = Array.isArray(payload.rows) ? payload.rows : [];
-    const normalized = rows.map(r => {
-      const o = {};
-      for (const k in r) o[k.trim().toLowerCase()] = typeof r[k] === 'string' ? r[k].trim() : r[k];
-      return o;
-    });
-    masterDataCache[systemId] = normalized;
-    return normalized;
-  }
-
-  async function loadSystemData(systemId){
-    currentSystemId = systemId;
-    sortColumn = SYSTEM_CONFIG[currentSystemId].columns[0].key;
-    sortDirection = 'asc';
-    tableHead.innerHTML = '';
-    tableBody.innerHTML = `<tr><td class="p-4 text-center">Loading reports...</td></tr>`;
-    const allData = await fetchAndCacheData(systemId);
-    const wantChip = currentVariant ? norm(currentVariant.id || currentVariant.label) : '';
-    let rowsByChipset = wantChip ? allData.filter(r => norm(r.chipset || '') === wantChip) : [];
-    const filtered = rowsByChipset.filter(row => normSystemId(row.system) === normSystemId(currentSystemId));
-    activeDataSet = filtered;
-    renderTableStructure();
-    if (!activeDataSet.length) {
-      tableBody.innerHTML = `<tr><td colspan="${SYSTEM_CONFIG[currentSystemId].columns.length}" class="p-6 text-center">No reports yet.</td></tr>`;
-      updatePaginationControls();
-      return;
+    <script>
+    // --- HELPER FUNCTIONS ---
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = "show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
     }
-    applySearchAndSort();
-  }
 
-  function renderTableStructure(){
-    const config = SYSTEM_CONFIG[currentSystemId];
-    const headerCells = config.columns.map(col => `
-      <th class="p-3" data-sort="${col.key}" style="${col.minWidth ? `min-width:${col.minWidth}` : ''}">
-        ${col.label} <span class="sort-indicator"></span>
-      </th>`).join('');
-    tableHead.innerHTML = `<tr>${headerCells}</tr>`;
-  }
+    const norm = s => (s || '').trim().toLowerCase();
+    
+    // --- DATA CONFIGURATION ---
+    // Merged your full list here so all links work
+    const DEVICE_CONFIG = {
+        "Retroid Pocket 5": {
+            name: "Retroid Pocket 5",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
+            link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
+            linkText: "Buy Now",
+            chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
+            score: 9.5,
+            reviewShort: "A beautiful OLED screen and surprisingly great performance make the Retroid Pocket 5 one of the best handhelds of 2024 and 2025. While I'd recommend the Retroid Pocket G2 to new buyers as it's essentially exactly the same as the RP5 but with a better screen, the RP5 remains an incredible handheld. Especially now it's under $200. Anything up to light Switch and light PC gaming is playable. Check out my YouTube channel for 70+ videos on this masterpiece of a handheld.",
+            pros: ["Stunning OLED Screen", "Great Performance", "Premium Build Quality"],
+            cons: ["D-pad up top is uncomfortable for some", "Comfort could be better"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 5", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
+            aliases: ["Retroid Pocket5","RP5"],
+            variants: [{id: "sd865", label: "Snapdragon 865"}]
+        },
+        "Retroid Pocket 6": {
+            name: "Retroid Pocket 6",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
+            link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
+            chipset: "Snapdragon 8 Gen 2", screen: "5.5\" 1080p OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
+            score: 9.8,
+            reviewShort: "A flagship killer. Switch emulation in your pocket has never been this good.",
+            pros: ["Insane Power", "Active Cooling", "Analog Triggers"],
+            cons: ["Price increase", "Heavier"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 6", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
+            aliases: ["Retroid 6","RP6"],
+            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+        },
+        "Retroid Pocket G2": {
+            name: "Retroid Pocket G2",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
+            link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
+            chipset: "Snapdragon G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
+            score: 8.5,
+            reviewShort: "A big screen streaming beast, essentially a Retroid Pocket 5 XL.",
+            pros: ["Huge Screen", "Comfortable", "Great Streaming"],
+            cons: ["LCD not OLED", "Lower Performance than RP6"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket g2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
+            aliases: ["Retroid G2", "RP G2"],
+            variants: [{id: "g2g2", label: "Snapdragon G2 Gen 2"}]
+        },
+        "Odin 2 Portal": {
+            name: "Odin 2 Portal",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/portal.png",
+            link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
+            chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
+            score: 9.7,
+            reviewShort: "The premium OLED handheld experience. Expensive, but flawless.",
+            pros: ["Incredible 120Hz OLED", "Top Tier Performance", "Premium Build"],
+            cons: ["Expensive", "Large Footprint"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 portal", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
+            aliases: ["Odin2 Portal"],
+            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+        },
+        "Odin 2": {
+            name: "AYN Odin 2",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
+            link: "https://www.ayntec.com/collections/all",
+            chipset: "SD 8 Gen 2", screen: "6\" 1080p IPS", battery: "8000 mAh", os: "Android 13", ram: "8-16GB", storage: "128-512GB",
+            score: 9.9,
+            reviewShort: "The endurance champion. Nothing beats the Odin 2 for battery life.",
+            pros: ["Infinite Battery", "Perfect Ergonomics", "Runs Everything"],
+            cons: ["IPS Screen", "Bulky"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202",
+            aliases: ["AYN Odin 2"],
+            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+        },
+        "Odin 2 Mini": {
+            name: "Odin 2 Mini",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
+            link: "https://www.ayntec.com/collections/all",
+            chipset: "SD 8 Gen 2", screen: "5\" Mini LED", battery: "5000 mAh", os: "Android 13", ram: "12GB", storage: "256GB",
+            score: 9.0,
+            reviewShort: "Power of the Odin 2 in a Vita-sized shell. The Mini-LED is bright but runs hot.",
+            pros: ["Mini LED Brightness", "Pocketable Power", "Vita Aesthetics"],
+            cons: ["Battery Life Average", "Gets Hot"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 mini", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20mini",
+            aliases: ["Odin2 Mini"],
+            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+        },
+        "Retroid Pocket Flip 2": {
+            name: "Retroid Pocket Flip 2",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/flip%20hero.png",
+            link: "https://www.goretroid.com/products/retroid-pocket-flip-2",
+            chipset: "Snapdragon 865", screen: "4.7\" Touch", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
+            score: 9.2,
+            reviewShort: "Clamshell perfection returns with updated internals.",
+            pros: ["Clamshell Design", "Protectable Screen", "Good Sliders"],
+            cons: ["Hinge durability concern", "Smaller screen"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket flip 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20flip%202",
+            aliases: ["RP Flip 2", "Flip 2"],
+            variants: [{id: "sd865", label: "Snapdragon 865"}]
+        },
+        "Retroid Pocket Classic": {
+            name: "Retroid Pocket Classic",
+            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20colors.png",
+            link: "https://www.goretroid.com/products/retroid-pocket-classic",
+            chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
+            score: 9.4,
+            reviewShort: "The ultimate 4:3 device for retro purists.",
+            pros: ["4:3 OLED", "Perfect for PS2/GC", "Classic aesthetics"],
+            cons: ["Not for modern gaming", "Mono speaker"],
+            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket classic", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
+            aliases: ["Retroid Classic","RP Classic"],
+            variants: [{id: "g1g2", label: "Snapdragon G1 Gen 2"}]
+        }
+    };
 
-  function displayCurrentPage(){
-    updateSortIndicators();
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const pageItems = currentlyDisplayedGames.slice(startIndex, startIndex + rowsPerPage);
-    const config = SYSTEM_CONFIG[currentSystemId];
-    const perfClass = { 'Perfect':'perf-perfect','Great':'perf-great','Playable':'perf-playable','Unplayable':'perf-unplayable' };
-    let html = '';
-    for (const row of pageItems) {
-      html += '<tr>';
-      for (const col of config.columns) {
-        let raw = row[col.key] ?? '';
-        let display = (col.key === 'date added' || col.key === 'date') ? normalizeDateDisplay(raw) : raw;
+    // System Config matches your CSV structure in app.py
+    const SYSTEM_CONFIG = {
+        switch:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'driver',label:'Driver'},{key:'emulator',label:'Emulator'},
+            {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
+        ]},
+        ps2:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'emulator',label:'Emulator'},{key:'resolution',label:'Resolution'},
+            {key:'rom region',label:'ROM Region'},{key:'notes',label:'Notes',minWidth:'300px'},
+            {key:'date added',label:'Date'}
+        ]},
+        winlator:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'winlator version',label:'Winlator Version'},{key:'driver',label:'Driver'},
+            {key:'dx wrapper',label:'DX Wrapper'},{key:'notes',label:'Notes',minWidth:'300px'},
+            {key:'date added',label:'Date'}
+        ]},
+        gamehub:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'game resolution',label:'Game Resolution'},{key:'driver',label:'Driver'},
+            {key:'dxvk version',label:'DXVK Version'},{key:'vkd3d version',label:'VKD3D Version'},
+            {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
+        ]},
+        ps3:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'emulator',label:'Emulator'},{key:'resolution',label:'Resolution'},
+            {key:'driver',label:'Driver'},{key:'notes',label:'Notes',minWidth:'300px'},
+            {key:'date added',label:'Date'}
+        ]},
+        psvita:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'driver',label:'Driver'},{key:'game title id',label:'Game Title ID'},
+            {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
+        ]},
+        wiiu:{ columns:[
+            {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
+            {key:'driver',label:'Driver'},{key:'pre-compiled shaders',label:'Pre-compiled Shaders'},
+            {key:'notes',label:'Notes',minWidth:'300px'},{key:'date added',label:'Date'}
+        ]}
+    };
+
+    const FORM_CONFIG = {
+        switch: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'driver', label: 'Driver', required: true },
+            { key: 'emulator', label: 'Emulator', required: true }
+        ],
+        ps2: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'emulator', label: 'Emulator', required: true },
+            { key: 'resolution', label: 'Resolution', required: true },
+            { key: 'rom region', label: 'ROM Region', required: true }
+        ],
+        winlator: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'winlator version', label: 'Winlator Version', required: true },
+            { key: 'driver', label: 'Driver', required: true },
+            { key: 'dx wrapper', label: 'DX Wrapper', required: true }
+        ],
+        gamehub: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'game resolution', label: 'Game Resolution', required: true },
+            { key: 'driver', label: 'Driver', required: true },
+            { key: 'dxvk version', label: 'DXVK Version', required: true },
+            { key: 'vkd3d version', label: 'VKD3D Version', required: true }
+        ],
+        ps3: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'emulator', label: 'Emulator', required: true },
+            { key: 'resolution', label: 'Resolution', required: true },
+            { key: 'driver', label: 'Driver', required: true }
+        ],
+        psvita: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'driver', label: 'Driver', required: true },
+            { key: 'game title id', label: 'Game Title ID', required: true }
+        ],
+        wiiu: [
+            { key: 'game', label: 'Game', required: true },
+            { key: 'performance', label: 'Performance', required: true, type: 'select', suggestions: ['Perfect','Great','Playable','Unplayable'] },
+            { key: 'driver', label: 'Driver', required: true },
+            { key: 'pre-compiled shaders', label: 'Pre-compiled Shaders', required: true, type: 'select', suggestions: ['Yes','No'] }
+        ]
+    };
+
+    const SYSTEM_COLORS = { switch: ['bg-red-600', 'text-white'], ps2: ['bg-blue-600', 'text-white'], ps3: ['bg-black', 'text-white'], psvita: ['bg-teal-500', 'text-white'], winlator: ['bg-sky-500', 'text-white'], gamehub: ['bg-blue-900', 'text-white'], wiiu: ['bg-blue-600', 'text-white'] };
+
+    // --- STATE MANAGEMENT ---
+    
+    // Resolve device from URL
+    const urlParams = new URLSearchParams(location.search);
+    const param = (urlParams.get("device") || "").trim().toLowerCase();
+    
+    // Fallback if URL param is empty
+    let resolvedKey = "Retroid Pocket 5"; 
+
+    // Find device key
+    if (param) {
+        for (const key of Object.keys(DEVICE_CONFIG)) {
+            const dev = DEVICE_CONFIG[key];
+            const names = [key, dev.name, ...(dev.aliases || [])].map(s => s.trim().toLowerCase());
+            if (names.includes(param)) {
+                resolvedKey = key;
+                break;
+            }
+        }
+    }
+
+    let DEVICE = DEVICE_CONFIG[resolvedKey];
+    let currentSystemId = 'switch';
+    let currentVariant = (DEVICE.variants && DEVICE.variants[0]) || null;
+    let activeDataSet = [];
+    let currentlyDisplayedGames = [];
+    let rowsPerPage = 10;
+    let currentPage = 1;
+    let sortColumn = SYSTEM_CONFIG['switch'].columns[0].key;
+    let sortDirection = 'asc';
+    let perfFilter = '';
+    let masterDataCache = {};
+
+    const tableBody = document.querySelector('#compatibility-table tbody');
+    const tableHead = document.querySelector('#compatibility-table thead');
+    const searchBox = document.getElementById('game-search-box');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const pageInfo = document.getElementById('page-info');
+
+    // --- PAGE INIT ---
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+        AOS.init({ once: true, offset: 50 });
         
-        if (col.key === 'notes') {
-            const val = (display || '').trim();
-            if (val === '-' || val === "'-" || val === '') display = '';
-        }
+        // 1. Setup Device Stats & Info
+        document.getElementById('device-name').textContent = DEVICE.name;
+        document.getElementById('device-img').src = DEVICE.img;
+        document.getElementById('hidden-device').value = DEVICE.name; 
+        
+        // Specs
+        document.getElementById('stat-chip').textContent = DEVICE.chipset || "Unknown";
+        document.getElementById('stat-screen').textContent = DEVICE.screen || "Unknown";
+        document.getElementById('stat-battery').textContent = DEVICE.battery || "Unknown";
+        document.getElementById('stat-os').textContent = DEVICE.os || "Android";
+        document.getElementById('stat-ram').textContent = DEVICE.ram || "Unknown";
+        document.getElementById('stat-storage').textContent = DEVICE.storage || "Unknown";
+        
+        // Affiliate
+        const btn = document.getElementById('affiliate-btn');
+        btn.href = DEVICE.link;
+        document.getElementById('header-shop-btn').href = DEVICE.link;
+        document.getElementById('channel-link').href = DEVICE.ytUrl;
 
-        const cls = col.isStatus ? `p-3 font-bold ${perfClass[raw] || ''}` : 'p-3';
-        html += `<td class="${cls}">${esc(display)}</td>`;
-      }
-      html += '</tr>';
+        // 2. Setup Review Card
+        document.getElementById('review-summary').textContent = `"${DEVICE.reviewShort}"`;
+        document.getElementById('score-text').textContent = DEVICE.score;
+        document.getElementById('pros-list').innerHTML = (DEVICE.pros || ['Good performance']).map(p => `<li>${p}</li>`).join('');
+        document.getElementById('cons-list').innerHTML = (DEVICE.cons || ['None']).map(c => `<li>${c}</li>`).join('');
+
+        // 3. Setup Variant Tabs
+        initVariantTabs();
+
+        // 4. Init Compatibility Table
+        loadSystemData('switch');
+
+        // 5. Fetch Video (Live from API)
+        fetchLatestVideo();
+
+        // Mobile Menu
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    });
+
+    // --- REAL DATA FETCHING ---
+    async function fetchAndCacheData(systemId) {
+        if (masterDataCache[systemId]) return masterDataCache[systemId];
+        try {
+            // Actual API Call to app.py
+            const res = await fetch(`/api/compatibility/${systemId}`);
+            if (!res.ok) throw new Error("API Error");
+            const payload = await res.json();
+            const rows = Array.isArray(payload.rows) ? payload.rows : [];
+            const normalized = rows.map(r => {
+                const o = {};
+                for (const k in r) o[k.trim().toLowerCase()] = typeof r[k] === 'string' ? r[k].trim() : r[k];
+                return o;
+            });
+            masterDataCache[systemId] = normalized;
+            return normalized;
+        } catch (e) {
+            console.error("Failed to load data", e);
+            return [];
+        }
     }
-    tableBody.innerHTML = html || '<tr><td colspan="100" class="p-4 text-center">No results.</td></tr>';
-    updatePaginationControls();
-  }
 
-  function updatePaginationControls(){
-    const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
-    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage === totalPages;
-  }
-
-  function applySearchAndSort(){
-    const searchTerm = (searchBox.value || '').toLowerCase();
-    const firstKey = SYSTEM_CONFIG[currentSystemId].columns[0].key;
-    let filtered = activeDataSet;
-    if (perfFilter) filtered = filtered.filter(row => (row.performance || '') === perfFilter);
-    if (searchTerm) filtered = filtered.filter(row => (row[firstKey] || '').toString().toLowerCase().includes(searchTerm));
-    filtered.sort((a,b)=>{
-      const A = getSortValue(a, sortColumn);
-      const B = getSortValue(b, sortColumn);
-      if (A < B) return sortDirection === 'asc' ? -1 : 1;
-      if (A > B) return sortDirection === 'asc' ?  1 : -1;
-      return 0;
-    });
-    currentlyDisplayedGames = filtered;
-    currentPage = 1;
-    displayCurrentPage();
-  }
-
-  function updateSortIndicators(){
-    tableHead.querySelectorAll('th').forEach(th=>{
-      const ind = th.querySelector('.sort-indicator');
-      if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
-    });
-  }
-
-  prevBtn?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayCurrentPage(); } });
-  nextBtn?.addEventListener('click', () => { if (currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
-  
-  rowsPerPageSelect?.addEventListener('change', (e) => {
-    rowsPerPage = parseInt(e.target.value, 10);
-    currentPage = 1;
-    displayCurrentPage();
-  });
-
-  const SYSTEM_ACTIVE = { switch:['bg-red-600','text-white'], ps2:['bg-green-700','text-white'], ps3:['bg-black','text-white'], winlator:['bg-sky-500','text-white'], wiiu:['bg-blue-600','text-white'], gamehub:['bg-blue-900','text-white'], psvita:['bg-teal-500','text-white'] };
-  function setActiveSystemBtn(systemId){
-    const wrap = document.getElementById('system-buttons');
-    wrap.querySelectorAll('button[data-system]').forEach(btn => {
-      btn.classList.remove('bg-red-600','bg-green-700','bg-black','bg-sky-500','bg-blue-600','bg-blue-900','bg-teal-500','text-white','bg-yellow-400','text-black');
-      btn.classList.add('bg-gray-600','text-white');
-    });
-    const active = wrap.querySelector(`[data-system="${systemId}"]`);
-    if (active) {
-      active.classList.remove('bg-gray-600');
-      (SYSTEM_ACTIVE[systemId] || ['bg-yellow-400','text-black']).forEach(c => active.classList.add(c));
+    async function fetchLatestVideo() {
+        // Try to fetch specific query for this device from your API
+        try {
+            const channelId = DEVICE.ytId || "UCh9GxjM-FNuSWv7xqn3UKVw";
+            const query = DEVICE.ytQuery || DEVICE.name;
+            const res = await fetch(`/api/youtube/latest?channel_id=${channelId}&q=${encodeURIComponent(query)}&limit=1`);
+            const data = await res.json();
+            
+            if (data && data.length > 0) {
+                const vid = data[0];
+                const embed = document.getElementById('main-video-embed');
+                embed.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid.videoId}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                document.getElementById('video-title').textContent = vid.title;
+                const d = new Date(vid.publishedAt);
+                document.getElementById('video-date').textContent = d.toLocaleDateString();
+            } else {
+                // Fallback to static main video if API fails or returns nothing
+                if (DEVICE.mainVideoId) {
+                    // ... existing logic ...
+                }
+            }
+        } catch (e) {
+            console.log("Video fetch failed", e);
+        }
     }
-  }
 
-  document.getElementById('system-buttons')?.addEventListener('click', (e)=>{
-    const btn = e.target.closest('button[data-system]'); if (!btn) return;
-    const sid = btn.dataset.system;
-    localStorage.setItem(STORAGE_KEY, sid);
-    setActiveSystemBtn(sid);
-    loadSystemData(sid);
-  });
+    function initVariantTabs() {
+        const wrap = document.getElementById('variant-tabs');
+        if (!DEVICE.variants || DEVICE.variants.length <= 1 || !wrap) return;
+        
+        wrap.classList.remove('hidden');
+        const row = wrap.querySelector('div');
+        row.innerHTML = '';
+        
+        DEVICE.variants.forEach((v, i) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = [
+                'px-3','py-1.5','rounded-md','font-retro','text-xs', 'transition-colors',
+                i === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-700 hover:bg-gray-600 text-white'
+            ].join(' ');
+            btn.textContent = v.label;
+            btn.dataset.variantId = v.id;
+            row.appendChild(btn);
+        });
+        
+        row.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-variant-id]');
+            if (!btn) return;
+            const id = btn.dataset.variantId;
+            const next = DEVICE.variants.find(v => v.id === id);
+            if (!next) return;
+            
+            [...row.children].forEach(b => {
+                  b.classList.remove('bg-yellow-400','text-black');
+                  b.classList.add('bg-gray-700','text-white');
+            });
+            btn.classList.remove('bg-gray-700','text-white');
+            btn.classList.add('bg-yellow-400','text-black');
+            
+            currentVariant = next;
+            loadSystemData(currentSystemId);
+            
+            const chipSel = document.getElementById('form-chipset-select');
+            if (chipSel) chipSel.value = currentVariant.id;
+        });
+    }
 
-  searchBox.addEventListener('input', debounce(applySearchAndSort, 200));
-  tableHead.addEventListener('click', (e)=>{
-    const th = e.target.closest('th'); if (!th?.dataset.sort) return;
-    sortDirection = (sortColumn === th.dataset.sort && sortDirection === 'asc') ? 'desc' : 'asc';
-    sortColumn = th.dataset.sort;
-    applySearchAndSort();
-  });
-
-  document.getElementById('perf-filters')?.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    perfFilter = btn.dataset.perf;
-    const allBtns = document.getElementById('perf-filters').querySelectorAll('button');
-    allBtns.forEach(b => {
-        if (b.dataset.perf === perfFilter) {
-            b.classList.add('filter-active');
-        } else {
-            b.classList.remove('filter-active');
+    async function loadSystemData(systemId) {
+        currentSystemId = systemId;
+        document.querySelectorAll('.system-btn').forEach(btn => {
+            const colors = SYSTEM_COLORS[systemId] || ['bg-yellow-400', 'text-black'];
+            btn.className = 'system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 bg-gray-700 text-white tracking-wide text-shadow-md';
+            if(btn.dataset.system === systemId) { btn.classList.remove('bg-gray-700', 'text-white'); btn.classList.add(...colors, 'scale-110', 'shadow-lg'); } 
+        });
+        
+        tableBody.innerHTML = `<tr><td colspan="100" class="p-6 text-center text-white/50"><i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2"></i>Loading data...</td></tr>`;
+        lucide.createIcons();
+        
+        // Fetch Real Data
+        const allData = await fetchAndCacheData(systemId);
+        
+        // Filter by chipset if applicable
+        const wantChip = currentVariant ? norm(currentVariant.id) : '';
+        let filtered = allData;
+        
+        // Only filter by chipset if the CSV actually has chipset data and we have a selected variant
+        if (wantChip && allData.some(r => r.chipset)) {
+            filtered = allData.filter(r => norm(r.chipset) === wantChip);
         }
-    });
-    applySearchAndSort();
-  });
+        
+        activeDataSet = filtered;
+        renderTableStructure();
+        applySearchAndSort();
+    }
 
-  function updateFormFields(sysId) {
-    const container = document.getElementById('dynamic-fields');
-    container.innerHTML = '';
-    const config = FORM_CONFIG[sysId] || [];
-    config.forEach(field => {
-        const div = document.createElement('div');
-        const req = field.required ? 'required' : '';
-        const star = field.required ? '*' : '';
-        let inputHtml = '';
-        if (field.type === 'select') {
-            const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            const cls = field.key === 'performance' ? 'form-input perf-perfect font-bold' : 'form-input';
-            inputHtml = `<select name="${field.key}" class="${cls}" ${req}>${options}</select>`;
-        } else {
-            inputHtml = `<input type="text" name="${field.key}" class="form-input" ${req}>`;
+    function renderTableStructure() {
+        const config = SYSTEM_CONFIG[currentSystemId] || SYSTEM_CONFIG['switch'];
+        tableHead.innerHTML = `<tr>${config.columns.map(col => `<th class="p-4" data-sort="${col.key}">${col.label} <span class="sort-indicator text-xs ml-1 opacity-50"></span></th>`).join('')}</tr>`;
+    }
+
+    function displayCurrentPage() {
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const pageItems = currentlyDisplayedGames.slice(startIndex, startIndex + rowsPerPage);
+        const config = SYSTEM_CONFIG[currentSystemId] || SYSTEM_CONFIG['switch'];
+        let html = '';
+        
+        // Update Sort Indicators
+        tableHead.querySelectorAll('th').forEach(th=>{
+            const ind = th.querySelector('.sort-indicator');
+            if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
+        });
+
+        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-white/50">No results found.</td></tr>`; } 
+        else {
+            pageItems.forEach((row, i) => {
+                html += `<tr class="${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors cursor-pointer" onclick="openGameModal(${startIndex + i})">`;
+                config.columns.forEach(col => {
+                    let val = row[col.key] || '-';
+                    if (col.isStatus) {
+                        let badgeStyle = "";
+                        if(val === 'Perfect') badgeStyle = "bg-green-500/20 text-green-300 border border-green-500/30";
+                        else if(val === 'Great') badgeStyle = "bg-blue-500/20 text-blue-300 border border-blue-500/30";
+                        else if(val === 'Playable') badgeStyle = "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30";
+                        else if(val === 'Unplayable') badgeStyle = "bg-red-500/20 text-red-300 border border-red-500/30";
+                        html += `<td class="p-3 font-body"><span class="${badgeStyle} px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block">${val}</span></td>`;
+                    } else { html += `<td class="p-3 font-body">${val}</td>`; }
+                });
+                html += '</tr>';
+            });
         }
-        div.innerHTML = `<label class="block mb-2 font-bold capitalize">${field.label} ${star}</label>${inputHtml}`;
-        container.appendChild(div);
+        tableBody.innerHTML = html;
+        const totalPages = Math.ceil(currentlyDisplayedGames.length / rowsPerPage) || 1;
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+        lucide.createIcons();
+    }
+
+    const PERFORMANCE_ORDER = { 'Perfect':0, 'Great':1, 'Playable':2, 'Unplayable':3 };
+    function getSortValue(row, colKey){
+        const raw = (row[colKey] ?? '').toString();
+        if (colKey === 'performance') return (raw in PERFORMANCE_ORDER ? PERFORMANCE_ORDER[raw] : 999);
+        return raw.toLowerCase();
+    }
+
+    function applySearchAndSort() {
+        const term = (searchBox.value || '').toLowerCase();
+        let filtered = activeDataSet;
+        if (perfFilter) filtered = filtered.filter(r => r.performance === perfFilter);
+        if (term) filtered = filtered.filter(r => (r.game || '').toLowerCase().includes(term));
+        
+        filtered.sort((a,b) => {
+            const valA = getSortValue(a, sortColumn);
+            const valB = getSortValue(b, sortColumn);
+            if(valA < valB) return sortDirection === 'asc' ? -1 : 1;
+            if(valA > valB) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+        
+        currentlyDisplayedGames = filtered;
+        currentPage = 1;
+        displayCurrentPage();
+    }
+
+    // --- GAME DETAILS MODAL LOGIC ---
+    function openGameModal(index) {
+        const game = currentlyDisplayedGames[index];
+        if(!game) return;
+        const modal = document.getElementById('game-details-modal');
+        const content = document.getElementById('game-modal-content');
+        
+        let statusColor = 'text-white';
+        if(game.performance === 'Perfect') statusColor = 'text-green-400 border-green-400/30 bg-green-400/10';
+        else if(game.performance === 'Great') statusColor = 'text-blue-400 border-blue-400/30 bg-blue-400/10';
+        else if(game.performance === 'Playable') statusColor = 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10';
+        else if(game.performance === 'Unplayable') statusColor = 'text-red-400 border-red-400/30 bg-red-400/10';
+
+        const config = SYSTEM_CONFIG[currentSystemId];
+        const specialFields = ['game', 'performance', 'notes', 'date added', 'date', 'boxArt', 'chipset'];
+        const gridFields = config.columns.filter(c => !specialFields.includes(c.key));
+        
+        // Simple initial box art logic
+        const secondarySearch = `https://tse2.mm.bing.net/th?q=${encodeURIComponent((game.game||'') + ' ' + currentSystemId + ' box art')}&w=400&h=600&c=7&rs=1&p=0`;
+        const initials = (game.game||'?').split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+        const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
+
+        content.innerHTML = `
+            <div class="flex flex-col md:flex-row gap-8 p-1">
+                <div class="w-full md:w-1/3 flex flex-col gap-4">
+                    <div class="relative rounded-lg overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 group">
+                        <img src="${secondarySearch}" crossorigin="anonymous" alt="${game.game}" class="w-full h-auto object-cover" 
+                             onError="this.src='${fallbackArt}';">
+                    </div>
+                </div>
+                <div class="w-full md:w-2/3">
+                    <div class="mb-6">
+                        <h2 class="font-logo text-3xl text-white mb-2 leading-tight drop-shadow-md">${game.game}</h2>
+                        <span class="font-retro text-sm font-bold ${statusColor} border px-4 py-1.5 rounded-full inline-flex items-center justify-center uppercase tracking-wider leading-none" style="min-height: 32px;">${game.performance}</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        ${gridFields.map(col => `<div class="bg-black/20 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-xs text-purple-300 font-retro mb-1 leading-none opacity-80">${col.label}</p><p class="font-mono text-white text-sm break-words leading-tight">${game[col.key] || '-'}</p></div>`).join('')}
+                        ${game.chipset ? `<div class="bg-black/20 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-xs text-purple-300 font-retro mb-1 leading-none opacity-80">Chipset</p><p class="font-mono text-white text-sm break-words leading-tight">${game.chipset}</p></div>` : ''}
+                    </div>
+                    ${game.notes ? `<div class="bg-white/5 p-5 rounded-xl border border-white/10 mb-6"><p class="text-xs text-purple-300 font-retro mb-2 flex items-center gap-2 opacity-80"><i data-lucide="file-text" class="w-4 h-4"></i> Notes</p><p class="font-body text-gray-200 leading-relaxed text-sm">${game.notes}</p></div>` : ''}
+                    <div class="border-t border-white/5 pt-4"><p class="text-[10px] text-white/30 font-mono">Reported on: ${game['date added'] || 'Unknown'}</p></div>
+                </div>
+            </div>`;
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+    }
+
+    // --- SCREENSHOT LOGIC ---
+    document.getElementById('screenshot-game-modal').addEventListener('click', function() {
+        const btn = this;
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> <span class="font-bold text-xs hidden sm:inline">SAVING...</span>`;
+        lucide.createIcons();
+
+        const captureContainer = document.createElement('div');
+        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#2E1A47', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '30px 30px', padding: '40px', borderRadius: '20px', zIndex: '-1' });
+        
+        const contentHTML = document.getElementById('game-modal-content').innerHTML;
+        captureContainer.innerHTML = `
+            <div class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl p-8 w-full shadow-2xl flex flex-col">
+                <div class="flex gap-8 p-1">
+                    <div class="flex flex-col gap-4" style="width: 33%;">${document.querySelector('#game-modal-content .w-full.md\\:w-1\\/3').innerHTML}</div>
+                    <div style="width: 67%;">${document.querySelector('#game-modal-content .w-full.md\\:w-2\\/3').innerHTML}</div>
+                </div>
+                <div class="mt-8 mx-2 pb-2 pt-4 border-t border-white/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-logo text-white text-lg tracking-tight">RYAN RETRO</span></div><span class="font-mono text-purple-300 text-xs">ryanretro.com</span></div>
+            </div>`;
+        document.body.appendChild(captureContainer);
+
+        html2canvas(captureContainer, { backgroundColor: '#2E1A47', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
+            document.body.removeChild(captureContainer);
+            const link = document.createElement('a');
+            link.download = 'RyanRetro-GameCard.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            btn.innerHTML = originalIcon;
+            lucide.createIcons();
+        }).catch(err => { console.error(err); document.body.removeChild(captureContainer); btn.innerHTML = originalIcon; lucide.createIcons(); alert("Capture failed."); });
     });
-    colorizePerformanceSelects(container);
-    ensureChipsetField();
-    document.getElementById('hidden-system').value = sysId;
-  }
 
-  document.getElementById('add-entry-btn')?.addEventListener('click', () => {
-    const formContainer = document.getElementById('add-entry-form-container');
-    formContainer.classList.remove('hidden');
-    const currentSys = document.getElementById('form-system-select').value || currentSystemId;
-    document.getElementById('form-system-select').value = currentSys;
-    updateFormFields(currentSys);
-    formContainer.scrollIntoView({ behavior: 'smooth' });
-  });
+    // --- EVENT LISTENERS ---
+    document.getElementById('close-game-modal').addEventListener('click', () => document.getElementById('game-details-modal').classList.add('hidden'));
+    document.getElementById('game-modal-bg').addEventListener('click', () => document.getElementById('game-details-modal').classList.add('hidden'));
 
-  document.getElementById('cancel-btn')?.addEventListener('click', () => {
-    document.getElementById('add-entry-form-container').classList.add('hidden');
-  });
+    document.getElementById('system-buttons').addEventListener('click', (e) => { if(e.target.dataset.system) loadSystemData(e.target.dataset.system); });
+    searchBox.addEventListener('input', () => applySearchAndSort());
+    
+    document.getElementById('perf-filters').addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        perfFilter = btn.dataset.perf;
+        document.querySelectorAll('#perf-filters button').forEach(b => b.classList.remove('filter-active'));
+        btn.classList.add('filter-active');
+        applySearchAndSort();
+    });
 
-  document.getElementById('form-system-select')?.addEventListener('change', (e) => {
-    updateFormFields(e.target.value);
-  });
+    tableHead.addEventListener('click', (e) => {
+        const th = e.target.closest('th');
+        if(!th) return;
+        sortDirection = (sortColumn === th.dataset.sort && sortDirection === 'asc') ? 'desc' : 'asc';
+        sortColumn = th.dataset.sort;
+        applySearchAndSort();
+    });
 
-  setActiveSystemBtn(currentSystemId);
-  loadSystemData(currentSystemId);
-});
+    prevBtn.addEventListener('click', () => { if(currentPage > 1) { currentPage--; displayCurrentPage(); } });
+    nextBtn.addEventListener('click', () => { if(currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
+    document.getElementById('rows-per-page').addEventListener('change', (e) => { rowsPerPage = parseInt(e.target.value); currentPage = 1; displayCurrentPage(); });
+    
+    document.getElementById('add-entry-btn').addEventListener('click', () => { 
+        document.getElementById('add-entry-form-container').classList.remove('hidden'); 
+        document.getElementById('add-entry-form-container').scrollIntoView({behavior:'smooth'});
+        // Pre-fill fields
+        const currentSys = document.getElementById('form-system-select').value || currentSystemId;
+        document.getElementById('form-system-select').value = currentSys;
+        updateFormFields(currentSys);
+    });
+    document.getElementById('cancel-btn').addEventListener('click', () => { document.getElementById('add-entry-form-container').classList.add('hidden'); });
+
+    // --- FORM LOGIC ---
+    const formSystemSelect = document.getElementById('form-system-select');
+    const dynamicFieldsContainer = document.getElementById('dynamic-fields');
+
+    function updateFormFields(sysId) {
+        dynamicFieldsContainer.innerHTML = '';
+        
+        // Generate standard fields based on FORM_CONFIG
+        const config = FORM_CONFIG[sysId] || [];
+        const fields = config.filter(f => f.key !== 'system' && f.key !== 'game' && f.key !== 'performance');
+
+        // Add fields
+        fields.forEach(field => {
+            const div = document.createElement('div');
+            const req = field.required ? 'required' : '';
+            const star = field.required ? '*' : '';
+            let inputHtml = '';
+            
+            if (field.type === 'select') {
+                const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                inputHtml = `<select name="${field.key}" class="form-input font-body" ${req}>${options}</select>`;
+            } else {
+                inputHtml = `<input type="text" name="${field.key}" class="form-input font-body" ${req}>`;
+            }
+            div.innerHTML = `<label class="block text-xs font-bold text-gray-400 mb-1 capitalize">${field.label} ${star}</label>${inputHtml}`;
+            dynamicFieldsContainer.appendChild(div);
+        });
+
+        // Ensure Chipset Field if device has variants
+        if (DEVICE.variants && DEVICE.variants.length > 1) {
+            const div = document.createElement('div');
+            const options = DEVICE.variants.map(v => `<option value="${v.id}">${v.label}</option>`).join('');
+            div.innerHTML = `<label class="block text-xs font-bold text-gray-400 mb-1">Chipset *</label>
+                             <select id="form-chipset-select" name="chipset" class="form-input font-body" required>${options}</select>`;
+            dynamicFieldsContainer.appendChild(div);
+            
+            if(currentVariant) {
+                document.getElementById('form-chipset-select').value = currentVariant.id;
+            }
+        }
+        
+        document.getElementById('hidden-system').value = sysId;
+        document.getElementById('hidden-device').value = DEVICE.name;
+        colorizePerformanceSelects();
+    }
+    
+    function colorizePerformanceSelects() {
+        const selects = document.querySelectorAll('select[name="performance"]');
+        selects.forEach(sel => {
+            const apply = () => {
+                sel.classList.remove('perf-perfect', 'perf-great', 'perf-playable', 'perf-unplayable');
+                if(sel.value === 'Perfect') sel.classList.add('perf-perfect');
+                else if(sel.value === 'Great') sel.classList.add('perf-great');
+                else if(sel.value === 'Playable') sel.classList.add('perf-playable');
+                else if(sel.value === 'Unplayable') sel.classList.add('perf-unplayable');
+            };
+            sel.addEventListener('change', apply);
+            apply();
+        });
+        const mainPerf = document.getElementById('form-performance');
+        if(mainPerf) {
+             const applyMain = () => {
+                mainPerf.classList.remove('perf-perfect', 'perf-great', 'perf-playable', 'perf-unplayable');
+                if(mainPerf.value === 'Perfect') mainPerf.classList.add('perf-perfect');
+                else if(mainPerf.value === 'Great') mainPerf.classList.add('perf-great');
+                else if(mainPerf.value === 'Playable') mainPerf.classList.add('perf-playable');
+                else if(mainPerf.value === 'Unplayable') mainPerf.classList.add('perf-unplayable');
+             };
+             mainPerf.addEventListener('change', applyMain);
+             applyMain();
+        }
+    }
+
+    formSystemSelect.addEventListener('change', (e) => updateFormFields(e.target.value));
+    updateFormFields('switch');
+
+    // --- SUBMIT LOGIC ---
+    const compatForm = document.getElementById('compatibility-form');
+
+    if (compatForm) {
+        compatForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const submitBtn = compatForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Sending...';
+            lucide.createIcons();
+
+            const formData = new FormData(compatForm);
+            const data = Object.fromEntries(formData.entries());
+
+            data.device = document.getElementById('hidden-device').value || DEVICE.name;
+            
+            // Fallback chipset
+            if (!data.chipset && currentVariant) {
+               data.chipset = currentVariant.id;
+            }
+
+            try {
+                const res = await fetch('/api/compat/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!res.ok) throw new Error("Submission failed");
+
+                showToast("Report added! Refreshing...");
+                
+                const sysId = data.system;
+                if (masterDataCache[sysId]) delete masterDataCache[sysId];
+
+                document.getElementById('add-entry-form-container').classList.add('hidden');
+                compatForm.reset();
+                loadSystemData(sysId);
+
+            } catch (err) {
+                console.error(err);
+                showToast("Error submitting report. Please try again.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                lucide.createIcons();
+            }
+        });
+    }
 </script>
 </body>
 </html>
