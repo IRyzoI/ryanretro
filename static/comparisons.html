@@ -300,26 +300,20 @@
 
     <main class="container mx-auto px-4 py-8 pb-20 max-w-7xl flex-grow">
 
-        <!-- Header Section -->
         <div class="text-center mb-8" data-aos="fade-down">
             <h1 class="font-display font-black text-4xl md:text-5xl text-white mb-2">HEAD TO HEAD</h1>
             <p class="text-white/50 max-w-xl mx-auto">Select devices below to compare specs, performance, and see my latest videos side-by-side. Scroll horizontally to add more!</p>
         </div>
 
-        <!-- Sticky Selector -->
         <div class="sticky top-24 z-40 bg-[#1a0b2e]/95 backdrop-blur-md py-4 border-b border-white/10 mb-8 -mx-4 px-4 shadow-xl">
             <div class="flex items-center gap-4 max-w-7xl mx-auto">
                 <span class="text-xs font-bold text-white/40 uppercase tracking-widest shrink-0 hidden md:block">Add Device:</span>
                 <div id="device-selector" class="flex gap-2 overflow-x-auto scrollbar-hide w-full pb-1">
-                    <!-- Buttons injected via JS -->
-                </div>
+                    </div>
             </div>
         </div>
 
-        <!-- Comparison Scrolling Container -->
-        <!-- Added pt-4 to prevent hover clipping -->
         <div id="comparison-container" class="flex flex-nowrap gap-6 overflow-x-auto pb-12 pt-4 custom-scrollbar items-stretch px-2 snap-x">
-            <!-- Cards injected via JS -->
             <div class="min-w-[320px] max-w-[320px] shrink-0 py-20 text-center text-white/30 border-2 border-dashed border-white/10 rounded-3xl mx-auto w-full" data-aos="fade-up">
                 <p class="font-display text-xl">Select devices from the list above to start comparing.</p>
             </div>
@@ -344,119 +338,119 @@
         const IMG_BASE_URL = "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/";
 
         // --- DATA CONFIGURATION ---
-        // Using filenames from user request mapped to device names
+        // Added videoId for each device
         const DEVICE_CONFIG = {
             "Retroid Pocket 5": {
                 name: "Retroid Pocket 5",
                 img: IMG_BASE_URL + "rp5.png",
                 link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
                 chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
-                score: 9.5, ytQuery: "retroid pocket 5", hubLink: "/handheld?device=Retroid Pocket 5"
+                score: 9.5, ytQuery: "retroid pocket 5", videoId: "73qGupmtvko", hubLink: "/handheld?device=Retroid Pocket 5"
             },
             "Retroid Pocket 6": {
-                name: "Retroid Pocket 6", // Using generic placeholder if no image explicit, but assuming RP6 might share RP5 or similar style
-                img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png", // Kept original URL as it wasn't in the new list but likely needed
+                name: "Retroid Pocket 6",
+                img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
                 link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
                 chipset: "SD 8 Gen 2", screen: "5.5\" OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
-                score: 9.8, ytQuery: "retroid pocket 6", hubLink: "/handheld?device=Retroid Pocket 6"
+                score: 9.8, ytQuery: "retroid pocket 6", videoId: "mB_uqYOL5fg", hubLink: "/handheld?device=Retroid Pocket 6"
             },
             "Retroid Pocket Mini": {
                 name: "Retroid Pocket Mini",
                 img: IMG_BASE_URL + "rpmini.png",
                 link: "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT",
                 chipset: "Snapdragon 865", screen: "3.7\" OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
-                score: 9.0, ytQuery: "retroid pocket mini", hubLink: "/handheld?device=Retroid Pocket Mini"
+                score: 9.0, ytQuery: "retroid pocket mini", videoId: "FVY9XFJ0TsU", hubLink: "/handheld?device=Retroid Pocket Mini"
             },
             "Retroid Pocket Classic": {
                 name: "Retroid Pocket Classic",
                 img: IMG_BASE_URL + "rpclassic.png",
                 link: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
                 chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
-                score: 9.4, ytQuery: "retroid pocket classic", hubLink: "/handheld?device=Retroid Pocket Classic"
+                score: 9.4, ytQuery: "retroid pocket classic", videoId: "QQv9Ymi8Fu8", hubLink: "/handheld?device=Retroid Pocket Classic"
             },
             "Retroid Pocket G2": {
                 name: "Retroid Pocket G2",
                 img: IMG_BASE_URL + "rpg2.png",
                 link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
                 chipset: "SD G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
-                score: 8.5, ytQuery: "retroid pocket g2", hubLink: "/handheld?device=Retroid Pocket G2"
+                score: 8.5, ytQuery: "retroid pocket g2", videoId: "-LoKyElYr6E", hubLink: "/handheld?device=Retroid Pocket G2"
             },
             "Retroid Pocket Flip 2": {
                 name: "Retroid Pocket Flip 2",
                 img: IMG_BASE_URL + "flip2.png",
                 link: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
                 chipset: "TBD", screen: "4.7\" LCD", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
-                score: 9.2, ytQuery: "retroid pocket flip 2", hubLink: "/handheld?device=Retroid Pocket Flip 2"
+                score: 9.2, ytQuery: "retroid pocket flip 2", videoId: "ltYjS7ZU7DM", hubLink: "/handheld?device=Retroid Pocket Flip 2"
             },
             "AYN Odin 2 Portal": {
                 name: "AYN Odin 2 Portal",
                 img: IMG_BASE_URL + "portal.png",
                 link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
                 chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
-                score: 9.7, ytQuery: "odin 2 portal", hubLink: "/handheld?device=Odin 2 Portal"
+                score: 9.7, ytQuery: "odin 2 portal", videoId: "jr-cL01mzmE", hubLink: "/handheld?device=Odin 2 Portal"
             },
             "AYN Odin 3": {
                 name: "AYN Odin 3",
                 img: IMG_BASE_URL + "odin3.png",
                 link: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
                 chipset: "SD 8 Gen 3 (Est)", screen: "6\" OLED", battery: "8500 mAh", os: "Android", ram: "16GB", storage: "512GB",
-                score: 9.9, ytQuery: "ayn odin 3", hubLink: "/handheld?device=AYN Odin 3"
+                score: 9.9, ytQuery: "ayn odin 3", videoId: "yV2MPzoPkwA", hubLink: "/handheld?device=AYN Odin 3"
             },
             "Ayaneo Konkr Pocket Fit": {
                 name: "Ayaneo Konkr Fit",
                 img: IMG_BASE_URL + "konkr.png",
                 link: "https://www.ayaneo.com",
                 chipset: "AMD 6800U", screen: "5.5\" IPS", battery: "45Wh", os: "Windows 11", ram: "16GB", storage: "512GB",
-                score: 8.8, ytQuery: "ayaneo pocket fit", hubLink: "/handheld?device=Ayaneo Konkr Pocket Fit"
+                score: 8.8, ytQuery: "ayaneo pocket fit", videoId: "BelWfaEn3V8", hubLink: "/handheld?device=Ayaneo Konkr Pocket Fit"
             },
             "TrimUI Brick": {
                 name: "TrimUI Brick",
                 img: IMG_BASE_URL + "brick.png",
                 link: "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
                 chipset: "Allwinner A133", screen: "3.2\" IPS", battery: "3000 mAh", os: "Linux", ram: "2GB", storage: "32GB",
-                score: 8.0, ytQuery: "trimui brick", hubLink: "/handheld?device=TrimUI Brick"
+                score: 8.0, ytQuery: "trimui brick", videoId: "1td7fFxjbpo", hubLink: "/handheld?device=TrimUI Brick"
             },
             "Vortex F5": {
                 name: "Vortex F5",
                 img: IMG_BASE_URL + "f5.png",
                 link: "#",
                 chipset: "RK3588", screen: "5\" IPS", battery: "5500 mAh", os: "Android", ram: "8GB", storage: "128GB",
-                score: 8.5, ytQuery: "vortex f5 handheld", hubLink: "/handheld?device=Vortex F5"
+                score: 8.5, ytQuery: "vortex f5 handheld", videoId: "56GI5zLV4RU", hubLink: "/handheld?device=Vortex F5"
             },
             "MagicX Zero 40": {
                 name: "MagicX Zero 40",
                 img: IMG_BASE_URL + "magicxzero40.png",
                 link: "#",
                 chipset: "RK3566", screen: "4\" 1:1", battery: "3500 mAh", os: "Linux", ram: "2GB", storage: "64GB",
-                score: 7.5, ytQuery: "magicx zero 40", hubLink: "/handheld?device=MagicX Zero 40"
+                score: 7.5, ytQuery: "magicx zero 40", videoId: "TWwCqykFoDs", hubLink: "/handheld?device=MagicX Zero 40"
             },
             "MagicX XU20 V32": {
                 name: "MagicX XU20",
                 img: IMG_BASE_URL + "xuretroxu20v32.png",
                 link: "#",
                 chipset: "TBD", screen: "3.5\" IPS", battery: "3000 mAh", os: "Linux", ram: "1GB", storage: "64GB",
-                score: 7.0, ytQuery: "magicx xu20", hubLink: "/handheld?device=MagicX XU20"
+                score: 7.0, ytQuery: "magicx xu20", videoId: "TWwCqykFoDs", hubLink: "/handheld?device=MagicX XU20"
             },
             "Mangmi Air X": {
                 name: "Mangmi Air X",
                 img: IMG_BASE_URL + "mangmiairx.png",
                 link: "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr",
                 chipset: "Dimensity 1200", screen: "5.5\" AMOLED", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
-                score: 8.7, ytQuery: "mangmi air x", hubLink: "/handheld?device=Mangmi Air X"
+                score: 8.7, ytQuery: "mangmi air x", videoId: "DAUG4MoHbAg", hubLink: "/handheld?device=Mangmi Air X"
             },
             "GKD Pixel 2": {
                 name: "GKD Pixel 2",
                 img: IMG_BASE_URL + "pixel2.png",
                 link: "#",
                 chipset: "Ingenic X1830", screen: "2.4\" IPS", battery: "1500 mAh", os: "Linux", ram: "512MB", storage: "16GB",
-                score: 8.2, ytQuery: "gkd pixel 2", hubLink: "/handheld?device=GKD Pixel 2"
+                score: 8.2, ytQuery: "gkd pixel 2", videoId: "4Elhovr-xfk", hubLink: "/handheld?device=GKD Pixel 2"
             },
             "Anbernic RG34XX": {
                 name: "Anbernic RG34XX",
                 img: IMG_BASE_URL + "rg34xx.png",
                 link: "https://s.click.aliexpress.com/e/_c3cp23I9",
                 chipset: "H700", screen: "3.5\" IPS", battery: "3300 mAh", os: "Linux", ram: "1GB", storage: "64GB",
-                score: 8.4, ytQuery: "anbernic rg34xx", hubLink: "/handheld?device=Anbernic RG34XX"
+                score: 8.4, ytQuery: "anbernic rg34xx", videoId: "6te3l-rP9F4", hubLink: "/handheld?device=Anbernic RG34XX"
             }
         };
 
@@ -580,10 +574,7 @@
                             <div class="border-t border-white/10 pt-4 mt-auto">
                                 <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2">Latest Video</p>
                                 <div class="video-embed-container relative group cursor-pointer" id="video-${index}">
-                                    <div class="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
-                                        <i data-lucide="youtube" class="w-8 h-8 text-white/50"></i>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -599,21 +590,37 @@
 
         function loadVideo(device, index) {
             const container = document.getElementById(`video-${index}`);
-            const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent("Ryan Retro " + device.ytQuery)}`;
+            // Use the videoId from config or fallback to a placeholder search if missing
+            const videoId = device.videoId;
             
-            container.innerHTML = `
-                <a href="${searchUrl}" target="_blank" class="block w-full h-full relative group">
-                    <img src="https://i.ytimg.com/vi/placeholder/hqdefault.jpg" 
-                         class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" 
-                         onerror="this.src='https://placehold.co/600x400/2a1b3d/FFF?text=Watch+Review'" />
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
-                         <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                            <i data-lucide="play" class="w-4 h-4 text-white fill-current ml-0.5"></i>
-                         </div>
-                         <span class="text-[10px] font-bold text-white mt-2 uppercase tracking-widest">Watch Review</span>
-                    </div>
-                </a>
-            `;
+            if (videoId) {
+                 container.innerHTML = `
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        title="${device.name} Video" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                `;
+            } else {
+                 // Fallback if no ID is found (shouldn't happen with current config)
+                 const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent("Ryan Retro " + device.ytQuery)}`;
+                 container.innerHTML = `
+                    <a href="${searchUrl}" target="_blank" class="block w-full h-full relative group">
+                        <img src="https://placehold.co/600x400/2a1b3d/FFF?text=Watch+Review" 
+                             class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                             <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <i data-lucide="play" class="w-4 h-4 text-white fill-current ml-0.5"></i>
+                             </div>
+                             <span class="text-[10px] font-bold text-white mt-2 uppercase tracking-widest">Search Video</span>
+                        </div>
+                    </a>
+                `;
+            }
         }
 
     </script>
