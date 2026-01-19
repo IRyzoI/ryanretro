@@ -1022,37 +1022,72 @@
             // This dictionary maps your specific table names to exact 600x900 (vertical) images.
             // No searching. No guessing. 100% accuracy.
             const GAME_COVERS = {
-                // --- Nintendo / Exclusives ---
-                "Captain Toad: Treasure Tracker": "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/c/captain-toad-treasure-tracker-switch/hero",
-                "Golf Story": "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/g/golf-story-switch/hero",
-                "Pokémon Sword (Battle)": "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/p/pokemon-sword-switch/hero",
-                "Pokémon Sword (Open)":   "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/p/pokemon-sword-switch/hero",
-                "Zelda: BOTW": "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-breath-of-the-wild-switch/hero",
-                "Zelda: TOTK": "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-tears-of-the-kingdom-switch/hero",
-                "Zelda: Echoes": "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-echoes-of-wisdom-switch/hero",
-                
-                // --- Steam / Multiplatform (Using Steam Library Vertical Art) ---
-                "Cuphead": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/268910/library_600x900.jpg",
-                "Cyberpunk 2077": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/library_600x900.jpg",
-                "Donut County": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/702670/library_600x900.jpg",
-                "Elden Ring": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/library_600x900.jpg",
-                "FIFA 18": "https://upload.wikimedia.org/wikipedia/en/a/a3/FIFA_18_Cover_Art.jpg", // Wiki fallback as Steam delisted older FIFAs
-                "Gris": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/683320/library_600x900.jpg",
-                "GTA V": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/271590/library_600x900.jpg",
-                "Hades 2": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145350/library_600x900.jpg",
-                "Hollow Knight Silksong": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1030300/library_600x900.jpg",
-                "Monster Boy": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/449610/library_600x900.jpg",
-                "Need for Speed Rivals": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1262600/library_600x900.jpg",
-                "Skyrim": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/489830/library_600x900.jpg",
-                "Slay the Spire": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/646570/library_600x900.jpg",
-                "Tennis in the Face": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/394290/library_600x900.jpg",
-                "Tomb Raider": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/203160/library_600x900.jpg",
-                "Traveller’s Rest": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1139980/library_600x900.jpg",
-                "The Witcher 3": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/library_600x900.jpg",
-                
-                // --- Niche / manual fallbacks ---
-                "Megabonk": "https://placehold.co/600x900/4c1d95/ffffff?text=MEGABONK", // Placeholder for obscure game
-            };
+  // --- Nintendo / Exclusives ---
+  "Captain Toad: Treasure Tracker":
+    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/c/captain-toad-treasure-tracker-switch/hero",
+  "Golf Story":
+    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/g/golf-story-switch/hero",
+  "Pokémon Sword (Battle)":
+    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/p/pokemon-sword-switch/hero",
+  "Pokémon Sword (Open)":
+    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/p/pokemon-sword-switch/hero",
+  "Zelda: BOTW":
+    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-breath-of-the-wild-switch/hero",
+  "Zelda: TOTK":
+    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-tears-of-the-kingdom-switch/hero",
+
+  // FIX: your Nintendo "Echoes" slug is often the one that breaks.
+  // This one is a direct, hotlinkable cover image.
+  "Zelda: Echoes":
+    "https://static.honestgamers.com/images/games/19/84/17/17189/5.jpg", // :contentReference[oaicite:1]{index=1}
+
+  // --- Steam / Multiplatform (Using Steam Library Vertical Art) ---
+  "Cuphead":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/268910/library_600x900.jpg",
+  "Cyberpunk 2077":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/library_600x900.jpg",
+  "Donut County":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/702670/library_600x900.jpg",
+  "Elden Ring":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/library_600x900.jpg",
+
+  // FIX: use the actual full-size Wikipedia file (not a random thumbnail).
+  "FIFA 18":
+    "https://upload.wikimedia.org/wikipedia/en/d/d4/FIFA18cover.png", // :contentReference[oaicite:2]{index=2}
+
+  "Gris":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/683320/library_600x900.jpg",
+  "GTA V":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/271590/library_600x900.jpg",
+  "Hades 2":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145350/library_600x900.jpg",
+  "Hollow Knight Silksong":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1030300/library_600x900.jpg",
+  "Monster Boy":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/449610/library_600x900.jpg",
+  "Need for Speed Rivals":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1262600/library_600x900.jpg",
+  "Skyrim":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/489830/library_600x900.jpg",
+  "Slay the Spire":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/646570/library_600x900.jpg",
+
+  // FIX: 394290 does NOT have library_600x900.jpg, but it DOES have a portrait asset.
+  "Tennis in the Face":
+    "https://prod-images.blacknut.net/65fae0a22227219ef319e43d_sm.jpg", // :contentReference[oaicite:3]{index=3}
+
+  "Tomb Raider":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/203160/library_600x900.jpg",
+  "Traveller’s Rest":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1139980/library_600x900.jpg",
+  "The Witcher 3":
+    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/library_600x900.jpg",
+
+  // --- Niche / manual fallbacks ---
+  "Megabonk":
+    "https://placehold.co/600x900/4c1d95/ffffff?text=MEGABONK",
+};
+
 
             // 3. Select Art
             let boxArtUrl = GAME_COVERS[gameName];
