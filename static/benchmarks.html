@@ -1018,41 +1018,47 @@
             // 1. Get Game Name
             const gameName = row.children[0].innerText.trim();
             
-            // Determine Suffix based on Mode or Game Name
-            let suffix = " box art";
+            // 2. Determine Suffix (Inverted Logic: Default to Switch, Exception for PC)
+            // Most handheld games (Indies, Retro, Nintendo) have Switch box art which is vertical and consistent.
+            // We only want "PC" art for heavy AAA games that never released on Switch.
             
-            // Check for Nintendo-specific titles first
-            const nintendoTitles = ["Zelda", "Pokémon", "Mario", "Metroid", "Smash Bros", "Animal Crossing"];
-            const isNintendo = nintendoTitles.some(t => gameName.includes(t));
+            const pcOnlyTitles = [
+                "Cyberpunk 2077", 
+                "Elden Ring", 
+                "GTA V", 
+                "Need for Speed Rivals", 
+                "Tomb Raider",
+                "Traveller’s Rest",
+                "Megabonk", // Assuming this doesn't have a Switch physical
+                "Hades 2"   // Currently EA only, no Switch box yet
+            ];
 
-            if (activeMode === 'switch' || isNintendo) {
-                suffix = " Nintendo Switch box art";
-            } else if (activeMode === 'windows') {
-                suffix = " PC box art";
-            } else if (activeMode === 'combined') {
-                // Heuristic fallback for combined mode
-                 suffix = isNintendo ? " Nintendo Switch box art" : " PC box art";
+            const isPCOnly = pcOnlyTitles.some(t => gameName.includes(t));
+            let suffix = " Nintendo Switch Box Art"; // DEFAULT to Switch for consistency
+
+            if (activeMode === 'windows' || isPCOnly) {
+                suffix = " PC Box Art";
             }
+            
+            // 3. Construct URL
+            // We use 'Nintendo Switch Box Art' to be very specific for the search engine
+            const query = encodeURIComponent(gameName + suffix);
+            const boxArtUrl = `https://tse2.mm.bing.net/th?q=${query}&w=300&h=450&c=7&rs=1&p=0`;
 
-            // 2. Fetch/Mock Art (Using logic from handheld.html)
+            // Fallback for loading errors
             const initials = gameName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
             const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
-            // Simple approach: fallback to placeholder, real logic needs API
-            const boxArtUrl = `https://tse2.mm.bing.net/th?q=${encodeURIComponent(gameName + suffix)}&w=300&h=450&c=7&rs=1&p=0`;
 
-            // 3. Build List of Results
+            // ... The rest of your loop logic (building resultsHtml) remains the same ...
+            
             let resultsHtml = '';
             for(let i=1; i<=DEVICE_COUNT; i++) {
-                if(!columnVisibility[i]) continue; // Skip hidden columns if you want, or show all? 
-                // Let's show all in modal even if hidden in table for full context
+                if(!columnVisibility[i]) continue;
                 
                 const cell = row.children[i];
                 if(!cell) continue;
                 
-                // Get value (handle current mode states like Value Mode)
                 let val = cell.innerText.trim();
-                // If in Value Mode, the innerText is price, we want the original FPS usually
-                // But if dataset.original exists, use that for FPS
                 if(cell.dataset.original) val = cell.dataset.original;
                 
                 const deviceName = deviceNames[i];
@@ -1061,7 +1067,7 @@
                 resultsHtml += `
                     <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/5">
                         <span class="font-bold text-sm ${colorClass}">${deviceName}</span>
-                        <span class="font-mono text-white text-lg">${val} <span class="text-xs text-white/30">FPS</span></span>
+                        <span class="font-body font-bold text-white text-lg">${val} <span class="text-xs text-white/30 font-normal">FPS</span></span>
                     </div>
                 `;
             }
