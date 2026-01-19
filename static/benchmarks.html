@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan Retro | Benchmarks</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -20,15 +20,15 @@
         :root {
             --bg-deep: #1a0b2e;
             --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
-            
-            --card-border: rgba(255, 255, 255, 0.2); 
+
+            --card-border: rgba(255, 255, 255, 0.2);
             --card-border-hover: rgba(255, 255, 255, 0.5);
-            
+
             --accent-yellow: #fbbf24;
-            --accent-red: #ef4444; 
+            --accent-red: #ef4444;
             --accent-purple: #a855f7;
             --accent-cyan: #22d3ee;
-            
+
             --text-main: #ffffff;
             --text-sub: #e2e8f0;
 
@@ -52,7 +52,7 @@
         .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
         .font-pixel { font-family: 'VT323', monospace; }
         .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
+
         /* Bento Card Styles (Flat Theme) */
         .bento-card {
             border: 2px solid var(--card-border);
@@ -60,7 +60,7 @@
             transition: all 0.2s ease-in-out;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.3); 
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
             transform: translateY(0);
             background-color: var(--bg-card); /* Default card bg */
         }
@@ -109,7 +109,7 @@
         }
 
         /* --- BENCHMARK SPECIFIC --- */
-        
+
         /* Controls Panel Dynamic Colors */
         #controlsPanel {
             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
@@ -176,7 +176,7 @@
             border-spacing: 0;
             color: var(--text-sub);
         }
-        
+
         .rr-table th {
             background: #2E1A47; /* Matching dark theme header from handheld logic */
             padding: 16px;
@@ -189,11 +189,11 @@
             border-bottom: 2px solid rgba(255,255,255,0.1);
             position: sticky;
             top: 0;
-            z-index: 50; 
+            z-index: 50;
             vertical-align: bottom;
             color: var(--accent-cyan);
         }
-        
+
         .rr-table th:first-child {
             text-align: left;
             position: sticky;
@@ -222,7 +222,7 @@
             left: 0;
             background: #2a1540; /* Slightly different for row header */
             border-right: 2px solid rgba(255,255,255,0.1);
-            z-index: 40; 
+            z-index: 40;
         }
 
         /* Row hover effect */
@@ -233,7 +233,7 @@
         .rr-table tbody tr:hover td {
             background: rgba(255,255,255,0.1);
         }
-        
+
         /* Highlight Cells */
         .best-cell {
             background: rgba(16, 185, 129, 0.2) !important;
@@ -275,7 +275,7 @@
 
     <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
         <div class="container mx-auto px-4 h-24 flex justify-between items-center">
-            
+
             <a href="/" class="flex items-center gap-3 group shrink-0">
                 <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
@@ -285,7 +285,7 @@
                     <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
                 </div>
             </a>
-            
+
             <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
                 <a href="/reviews" class="nav-pill"><i data-lucide="star" class="w-3.5 h-3.5"></i> Reviews</a>
                 <a href="/benchmarks" class="nav-pill active"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Benchmarks</a>
@@ -293,7 +293,7 @@
                 <a href="/gotw" class="nav-pill"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> GOTW</a>
                 <a href="/patrons" class="nav-pill"><i data-lucide="heart" class="w-3.5 h-3.5"></i> Patrons</a>
             </nav>
-            
+
             <div class="flex items-center gap-4">
                 <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
@@ -308,17 +308,17 @@
                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
                 </div>
-    
+
                 <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
                     <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
                 </a>
-                
+
                 <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
-        
+
         <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
              <div class="grid grid-cols-2 gap-2 mb-2">
                  <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="star" class="w-4 h-4"></i> Reviews</a>
@@ -328,7 +328,7 @@
                  <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="gamepad-2" class="w-4 h-4"></i> GOTW</a>
                  <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i> Patrons</a>
              </div>
-             
+
              <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
                  <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
                  <div class="flex gap-3 flex-wrap justify-end">
@@ -356,7 +356,7 @@
         </section>
 
         <div id="controlsPanel" class="bento-card p-6 mb-8 panel-yellow" data-aos="fade-up">
-            
+
             <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-white/20">
                 <div class="flex items-center gap-3">
                     <span class="font-retro text-xs text-white/50 uppercase tracking-widest">System:</span>
@@ -390,7 +390,7 @@
 
         <div id="benchCard" class="bento-card p-0 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
             <div class="overflow-x-auto custom-scrollbar w-full max-h-[800px]">
-                
+
                 <table class="rr-table" data-mode="combined">
                     <thead>
                         <tr>
@@ -432,7 +432,7 @@
                         <tr><td>The Witcher 3</td><td>14</td><td>30</td><td>42</td><td>35</td><td>41</td><td>75</td><td>Untested</td></tr>
                     </tbody>
                 </table>
-                
+
                 <table class="rr-table hidden" data-mode="switch">
                     <thead>
                         <tr>
@@ -509,7 +509,7 @@
             <button id="toggleNotes" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-xl font-retro text-xs transition-all">
                 <i data-lucide="info" class="inline w-4 h-4 mr-2"></i> SHOW NOTES
             </button>
-            
+
             <div id="notesContent" class="hidden mt-6 bento-card p-8 text-left max-w-4xl mx-auto">
                  <div class="grid md:grid-cols-2 gap-8 mb-8">
                      <div>
@@ -531,7 +531,7 @@
                         </p>
                      </div>
                  </div>
-                 
+
                  <div class="mt-8 pt-8 border-t border-white/10">
                      <h3 class="font-retro text-purple-400 text-sm mb-4">Device Specs & Pricing (Time of Filming)</h3>
                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 text-xs">
@@ -597,7 +597,7 @@
         </div>
 
     </main>
-    
+
     <div id="game-details-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="game-modal-bg"></div>
         <div id="game-card-wrapper" class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl w-full max-w-2xl shadow-2xl animate-popIn flex flex-col max-h-[90vh] overflow-hidden">
@@ -693,7 +693,7 @@
                 el.style.color = '';
                 el.style.fontWeight = '';
                 if (el.dataset.original) {
-                    el.innerHTML = el.dataset.original; 
+                    el.innerHTML = el.dataset.original;
                     delete el.dataset.original;
                 }
             });
@@ -812,7 +812,7 @@
                     if (!cell.dataset.original) {
                         cell.dataset.original = cell.innerText.trim();
                     }
-                    
+
                     const val = parseFloat(cell.dataset.original);
                     if (!isNaN(val) && val > 0) {
                         const cost = prices[i] / val;
@@ -830,7 +830,7 @@
                     if (!isNaN(val) && val > 0) {
                         const cost = prices[i] / val;
                         const isBest = (Math.abs(cost - minCost) < 0.0001);
-                        
+
                         if (isBest) {
                             cell.innerHTML = `<span class="text-green-400 font-bold">$${cost.toFixed(2)}</span>`;
                             cell.classList.add('best-cell');
@@ -850,13 +850,13 @@
             rows.forEach(row => {
                 const nameCell = row.children[0];
                 const gameName = nameCell.innerText.trim();
-                
+
                 const demanding = [
                     'Elden Ring','Cyberpunk 2077','Need for Speed Rivals',
                     'Pokémon Sword (Open)','Pokémon Sword (Battle)',
                     'Zelda: Breath of the Wild','Zelda: Tears of the Kingdom','The Witcher 3'
                 ].includes(gameName);
-                
+
                 const threshold = demanding ? 30 : 60;
 
                 for (let i = 1; i <= DEVICE_COUNT; i++) {
@@ -872,14 +872,14 @@
         }
 
         // --- HANDLERS ---
-        
+
         // Modes
         document.querySelectorAll('.mode-toggle').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.mode-toggle').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 activeMode = btn.dataset.mode;
-                
+
                 // Update Control Panel Style
                 controlsPanel.classList.remove('panel-yellow', 'panel-red', 'panel-blue');
                 if (activeMode === 'combined') controlsPanel.classList.add('panel-yellow');
@@ -887,7 +887,7 @@
                 else if (activeMode === 'windows') controlsPanel.classList.add('panel-blue');
 
                 updateTableVisibility();
-                
+
                 // Re-apply current feature
                 if (highlightOn) applyHighlight();
                 if (colorModeOn) applyColorMode();
@@ -919,7 +919,7 @@
             document.querySelector(`.feat-${f}`).addEventListener('click', (e) => {
                 const btn = e.target.closest('button');
                 const wasActive = btn.classList.contains('active');
-                
+
                 // Reset all
                 feats.forEach(x => {
                     document.querySelector(`.feat-${x}`).classList.remove('active');
@@ -928,9 +928,9 @@
                     if(x === 'value') valueModeOn = false;
                     if(x === 'great') runsGreatOn = false;
                 });
-                
+
                 clearEffects();
-                
+
                 if (!wasActive) {
                     btn.classList.add('active');
                     if(f === 'highlight') { highlightOn = true; applyHighlight(); }
@@ -962,7 +962,7 @@
                 mobileMenu.classList.toggle('hidden');
             });
         }
-        
+
         // Sorting Logic
         document.querySelectorAll('th.sortable').forEach(th => {
             th.addEventListener('click', function() {
@@ -971,14 +971,14 @@
                 const rowsArray = Array.from(tbody.rows);
                 const colIndex = Array.from(th.parentNode.children).indexOf(th);
                 const isAsc = th.dataset.sortDir === 'asc';
-                
+
                 table.querySelectorAll('th').forEach(h => h.removeAttribute('data-sort-dir'));
                 th.dataset.sortDir = isAsc ? 'desc' : 'asc';
-                
+
                 rowsArray.sort((a, b) => {
                     const cellA = a.children[colIndex];
                     const cellB = b.children[colIndex];
-                    
+
                     const getCleanVal = (cell) => {
                         let val = cell.innerText.trim();
                         if (val.startsWith('$')) val = val.substring(1);
@@ -1001,7 +1001,7 @@
         });
 
         // --- GAME MODAL LOGIC ---
-        
+
         const modal = document.getElementById('game-details-modal');
         const modalContent = document.getElementById('game-modal-content');
         const closeBtn = document.getElementById('close-game-modal');
@@ -1024,17 +1024,17 @@
             const GAME_COVERS = {
   // --- Nintendo / Exclusives ---
   "Captain Toad: Treasure Tracker":
-    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/c/captain-toad-treasure-tracker-switch/hero",
+    "https://static.wikia.nocookie.net/nintendo/images/e/e9/Captain_Toad_Treasure_Switch_EU.jpg/revision/latest?cb=20190915115715&path-prefix=en",
   "Golf Story":
-    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/g/golf-story-switch/hero",
+    "https://images.launchbox-app.com/e31a54d2-7ba1-443d-864e-cb9a680f6e75.jpg",
   "Pokémon Sword (Battle)":
-    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/p/pokemon-sword-switch/hero",
+    "https://archives.bulbagarden.net/media/upload/thumb/4/47/Sword_EN_boxart.png/640px-Sword_EN_boxart.png",
   "Pokémon Sword (Open)":
-    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/p/pokemon-sword-switch/hero",
+    "https://archives.bulbagarden.net/media/upload/thumb/4/47/Sword_EN_boxart.png/640px-Sword_EN_boxart.png",
   "Zelda: Breath of the Wild":
-    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-breath-of-the-wild-switch/hero",
+    "https://images-na.ssl-images-amazon.com/images/I/91DgUPPHMGL._SL1500_.jpg",
   "Zelda: Tears of the Kingdom":
-    "https://assets.nintendo.com/image/upload/ar_2:3,c_pad,dpr_2.0,f_auto,q_auto,w_400/b_white/ncom/en_US/games/switch/t/the-legend-of-zelda-tears-of-the-kingdom-switch/hero",
+    "https://static.wikia.nocookie.net/nintendo/images/2/2a/The_Legend_of_Zelda_Tears_of_the_Kingdom_box_art_South_Korea.png/revision/latest/scale-to-width-down/250?cb=20240130073833&path-prefix=en",
 
   // FIX: your Nintendo "Echoes" slug is often the one that breaks.
   // This one is a direct, hotlinkable cover image.
@@ -1053,7 +1053,7 @@
 
   // FIX: use the actual full-size Wikipedia file (not a random thumbnail).
   "FIFA 18":
-    "https://upload.wikimedia.org/wikipedia/en/d/d4/FIFA18cover.png", // :contentReference[oaicite:2]{index=2}
+    "https://static.wikia.nocookie.net/nintendo/images/f/fb/FIFA_18_%28NA_-_Final%29.png/revision/latest?cb=20170914032140&path-prefix=en", // :contentReference[oaicite:2]{index=2}
 
   "Gris":
     "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/683320/library_600x900.jpg",
@@ -1085,7 +1085,7 @@
 
   // --- Niche / manual fallbacks ---
   "Megabonk":
-    "https://placehold.co/600x900/4c1d95/ffffff?text=MEGABONK",
+    "https://gfn.ru/media/images/box_art_image-megabonk-b6f8044a.original.jpg",
 };
 
 
@@ -1095,7 +1095,7 @@
             // 4. Fail-safe (Only searches if you add a new game and forget to update the list above)
             if (!boxArtUrl) {
                 console.warn("Missing explicit cover for:", gameName);
-                const suffix = " Box Art"; 
+                const suffix = " Box Art";
                 boxArtUrl = `https://tse2.mm.bing.net/th?q=${encodeURIComponent(gameName + suffix)}&w=300&h=450&c=7&rs=1&p=0`;
             }
 
@@ -1106,16 +1106,16 @@
             let resultsHtml = '';
             for(let i=1; i<=DEVICE_COUNT; i++) {
                 if(!columnVisibility[i]) continue;
-                
+
                 const cell = row.children[i];
                 if(!cell) continue;
-                
+
                 let val = cell.innerText.trim();
                 if(cell.dataset.original) val = cell.dataset.original;
-                
+
                 const deviceName = deviceNames[i];
                 const colorClass = deviceColors[i];
-                
+
                 resultsHtml += `
                     <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/5">
                         <span class="font-bold text-sm ${colorClass}">${deviceName}</span>
@@ -1136,7 +1136,7 @@
                     <div class="w-full md:w-2/3 flex flex-col">
                         <h2 class="font-display font-black text-3xl text-white mb-1 leading-tight">${gameName}</h2>
                         <span class="text-white/40 text-xs font-bold uppercase tracking-widest mb-6">Benchmark Results</span>
-                        
+
                         <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
                             ${resultsHtml}
                         </div>
