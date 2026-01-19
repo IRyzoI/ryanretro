@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan Retro | Device Hub</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -22,16 +22,16 @@
         :root {
             --bg-deep: #1a0b2e;
             --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
-            
+
             /* Friendly Outlined Theme Colors */
-            --card-border: rgba(255, 255, 255, 0.2); 
+            --card-border: rgba(255, 255, 255, 0.2);
             --card-border-hover: rgba(255, 255, 255, 0.5);
-            
+
             --accent-yellow: #fbbf24;
-            --accent-red: #ef4444; 
+            --accent-red: #ef4444;
             --accent-purple: #a855f7;
             --accent-cyan: #22d3ee;
-            
+
             --text-main: #ffffff;
             --text-sub: #e2e8f0;
 
@@ -54,16 +54,16 @@
         .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
         .font-pixel { font-family: 'VT323', monospace; }
         .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        
+
         /* --- BENTO GRID COMPONENTS --- */
-        
+
         .bento-card {
             border: 2px solid var(--card-border);
             border-radius: 32px;
             transition: all 0.2s ease-in-out;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.3); 
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
             transform: translateY(0);
         }
         .bento-card:hover {
@@ -144,16 +144,16 @@
             display: flex; justify-content: center; align-items: center; gap: 8px;
             transition: all 0.2s;
             border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 6px 0 #d97706; 
+            box-shadow: 0 6px 0 #d97706;
         }
-        .btn-yellow:hover { 
-            background: #fcd34d; 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 0 #d97706; 
+        .btn-yellow:hover {
+            background: #fcd34d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #d97706;
         }
-        .btn-yellow:active { 
-            transform: translateY(4px); 
-            box-shadow: 0 0 0 #d97706; 
+        .btn-yellow:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #d97706;
         }
 
         /* Nav & Social Buttons */
@@ -172,7 +172,7 @@
             background: rgba(255,255,255,0.1);
             border-color: rgba(255,255,255,0.2);
         }
-        
+
         .social-btn {
             width: 36px; height: 36px;
             display: flex; align-items: center; justify-content: center;
@@ -231,7 +231,7 @@
             border-color: var(--card-border-hover);
             box-shadow: 0 12px 0 rgba(0,0,0,0.3);
         }
-        
+
         .shiny-btn { overflow: hidden; position: relative; }
         @keyframes shine-sweep { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
         .shiny-btn::after {
@@ -286,7 +286,7 @@
 
     <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
         <div class="container mx-auto px-4 h-24 flex justify-between items-center">
-            
+
             <a href="/" class="flex items-center gap-3 group shrink-0">
                 <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
@@ -296,17 +296,17 @@
                     <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
                 </div>
             </a>
-            
+
             <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
                 <a href="/reviews" class="nav-pill">Reviews</a>
                 <a href="/benchmarks" class="nav-pill">Benchmarks</a>
-                <a href="/comparisons" class="nav-pill">Comparisons</a>
+                <a href="/compatibility" class="nav-pill">Comparisons</a>
                 <a href="/gotw" class="nav-pill">Game of the Week</a>
                 <a href="/patrons" class="nav-pill">Patrons</a>
             </nav>
-            
+
             <div class="flex items-center gap-4">
-                
+
                 <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
                     <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
@@ -324,32 +324,32 @@
                 <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
                     <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
                 </a>
-                
+
                 <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
-        
+
 <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
              <div class="grid grid-cols-2 gap-2 mb-2">
                  <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Reviews</a>
-                 
+
                  <a href="/benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Benchmarks</a>
-                 
-                 <a href="/comparisons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Comparisons</a>
-                 
+
+                 <a href="/handheld" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Comparisons</a>
+
                  <a href="/store" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Shop</a>
-                 
+
                  <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2">
                      GOTW <i data-lucide="gamepad-2" class="w-4 h-4"></i>
                  </a>
-                 
+
                  <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2">
                      Patrons <i data-lucide="heart" class="w-4 h-4"></i>
                  </a>
              </div>
-             
+
              <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
                  <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
                  <div class="flex gap-3 flex-wrap justify-end">
@@ -373,7 +373,7 @@
 
         <section id="hub" class="mb-8" data-aos="fade-up">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                
+
                 <div class="lg:col-span-4 h-full">
                     <div class="bento-card card-violet p-6 flex flex-col h-full relative overflow-hidden">
                         <div class="flex justify-between items-start mb-4 relative z-10">
@@ -414,7 +414,7 @@
                         <div id="main-video-embed" class="video-container mb-4 border-2 border-white/10 flex-grow min-h-[300px]">
                             <div class="absolute inset-0 flex items-center justify-center text-white/20 font-display font-bold animate-pulse">LOADING VIDEO...</div>
                         </div>
-                        
+
                         <div class="px-2">
                             <h2 id="video-title" class="text-2xl font-display font-bold text-white line-clamp-1 mb-1">Loading Video Title...</h2>
                             <p class="text-sm font-medium text-white/60 font-mono" id="video-date">...</p>
@@ -424,13 +424,13 @@
 
                 <div class="lg:col-span-12">
                     <div class="bento-card card-teal p-8 flex flex-col md:flex-row gap-8">
-                        
+
                         <div class="flex-1 flex flex-col">
                             <div class="mb-4">
                                 <span class="text-white/70 font-bold text-xs uppercase tracking-widest border-b-2 border-white/20 pb-1">Ryan's Verdict</span>
                                 <h3 class="font-display font-bold text-3xl text-white leading-tight mt-2">Final Thoughts</h3>
                             </div>
-                            
+
                             <div class="relative pl-6 border-l-4 border-white/30 bg-black/20 p-6 rounded-r-2xl flex-grow">
                                 <p id="review-summary" class="text-lg font-medium text-white leading-relaxed">
                                     "Loading review summary..."
@@ -470,7 +470,7 @@
 
         <section id="database" data-aos="fade-up" class="mb-0">
             <div id="compatibility" class="card-3d rounded-3xl p-6 md:p-10 relative overflow-hidden">
-                
+
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <h2 class="font-retro text-3xl text-white drop-shadow-md">Game Compatibility</h2>
                     <div id="variant-tabs" class="hidden"><div class="inline-flex flex-wrap gap-2 bg-black/20 p-1 rounded-lg"></div></div>
@@ -495,7 +495,7 @@
                             <button data-perf="Playable" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-playable font-bold border border-transparent transition-colors">Playable</button>
                             <button data-perf="Unplayable" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-unplayable font-bold border border-transparent transition-colors">Unplayable</button>
                         </div>
-                        
+
                         <div class="flex gap-4 w-full md:w-auto">
                             <div class="relative flex-grow md:flex-grow-0 md:w-64">
                                 <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
@@ -562,12 +562,12 @@
                         </div>
 
                         <div id="dynamic-fields" class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                        
+
                         <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-gray-400 mb-1">Notes (Optional)</label>
                             <textarea name="notes" class="form-input font-body" rows="2" placeholder="Any special settings?"></textarea>
                         </div>
-                        
+
                         <div class="md:col-span-2 flex justify-end gap-3 mt-4 pt-4 border-t border-white/10">
                             <button type="button" id="cancel-btn" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-retro text-xs transition-colors">Cancel</button>
                             <button type="submit" class="px-6 py-2 rounded bg-[#fbbf24] hover:bg-white text-[#451a03] font-retro text-xs shadow-lg transition-colors flex items-center justify-center gap-2">Submit</button>
@@ -623,116 +623,220 @@
     }
 
     const norm = s => (s || '').trim().toLowerCase();
-    
+
     // --- DATA CONFIGURATION ---
     // Merged your full list here so all links work
     const DEVICE_CONFIG = {
-        "Retroid Pocket 5": {
-            name: "Retroid Pocket 5",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5.png",
-            link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
-            linkText: "Buy Now",
-            chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
-            score: 9.5,
-            reviewShort: "A beautiful OLED screen and surprisingly great performance make the Retroid Pocket 5 one of the best handhelds of 2024 and 2025. While I'd recommend the Retroid Pocket G2 to new buyers as it's essentially exactly the same as the RP5 but with a better screen, the RP5 remains an incredible handheld. Especially now it's under $200. Anything up to light Switch and light PC gaming is playable. Check out my YouTube channel for 70+ videos on this masterpiece of a handheld.",
-            pros: ["Stunning OLED Screen", "Great Performance", "Premium Build Quality"],
-            cons: ["D-pad up top is uncomfortable for some", "Comfort could be better"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 5", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
-            aliases: ["Retroid Pocket5","RP5"],
-            variants: [{id: "sd865", label: "Snapdragon 865"}]
-        },
-        "Retroid Pocket 6": {
-            name: "Retroid Pocket 6",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
-            link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
-            chipset: "Snapdragon 8 Gen 2", screen: "5.5\" 1080p OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
-            score: 9.8,
-            reviewShort: "A flagship killer. Switch emulation in your pocket has never been this good.",
-            pros: ["Insane Power", "Active Cooling", "Analog Triggers"],
-            cons: ["Price increase", "Heavier"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 6", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
-            aliases: ["Retroid 6","RP6"],
-            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
-        },
-        "Retroid Pocket G2": {
-            name: "Retroid Pocket G2",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png",
-            link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
-            chipset: "Snapdragon G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
-            score: 8.5,
-            reviewShort: "A big screen streaming beast, essentially a Retroid Pocket 5 XL.",
-            pros: ["Huge Screen", "Comfortable", "Great Streaming"],
-            cons: ["LCD not OLED", "Lower Performance than RP6"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket g2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
-            aliases: ["Retroid G2", "RP G2"],
-            variants: [{id: "g2g2", label: "Snapdragon G2 Gen 2"}]
-        },
-        "Odin 2 Portal": {
-            name: "Odin 2 Portal",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/portal.png",
-            link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
-            chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
-            score: 9.7,
-            reviewShort: "The premium OLED handheld experience. Expensive, but flawless.",
-            pros: ["Incredible 120Hz OLED", "Top Tier Performance", "Premium Build"],
-            cons: ["Expensive", "Large Footprint"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 portal", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
-            aliases: ["Odin2 Portal"],
-            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
-        },
-        "Odin 2": {
-            name: "AYN Odin 2",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
-            link: "https://www.ayntec.com/collections/all",
-            chipset: "SD 8 Gen 2", screen: "6\" 1080p IPS", battery: "8000 mAh", os: "Android 13", ram: "8-16GB", storage: "128-512GB",
-            score: 9.9,
-            reviewShort: "The endurance champion. Nothing beats the Odin 2 for battery life.",
-            pros: ["Infinite Battery", "Perfect Ergonomics", "Runs Everything"],
-            cons: ["IPS Screen", "Bulky"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202",
-            aliases: ["AYN Odin 2"],
-            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
-        },
-        "Odin 2 Mini": {
-            name: "Odin 2 Mini",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/odin2-portal.png",
-            link: "https://www.ayntec.com/collections/all",
-            chipset: "SD 8 Gen 2", screen: "5\" Mini LED", battery: "5000 mAh", os: "Android 13", ram: "12GB", storage: "256GB",
-            score: 9.0,
-            reviewShort: "Power of the Odin 2 in a Vita-sized shell. The Mini-LED is bright but runs hot.",
-            pros: ["Mini LED Brightness", "Pocketable Power", "Vita Aesthetics"],
-            cons: ["Battery Life Average", "Gets Hot"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 mini", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20mini",
-            aliases: ["Odin2 Mini"],
-            variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
-        },
-        "Retroid Pocket Flip 2": {
-            name: "Retroid Pocket Flip 2",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/flip%20hero.png",
-            link: "https://www.goretroid.com/products/retroid-pocket-flip-2",
-            chipset: "Snapdragon 865", screen: "4.7\" Touch", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
-            score: 9.2,
-            reviewShort: "Clamshell perfection returns with updated internals.",
-            pros: ["Clamshell Design", "Protectable Screen", "Good Sliders"],
-            cons: ["Hinge durability concern", "Smaller screen"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket flip 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20flip%202",
-            aliases: ["RP Flip 2", "Flip 2"],
-            variants: [{id: "sd865", label: "Snapdragon 865"}]
-        },
-        "Retroid Pocket Classic": {
-            name: "Retroid Pocket Classic",
-            img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/classic%20colors.png",
-            link: "https://www.goretroid.com/products/retroid-pocket-classic",
-            chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
-            score: 9.4,
-            reviewShort: "The ultimate 4:3 device for retro purists.",
-            pros: ["4:3 OLED", "Perfect for PS2/GC", "Classic aesthetics"],
-            cons: ["Not for modern gaming", "Mono speaker"],
-            ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket classic", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
-            aliases: ["Retroid Classic","RP Classic"],
-            variants: [{id: "g1g2", label: "Snapdragon G1 Gen 2"}]
-        }
-    };
+    "Retroid Pocket 5": {
+        name: "Retroid Pocket 5",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7oKv7uT",
+        linkText: "Buy Now",
+        chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
+        score: 9.5,
+        reviewShort: "A beautiful OLED screen and surprisingly great performance make the Retroid Pocket 5 one of the best handhelds. Surprisingly premium for the price.",
+        pros: ["Stunning OLED Screen", "Great Performance", "Premium Build Quality"],
+        cons: ["D-pad up top is uncomfortable for some", "Comfort could be better"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 5", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
+        aliases: ["Retroid Pocket5","RP5"],
+        variants: [{id: "sd865", label: "Snapdragon 865"}]
+    },
+    "Retroid Pocket 6": {
+        name: "Retroid Pocket 6",
+        img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
+        link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon 8 Gen 2", screen: "5.5\" 1080p OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
+        score: 9.8,
+        reviewShort: "A flagship killer. Switch emulation in your pocket has never been this good.",
+        pros: ["Insane Power", "Active Cooling", "Analog Triggers"],
+        cons: ["Price increase", "Heavier"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 6", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
+        aliases: ["Retroid 6","RP6"],
+        variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+    },
+    "Retroid Pocket G2": {
+        name: "Retroid Pocket G2",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
+        score: 8.5,
+        reviewShort: "A big screen streaming beast, essentially a Retroid Pocket 5 XL.",
+        pros: ["Huge Screen", "Comfortable", "Great Streaming"],
+        cons: ["LCD not OLED", "Lower Performance than RP6"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket g2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
+        aliases: ["Retroid G2", "RP G2"],
+        variants: [{id: "g2g2", label: "Snapdragon G2 Gen 2"}]
+    },
+    "Retroid Pocket Classic": {
+        name: "Retroid Pocket Classic",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-classic",
+        chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
+        score: 9.4,
+        reviewShort: "The ultimate 4:3 device for retro purists.",
+        pros: ["4:3 OLED", "Perfect for PS2/GC", "Classic aesthetics"],
+        cons: ["Not for modern gaming", "Mono speaker"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket classic", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
+        aliases: ["Retroid Classic","RP Classic"],
+        variants: [{id: "g1g2", label: "Snapdragon G1 Gen 2"}]
+    },
+    "Retroid Pocket Mini": {
+        name: "Retroid Pocket Mini",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld",
+        chipset: "Snapdragon 865", screen: "3.7\" 960p OLED", battery: "4000 mAh", os: "Android 13", ram: "6GB", storage: "128GB",
+        score: 9.6,
+        reviewShort: "A 4:3 OLED masterpiece. The perfect pocket companion with way more power than it needs.",
+        pros: ["Incredible OLED", "Very Powerful", "Pocketable"],
+        cons: ["Small screen for streaming", "Pricey for size"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket mini", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20mini",
+        aliases: ["RP Mini"],
+        variants: [{id: "sd865", label: "Snapdragon 865"}]
+    },
+    "Retroid Pocket Flip 2": {
+        name: "Retroid Pocket Flip 2",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-flip-2",
+        chipset: "Snapdragon 865", screen: "4.7\" Touch", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
+        score: 9.2,
+        reviewShort: "Clamshell perfection returns with updated internals.",
+        pros: ["Clamshell Design", "Protectable Screen", "Good Sliders"],
+        cons: ["Hinge durability concern", "Smaller screen"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket flip 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20flip%202",
+        aliases: ["RP Flip 2", "Flip 2"],
+        variants: [{id: "sd865", label: "Snapdragon 865"}]
+    },
+    "Odin 2 Portal": {
+        name: "Odin 2 Portal",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png",
+        link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
+        chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
+        score: 9.7,
+        reviewShort: "The premium OLED handheld experience. Expensive, but flawless.",
+        pros: ["Incredible 120Hz OLED", "Top Tier Performance", "Premium Build"],
+        cons: ["Expensive", "Large Footprint"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 portal", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
+        aliases: ["Odin2 Portal"],
+        variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+    },
+    "AYN Odin 3": {
+        name: "AYN Odin 3",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png",
+        link: "https://www.ayntec.com/",
+        chipset: "Snapdragon 8 Elite", screen: "6\" 1080p 120Hz AMOLED", battery: "8000 mAh", os: "Android 15", ram: "12-24GB", storage: "256GB+",
+        score: 9.9,
+        reviewShort: "The most powerful Android handheld ever made. Overkill in the best way possible.",
+        pros: ["Snapdragon 8 Elite", "120Hz AMOLED", "Wi-Fi 7"],
+        cons: ["Very Expensive", "Overkill for retro"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "ayn odin 3", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=ayn%20odin%203",
+        aliases: ["Odin3"],
+        variants: [{id: "sd8elite", label: "Snapdragon 8 Elite"}]
+    },
+    "Ayaneo Konkr Pocket Fit": {
+        name: "Ayaneo Konkr Pocket Fit",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/konkr.png",
+        link: "https://www.ayaneo.com/",
+        chipset: "Snapdragon G3x Gen 3", screen: "6\" 1080p 144Hz LCD", battery: "8000 mAh", os: "Android", ram: "8GB+", storage: "128GB+",
+        score: 9.0,
+        reviewShort: "A surprising LCD flagship killer from Ayaneo with a focus on ergonomics.",
+        pros: ["144Hz Screen", "Snapdragon G3x Gen 3", "Ergonomic Grip"],
+        cons: ["LCD not OLED", "Fan Noise"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "ayaneo konkr pocket fit", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=ayaneo%20konkr%20pocket%20fit",
+        aliases: ["Konkr Pocket Fit", "Konkr Fit"],
+        variants: [{id: "g3xgen3", label: "Snapdragon G3x Gen 3"}]
+    },
+    "Anbernic RG34XX": {
+        name: "Anbernic RG34XX",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png",
+        link: "https://anbernic.com/",
+        chipset: "Allwinner H700", screen: "3.4\" 720x480 IPS", battery: "3500 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
+        score: 9.0,
+        reviewShort: "The Game Boy Advance form factor perfected. 3x pixel scaling on a 3:2 screen.",
+        pros: ["Perfect GBA Scaling", "Horizontal Design", "Great Price"],
+        cons: ["Low RAM", "No Android"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "anbernic rg34xx", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=anbernic%20rg34xx",
+        aliases: ["RG34XX"],
+        variants: [{id: "h700", label: "Allwinner H700"}]
+    },
+    "MagicX Zero 40": {
+        name: "MagicX Zero 40",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/magicxzero40.png",
+        link: "https://shop.magicx.team/",
+        chipset: "Allwinner A133P", screen: "4\" 480x800 IPS", battery: "4300 mAh", os: "Android", ram: "2GB", storage: "TF Card",
+        score: 8.0,
+        reviewShort: "Vertical screen perfection designed specifically for DS emulation.",
+        pros: ["Vertical Screen", "Great for DS", "Good Battery"],
+        cons: ["Low Resolution", "Weak Chipset"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "magicx zero 40", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=magicx%20zero%2040",
+        aliases: ["Zero 40"],
+        variants: [{id: "a133p", label: "Allwinner A133P"}]
+    },
+    "MagicX XU20 V32": {
+        name: "MagicX XU20 V32",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/xuretroxu20v32.png",
+        link: "https://www.xuretro.com/",
+        chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3200 mAh", os: "Android 10", ram: "2GB", storage: "TF Card",
+        score: 7.5,
+        reviewShort: "A tiny 4:3 Android handheld. Great resolution for such a small device.",
+        pros: ["High Res Screen", "Pocketable", "Cheap Android"],
+        cons: ["Old Android 10", "Small Battery"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "magicx xu20 v32", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=magicx%20xu20%20v32",
+        aliases: ["XU20 V32"],
+        variants: [{id: "a133p", label: "Allwinner A133P"}]
+    },
+    "TrimUI Brick": {
+        name: "TrimUI Brick",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png",
+        link: "https://www.trimui.com/",
+        chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3000 mAh", os: "Linux", ram: "1GB", storage: "8GB eMMC",
+        score: 8.5,
+        reviewShort: "Premium feel, high res screen, and no sticks. A minimalist's dream.",
+        pros: ["Premium Build", "High Res Screen", "Simple UI"],
+        cons: ["No Joysticks", "Gets Warm"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "trimui brick", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=trimui%20brick",
+        aliases: ["Smart Brick"],
+        variants: [{id: "a133p", label: "Allwinner A133P"}]
+    },
+    "Vortex F5": {
+        name: "Vortex F5",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/f5.png",
+        link: "https://retrohandhelds.gg/",
+        chipset: "Rockchip RK3566", screen: "5.5\" 720p IPS", battery: "5000 mAh", os: "Linux", ram: "1GB", storage: "8GB",
+        score: 7.5,
+        reviewShort: "A solid budget Linux handheld with a generous 5.5 inch screen.",
+        pros: ["Large Screen", "Comfortable", "Good Battery"],
+        cons: ["Older Chipset", "Low RAM"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "vortex f5 handheld", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=vortex%20f5",
+        aliases: ["QRD Vortex F5"],
+        variants: [{id: "rk3566", label: "Rockchip RK3566"}]
+    },
+    "Mangmi Air X": {
+        name: "Mangmi Air X",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png",
+        link: "https://thememorycore.com/",
+        chipset: "Snapdragon 662", screen: "5.5\" 1080p IPS", battery: "5000 mAh", os: "Android 14", ram: "4GB", storage: "64GB",
+        score: 8.0,
+        reviewShort: "A budget Android entry with a decent 1080p screen and good ergonomics.",
+        pros: ["1080p Screen", "Android 14", "Good Build"],
+        cons: ["Weak Chipset", "No Video Out"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "mangmi air x", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=mangmi%20air%20x",
+        aliases: ["Mangmi X"],
+        variants: [{id: "sd662", label: "Snapdragon 662"}]
+    },
+    "GKD Pixel 2": {
+        name: "GKD Pixel 2",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/pixel2.png",
+        link: "https://www.keepretro.com/",
+        chipset: "Rockchip RK3326S", screen: "2.4\" 640x480 IPS", battery: "1800 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
+        score: 8.0,
+        reviewShort: "The metal micro handheld returns with a much better high-res screen.",
+        pros: ["Metal Shell", "640x480 Resolution", "Pocketable"],
+        cons: ["Small Screen", "RK3326 Performance"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "gkd pixel 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=gkd%20pixel%202",
+        aliases: ["Pixel 2"],
+        variants: [{id: "rk3326s", label: "Rockchip RK3326S"}]
+    }
+};
 
     // System Config matches your CSV structure in app.py
     const SYSTEM_CONFIG = {
@@ -830,13 +934,13 @@
     const SYSTEM_COLORS = { switch: ['bg-red-600', 'text-white'], ps2: ['bg-blue-600', 'text-white'], ps3: ['bg-black', 'text-white'], psvita: ['bg-teal-500', 'text-white'], winlator: ['bg-sky-500', 'text-white'], gamehub: ['bg-blue-900', 'text-white'], wiiu: ['bg-blue-600', 'text-white'] };
 
     // --- STATE MANAGEMENT ---
-    
+
     // Resolve device from URL
     const urlParams = new URLSearchParams(location.search);
     const param = (urlParams.get("device") || "").trim().toLowerCase();
-    
+
     // Fallback if URL param is empty
-    let resolvedKey = "Retroid Pocket 5"; 
+    let resolvedKey = "Retroid Pocket 5";
 
     // Find device key
     if (param) {
@@ -873,12 +977,12 @@
     document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
         AOS.init({ once: true, offset: 50 });
-        
+
         // 1. Setup Device Stats & Info
         document.getElementById('device-name').textContent = DEVICE.name;
         document.getElementById('device-img').src = DEVICE.img;
-        document.getElementById('hidden-device').value = DEVICE.name; 
-        
+        document.getElementById('hidden-device').value = DEVICE.name;
+
         // Specs
         document.getElementById('stat-chip').textContent = DEVICE.chipset || "Unknown";
         document.getElementById('stat-screen').textContent = DEVICE.screen || "Unknown";
@@ -886,11 +990,11 @@
         document.getElementById('stat-os').textContent = DEVICE.os || "Android";
         document.getElementById('stat-ram').textContent = DEVICE.ram || "Unknown";
         document.getElementById('stat-storage').textContent = DEVICE.storage || "Unknown";
-        
+
         // Affiliate
         const btn = document.getElementById('affiliate-btn');
         btn.href = DEVICE.link;
-        // document.getElementById('header-shop-btn').href = DEVICE.link; 
+        // document.getElementById('header-shop-btn').href = DEVICE.link;
         document.getElementById('channel-link').href = DEVICE.ytUrl;
 
         // 2. Setup Review Card
@@ -943,7 +1047,7 @@
             const query = DEVICE.ytQuery || DEVICE.name;
             const res = await fetch(`/api/youtube/latest?channel_id=${channelId}&q=${encodeURIComponent(query)}&limit=1`);
             const data = await res.json();
-            
+
             if (data && data.length > 0) {
                 const vid = data[0];
                 const embed = document.getElementById('main-video-embed');
@@ -965,11 +1069,11 @@
     function initVariantTabs() {
         const wrap = document.getElementById('variant-tabs');
         if (!DEVICE.variants || DEVICE.variants.length <= 1 || !wrap) return;
-        
+
         wrap.classList.remove('hidden');
         const row = wrap.querySelector('div');
         row.innerHTML = '';
-        
+
         DEVICE.variants.forEach((v, i) => {
             const btn = document.createElement('button');
             btn.type = 'button';
@@ -981,24 +1085,24 @@
             btn.dataset.variantId = v.id;
             row.appendChild(btn);
         });
-        
+
         row.addEventListener('click', (e) => {
             const btn = e.target.closest('button[data-variant-id]');
             if (!btn) return;
             const id = btn.dataset.variantId;
             const next = DEVICE.variants.find(v => v.id === id);
             if (!next) return;
-            
+
             [...row.children].forEach(b => {
                   b.classList.remove('bg-yellow-400','text-black');
                   b.classList.add('bg-gray-700','text-white');
             });
             btn.classList.remove('bg-gray-700','text-white');
             btn.classList.add('bg-yellow-400','text-black');
-            
+
             currentVariant = next;
             loadSystemData(currentSystemId);
-            
+
             const chipSel = document.getElementById('form-chipset-select');
             if (chipSel) chipSel.value = currentVariant.id;
         });
@@ -1009,24 +1113,24 @@
         document.querySelectorAll('.system-btn').forEach(btn => {
             const colors = SYSTEM_COLORS[systemId] || ['bg-yellow-400', 'text-black'];
             btn.className = 'system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 bg-gray-700 text-white tracking-wide text-shadow-md';
-            if(btn.dataset.system === systemId) { btn.classList.remove('bg-gray-700', 'text-white'); btn.classList.add(...colors, 'scale-110', 'shadow-lg'); } 
+            if(btn.dataset.system === systemId) { btn.classList.remove('bg-gray-700', 'text-white'); btn.classList.add(...colors, 'scale-110', 'shadow-lg'); }
         });
-        
+
         tableBody.innerHTML = `<tr><td colspan="100" class="p-6 text-center text-white/50"><i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2"></i>Loading data...</td></tr>`;
         lucide.createIcons();
-        
+
         // Fetch Real Data
         const allData = await fetchAndCacheData(systemId);
-        
+
         // Filter by chipset if applicable
         const wantChip = currentVariant ? norm(currentVariant.id) : '';
         let filtered = allData;
-        
+
         // Only filter by chipset if the CSV actually has chipset data and we have a selected variant
         if (wantChip && allData.some(r => r.chipset)) {
             filtered = allData.filter(r => norm(r.chipset) === wantChip);
         }
-        
+
         activeDataSet = filtered;
         renderTableStructure();
         applySearchAndSort();
@@ -1042,14 +1146,14 @@
         const pageItems = currentlyDisplayedGames.slice(startIndex, startIndex + rowsPerPage);
         const config = SYSTEM_CONFIG[currentSystemId] || SYSTEM_CONFIG['switch'];
         let html = '';
-        
+
         // Update Sort Indicators
         tableHead.querySelectorAll('th').forEach(th=>{
             const ind = th.querySelector('.sort-indicator');
             if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
         });
 
-        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-white/50">No results found.</td></tr>`; } 
+        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-white/50">No results found.</td></tr>`; }
         else {
             pageItems.forEach((row, i) => {
                 html += `<tr class="${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors cursor-pointer" onclick="openGameModal(${startIndex + i})">`;
@@ -1087,7 +1191,7 @@
         let filtered = activeDataSet;
         if (perfFilter) filtered = filtered.filter(r => r.performance === perfFilter);
         if (term) filtered = filtered.filter(r => (r.game || '').toLowerCase().includes(term));
-        
+
         filtered.sort((a,b) => {
             const valA = getSortValue(a, sortColumn);
             const valB = getSortValue(b, sortColumn);
@@ -1095,7 +1199,7 @@
             if(valA > valB) return sortDirection === 'asc' ? 1 : -1;
             return 0;
         });
-        
+
         currentlyDisplayedGames = filtered;
         currentPage = 1;
         displayCurrentPage();
@@ -1107,7 +1211,7 @@
         if(!game) return;
         const modal = document.getElementById('game-details-modal');
         const content = document.getElementById('game-modal-content');
-        
+
         let statusColor = 'text-white';
         if(game.performance === 'Perfect') statusColor = 'text-green-400 border-green-400/30 bg-green-400/10';
         else if(game.performance === 'Great') statusColor = 'text-blue-400 border-blue-400/30 bg-blue-400/10';
@@ -1117,7 +1221,7 @@
         const config = SYSTEM_CONFIG[currentSystemId];
         const specialFields = ['game', 'performance', 'notes', 'date added', 'date', 'boxArt', 'chipset'];
         const gridFields = config.columns.filter(c => !specialFields.includes(c.key));
-        
+
         // Simple initial box art logic
         const secondarySearch = `https://tse2.mm.bing.net/th?q=${encodeURIComponent((game.game||'') + ' ' + currentSystemId + ' box art')}&w=400&h=600&c=7&rs=1&p=0`;
         const initials = (game.game||'?').split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
@@ -1127,7 +1231,7 @@
             <div class="flex flex-col md:flex-row gap-8 p-1">
                 <div class="w-full md:w-1/3 flex flex-col gap-4">
                     <div class="relative rounded-lg overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 group">
-                        <img src="${secondarySearch}" crossorigin="anonymous" alt="${game.game}" class="w-full h-auto object-cover" 
+                        <img src="${secondarySearch}" crossorigin="anonymous" alt="${game.game}" class="w-full h-auto object-cover"
                              onError="this.src='${fallbackArt}';">
                     </div>
                 </div>
@@ -1157,7 +1261,7 @@
 
         const captureContainer = document.createElement('div');
         Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#2E1A47', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '30px 30px', padding: '40px', borderRadius: '20px', zIndex: '-1' });
-        
+
         const contentHTML = document.getElementById('game-modal-content').innerHTML;
         captureContainer.innerHTML = `
             <div class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl p-8 w-full shadow-2xl flex flex-col">
@@ -1186,7 +1290,7 @@
 
     document.getElementById('system-buttons').addEventListener('click', (e) => { if(e.target.dataset.system) loadSystemData(e.target.dataset.system); });
     searchBox.addEventListener('input', () => applySearchAndSort());
-    
+
     document.getElementById('perf-filters').addEventListener('click', (e) => {
         const btn = e.target.closest('button');
         if(!btn) return;
@@ -1207,9 +1311,9 @@
     prevBtn.addEventListener('click', () => { if(currentPage > 1) { currentPage--; displayCurrentPage(); } });
     nextBtn.addEventListener('click', () => { if(currentPage < Math.ceil(currentlyDisplayedGames.length / rowsPerPage)) { currentPage++; displayCurrentPage(); } });
     document.getElementById('rows-per-page').addEventListener('change', (e) => { rowsPerPage = parseInt(e.target.value); currentPage = 1; displayCurrentPage(); });
-    
-    document.getElementById('add-entry-btn').addEventListener('click', () => { 
-        document.getElementById('add-entry-form-container').classList.remove('hidden'); 
+
+    document.getElementById('add-entry-btn').addEventListener('click', () => {
+        document.getElementById('add-entry-form-container').classList.remove('hidden');
         document.getElementById('add-entry-form-container').scrollIntoView({behavior:'smooth'});
         // Pre-fill fields
         const currentSys = document.getElementById('form-system-select').value || currentSystemId;
@@ -1224,7 +1328,7 @@
 
     function updateFormFields(sysId) {
         dynamicFieldsContainer.innerHTML = '';
-        
+
         // Generate standard fields based on FORM_CONFIG
         const config = FORM_CONFIG[sysId] || [];
         const fields = config.filter(f => f.key !== 'system' && f.key !== 'game' && f.key !== 'performance');
@@ -1235,7 +1339,7 @@
             const req = field.required ? 'required' : '';
             const star = field.required ? '*' : '';
             let inputHtml = '';
-            
+
             if (field.type === 'select') {
                 const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
                 inputHtml = `<select name="${field.key}" class="form-input font-body" ${req}>${options}</select>`;
@@ -1253,17 +1357,17 @@
             div.innerHTML = `<label class="block text-xs font-bold text-gray-400 mb-1">Chipset *</label>
                              <select id="form-chipset-select" name="chipset" class="form-input font-body" required>${options}</select>`;
             dynamicFieldsContainer.appendChild(div);
-            
+
             if(currentVariant) {
                 document.getElementById('form-chipset-select').value = currentVariant.id;
             }
         }
-        
+
         document.getElementById('hidden-system').value = sysId;
         document.getElementById('hidden-device').value = DEVICE.name;
         colorizePerformanceSelects();
     }
-    
+
     function colorizePerformanceSelects() {
         const selects = document.querySelectorAll('select[name="performance"]');
         selects.forEach(sel => {
@@ -1299,8 +1403,8 @@
 
     if (compatForm) {
         compatForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); 
-            
+            e.preventDefault();
+
             const submitBtn = compatForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
@@ -1311,7 +1415,7 @@
             const data = Object.fromEntries(formData.entries());
 
             data.device = document.getElementById('hidden-device').value || DEVICE.name;
-            
+
             // Fallback chipset
             if (!data.chipset && currentVariant) {
                data.chipset = currentVariant.id;
@@ -1327,7 +1431,7 @@
                 if (!res.ok) throw new Error("Submission failed");
 
                 showToast("Report added! Refreshing...");
-                
+
                 const sysId = data.system;
                 if (masterDataCache[sysId]) delete masterDataCache[sysId];
 
