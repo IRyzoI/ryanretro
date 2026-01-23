@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan Retro | Official</title>
 
-    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
@@ -22,12 +20,12 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#2D1B4E',      // Deep Soft Purple
-                            card: '#432C7A',    // Lighter Grape
-                            hover: '#5B3EA8',   // Bright Purple
-                            accent: '#FFFFFF',  // Pure White
-                            muted: '#D4BBFF',   // Soft Lavender Text
-                            red: '#FF0000'      // YouTube Red
+                            bg: '#2D1B4E',       // Deep Soft Purple
+                            card: '#432C7A',     // Lighter Grape
+                            hover: '#5B3EA8',    // Bright Purple
+                            accent: '#FFFFFF',   // Pure White
+                            muted: '#D4BBFF',    // Soft Lavender Text
+                            red: '#FF0000'       // YouTube Red
                         }
                     },
                     fontFamily: {
@@ -89,11 +87,9 @@
 </head>
 <body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
 
-    <!-- Header -->
     <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
 
-            <!-- Logo -->
             <a href="/" class="flex items-center gap-3 group shrink-0">
                 <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
@@ -101,7 +97,6 @@
                 <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
             </a>
 
-            <!-- Navigation Links (Desktop) -->
             <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
                 <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
                 <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
@@ -109,9 +104,7 @@
                 <a href="/store" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Shop</a>
             </nav>
 
-            <!-- Socials & Actions -->
             <div class="flex items-center gap-4">
-                <!-- Social Icons (Desktop) -->
                 <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
@@ -130,7 +123,6 @@
             </div>
         </div>
 
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
             <div class="grid grid-cols-2 gap-2">
                 <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
@@ -153,7 +145,6 @@
 
     <main class="flex-grow">
 
-        <!-- HERO SECTION -->
         <section class="container mx-auto px-4 lg:px-6 py-8 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-12">
             <div class="flex-1 space-y-4 text-center md:text-left">
                 <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-none">
@@ -166,7 +157,6 @@
                 </p>
             </div>
 
-            <!-- Featured Content (Dynamic) -->
             <div class="flex-1 w-full flex flex-col gap-3">
                 <div class="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full border border-white/10 w-fit mx-auto md:mx-0">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -175,8 +165,8 @@
 
                 <div class="relative group w-full">
                     <div class="absolute inset-0 bg-brand-hover blur-3xl opacity-20 group-hover:opacity-30 transition-opacity rounded-full"></div>
-                    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" id="hero-video-link" class="block aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl relative border-4 border-brand-card group-hover:border-white/20 transition-all transform group-hover:scale-[1.02]">
-                        <img id="hero-video-thumb" src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                    <a href="https://www.youtube.com/watch?v=jNQXAC9IVRw" target="_blank" id="hero-video-link" class="block aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl relative border-4 border-brand-card group-hover:border-white/20 transition-all transform group-hover:scale-[1.02]">
+                        <img id="hero-video-thumb" src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                         <div class="absolute inset-0 flex items-center justify-center">
                             <div class="w-20 h-20 bg-brand-red rounded-full flex items-center justify-center text-white shadow-lg play-btn-pulse cursor-pointer hover:bg-red-600 transition-colors">
                                 <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
@@ -184,31 +174,27 @@
                         </div>
                         <div class="absolute bottom-4 left-4 right-4">
                             <span class="bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">LATEST UPLOAD</span>
-                            <h3 id="hero-video-title" class="text-white font-bold text-lg mt-1 drop-shadow-md">The ULTIMATE Handheld of 2026? Retroid Pocket 5 Review</h3>
+                            <h3 id="hero-video-title" class="text-white font-bold text-lg mt-1 drop-shadow-md">AYN Odin 3 - The King Returns</h3>
                         </div>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- HANDHELD LIBRARY -->
         <section id="library" class="bg-black/10 py-8 border-t border-brand-card">
             <div class="container mx-auto px-4 lg:px-6">
 
-                <!-- Controls Header -->
                 <div class="flex flex-col gap-4 mb-4">
                     <div>
                         <h2 class="text-3xl font-bold">Handhelds</h2>
                     </div>
 
                     <div class="w-full flex flex-col gap-4">
-                        <!-- Search Bar -->
                         <div class="relative w-full">
                             <input type="text" id="device-search" placeholder="Search devices..." class="w-full bg-brand-bg border border-brand-card rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-brand-muted focus:ring-1 focus:ring-brand-muted transition-all placeholder-brand-muted/50 text-white shadow-inner">
                             <i data-lucide="search" class="absolute left-3 top-3.5 w-4 h-4 text-brand-muted"></i>
                         </div>
 
-                        <!-- Filters -->
                         <div class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar mask-gradient w-full">
                             <button class="filter-btn active px-4 py-2 rounded-lg text-sm font-bold bg-white text-brand-bg whitespace-nowrap transition-colors" data-filter="all">All</button>
                             <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="Retroid">Retroid</button>
@@ -223,16 +209,13 @@
                     </div>
                 </div>
 
-                <!-- Fluid Scroll Track with Drag -->
                 <div class="relative -mx-4 px-4 lg:mx-0 lg:px-0">
                     <div class="flex overflow-x-auto pb-8 pt-2 custom-scrollbar snap-x scroll-pl-6 grab-cursor" id="device-track">
-                        <!-- JS Populated -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </section>
 
-        <!-- GUIDES -->
         <section id="guides" class="container mx-auto px-4 lg:px-6 py-8">
             <h2 class="text-2xl font-bold mb-8">Essential Guides</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -276,7 +259,6 @@
             </div>
         </section>
 
-        <!-- LATEST VIDEOS GRID -->
         <section id="videos" class="bg-black/20 py-8 border-t border-brand-card">
             <div class="container mx-auto px-4 lg:px-6">
                 <div class="flex items-center justify-between mb-8">
@@ -294,7 +276,6 @@
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-brand-bg border-t border-brand-card py-12 text-center">
         <div class="container mx-auto px-6">
             <div class="flex justify-center flex-wrap gap-6 mb-6">
@@ -454,62 +435,59 @@
         // --------------------------------------------------------
         async function loadVideos() {
             const track = document.getElementById('latest-videos-track');
-            try {
-                // Use the API endpoint you provided
-                const res = await fetch('/api/latest-videos?limit=10');
-                if(!res.ok) throw new Error("No API");
-                const data = await res.json();
+            
+            // Default Mocks (Updated to current content)
+            const mockVideos = [
+                { title: "AYN Odin 3 - The King Returns", id: "jNQXAC9IVRw", thumb: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" },
+                { title: "Steam Deck 2 vs The World", id: "9bZkp7q19f0", thumb: "https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg" },
+                { title: "EmulationStation 2026 Setup Guide", id: "L_jWHffIx5E", thumb: "https://img.youtube.com/vi/L_jWHffIx5E/maxresdefault.jpg" },
+                { title: "Top 10 Android Games for Handhelds", id: "fJ9rUzIMcZQ", thumb: "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg" }
+            ];
 
-                if (data && data.length) {
-                    // Map your API data to the Purple Aesthetic Card
-                    track.innerHTML = data.map(v => `
-                        <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-card rounded-xl overflow-hidden hover:bg-brand-hover transition-colors block shadow-lg">
-                            <div class="aspect-video relative overflow-hidden">
-                                <img src="${v.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                <div class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">WATCH</div>
-                            </div>
-                            <div class="p-4">
-                                <h3 class="font-bold text-white text-sm line-clamp-2 mb-2 group-hover:text-brand-muted transition-colors">${v.title}</h3>
-                                <div class="text-xs text-brand-muted flex items-center gap-2">
-                                    <span>New Upload</span> • <span>Recent</span>
-                                </div>
-                            </div>
-                        </a>`).join('');
-                    lucide.createIcons();
+            let videos = mockVideos; // Start with mocks
+
+            try {
+                // Try fetching from API
+                const res = await fetch('/api/latest-videos?limit=10');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length) {
+                        videos = data; // Use API data if available
+                    }
                 }
             } catch(e) {
-                // Fallback Content (Matching Aesthetic)
-                track.innerHTML = `
-                   <div class="col-span-full text-center text-brand-muted py-10">
-                        <p class="mb-4">Unable to load latest videos via API.</p>
-                        <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="px-6 py-3 bg-brand-card text-white rounded-lg font-bold hover:bg-brand-hover transition-colors inline-block">
-                            Visit Channel
-                        </a>
-                   </div>
-                `;
-                // Add mocks if API fails for preview purposes
-                 const mockVideos = [
-                    { title: "AYN Odin 3 - The King Returns", id: "jNQXAC9IVRw", thumb: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" },
-                    { title: "Steam Deck 2 vs The World", id: "9bZkp7q19f0", thumb: "https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg" },
-                    { title: "EmulationStation 2026 Setup Guide", id: "L_jWHffIx5E", thumb: "https://img.youtube.com/vi/L_jWHffIx5E/maxresdefault.jpg" },
-                    { title: "Top 10 Android Games for Handhelds", id: "fJ9rUzIMcZQ", thumb: "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg" }
-                ];
-
-                track.innerHTML = mockVideos.map(v => `
-                    <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-card rounded-xl overflow-hidden hover:bg-brand-hover transition-colors block shadow-lg">
-                        <div class="aspect-video relative overflow-hidden">
-                            <img src="${v.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            <div class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">WATCH</div>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-white text-sm line-clamp-2 mb-2 group-hover:text-brand-muted transition-colors">${v.title}</h3>
-                            <div class="text-xs text-brand-muted flex items-center gap-2">
-                                <span>Recent</span>
-                            </div>
-                        </div>
-                    </a>`).join('');
-                lucide.createIcons();
+                console.log("Using mock data");
             }
+
+            // 1. RENDER VIDEOS GRID
+            track.innerHTML = videos.map(v => `
+                <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-card rounded-xl overflow-hidden hover:bg-brand-hover transition-colors block shadow-lg">
+                    <div class="aspect-video relative overflow-hidden">
+                        <img src="${v.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">WATCH</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-white text-sm line-clamp-2 mb-2 group-hover:text-brand-muted transition-colors">${v.title}</h3>
+                        <div class="text-xs text-brand-muted flex items-center gap-2">
+                            <span>Recent</span>
+                        </div>
+                    </div>
+                </a>`).join('');
+
+            // 2. HERO UPDATE LOGIC (New Feature)
+            // This grabs the VERY FIRST video from the list (API or Mock) and puts it in the hero
+            if(videos.length > 0) {
+                const latest = videos[0];
+                const heroLink = document.getElementById('hero-video-link');
+                const heroThumb = document.getElementById('hero-video-thumb');
+                const heroTitle = document.getElementById('hero-video-title');
+
+                if(heroLink) heroLink.href = `https://www.youtube.com/watch?v=${latest.id}`;
+                if(heroThumb) heroThumb.src = latest.thumb;
+                if(heroTitle) heroTitle.textContent = latest.title;
+            }
+
+            lucide.createIcons();
         }
 
         // Initialize Everything
