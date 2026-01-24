@@ -86,6 +86,33 @@
             border-color: #D4BBFF;
             background: rgba(0,0,0,0.4);
         }
+
+        /* Device Stats Pills - Restored & Themed */
+        .stat-pill {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            display: flex;
+            flex-direction: column; /* Vertical Stack */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 4px;
+            color: #D4BBFF; /* brand-muted */
+            font-weight: 700;
+            height: 100%;
+            min-height: 60px; /* Ensure height */
+            line-height: 1.2;
+            transition: background 0.2s, color 0.2s;
+        }
+        .stat-pill:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .stat-pill i { width: 16px; height: 16px; margin-bottom: 2px; color: white; }
     </style>
 </head>
 <body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
@@ -159,8 +186,18 @@
                             <h1 id="device-name" class="font-extrabold text-3xl text-white uppercase leading-none tracking-tight">DEVICE<br>NAME</h1>
                         </div>
 
-                        <div class="flex-grow flex items-center justify-center py-6 relative z-10 min-h-[200px]">
-                            <img id="device-img" src="" class="w-64 object-contain animate-float drop-shadow-2xl" alt="Device">
+                        <div class="flex-grow flex items-center justify-center py-6 relative z-10 min-h-[160px]">
+                            <img id="device-img" src="" class="w-56 object-contain animate-float drop-shadow-2xl" alt="Device">
+                        </div>
+
+                        <!-- Key Stats Grid -->
+                        <div class="grid grid-cols-2 gap-2 mb-6 relative z-10 w-full" id="stats-grid">
+                            <div class="stat-pill"><i data-lucide="cpu"></i> <span id="stat-chip">...</span></div>
+                            <div class="stat-pill"><i data-lucide="monitor"></i> <span id="stat-screen">...</span></div>
+                            <div class="stat-pill"><i data-lucide="memory-stick"></i> <span id="stat-ram">...</span></div>
+                            <div class="stat-pill"><i data-lucide="hard-drive"></i> <span id="stat-storage">...</span></div>
+                            <div class="stat-pill"><i data-lucide="battery"></i> <span id="stat-battery">...</span></div>
+                            <div class="stat-pill"><i data-lucide="smartphone"></i> <span id="stat-os">...</span></div>
                         </div>
 
                         <a id="affiliate-btn" href="#" target="_blank" class="w-full py-4 bg-white text-brand-bg font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-brand-muted transition-colors relative z-10 mt-auto">
@@ -367,7 +404,7 @@
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png",
         link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
         linkText: "Buy Now",
-        chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
+        chipset: "Snapdragon 865", screen: "5.5\" AMOLED 1080p 60Hz", battery: "5000 mAh", os: "Android 13", ram: "8GB LPDDR4x", storage: "128GB UFS 3.1",
         score: 9.5,
         reviewShort: "A beautiful OLED screen and surprisingly great performance make the Retroid Pocket 5 one of the best handhelds. Surprisingly premium for the price.",
         pros: ["Stunning OLED Screen", "Great Performance", "Premium Build Quality"],
@@ -380,7 +417,7 @@
         name: "Retroid Pocket 6",
         img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
         link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
-        chipset: "Snapdragon 8 Gen 2", screen: "5.5\" 1080p OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
+        chipset: "Snapdragon 8 Gen 2", screen: "5.5\" AMOLED 1080p 120Hz", battery: "6000 mAh", os: "Android 13", ram: "8GB/12GB LPDDR5x", storage: "128GB/256GB UFS 3.1",
         score: 9.8,
         reviewShort: "A flagship killer. Switch emulation in your pocket has never been this good.",
         pros: ["Insane Power", "Active Cooling", "Analog Triggers"],
@@ -393,7 +430,7 @@
         name: "Retroid Pocket G2",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png",
         link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
-        chipset: "Snapdragon G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
+        chipset: "Snapdragon G2 Gen 2", screen: "5.5\" AMOLED 1080p 60Hz", battery: "5000 mAh", os: "Android 15", ram: "8GB LPDDR4x", storage: "128GB UFS 3.1",
         score: 8.5,
         reviewShort: "A big screen streaming beast, essentially a Retroid Pocket 5 XL.",
         pros: ["Huge Screen", "Comfortable", "Great Streaming"],
@@ -406,7 +443,7 @@
         name: "Retroid Pocket Classic",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png",
         link: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
-        chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
+        chipset: "Snapdragon G1 Gen 2", screen: "3.92\" AMOLED 1240x1080", battery: "5000 mAh", os: "Android 14", ram: "4GB/6GB LPDDR4x", storage: "64GB/128GB eMMC 5.1",
         score: 9.4,
         reviewShort: "The ultimate 4:3 device for retro purists.",
         pros: ["4:3 OLED", "Perfect for PS2/GC", "Classic aesthetics"],
@@ -419,7 +456,7 @@
         name: "Retroid Pocket Mini",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png",
         link: "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT",
-        chipset: "Snapdragon 865", screen: "3.7\" 960p OLED", battery: "4000 mAh", os: "Android 13", ram: "6GB", storage: "128GB",
+        chipset: "Snapdragon 865", screen: "3.7\" AMOLED 1280x960", battery: "4000 mAh", os: "Android 13", ram: "6GB LPDDR4x", storage: "128GB UFS 3.1",
         score: 9.6,
         reviewShort: "A 4:3 OLED masterpiece. The perfect pocket companion with way more power than it needs.",
         pros: ["Incredible OLED", "Very Powerful", "Pocketable"],
@@ -432,7 +469,7 @@
         name: "Retroid Pocket Flip 2",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png",
         link: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
-        chipset: "Snapdragon 865", screen: "4.7\" Touch", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
+        chipset: "SD865 / D1100", screen: "5.5\" AMOLED 1080p 60Hz", battery: "5000 mAh", os: "Android 13", ram: "8GB LPDDR4x", storage: "128GB UFS 3.1",
         score: 9.2,
         reviewShort: "Clamshell perfection returns with updated internals.",
         pros: ["Clamshell Design", "Protectable Screen", "Good Sliders"],
@@ -445,7 +482,7 @@
         name: "Odin 2 Portal",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png",
         link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
-        chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
+        chipset: "Snapdragon 8 Gen 2", screen: "7\" OLED 1080p 120Hz", battery: "8000 mAh", os: "Android 13", ram: "8/12/16GB LPDDR5x", storage: "128/512GB/1TB UFS 4.0",
         score: 9.7,
         reviewShort: "The premium OLED handheld experience. Expensive, but flawless.",
         pros: ["Incredible 120Hz OLED", "Top Tier Performance", "Premium Build"],
@@ -458,7 +495,7 @@
         name: "AYN Odin 3",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png",
         link: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
-        chipset: "Snapdragon 8 Elite", screen: "6\" 1080p 120Hz AMOLED", battery: "8000 mAh", os: "Android 15", ram: "12-24GB", storage: "256GB+",
+        chipset: "Snapdragon 8 Elite", screen: "6\" AMOLED 1080p 120Hz", battery: "8000 mAh", os: "Android 15", ram: "Up to 24GB LPDDR5x", storage: "Up to 1TB UFS 4.0",
         score: 9.9,
         reviewShort: "The most powerful Android handheld ever made. Overkill in the best way possible.",
         pros: ["Snapdragon 8 Elite", "120Hz AMOLED", "Wi-Fi 7"],
@@ -471,7 +508,7 @@
         name: "Ayaneo Konkr Pocket Fit",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/konkr.png",
         link: "https://ayaneo.com/goods/9409042546933",
-        chipset: "Snapdragon G3x Gen 3", screen: "6\" 1080p 144Hz LCD", battery: "8000 mAh", os: "Android", ram: "8GB+", storage: "128GB+",
+        chipset: "Snapdragon G3 Gen 3", screen: "6\" LCD 1080p 144Hz", battery: "8300 mAh", os: "Android 14", ram: "8GB-16GB LPDDR5x", storage: "128GB UFS 3.1 / 256GB+",
         score: 9.0,
         reviewShort: "A surprising LCD flagship killer from Ayaneo with a focus on ergonomics.",
         pros: ["144Hz Screen", "Snapdragon G3x Gen 3", "Ergonomic Grip"],
@@ -484,7 +521,7 @@
         name: "Anbernic RG34XX",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png",
         link: "https://s.click.aliexpress.com/e/_c3cp23I9",
-        chipset: "Allwinner H700", screen: "3.4\" 720x480 IPS", battery: "3500 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
+        chipset: "Allwinner H700", screen: "3.4\" IPS 720x480", battery: "3500 mAh", os: "Linux", ram: "1GB LPDDR4", storage: "Dual microSD",
         score: 9.0,
         reviewShort: "The Game Boy Advance form factor perfected. 3x pixel scaling on a 3:2 screen.",
         pros: ["Perfect GBA Scaling", "Horizontal Design", "Great Price"],
@@ -497,7 +534,7 @@
         name: "MagicX Zero 40",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/magicxzero40.png",
         link: "https://s.click.aliexpress.com/e/_c4EN3p5H",
-        chipset: "Allwinner A133P", screen: "4\" 480x800 IPS", battery: "4300 mAh", os: "Android", ram: "2GB", storage: "TF Card",
+        chipset: "Allwinner A133 Plus", screen: "4\" IPS 480x800", battery: "4300 mAh", os: "Android 10", ram: "2GB LPDDR4", storage: "64GB/128GB",
         score: 8.0,
         reviewShort: "Vertical screen perfection designed specifically for DS emulation.",
         pros: ["Vertical Screen", "Great for DS", "Good Battery"],
@@ -510,7 +547,7 @@
         name: "MagicX XU20 V32",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/xuretroxu20v32.png",
         link: "https://s.click.aliexpress.com/e/_c4qAZCof",
-        chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3200 mAh", os: "Android 10", ram: "2GB", storage: "TF Card",
+        chipset: "Allwinner A133 Plus", screen: "3.2\" IPS 1024x768", battery: "3200 mAh", os: "Android 10", ram: "2GB DDR4", storage: "microSD",
         score: 7.5,
         reviewShort: "A tiny 4:3 Android handheld. Great resolution for such a small device.",
         pros: ["High Res Screen", "Pocketable", "Cheap Android"],
@@ -523,7 +560,7 @@
         name: "TrimUI Brick",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png",
         link: "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
-        chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3000 mAh", os: "Linux", ram: "1GB", storage: "8GB eMMC",
+        chipset: "Allwinner A133 Plus", screen: "3.2\" IPS 1024x768", battery: "3000 mAh", os: "Linux", ram: "2GB LPDDR3/4", storage: "8GB + microSD",
         score: 8.5,
         reviewShort: "Premium feel, high res screen, and no sticks. A minimalist's dream.",
         pros: ["Premium Build", "High Res Screen", "Simple UI"],
@@ -549,7 +586,7 @@
         name: "Mangmi Air X",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png",
         link: "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr",
-        chipset: "Snapdragon 662", screen: "5.5\" 1080p IPS", battery: "5000 mAh", os: "Android 14", ram: "4GB", storage: "64GB",
+        chipset: "Snapdragon 662", screen: "5.5\" IPS 1080p 60Hz", battery: "5000 mAh", os: "Android 14", ram: "4GB LPDDR4x", storage: "64GB eMMC",
         score: 8.0,
         reviewShort: "A budget Android entry with a decent 1080p screen and good ergonomics.",
         pros: ["1080p Screen", "Android 14", "Good Build"],
@@ -562,7 +599,7 @@
         name: "GKD Pixel 2",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/pixel2.png",
         link: "https://www.keepretro.com/",
-        chipset: "Rockchip RK3326S", screen: "2.4\" 640x480 IPS", battery: "1800 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
+        chipset: "Rockchip RK3326S", screen: "2.4\" IPS 640x480", battery: "1800 mAh", os: "Linux (IUX)", ram: "1GB DDR3", storage: "microSD",
         score: 8.0,
         reviewShort: "The metal micro handheld returns with a much better high-res screen.",
         pros: ["Metal Shell", "640x480 Resolution", "Pocketable"],
@@ -734,6 +771,14 @@
         document.getElementById('device-img').src = DEVICE.img;
         document.getElementById('hidden-device').value = DEVICE.name;
 
+        // POPULATE STATS PILLS
+        document.getElementById('stat-chip').textContent = DEVICE.chipset || "Unknown";
+        document.getElementById('stat-screen').textContent = DEVICE.screen || "Unknown";
+        document.getElementById('stat-battery').textContent = DEVICE.battery || "Unknown";
+        document.getElementById('stat-os').textContent = DEVICE.os || "Android";
+        document.getElementById('stat-ram').textContent = DEVICE.ram || "Unknown";
+        document.getElementById('stat-storage').textContent = DEVICE.storage || "Unknown";
+
         // Affiliate
         const btn = document.getElementById('affiliate-btn');
         btn.href = DEVICE.link;
@@ -753,6 +798,9 @@
         document.getElementById('mobile-menu-btn').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         });
+        
+        // Refresh Icons after updating DOM
+        lucide.createIcons();
     });
 
     // --- REAL DATA FETCHING ---
