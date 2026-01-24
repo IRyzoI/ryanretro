@@ -192,16 +192,46 @@
             margin-bottom: 15px;
             box-shadow: 0 2px 10px var(--shadow);
             background-color: #eee;
-            min-height: 200px;
-            object-fit: cover;
+            /* Force 16:9 Aspect Ratio to crop black bars */
+            aspect-ratio: 16 / 9;
+            object-fit: cover; 
+            object-position: center;
+        }
+
+        /* Video Header Layout */
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 10px;
+            text-align: left;
         }
 
         .video-title {
+            flex: 1;
             font-size: 18px;
             font-weight: 600;
             color: var(--title-color);
-            margin-bottom: 5px;
             line-height: 1.4;
+            margin: 0;
+        }
+        
+        .author-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-color);
+            opacity: 0.8;
+            background: var(--input-bg);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--input-border);
+            white-space: nowrap;
+            margin-top: 2px; /* Visual alignment with title text */
+            flex-shrink: 0;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .video-meta {
@@ -257,7 +287,12 @@
 
     <div id="result">
         <img id="thumbImg" class="thumb-preview" src="" alt="Thumbnail" crossorigin="anonymous">
-        <div id="videoTitle" class="video-title"></div>
+        
+        <div class="video-header">
+            <div id="videoTitle" class="video-title"></div>
+            <div id="authorName" class="author-name"></div>
+        </div>
+
         <div id="videoID" class="video-meta"></div>
         
         <div class="btn-group">
@@ -320,6 +355,7 @@
         const urlInput = document.getElementById('urlInput').value;
         const resultDiv = document.getElementById('result');
         const titleEl = document.getElementById('videoTitle');
+        const authorNameEl = document.getElementById('authorName');
         const metaEl = document.getElementById('videoID');
         const imgEl = document.getElementById('thumbImg');
         const errorEl = document.getElementById('errorMsg');
@@ -363,11 +399,15 @@
 
             // Store data
             currentTitle = data.title || "Unknown Title";
+            const authorName = data.author_name || "Unknown";
             const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
             // Update UI
             titleEl.textContent = currentTitle;
             metaEl.textContent = `ID: ${videoId}`;
+            
+            // Update Author Info (Just name)
+            authorNameEl.textContent = authorName;
             
             // Handle Image Fallback
             imgEl.onload = () => {
@@ -377,6 +417,7 @@
                 }
             };
             imgEl.onerror = function() {
+                // Fallback to HQ which often has black bars, but our CSS will crop it!
                 this.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
             };
             
@@ -424,40 +465,63 @@
         img.src = imgEl.src;
 
         img.onload = () => {
-            // Set canvas dimensions
-            // We want high res, so use image natural width
-            const w = img.naturalWidth;
-            const h = img.naturalHeight;
-            const padding = 40;
-            const textAreaHeight = 150; // Space for title below
+            // FORCE HD RESOLUTION (1280px wide)
+            // This prevents low-res source images from creating tiny output files.
+            const OUTPUT_WIDTH = 1280; 
+            const targetAspect = 16 / 9;
             
-            canvas.width = w;
-            canvas.height = h + textAreaHeight;
+            const sourceW = img.naturalWidth;
+            const sourceH = img.naturalHeight;
+            const sourceAspect = sourceW / sourceH;
+            
+            let drawX = 0, drawY = 0, drawW = sourceW, drawH = sourceH;
+
+            // Smart Crop: Remove black bars from 4:3 images to fit 16:9
+            if (sourceAspect < targetAspect) {
+                // Source is taller (e.g. 4:3), crop top/bottom
+                drawH = sourceW / targetAspect;
+                drawY = (sourceH - drawH) / 2;
+            } 
+            else if (sourceAspect > targetAspect) {
+                // Source is wider, crop sides
+                drawW = sourceH * targetAspect;
+                drawX = (sourceW - drawW) / 2;
+            }
+
+            // Destination Dimensions
+            const outW = OUTPUT_WIDTH;
+            const outImageH = outW / targetAspect; // 720px
+            // Set text area to 150px so Total Height = 720 + 150 = 870px
+            const textAreaHeight = 150; 
+            
+            canvas.width = outW;
+            canvas.height = outImageH + textAreaHeight;
 
             // 1. Draw Background
-            // Use Dark Grey (#1e1e1e) for dark mode, White (#ffffff) for light mode
             ctx.fillStyle = isDark ? "#1e1e1e" : "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Draw Thumbnail
-            ctx.drawImage(img, 0, 0);
+            // 2. Draw Thumbnail (Upscaling if source is small)
+            // We draw the cropped source region onto the full HD canvas area
+            ctx.drawImage(img, drawX, drawY, drawW, drawH, 0, 0, outW, outImageH);
 
             // 3. Draw Title Text
             ctx.fillStyle = isDark ? "#ffffff" : "#000000";
-            ctx.font = "bold 48px Arial, sans-serif";
+            
+            // Scaled fonts for HD canvas
+            const baseFontSize = 60;
+            ctx.font = `bold ${baseFontSize}px Arial, sans-serif`;
             ctx.textBaseline = "middle";
             
-            // Text Wrapping Logic
-            const maxWidth = w - (padding * 2);
-            const words = currentTitle.split(' ');
-            let line = '';
-            let y = h + (textAreaHeight / 2); // Center vertically in the text area
+            const padding = 60;
+            const maxWidth = outW - (padding * 2);
+            let y = outImageH + (textAreaHeight / 2); // Center in text area
             
-            // Measure first to see if it fits
+            // Text Fitting Logic
             const metrics = ctx.measureText(currentTitle);
             if (metrics.width > maxWidth) {
-                 // If too long, maybe scale down font slightly?
-                 ctx.font = "bold 36px Arial, sans-serif";
+                 // Shrink font if title is too long
+                 ctx.font = `bold ${baseFontSize * 0.8}px Arial, sans-serif`;
             }
             
             ctx.fillText(currentTitle, padding, y, maxWidth);
