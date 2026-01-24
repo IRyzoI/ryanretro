@@ -530,6 +530,10 @@ async def store_page():
 def ranking_page(): 
     return FileResponse(os.path.join(STATIC_DIR, "ranking.html"))
 
+@app.get("/thumbnail", response_class=FileResponse)
+def ranking_page(): 
+    return FileResponse(os.path.join(STATIC_DIR, "thumbnail.html"))
+
 # 3. Helper Routes (Guides)
 @app.get("/guides/{slug}", response_class=HTMLResponse)
 def serve_guide(slug: str):
