@@ -9,538 +9,271 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Kanit:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#2D1B4E',       // Deep Soft Purple
+                            card: '#432C7A',     // Lighter Grape
+                            hover: '#5B3EA8',    // Bright Purple
+                            accent: '#FFFFFF',   // Pure White
+                            muted: '#D4BBFF',    // Soft Lavender Text
+                            red: '#FF0000'       // YouTube Red
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* --- THEME --- */
-        :root {
-            --bg-deep: #1a0b2e;
-            --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; display: block; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; transition: background 0.3s; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
-            /* Friendly Outlined Theme Colors */
-            --card-border: rgba(255, 255, 255, 0.2);
-            --card-border-hover: rgba(255, 255, 255, 0.5);
-
-            --accent-yellow: #fbbf24;
-            --accent-red: #ef4444;
-            --accent-purple: #a855f7;
-            --accent-cyan: #22d3ee;
-
-            --text-main: #ffffff;
-            --text-sub: #e2e8f0;
-
-            /* Table Specific Vars */
-            --bg-card: #3D255D; /* Darker purple for table card */
-        }
-
-        body {
-            background-color: var(--bg-deep);
-            background-image: var(--bg-gradient);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Typography */
-        .font-display { font-family: 'Outfit', sans-serif; }
-        .font-logo { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
-        .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
-        .font-pixel { font-family: 'VT323', monospace; }
-        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        /* --- BENTO GRID COMPONENTS --- */
-
-        .bento-card {
-            border: 2px solid var(--card-border);
-            border-radius: 32px;
-            transition: all 0.2s ease-in-out;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
-            transform: translateY(0);
-        }
-        .bento-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--card-border-hover);
-            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
-        }
-
-        /* Distinct Card Colors */
-        .card-violet { background-color: #5b21b6; }
-        .card-teal   { background-color: #0f766e; }
-        .card-rose   { background-color: #be123c; }
-        .card-blue   { background-color: #1e40af; }
-        .card-slate  { background-color: #1e293b; }
-
-        /* Video Area */
-        .video-container {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-        .video-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
-
-        /* Device Stats Pills */
-        .stat-pill {
-            background: rgba(0,0,0,0.2);
-            border: 2px solid rgba(255,255,255,0.15);
-            padding: 10px;
-            border-radius: 16px;
-            font-size: 11px;
-            display: flex;
-            flex-direction: column; /* Vertical Stack */
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 4px;
-            color: var(--text-sub);
-            font-weight: 700;
-            height: 100%;
-            min-height: 64px; /* Ensure height */
-            line-height: 1.2;
-        }
-        .stat-pill i { color: var(--accent-cyan); width: 18px; height: 18px; margin-bottom: 2px; }
-
-        /* Flat Score Badge */
-        .score-badge {
-            background: var(--accent-yellow);
-            color: #451a03;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            padding: 8px 16px;
-            border-radius: 16px;
-            font-size: 18px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 4px 0 #d97706;
-        }
-
-        /* Buttons */
-        .btn-yellow {
-            background: var(--accent-yellow);
-            color: #451a03;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 16px;
-            border-radius: 20px;
-            width: 100%;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            transition: all 0.2s;
-            border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 6px 0 #d97706;
-        }
-        .btn-yellow:hover {
-            background: #fcd34d;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 0 #d97706;
-        }
-        .btn-yellow:active {
-            transform: translateY(4px);
-            box-shadow: 0 0 0 #d97706;
-        }
-
-        /* Nav & Social Buttons */
-        .nav-pill {
-            padding: 8px 16px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.7);
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        .nav-pill:hover {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        .social-btn {
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.7);
-            transition: all 0.2s;
-        }
-        .social-btn:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.3);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Inputs & Selects */
-        .friendly-input {
-            background: rgba(0,0,0,0.2);
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 16px;
-            color: white;
-            transition: all 0.2s;
-        }
-        .friendly-input:focus {
-            outline: none;
-            border-color: var(--accent-purple);
-            background: rgba(0,0,0,0.4);
-            box-shadow: 0 4px 0 rgba(168, 85, 247, 0.4);
-        }
-
-        /* Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 5px; border: 2px solid var(--bg-deep); }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
-
-        /* Floating Animation */
+        /* Animations */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
 
-        /* --- TABLE & COMPATIBILITY STYLES --- */
-        .text-shadow-md { text-shadow: 2px 2px 1px rgba(0,0,0,0.8); }
-
-        .card-3d {
-            background-color: var(--bg-card);
-            border: 2px solid var(--card-border);
-            border-radius: 32px;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
-            transform: translateY(0);
-        }
-
-        .card-3d:hover {
-            transform: translateY(-4px);
-            border-color: var(--card-border-hover);
-            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
-        }
-
-        .shiny-btn { overflow: hidden; position: relative; }
-        @keyframes shine-sweep { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
-        .shiny-btn::after {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
-            transform: skewX(-25deg); animation: shine-sweep 4s infinite;
-        }
-
-        .perf-perfect { color: #4ade80; text-transform: uppercase; }
-        .perf-great { color: #38bdf8; text-transform: uppercase; }
-        .perf-playable { color: #facc15; text-transform: uppercase; }
-        .perf-unplayable { color: #f87171; text-transform: uppercase; }
-
-        .filter-active { background-color: #ffffff !important; color: #2E1A47 !important; font-weight: bold; }
-        button.perf-perfect.filter-active { background-color: #4ade80 !important; }
-        button.perf-great.filter-active { background-color: #38bdf8 !important; }
-        button.perf-playable.filter-active { background-color: #facc15 !important; }
-        button.perf-unplayable.filter-active { background-color: #f87171 !important; }
-
-        .form-input {
-            background-color: rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.1);
-            color: white; border-radius: 0.5rem; padding: 0.75rem; width: 100%; transition: all 0.3s;
-        }
-        .form-input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.2); }
-        select.form-input option { background-color: var(--bg-card); color: white; }
-
-        /* Performance Select Colorization for Form */
-        select.form-input.perf-perfect      { color: #4ade80; background-color: rgba(74, 222, 128, .10); }
-        select.form-input.perf-great        { color: #38bdf8; background-color: rgba(56, 189, 248, .10); }
-        select.form-input.perf-playable     { color: #fb923c; background-color: rgba(251, 146, 60, .10); }
-        select.form-input.perf-unplayable   { color: #f87171; background-color: rgba(248, 113, 113, .10); }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
         /* Toast */
         #toast {
-            visibility: hidden; min-width: 250px; background-color: var(--accent-cyan); color: #2E1A47;
-            text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000;
+            visibility: hidden; min-width: 250px; background-color: #5B3EA8; color: white;
+            text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 1000;
             left: 50%; bottom: 30px; transform: translateX(-50%);
-            font-family: 'Press Start 2P', cursive; font-size: 10px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
         }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
+        /* Table Styles */
+        .sort-indicator { display: inline-block; width: 1.2em; text-align: center; }
+
+        /* Performance Badge Colors (Table & Form) */
+        .perf-perfect { color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.2); }
+        .perf-great { color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); }
+        .perf-playable { color: #facc15; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.2); }
+        .perf-unplayable { color: #f87171; background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.2); }
+
+        /* Form Elements */
+        .brand-input {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.2s;
+        }
+        .brand-input:focus {
+            outline: none;
+            border-color: #D4BBFF;
+            background: rgba(0,0,0,0.4);
+        }
     </style>
 </head>
-<body>
-
-    <div class="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#4c1d95]/40 to-transparent -z-10 pointer-events-none"></div>
-    <div class="fixed top-[-200px] right-[-200px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
+<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
 
     <div id="toast">Code Copied!</div>
 
-    <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
-        <div class="container mx-auto px-4 h-24 flex justify-between items-center">
+    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+        <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
 
             <a href="/" class="flex items-center gap-3 group shrink-0">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
-                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <div class="hidden sm:flex flex-col">
-                    <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
-                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
-                </div>
+                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
             </a>
 
-            <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
-                <a href="/reviews" class="nav-pill">Reviews</a>
-                <a href="/benchmarks" class="nav-pill">Benchmarks</a>
-                <a href="/compatibility" class="nav-pill">Comparisons</a>
-                <a href="/gotw" class="nav-pill">Game of the Week</a>
-                <a href="/patrons" class="nav-pill">Patrons</a>
+            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Shop</a>
             </nav>
 
             <div class="flex items-center gap-4">
-
-                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
-                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                    <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
-                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="social-btn" title="Instagram"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="social-btn" title="TikTok">
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
                         <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
-                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="social-btn" title="Discord"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
                 </div>
 
-                <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
-                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
-                </a>
-
-                <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
 
-<div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
-             <div class="grid grid-cols-2 gap-2 mb-2">
-                 <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Reviews</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-2">
+                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+            </div>
 
-                 <a href="/benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Benchmarks</a>
-
-                 <a href="/handheld" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Comparisons</a>
-
-                 <a href="/store" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all">Shop</a>
-
-                 <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2">
-                     GOTW <i data-lucide="gamepad-2" class="w-4 h-4"></i>
-                 </a>
-
-                 <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2">
-                     Patrons <i data-lucide="heart" class="w-4 h-4"></i>
-                 </a>
-             </div>
-
-             <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
-                 <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
-                 <div class="flex gap-3 flex-wrap justify-end">
-                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/60 hover:text-white" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white" title="X (Twitter)">
-                        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                     </a>
-                     <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/60 hover:text-white" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                     <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white" title="TikTok">
-                        <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                     </a>
-                     <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/60 hover:text-white" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
-                 </div>
-             </div>
+            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 pb-8 max-w-7xl">
+    <main class="flex-grow container mx-auto px-4 lg:px-6 py-8">
 
-        <section id="hub" class="mb-8" data-aos="fade-up">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <section id="hub" class="mb-12" data-aos="fade-up">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
-                <div class="lg:col-span-4 h-full">
-                    <div class="bento-card card-violet p-6 flex flex-col h-full relative overflow-hidden">
+                <div class="lg:col-span-4 h-full flex flex-col">
+                    <div class="bg-brand-card rounded-2xl p-6 flex flex-col h-full relative overflow-hidden border border-white/5 shadow-xl">
                         <div class="flex justify-between items-start mb-4 relative z-10">
-                            <h3 id="device-name" class="font-display font-black text-3xl text-white uppercase leading-none drop-shadow-md">DEVICE<br>NAME</h3>
+                            <h1 id="device-name" class="font-extrabold text-3xl text-white uppercase leading-none tracking-tight">DEVICE<br>NAME</h1>
                         </div>
 
-                        <div class="flex-grow flex items-center justify-center py-6 relative z-10 min-h-[150px]">
-                            <img id="device-img" src="" class="w-56 object-contain animate-float drop-shadow-2xl" alt="Device">
+                        <div class="flex-grow flex items-center justify-center py-6 relative z-10 min-h-[200px]">
+                            <img id="device-img" src="" class="w-64 object-contain animate-float drop-shadow-2xl" alt="Device">
                         </div>
 
-                        <div class="grid grid-cols-2 gap-2 mb-6 relative z-10" id="stats-grid">
-                            <div class="stat-pill"><i data-lucide="cpu"></i> <span id="stat-chip">...</span></div>
-                            <div class="stat-pill"><i data-lucide="monitor"></i> <span id="stat-screen">...</span></div>
-                            <div class="stat-pill"><i data-lucide="memory-stick"></i> <span id="stat-ram">...</span></div>
-                            <div class="stat-pill"><i data-lucide="hard-drive"></i> <span id="stat-storage">...</span></div>
-                            <div class="stat-pill"><i data-lucide="battery"></i> <span id="stat-battery">...</span></div>
-                            <div class="stat-pill"><i data-lucide="smartphone"></i> <span id="stat-os">...</span></div>
-                        </div>
-
-                        <a id="affiliate-btn" href="#" target="_blank" class="btn-yellow relative z-10">
-                            <span>Buy Now</span> <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        <a id="affiliate-btn" href="#" target="_blank" class="w-full py-4 bg-white text-brand-bg font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-brand-muted transition-colors relative z-10 mt-auto">
+                            <span>Buy Now</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </a>
-                        <p class="text-[10px] font-bold text-white/30 text-center mt-3 uppercase tracking-wider relative z-10">Affiliate Link • Supports Channel</p>
+                        <p class="text-[10px] font-bold text-brand-muted text-center mt-3 uppercase tracking-wider relative z-10">Affiliate Link • Supports The Channel</p>
                     </div>
                 </div>
 
-                <div class="lg:col-span-8 h-full">
-                    <div class="bento-card card-rose p-4 flex flex-col h-full">
-                        <div class="flex justify-between items-center mb-4 px-2">
-                            <h2 class="font-display font-bold text-white text-xl flex items-center gap-2">
-                                <i data-lucide="play-circle" class="text-white w-6 h-6"></i> Video Review
+                <div class="lg:col-span-8 h-full flex flex-col">
+                    <div class="bg-brand-card rounded-2xl p-1 overflow-hidden border border-white/5 shadow-xl h-full flex flex-col">
+                        <div class="flex justify-between items-center p-4">
+                            <h2 class="font-bold text-white text-lg flex items-center gap-2">
+                                <i data-lucide="play-circle" class="text-brand-muted w-5 h-5"></i> Video Review
                             </h2>
-                            <a id="channel-link" href="#" target="_blank" class="text-xs font-bold text-white/80 hover:text-white transition-colors flex items-center gap-1 bg-black/20 px-4 py-2 rounded-lg border border-white/10 hover:border-white/30">
-                                More Videos <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                            <a id="channel-link" href="#" target="_blank" class="text-xs font-bold text-brand-muted hover:text-white transition-colors">
+                                View Channel &rarr;
                             </a>
                         </div>
-
-                        <div id="main-video-embed" class="video-container mb-4 border-2 border-white/10 flex-grow min-h-[300px]">
-                            <div class="absolute inset-0 flex items-center justify-center text-white/20 font-display font-bold animate-pulse">LOADING VIDEO...</div>
+                        <div id="main-video-embed" class="bg-black rounded-xl overflow-hidden relative flex-grow min-h-[300px] lg:min-h-0">
+                            <div class="absolute inset-0 flex items-center justify-center text-white/20 font-bold animate-pulse">LOADING VIDEO...</div>
                         </div>
-
-                        <div class="px-2">
-                            <h2 id="video-title" class="text-2xl font-display font-bold text-white line-clamp-1 mb-1">Loading Video Title...</h2>
-                            <p class="text-sm font-medium text-white/60 font-mono" id="video-date">...</p>
+                        <div class="p-4">
+                            <h2 id="video-title" class="text-xl font-bold text-white line-clamp-1">Loading Video Title...</h2>
+                            <p class="text-sm font-medium text-brand-muted" id="video-date">...</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-12">
-                    <div class="bento-card card-teal p-8 flex flex-col md:flex-row gap-8">
-
-                        <div class="flex-1 flex flex-col">
-                            <div class="mb-4">
-                                <span class="text-white/70 font-bold text-xs uppercase tracking-widest border-b-2 border-white/20 pb-1">Ryan's Verdict</span>
-                                <h3 class="font-display font-bold text-3xl text-white leading-tight mt-2">Final Thoughts</h3>
-                            </div>
-
-                            <div class="relative pl-6 border-l-4 border-white/30 bg-black/20 p-6 rounded-r-2xl flex-grow">
-                                <p id="review-summary" class="text-lg font-medium text-white leading-relaxed">
-                                    "Loading review summary..."
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="w-full md:w-96 shrink-0 flex flex-col gap-4">
-                            <div class="flex justify-end">
-                                <div class="score-badge shadow-lg">
-                                    <span class="text-xs uppercase font-bold text-black/50">RATING</span>
-                                    <span id="score-text" class="text-2xl">0.0</span>
-                                    <i data-lucide="star" class="w-5 h-5 fill-current"></i>
-                                </div>
-                            </div>
-
-                            <div class="bg-black/20 border-2 border-white/10 p-4 rounded-2xl flex-1">
-                                <span class="block text-xs font-extrabold text-green-300 uppercase mb-3 flex items-center gap-2 border-b border-white/5 pb-2">
-                                    <i data-lucide="thumbs-up" class="w-4 h-4"></i> The Good
-                                </span>
-                                <ul class="text-sm font-medium text-white/90 list-disc list-inside space-y-2" id="pros-list"><li>Loading...</li></ul>
-                            </div>
-
-                            <div class="bg-black/20 border-2 border-white/10 p-4 rounded-2xl flex-1">
-                                <span class="block text-xs font-extrabold text-red-300 uppercase mb-3 flex items-center gap-2 border-b border-white/5 pb-2">
-                                    <i data-lucide="thumbs-down" class="w-4 h-4"></i> The Bad
-                                </span>
-                                <ul class="text-sm font-medium text-white/90 list-disc list-inside space-y-2" id="cons-list"><li>Loading...</li></ul>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
 
             </div>
         </section>
 
-        <section id="database" data-aos="fade-up" class="mb-0">
-            <div id="compatibility" class="card-3d rounded-3xl p-6 md:p-10 relative overflow-hidden">
+        <section id="database" data-aos="fade-up">
+            <div class="bg-brand-card rounded-2xl border border-white/5 p-6 lg:p-10 shadow-xl overflow-hidden relative">
 
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <h2 class="font-retro text-3xl text-white drop-shadow-md">Game Compatibility</h2>
-                    <div id="variant-tabs" class="hidden"><div class="inline-flex flex-wrap gap-2 bg-black/20 p-1 rounded-lg"></div></div>
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-white">Compatibility</h2>
+                        <p class="text-brand-muted text-sm mt-1">Community tested performance reports</p>
+                    </div>
+                    <div id="variant-tabs" class="hidden">
+                         <div class="inline-flex flex-wrap gap-2 bg-brand-bg p-1 rounded-lg"></div>
+                    </div>
                 </div>
 
-                <div id="system-buttons" class="mb-6 flex flex-wrap gap-2">
-                    <button data-system="switch" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">Switch</button>
-                    <button data-system="ps2" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">PS2</button>
-                    <button data-system="ps3" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">PS3</button>
-                    <button data-system="psvita" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">PS Vita</button>
-                    <button data-system="winlator" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">Winlator</button>
-                    <button data-system="gamehub" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">GameHub</button>
-                    <button data-system="wiiu" class="system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 tracking-wide text-shadow-md">Wii U</button>
+                <div id="system-buttons" class="flex flex-wrap gap-2 mb-6 pb-4 border-b border-white/5">
+                    <button data-system="switch" class="system-btn">Switch</button>
+                    <button data-system="ps2" class="system-btn">PS2</button>
+                    <button data-system="ps3" class="system-btn">PS3</button>
+                    <button data-system="psvita" class="system-btn">PS Vita</button>
+                    <button data-system="winlator" class="system-btn">Winlator</button>
+                    <button data-system="gamehub" class="system-btn">GameHub</button>
+                    <button data-system="wiiu" class="system-btn">Wii U</button>
                 </div>
 
-                <div class="bg-black/20 rounded-xl p-4 mb-6 border border-white/5">
+                <div class="bg-brand-bg/30 rounded-xl p-4 mb-6 border border-white/5">
                     <div class="flex flex-col md:flex-row gap-4 justify-between items-end md:items-center">
-                        <div id="perf-filters" class="flex flex-wrap gap-2 text-xs font-retro">
-                            <button data-perf="" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 border border-transparent filter-active transition-colors">All</button>
-                            <button data-perf="Perfect" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-perfect font-bold border border-transparent transition-colors">Perfect</button>
-                            <button data-perf="Great" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-great font-bold border border-transparent transition-colors">Great</button>
-                            <button data-perf="Playable" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-playable font-bold border border-transparent transition-colors">Playable</button>
-                            <button data-perf="Unplayable" class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 perf-unplayable font-bold border border-transparent transition-colors">Unplayable</button>
+                        <div id="perf-filters" class="flex flex-wrap gap-2">
+                            <button data-perf="" class="perf-btn">All</button>
+                            <button data-perf="Perfect" class="perf-btn">Perfect</button>
+                            <button data-perf="Great" class="perf-btn">Great</button>
+                            <button data-perf="Playable" class="perf-btn">Playable</button>
+                            <button data-perf="Unplayable" class="perf-btn">Unplayable</button>
                         </div>
 
-                        <div class="flex gap-4 w-full md:w-auto">
+                        <div class="flex gap-2 w-full md:w-auto">
                             <div class="relative flex-grow md:flex-grow-0 md:w-64">
-                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
-                                <input type="text" id="game-search-box" class="form-input pl-10" placeholder="Search games...">
+                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-brand-muted w-4 h-4"></i>
+                                <input type="text" id="game-search-box" class="w-full bg-brand-bg border border-brand-card rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-brand-muted transition-colors placeholder-brand-muted/50" placeholder="Search games...">
                             </div>
-                            <select id="rows-per-page" class="form-input w-20 text-center font-mono">
+                            <select id="rows-per-page" class="bg-brand-bg border border-brand-card rounded-lg px-2 text-sm text-white focus:outline-none cursor-pointer">
                                 <option value="10" selected>10</option>
                                 <option value="20">20</option>
                                 <option value="50">50</option>
-                                <option value="100">100</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar rounded-lg border border-white/10">
-                    <table id="compatibility-table" class="min-w-full text-sm text-left text-gray-200">
-                        <thead class="bg-black/40 text-accent-cyan font-retro text-sm uppercase tracking-wider cursor-pointer select-none"></thead>
-                        <tbody class="divide-y divide-white/10 align-baseline bg-black/10"></tbody>
+                <div class="overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-brand-bg/20">
+                    <table id="compatibility-table" class="min-w-full text-sm text-left">
+                        <thead class="bg-brand-bg text-brand-muted font-bold text-xs uppercase tracking-wider cursor-pointer select-none">
+                            </thead>
+                        <tbody class="divide-y divide-white/5 align-baseline text-white/90">
+                            </tbody>
                     </table>
                 </div>
 
-                <div id="pagination-controls" class="mt-8 flex items-center justify-center gap-4">
-                    <button id="prev-btn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-retro text-xs disabled:opacity-30 disabled:cursor-not-allowed transition-colors">Previous</button>
-                    <span id="page-info" class="font-retro text-sm text-white">Page 1 of 1</span>
-                    <button id="next-btn" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg font-retro text-xs disabled:opacity-30 disabled:cursor-not-allowed transition-colors">Next</button>
+                <div id="pagination-controls" class="mt-6 flex items-center justify-center gap-4">
+                    <button id="prev-btn" class="bg-brand-bg hover:bg-brand-hover text-white px-4 py-2 rounded-lg font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed transition-colors">Previous</button>
+                    <span id="page-info" class="font-bold text-sm text-brand-muted">Page 1 of 1</span>
+                    <button id="next-btn" class="bg-brand-bg hover:bg-brand-hover text-white px-4 py-2 rounded-lg font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed transition-colors">Next</button>
                 </div>
 
-                <div class="text-center mt-10">
-                    <button id="add-entry-btn" class="shiny-btn bg-[#fbbf24] text-[#451a03] px-8 py-3 rounded-xl font-logo font-bold shadow-lg hover:bg-white hover:scale-105 transition-all">
+                <div class="text-center mt-12 border-t border-white/5 pt-8">
+                    <p class="text-brand-muted text-sm mb-4">Don't see a game? Help the community.</p>
+                    <button id="add-entry-btn" class="bg-white text-brand-bg px-8 py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition-transform">
                         ADD YOUR ENTRY
                     </button>
                 </div>
 
-                <div id="add-entry-form-container" class="hidden mt-8 bg-black/30 p-6 rounded-xl border border-white/10 animate-[popIn_0.3s_ease-out]">
-                     <h3 class="font-retro text-xl text-white mb-4">Submit Report</h3>
-                     <form id="compatibility-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="add-entry-form-container" class="hidden mt-8 bg-brand-bg p-6 rounded-xl border border-white/10 animate-pop-in">
+                      <h3 class="font-bold text-xl text-white mb-6">Submit Report</h3>
+                      <form id="compatibility-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                         <div class="md:col-span-2">
-                            <label for="form-game-title" class="block text-xs font-bold text-gray-400 mb-1">Game Title *</label>
-                            <input type="text" id="form-game-title" name="game" class="form-input font-body" required placeholder="e.g. Super Mario Odyssey">
+                            <label for="form-game-title" class="block text-xs font-bold text-brand-muted mb-1">Game Title *</label>
+                            <input type="text" id="form-game-title" name="game" class="brand-input w-full rounded-lg px-4 py-2" required placeholder="e.g. Super Mario Odyssey">
                         </div>
 
                         <div>
-                             <label for="form-system-select" class="block text-xs font-bold text-gray-400 mb-1">System *</label>
-                             <select id="form-system-select" name="system" class="form-input font-body" required>
+                             <label for="form-system-select" class="block text-xs font-bold text-brand-muted mb-1">System *</label>
+                             <select id="form-system-select" name="system" class="brand-input w-full rounded-lg px-4 py-2" required>
                                  <option value="switch">Nintendo Switch</option>
                                  <option value="ps2">PlayStation 2</option>
                                  <option value="ps3">PlayStation 3</option>
@@ -552,8 +285,8 @@
                         </div>
 
                         <div>
-                            <label for="form-performance" class="block text-xs font-bold text-gray-400 mb-1">Performance *</label>
-                            <select id="form-performance" name="performance" class="form-input font-body" required>
+                            <label for="form-performance" class="block text-xs font-bold text-brand-muted mb-1">Performance *</label>
+                            <select id="form-performance" name="performance" class="brand-input w-full rounded-lg px-4 py-2" required>
                                 <option value="Perfect">Perfect</option>
                                 <option value="Great">Great</option>
                                 <option value="Playable">Playable</option>
@@ -564,41 +297,44 @@
                         <div id="dynamic-fields" class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-gray-400 mb-1">Notes (Optional)</label>
-                            <textarea name="notes" class="form-input font-body" rows="2" placeholder="Any special settings?"></textarea>
+                            <label class="block text-xs font-bold text-brand-muted mb-1">Notes (Optional)</label>
+                            <textarea name="notes" class="brand-input w-full rounded-lg px-4 py-2" rows="3" placeholder="Any special settings?"></textarea>
                         </div>
 
                         <div class="md:col-span-2 flex justify-end gap-3 mt-4 pt-4 border-t border-white/10">
-                            <button type="button" id="cancel-btn" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-500 text-white font-retro text-xs transition-colors">Cancel</button>
-                            <button type="submit" class="px-6 py-2 rounded bg-[#fbbf24] hover:bg-white text-[#451a03] font-retro text-xs shadow-lg transition-colors flex items-center justify-center gap-2">Submit</button>
+                            <button type="button" id="cancel-btn" class="px-4 py-2 rounded-lg bg-brand-card hover:bg-brand-hover text-white font-bold text-sm transition-colors">Cancel</button>
+                            <button type="submit" class="px-6 py-2 rounded-lg bg-white text-brand-bg font-bold text-sm shadow-lg hover:bg-brand-muted transition-colors flex items-center justify-center gap-2">Submit</button>
                         </div>
                         <input type="hidden" id="hidden-device" name="device">
                         <input type="hidden" id="hidden-system" name="system">
-                     </form>
+                      </form>
                 </div>
+
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-black/20 py-10 text-center border-t border-white/5 mt-auto">
-        <div class="flex justify-center flex-wrap gap-4 mb-6">
-            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-            <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="X (Twitter)"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="TikTok"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center flex-wrap gap-6 mb-6">
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+            </div>
+            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
         </div>
-        <p class="text-xs font-bold text-white/20 uppercase tracking-widest">Ryan Retro • 2026</p>
     </footer>
 
     <div id="game-details-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="game-modal-bg"></div>
-        <div id="game-card-wrapper" class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl w-full max-w-4xl shadow-2xl animate-[popIn_0.3s_ease-out] flex flex-col max-h-[90vh] overflow-hidden">
+        <div class="absolute inset-0 bg-brand-bg/90 backdrop-blur-sm" id="game-modal-bg"></div>
+        <div id="game-card-wrapper" class="relative bg-brand-card border-2 border-white/20 rounded-3xl w-full max-w-4xl shadow-2xl animate-pop-in flex flex-col max-h-[90vh] overflow-hidden">
             <div class="flex justify-between items-center p-4 border-b border-white/10 bg-black/20 shrink-0">
-                <span class="font-retro text-white/50 text-sm pl-2">DETAILS</span>
+                <span class="font-bold text-brand-muted text-xs pl-2 tracking-widest uppercase">REPORT DETAILS</span>
                 <div class="flex gap-2">
                     <button id="screenshot-game-modal" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex items-center gap-2" title="Save Card">
                         <i data-lucide="camera" class="w-5 h-5"></i>
@@ -609,11 +345,11 @@
                     </button>
                 </div>
             </div>
-            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow"></div>
+            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow text-white"></div>
         </div>
     </div>
 
-    <script>
+<script>
     // --- HELPER FUNCTIONS ---
     function showToast(message) {
         const toast = document.getElementById("toast");
@@ -625,236 +361,237 @@
     const norm = s => (s || '').trim().toLowerCase();
 
     // --- DATA CONFIGURATION ---
-    // Merged your full list here so all links work
     const DEVICE_CONFIG = {
-  "Retroid Pocket 5": {
-    name: "Retroid Pocket 5",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png",
-    link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
-    linkText: "Buy Now",
-    chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
-    score: 9.5,
-    reviewShort: "A beautiful OLED screen and surprisingly great performance make the Retroid Pocket 5 one of the best handhelds. Surprisingly premium for the price.",
-    pros: ["Stunning OLED Screen", "Great Performance", "Premium Build Quality"],
-    cons: ["D-pad up top is uncomfortable for some", "Comfort could be better"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 5", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
-    aliases: ["Retroid Pocket5","RP5"],
-    variants: [{id: "sd865", label: "Snapdragon 865"}]
-  },
+      "Retroid Pocket 5": {
+        name: "Retroid Pocket 5",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT",
+        linkText: "Buy Now",
+        chipset: "Snapdragon 865", screen: "5.5\" 1080p OLED", battery: "5000 mAh", os: "Android 13", ram: "8GB", storage: "128GB",
+        score: 9.5,
+        reviewShort: "A beautiful OLED screen and surprisingly great performance make the Retroid Pocket 5 one of the best handhelds. Surprisingly premium for the price.",
+        pros: ["Stunning OLED Screen", "Great Performance", "Premium Build Quality"],
+        cons: ["D-pad up top is uncomfortable for some", "Comfort could be better"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 5", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
+        aliases: ["Retroid Pocket5","RP5"],
+        variants: [{id: "sd865", label: "Snapdragon 865"}]
+      },
+      "Retroid Pocket 6": {
+        name: "Retroid Pocket 6",
+        img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
+        link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon 8 Gen 2", screen: "5.5\" 1080p OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
+        score: 9.8,
+        reviewShort: "A flagship killer. Switch emulation in your pocket has never been this good.",
+        pros: ["Insane Power", "Active Cooling", "Analog Triggers"],
+        cons: ["Price increase", "Heavier"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 6", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
+        aliases: ["Retroid 6","RP6"],
+        variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+      },
+      "Retroid Pocket G2": {
+        name: "Retroid Pocket G2",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
+        score: 8.5,
+        reviewShort: "A big screen streaming beast, essentially a Retroid Pocket 5 XL.",
+        pros: ["Huge Screen", "Comfortable", "Great Streaming"],
+        cons: ["LCD not OLED", "Lower Performance than RP6"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket g2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
+        aliases: ["Retroid G2", "RP G2"],
+        variants: [{id: "g2g2", label: "Snapdragon G2 Gen 2"}]
+      },
+      "Retroid Pocket Classic": {
+        name: "Retroid Pocket Classic",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
+        score: 9.4,
+        reviewShort: "The ultimate 4:3 device for retro purists.",
+        pros: ["4:3 OLED", "Perfect for PS2/GC", "Classic aesthetics"],
+        cons: ["Not for modern gaming", "Mono speaker"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket classic", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
+        aliases: ["Retroid Classic","RP Classic"],
+        variants: [{id: "g1g2", label: "Snapdragon G1 Gen 2"}]
+      },
+      "Retroid Pocket Mini": {
+        name: "Retroid Pocket Mini",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon 865", screen: "3.7\" 960p OLED", battery: "4000 mAh", os: "Android 13", ram: "6GB", storage: "128GB",
+        score: 9.6,
+        reviewShort: "A 4:3 OLED masterpiece. The perfect pocket companion with way more power than it needs.",
+        pros: ["Incredible OLED", "Very Powerful", "Pocketable"],
+        cons: ["Small screen for streaming", "Pricey for size"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket mini", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20mini",
+        aliases: ["RP Mini"],
+        variants: [{id: "sd865", label: "Snapdragon 865"}]
+      },
+      "Retroid Pocket Flip 2": {
+        name: "Retroid Pocket Flip 2",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png",
+        link: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
+        chipset: "Snapdragon 865", screen: "4.7\" Touch", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
+        score: 9.2,
+        reviewShort: "Clamshell perfection returns with updated internals.",
+        pros: ["Clamshell Design", "Protectable Screen", "Good Sliders"],
+        cons: ["Hinge durability concern", "Smaller screen"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket flip 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20flip%202",
+        aliases: ["RP Flip 2", "Flip 2"],
+        variants: [{id: "sd865", label: "Snapdragon 865"}]
+      },
+      "Odin 2 Portal": {
+        name: "Odin 2 Portal",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png",
+        link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
+        chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
+        score: 9.7,
+        reviewShort: "The premium OLED handheld experience. Expensive, but flawless.",
+        pros: ["Incredible 120Hz OLED", "Top Tier Performance", "Premium Build"],
+        cons: ["Expensive", "Large Footprint"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 portal", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
+        aliases: ["Odin2 Portal"],
+        variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
+      },
+      "AYN Odin 3": {
+        name: "AYN Odin 3",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png",
+        link: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
+        chipset: "Snapdragon 8 Elite", screen: "6\" 1080p 120Hz AMOLED", battery: "8000 mAh", os: "Android 15", ram: "12-24GB", storage: "256GB+",
+        score: 9.9,
+        reviewShort: "The most powerful Android handheld ever made. Overkill in the best way possible.",
+        pros: ["Snapdragon 8 Elite", "120Hz AMOLED", "Wi-Fi 7"],
+        cons: ["Very Expensive", "Overkill for retro"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "ayn odin 3", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=ayn%20odin%203",
+        aliases: ["Odin3"],
+        variants: [{id: "sd8elite", label: "Snapdragon 8 Elite"}]
+      },
+      "Ayaneo Konkr Pocket Fit": {
+        name: "Ayaneo Konkr Pocket Fit",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/konkr.png",
+        link: "https://ayaneo.com/goods/9409042546933",
+        chipset: "Snapdragon G3x Gen 3", screen: "6\" 1080p 144Hz LCD", battery: "8000 mAh", os: "Android", ram: "8GB+", storage: "128GB+",
+        score: 9.0,
+        reviewShort: "A surprising LCD flagship killer from Ayaneo with a focus on ergonomics.",
+        pros: ["144Hz Screen", "Snapdragon G3x Gen 3", "Ergonomic Grip"],
+        cons: ["LCD not OLED", "Fan Noise"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "ayaneo konkr pocket fit", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=ayaneo%20konkr%20pocket%20fit",
+        aliases: ["Konkr Pocket Fit", "Konkr Fit"],
+        variants: [{id: "g3xgen3", label: "Snapdragon G3x Gen 3"}]
+      },
+      "Anbernic RG34XX": {
+        name: "Anbernic RG34XX",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png",
+        link: "https://s.click.aliexpress.com/e/_c3cp23I9",
+        chipset: "Allwinner H700", screen: "3.4\" 720x480 IPS", battery: "3500 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
+        score: 9.0,
+        reviewShort: "The Game Boy Advance form factor perfected. 3x pixel scaling on a 3:2 screen.",
+        pros: ["Perfect GBA Scaling", "Horizontal Design", "Great Price"],
+        cons: ["Low RAM", "No Android"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "anbernic rg34xx", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=anbernic%20rg34xx",
+        aliases: ["RG34XX"],
+        variants: [{id: "h700", label: "Allwinner H700"}]
+      },
+      "MagicX Zero 40": {
+        name: "MagicX Zero 40",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/magicxzero40.png",
+        link: "https://s.click.aliexpress.com/e/_c4EN3p5H",
+        chipset: "Allwinner A133P", screen: "4\" 480x800 IPS", battery: "4300 mAh", os: "Android", ram: "2GB", storage: "TF Card",
+        score: 8.0,
+        reviewShort: "Vertical screen perfection designed specifically for DS emulation.",
+        pros: ["Vertical Screen", "Great for DS", "Good Battery"],
+        cons: ["Low Resolution", "Weak Chipset"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "magicx zero 40", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=magicx%20zero%2040",
+        aliases: ["Zero 40"],
+        variants: [{id: "a133p", label: "Allwinner A133P"}]
+      },
+      "MagicX XU20 V32": {
+        name: "MagicX XU20 V32",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/xuretroxu20v32.png",
+        link: "https://s.click.aliexpress.com/e/_c4qAZCof",
+        chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3200 mAh", os: "Android 10", ram: "2GB", storage: "TF Card",
+        score: 7.5,
+        reviewShort: "A tiny 4:3 Android handheld. Great resolution for such a small device.",
+        pros: ["High Res Screen", "Pocketable", "Cheap Android"],
+        cons: ["Old Android 10", "Small Battery"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "magicx xu20 v32", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=magicx%20xu20%20v32",
+        aliases: ["XU20 V32"],
+        variants: [{id: "a133p", label: "Allwinner A133P"}]
+      },
+      "TrimUI Brick": {
+        name: "TrimUI Brick",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png",
+        link: "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
+        chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3000 mAh", os: "Linux", ram: "1GB", storage: "8GB eMMC",
+        score: 8.5,
+        reviewShort: "Premium feel, high res screen, and no sticks. A minimalist's dream.",
+        pros: ["Premium Build", "High Res Screen", "Simple UI"],
+        cons: ["No Joysticks", "Gets Warm"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "trimui brick", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=trimui%20brick",
+        aliases: ["Smart Brick"],
+        variants: [{id: "a133p", label: "Allwinner A133P"}]
+      },
+      "Vortex F5": {
+        name: "Vortex F5",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/f5.png",
+        link: "https://s.click.aliexpress.com/e/_c42DAswx",
+        chipset: "Rockchip RK3566", screen: "5.5\" 720p IPS", battery: "5000 mAh", os: "Linux", ram: "1GB", storage: "8GB",
+        score: 7.5,
+        reviewShort: "A solid budget Linux handheld with a generous 5.5 inch screen.",
+        pros: ["Large Screen", "Comfortable", "Good Battery"],
+        cons: ["Older Chipset", "Low RAM"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "vortex f5 handheld", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=vortex%20f5",
+        aliases: ["QRD Vortex F5"],
+        variants: [{id: "rk3566", label: "Rockchip RK3566"}]
+      },
+      "Mangmi Air X": {
+        name: "Mangmi Air X",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png",
+        link: "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr",
+        chipset: "Snapdragon 662", screen: "5.5\" 1080p IPS", battery: "5000 mAh", os: "Android 14", ram: "4GB", storage: "64GB",
+        score: 8.0,
+        reviewShort: "A budget Android entry with a decent 1080p screen and good ergonomics.",
+        pros: ["1080p Screen", "Android 14", "Good Build"],
+        cons: ["Weak Chipset", "No Video Out"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "mangmi air x", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=mangmi%20air%20x",
+        aliases: ["Mangmi X"],
+        variants: [{id: "sd662", label: "Snapdragon 662"}]
+      },
+      "GKD Pixel 2": {
+        name: "GKD Pixel 2",
+        img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/pixel2.png",
+        link: "https://www.keepretro.com/",
+        chipset: "Rockchip RK3326S", screen: "2.4\" 640x480 IPS", battery: "1800 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
+        score: 8.0,
+        reviewShort: "The metal micro handheld returns with a much better high-res screen.",
+        pros: ["Metal Shell", "640x480 Resolution", "Pocketable"],
+        cons: ["Small Screen", "RK3326 Performance"],
+        ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "gkd pixel 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=gkd%20pixel%202",
+        aliases: ["Pixel 2"],
+        variants: [{id: "rk3326s", label: "Rockchip RK3326S"}]
+      }
+    };
 
-  "Retroid Pocket 6": {
-    name: "Retroid Pocket 6",
-    img: "https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png",
-    link: "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT",
-    chipset: "Snapdragon 8 Gen 2", screen: "5.5\" 1080p OLED", battery: "6000 mAh", os: "Android 14", ram: "8/12GB", storage: "128/256GB",
-    score: 9.8,
-    reviewShort: "A flagship killer. Switch emulation in your pocket has never been this good.",
-    pros: ["Insane Power", "Active Cooling", "Analog Triggers"],
-    cons: ["Price increase", "Heavier"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 6", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%206",
-    aliases: ["Retroid 6","RP6"],
-    variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
-  },
+    const SYSTEM_COLORS = {
+        switch: ['bg-red-600', 'text-white'],
+        ps2: ['bg-blue-600', 'text-white'],
+        ps3: ['bg-black', 'text-white'],
+        psvita: ['bg-teal-500', 'text-white'],
+        winlator: ['bg-sky-500', 'text-white'],
+        gamehub: ['bg-blue-900', 'text-white'],
+        wiiu: ['bg-blue-600', 'text-white']
+    };
 
-  "Retroid Pocket G2": {
-    name: "Retroid Pocket G2",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png",
-    link: "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT",
-    chipset: "Snapdragon G2 Gen 2", screen: "6\" LCD", battery: "8000mAh", os: "Android", ram: "8GB", storage: "128GB",
-    score: 8.5,
-    reviewShort: "A big screen streaming beast, essentially a Retroid Pocket 5 XL.",
-    pros: ["Huge Screen", "Comfortable", "Great Streaming"],
-    cons: ["LCD not OLED", "Lower Performance than RP6"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket g2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20g2",
-    aliases: ["Retroid G2", "RP G2"],
-    variants: [{id: "g2g2", label: "Snapdragon G2 Gen 2"}]
-  },
+    const PERF_COLORS = {
+        '': ['bg-white', 'text-brand-bg'], // All
+        'Perfect': ['bg-green-600', 'text-white'],
+        'Great': ['bg-blue-600', 'text-white'],
+        'Playable': ['bg-orange-500', 'text-white'],
+        'Unplayable': ['bg-red-600', 'text-white']
+    };
 
-  "Retroid Pocket Classic": {
-    name: "Retroid Pocket Classic",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png",
-    link: "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT",
-    chipset: "Snapdragon G1", screen: "4:3 OLED", battery: "4000 mAh", os: "Android", ram: "6GB", storage: "128GB",
-    score: 9.4,
-    reviewShort: "The ultimate 4:3 device for retro purists.",
-    pros: ["4:3 OLED", "Perfect for PS2/GC", "Classic aesthetics"],
-    cons: ["Not for modern gaming", "Mono speaker"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket classic", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20classic",
-    aliases: ["Retroid Classic","RP Classic"],
-    variants: [{id: "g1g2", label: "Snapdragon G1 Gen 2"}]
-  },
-
-  "Retroid Pocket Mini": {
-    name: "Retroid Pocket Mini",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png",
-    link: "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT",
-    chipset: "Snapdragon 865", screen: "3.7\" 960p OLED", battery: "4000 mAh", os: "Android 13", ram: "6GB", storage: "128GB",
-    score: 9.6,
-    reviewShort: "A 4:3 OLED masterpiece. The perfect pocket companion with way more power than it needs.",
-    pros: ["Incredible OLED", "Very Powerful", "Pocketable"],
-    cons: ["Small screen for streaming", "Pricey for size"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket mini", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20mini",
-    aliases: ["RP Mini"],
-    variants: [{id: "sd865", label: "Snapdragon 865"}]
-  },
-
-  "Retroid Pocket Flip 2": {
-    name: "Retroid Pocket Flip 2",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png",
-    link: "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT",
-    chipset: "Snapdragon 865", screen: "4.7\" Touch", battery: "5000 mAh", os: "Android", ram: "8GB", storage: "128GB",
-    score: 9.2,
-    reviewShort: "Clamshell perfection returns with updated internals.",
-    pros: ["Clamshell Design", "Protectable Screen", "Good Sliders"],
-    cons: ["Hinge durability concern", "Smaller screen"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket flip 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%20flip%202",
-    aliases: ["RP Flip 2", "Flip 2"],
-    variants: [{id: "sd865", label: "Snapdragon 865"}]
-  },
-
-  "Odin 2 Portal": {
-    name: "Odin 2 Portal",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png",
-    link: "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td",
-    chipset: "SD 8 Gen 2", screen: "7\" 120Hz OLED", battery: "8000 mAh", os: "Android 13", ram: "12GB", storage: "512GB",
-    score: 9.7,
-    reviewShort: "The premium OLED handheld experience. Expensive, but flawless.",
-    pros: ["Incredible 120Hz OLED", "Top Tier Performance", "Premium Build"],
-    cons: ["Expensive", "Large Footprint"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "odin 2 portal", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=odin%202%20portal",
-    aliases: ["Odin2 Portal"],
-    variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
-  },
-
-  "AYN Odin 3": {
-    name: "AYN Odin 3",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png",
-    link: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
-    chipset: "Snapdragon 8 Elite", screen: "6\" 1080p 120Hz AMOLED", battery: "8000 mAh", os: "Android 15", ram: "12-24GB", storage: "256GB+",
-    score: 9.9,
-    reviewShort: "The most powerful Android handheld ever made. Overkill in the best way possible.",
-    pros: ["Snapdragon 8 Elite", "120Hz AMOLED", "Wi-Fi 7"],
-    cons: ["Very Expensive", "Overkill for retro"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "ayn odin 3", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=ayn%20odin%203",
-    aliases: ["Odin3"],
-    variants: [{id: "sd8elite", label: "Snapdragon 8 Elite"}]
-  },
-
-  "Ayaneo Konkr Pocket Fit": {
-    name: "Ayaneo Konkr Pocket Fit",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/konkr.png",
-    link: "https://ayaneo.com/goods/9409042546933",
-    chipset: "Snapdragon G3x Gen 3", screen: "6\" 1080p 144Hz LCD", battery: "8000 mAh", os: "Android", ram: "8GB+", storage: "128GB+",
-    score: 9.0,
-    reviewShort: "A surprising LCD flagship killer from Ayaneo with a focus on ergonomics.",
-    pros: ["144Hz Screen", "Snapdragon G3x Gen 3", "Ergonomic Grip"],
-    cons: ["LCD not OLED", "Fan Noise"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "ayaneo konkr pocket fit", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=ayaneo%20konkr%20pocket%20fit",
-    aliases: ["Konkr Pocket Fit", "Konkr Fit"],
-    variants: [{id: "g3xgen3", label: "Snapdragon G3x Gen 3"}]
-  },
-
-  "Anbernic RG34XX": {
-    name: "Anbernic RG34XX",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png",
-    link: "https://s.click.aliexpress.com/e/_c3cp23I9",
-    chipset: "Allwinner H700", screen: "3.4\" 720x480 IPS", battery: "3500 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
-    score: 9.0,
-    reviewShort: "The Game Boy Advance form factor perfected. 3x pixel scaling on a 3:2 screen.",
-    pros: ["Perfect GBA Scaling", "Horizontal Design", "Great Price"],
-    cons: ["Low RAM", "No Android"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "anbernic rg34xx", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=anbernic%20rg34xx",
-    aliases: ["RG34XX"],
-    variants: [{id: "h700", label: "Allwinner H700"}]
-  },
-
-  "MagicX Zero 40": {
-    name: "MagicX Zero 40",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/magicxzero40.png",
-    link: "https://s.click.aliexpress.com/e/_c4EN3p5H",
-    chipset: "Allwinner A133P", screen: "4\" 480x800 IPS", battery: "4300 mAh", os: "Android", ram: "2GB", storage: "TF Card",
-    score: 8.0,
-    reviewShort: "Vertical screen perfection designed specifically for DS emulation.",
-    pros: ["Vertical Screen", "Great for DS", "Good Battery"],
-    cons: ["Low Resolution", "Weak Chipset"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "magicx zero 40", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=magicx%20zero%2040",
-    aliases: ["Zero 40"],
-    variants: [{id: "a133p", label: "Allwinner A133P"}]
-  },
-
-  "MagicX XU20 V32": {
-    name: "MagicX XU20 V32",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/xuretroxu20v32.png",
-    link: "https://s.click.aliexpress.com/e/_c4qAZCof",
-    chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3200 mAh", os: "Android 10", ram: "2GB", storage: "TF Card",
-    score: 7.5,
-    reviewShort: "A tiny 4:3 Android handheld. Great resolution for such a small device.",
-    pros: ["High Res Screen", "Pocketable", "Cheap Android"],
-    cons: ["Old Android 10", "Small Battery"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "magicx xu20 v32", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=magicx%20xu20%20v32",
-    aliases: ["XU20 V32"],
-    variants: [{id: "a133p", label: "Allwinner A133P"}]
-  },
-
-  "TrimUI Brick": {
-    name: "TrimUI Brick",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png",
-    link: "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv",
-    chipset: "Allwinner A133P", screen: "3.2\" 1024x768 IPS", battery: "3000 mAh", os: "Linux", ram: "1GB", storage: "8GB eMMC",
-    score: 8.5,
-    reviewShort: "Premium feel, high res screen, and no sticks. A minimalist's dream.",
-    pros: ["Premium Build", "High Res Screen", "Simple UI"],
-    cons: ["No Joysticks", "Gets Warm"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "trimui brick", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=trimui%20brick",
-    aliases: ["Smart Brick"],
-    variants: [{id: "a133p", label: "Allwinner A133P"}]
-  },
-
-  "Vortex F5": {
-    name: "Vortex F5",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/f5.png",
-    link: "https://s.click.aliexpress.com/e/_c42DAswx",
-    chipset: "Rockchip RK3566", screen: "5.5\" 720p IPS", battery: "5000 mAh", os: "Linux", ram: "1GB", storage: "8GB",
-    score: 7.5,
-    reviewShort: "A solid budget Linux handheld with a generous 5.5 inch screen.",
-    pros: ["Large Screen", "Comfortable", "Good Battery"],
-    cons: ["Older Chipset", "Low RAM"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "vortex f5 handheld", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=vortex%20f5",
-    aliases: ["QRD Vortex F5"],
-    variants: [{id: "rk3566", label: "Rockchip RK3566"}]
-  },
-
-  "Mangmi Air X": {
-    name: "Mangmi Air X",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png",
-    link: "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr",
-    chipset: "Snapdragon 662", screen: "5.5\" 1080p IPS", battery: "5000 mAh", os: "Android 14", ram: "4GB", storage: "64GB",
-    score: 8.0,
-    reviewShort: "A budget Android entry with a decent 1080p screen and good ergonomics.",
-    pros: ["1080p Screen", "Android 14", "Good Build"],
-    cons: ["Weak Chipset", "No Video Out"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "mangmi air x", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=mangmi%20air%20x",
-    aliases: ["Mangmi X"],
-    variants: [{id: "sd662", label: "Snapdragon 662"}]
-  },
-
-  "GKD Pixel 2": {
-    name: "GKD Pixel 2",
-    img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/pixel2.png",
-    link: "https://www.keepretro.com/",
-    chipset: "Rockchip RK3326S", screen: "2.4\" 640x480 IPS", battery: "1800 mAh", os: "Linux", ram: "1GB", storage: "TF Card",
-    score: 8.0,
-    reviewShort: "The metal micro handheld returns with a much better high-res screen.",
-    pros: ["Metal Shell", "640x480 Resolution", "Pocketable"],
-    cons: ["Small Screen", "RK3326 Performance"],
-    ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "gkd pixel 2", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=gkd%20pixel%202",
-    aliases: ["Pixel 2"],
-    variants: [{id: "rk3326s", label: "Rockchip RK3326S"}]
-  }
-};
-
-
-    // System Config matches your CSV structure in app.py
+    // System Config
     const SYSTEM_CONFIG = {
         switch:{ columns:[
             {key:'game',label:'Game'},{key:'performance',label:'Performance',isStatus:true},
@@ -947,8 +684,6 @@
         ]
     };
 
-    const SYSTEM_COLORS = { switch: ['bg-red-600', 'text-white'], ps2: ['bg-blue-600', 'text-white'], ps3: ['bg-black', 'text-white'], psvita: ['bg-teal-500', 'text-white'], winlator: ['bg-sky-500', 'text-white'], gamehub: ['bg-blue-900', 'text-white'], wiiu: ['bg-blue-600', 'text-white'] };
-
     // --- STATE MANAGEMENT ---
 
     // Resolve device from URL
@@ -999,31 +734,17 @@
         document.getElementById('device-img').src = DEVICE.img;
         document.getElementById('hidden-device').value = DEVICE.name;
 
-        // Specs
-        document.getElementById('stat-chip').textContent = DEVICE.chipset || "Unknown";
-        document.getElementById('stat-screen').textContent = DEVICE.screen || "Unknown";
-        document.getElementById('stat-battery').textContent = DEVICE.battery || "Unknown";
-        document.getElementById('stat-os').textContent = DEVICE.os || "Android";
-        document.getElementById('stat-ram').textContent = DEVICE.ram || "Unknown";
-        document.getElementById('stat-storage').textContent = DEVICE.storage || "Unknown";
-
         // Affiliate
         const btn = document.getElementById('affiliate-btn');
         btn.href = DEVICE.link;
-        // document.getElementById('header-shop-btn').href = DEVICE.link;
-        document.getElementById('channel-link').href = DEVICE.ytUrl;
-
-        // 2. Setup Review Card
-        document.getElementById('review-summary').textContent = `"${DEVICE.reviewShort}"`;
-        document.getElementById('score-text').textContent = DEVICE.score;
-        document.getElementById('pros-list').innerHTML = (DEVICE.pros || ['Good performance']).map(p => `<li>${p}</li>`).join('');
-        document.getElementById('cons-list').innerHTML = (DEVICE.cons || ['None']).map(c => `<li>${c}</li>`).join('');
+        // document.getElementById('channel-link').href = DEVICE.ytUrl;
 
         // 3. Setup Variant Tabs
         initVariantTabs();
 
         // 4. Init Compatibility Table
         loadSystemData('switch');
+        updatePerfButtons();
 
         // 5. Fetch Video (Live from API)
         fetchLatestVideo();
@@ -1052,12 +773,12 @@
             return normalized;
         } catch (e) {
             console.error("Failed to load data", e);
+            // Mock Data if API fails for UI dev
             return [];
         }
     }
 
     async function fetchLatestVideo() {
-        // Try to fetch specific query for this device from your API
         try {
             const channelId = DEVICE.ytId || "UCh9GxjM-FNuSWv7xqn3UKVw";
             const query = DEVICE.ytQuery || DEVICE.name;
@@ -1067,15 +788,10 @@
             if (data && data.length > 0) {
                 const vid = data[0];
                 const embed = document.getElementById('main-video-embed');
-                embed.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid.videoId}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                embed.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid.videoId}" class="w-full h-full" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 document.getElementById('video-title').textContent = vid.title;
                 const d = new Date(vid.publishedAt);
                 document.getElementById('video-date').textContent = d.toLocaleDateString();
-            } else {
-                // Fallback to static main video if API fails or returns nothing
-                if (DEVICE.mainVideoId) {
-                    // ... existing logic ...
-                }
             }
         } catch (e) {
             console.log("Video fetch failed", e);
@@ -1090,12 +806,16 @@
         const row = wrap.querySelector('div');
         row.innerHTML = '';
 
+        // Class Constants for Toggling
+        const CLASS_ACTIVE = 'bg-white text-brand-bg';
+        const CLASS_INACTIVE = 'bg-brand-card hover:bg-brand-hover text-brand-muted hover:text-white';
+
         DEVICE.variants.forEach((v, i) => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = [
-                'px-3','py-1.5','rounded-md','font-retro','text-xs', 'transition-colors',
-                i === 0 ? 'bg-yellow-400 text-black' : 'bg-gray-700 hover:bg-gray-600 text-white'
+                'px-3','py-1.5','rounded-md','font-bold','text-xs', 'transition-colors',
+                i === 0 ? CLASS_ACTIVE : CLASS_INACTIVE
             ].join(' ');
             btn.textContent = v.label;
             btn.dataset.variantId = v.id;
@@ -1109,12 +829,12 @@
             const next = DEVICE.variants.find(v => v.id === id);
             if (!next) return;
 
+            // Reset all buttons to inactive class string
             [...row.children].forEach(b => {
-                  b.classList.remove('bg-yellow-400','text-black');
-                  b.classList.add('bg-gray-700','text-white');
+                 b.className = `px-3 py-1.5 rounded-md font-bold text-xs transition-colors ${CLASS_INACTIVE}`;
             });
-            btn.classList.remove('bg-gray-700','text-white');
-            btn.classList.add('bg-yellow-400','text-black');
+            // Set active button to active class string
+            btn.className = `px-3 py-1.5 rounded-md font-bold text-xs transition-colors ${CLASS_ACTIVE}`;
 
             currentVariant = next;
             loadSystemData(currentSystemId);
@@ -1127,12 +847,19 @@
     async function loadSystemData(systemId) {
         currentSystemId = systemId;
         document.querySelectorAll('.system-btn').forEach(btn => {
-            const colors = SYSTEM_COLORS[systemId] || ['bg-yellow-400', 'text-black'];
-            btn.className = 'system-btn px-4 py-2 rounded-lg font-logo text-sm transition-all hover:scale-105 bg-gray-700 text-white tracking-wide text-shadow-md';
-            if(btn.dataset.system === systemId) { btn.classList.remove('bg-gray-700', 'text-white'); btn.classList.add(...colors, 'scale-110', 'shadow-lg'); }
+            const colors = SYSTEM_COLORS[systemId] || ['bg-white', 'text-brand-bg'];
+
+            // Reset base classes
+            btn.className = 'system-btn px-4 py-2 rounded-lg font-bold text-sm bg-brand-bg text-brand-muted hover:text-white hover:bg-brand-hover transition-all';
+
+            if(btn.dataset.system === systemId) {
+                // Apply active classes
+                btn.classList.remove('bg-brand-bg', 'text-brand-muted', 'hover:bg-brand-hover');
+                btn.classList.add(...colors, 'scale-105', 'shadow-lg');
+            }
         });
 
-        tableBody.innerHTML = `<tr><td colspan="100" class="p-6 text-center text-white/50"><i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2"></i>Loading data...</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="100" class="p-8 text-center text-brand-muted font-bold"><i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2 text-white"></i>Loading community reports...</td></tr>`;
         lucide.createIcons();
 
         // Fetch Real Data
@@ -1154,7 +881,7 @@
 
     function renderTableStructure() {
         const config = SYSTEM_CONFIG[currentSystemId] || SYSTEM_CONFIG['switch'];
-        tableHead.innerHTML = `<tr>${config.columns.map(col => `<th class="p-4" data-sort="${col.key}">${col.label} <span class="sort-indicator text-xs ml-1 opacity-50"></span></th>`).join('')}</tr>`;
+        tableHead.innerHTML = `<tr>${config.columns.map(col => `<th class="p-4" data-sort="${col.key}">${col.label} <span class="sort-indicator text-[10px] ml-1 opacity-50"></span></th>`).join('')}</tr>`;
     }
 
     function displayCurrentPage() {
@@ -1169,20 +896,20 @@
             if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
         });
 
-        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-white/50">No results found.</td></tr>`; }
+        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-brand-muted font-bold">No results found for this device/filter.</td></tr>`; }
         else {
             pageItems.forEach((row, i) => {
-                html += `<tr class="${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors cursor-pointer" onclick="openGameModal(${startIndex + i})">`;
+                html += `<tr class="group ${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors cursor-pointer" onclick="openGameModal(${startIndex + i})">`;
                 config.columns.forEach(col => {
                     let val = row[col.key] || '-';
                     if (col.isStatus) {
                         let badgeStyle = "";
-                        if(val === 'Perfect') badgeStyle = "bg-green-500/20 text-green-300 border border-green-500/30";
-                        else if(val === 'Great') badgeStyle = "bg-blue-500/20 text-blue-300 border border-blue-500/30";
-                        else if(val === 'Playable') badgeStyle = "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30";
-                        else if(val === 'Unplayable') badgeStyle = "bg-red-500/20 text-red-300 border border-red-500/30";
-                        html += `<td class="p-3 font-body"><span class="${badgeStyle} px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider inline-block">${val}</span></td>`;
-                    } else { html += `<td class="p-3 font-body">${val}</td>`; }
+                        if(val === 'Perfect') badgeStyle = "perf-perfect";
+                        else if(val === 'Great') badgeStyle = "perf-great";
+                        else if(val === 'Playable') badgeStyle = "perf-playable";
+                        else if(val === 'Unplayable') badgeStyle = "perf-unplayable";
+                        html += `<td class="p-4 font-mono text-xs"><span class="${badgeStyle} px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block border">${val}</span></td>`;
+                    } else { html += `<td class="p-4 font-medium text-sm text-brand-muted group-hover:text-white">${val}</td>`; }
                 });
                 html += '</tr>';
             });
@@ -1221,6 +948,22 @@
         displayCurrentPage();
     }
 
+    function updatePerfButtons() {
+        document.querySelectorAll('.perf-btn').forEach(btn => {
+            const type = btn.dataset.perf;
+            const colors = PERF_COLORS[type] || ['bg-white', 'text-brand-bg'];
+
+            // Reset base classes
+            btn.className = 'perf-btn px-4 py-2 rounded-lg font-bold text-sm bg-brand-bg text-brand-muted hover:text-white hover:bg-brand-hover transition-all';
+
+            if(type === perfFilter) {
+                // Apply active classes
+                btn.classList.remove('bg-brand-bg', 'text-brand-muted', 'hover:bg-brand-hover');
+                btn.classList.add(...colors, 'scale-105', 'shadow-lg');
+            }
+        });
+    }
+
     // --- GAME DETAILS MODAL LOGIC ---
     function openGameModal(index) {
         const game = currentlyDisplayedGames[index];
@@ -1228,11 +971,11 @@
         const modal = document.getElementById('game-details-modal');
         const content = document.getElementById('game-modal-content');
 
-        let statusColor = 'text-white';
-        if(game.performance === 'Perfect') statusColor = 'text-green-400 border-green-400/30 bg-green-400/10';
-        else if(game.performance === 'Great') statusColor = 'text-blue-400 border-blue-400/30 bg-blue-400/10';
-        else if(game.performance === 'Playable') statusColor = 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10';
-        else if(game.performance === 'Unplayable') statusColor = 'text-red-400 border-red-400/30 bg-red-400/10';
+        let statusBadge = '';
+if(game.performance === 'Perfect') statusBadge = 'perf-perfect';
+else if(game.performance === 'Great') statusBadge = 'perf-great';
+else if(game.performance === 'Playable') statusBadge = 'perf-playable';
+else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
 
         const config = SYSTEM_CONFIG[currentSystemId];
         const specialFields = ['game', 'performance', 'notes', 'date added', 'date', 'boxArt', 'chipset'];
@@ -1244,24 +987,24 @@
         const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
 
         content.innerHTML = `
-            <div class="flex flex-col md:flex-row gap-8 p-1">
+            <div class="flex flex-col md:flex-row gap-8">
                 <div class="w-full md:w-1/3 flex flex-col gap-4">
-                    <div class="relative rounded-lg overflow-hidden shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 group">
-                        <img src="${secondarySearch}" crossorigin="anonymous" alt="${game.game}" class="w-full h-auto object-cover"
+                    <div class="relative rounded-lg overflow-hidden shadow-2xl border border-white/10 group bg-black">
+                        <img src="${secondarySearch}" crossorigin="anonymous" alt="${game.game}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                              onError="this.src='${fallbackArt}';">
                     </div>
                 </div>
                 <div class="w-full md:w-2/3">
                     <div class="mb-6">
-                        <h2 class="font-logo text-3xl text-white mb-2 leading-tight drop-shadow-md">${game.game}</h2>
-                        <span class="font-retro text-sm font-bold ${statusColor} border px-4 py-1.5 rounded-full inline-flex items-center justify-center uppercase tracking-wider leading-none" style="min-height: 32px;">${game.performance}</span>
+                        <h2 class="font-extrabold text-3xl text-white mb-2 leading-tight">${game.game}</h2>
+                        <span class="${statusBadge} px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center justify-center border">${game.performance}</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        ${gridFields.map(col => `<div class="bg-black/20 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-xs text-purple-300 font-retro mb-1 leading-none opacity-80">${col.label}</p><p class="font-mono text-white text-sm break-words leading-tight">${game[col.key] || '-'}</p></div>`).join('')}
-                        ${game.chipset ? `<div class="bg-black/20 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-xs text-purple-300 font-retro mb-1 leading-none opacity-80">Chipset</p><p class="font-mono text-white text-sm break-words leading-tight">${game.chipset}</p></div>` : ''}
+                        ${gridFields.map(col => `<div class="bg-brand-bg/50 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-[10px] text-brand-muted font-bold uppercase mb-1 leading-none opacity-80">${col.label}</p><p class="font-mono text-white text-sm break-words leading-tight">${game[col.key] || '-'}</p></div>`).join('')}
+                        ${game.chipset ? `<div class="bg-brand-bg/50 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-[10px] text-brand-muted font-bold uppercase mb-1 leading-none opacity-80">Chipset</p><p class="font-mono text-white text-sm break-words leading-tight">${game.chipset}</p></div>` : ''}
                     </div>
-                    ${game.notes ? `<div class="bg-white/5 p-5 rounded-xl border border-white/10 mb-6"><p class="text-xs text-purple-300 font-retro mb-2 flex items-center gap-2 opacity-80"><i data-lucide="file-text" class="w-4 h-4"></i> Notes</p><p class="font-body text-gray-200 leading-relaxed text-sm">${game.notes}</p></div>` : ''}
-                    <div class="border-t border-white/5 pt-4"><p class="text-[10px] text-white/30 font-mono">Reported on: ${game['date added'] || 'Unknown'}</p></div>
+                    ${game.notes ? `<div class="bg-brand-bg/50 p-5 rounded-xl border border-white/10 mb-6"><p class="text-xs text-brand-muted font-bold uppercase mb-2 flex items-center gap-2 opacity-80"><i data-lucide="file-text" class="w-4 h-4"></i> Notes</p><p class="font-sans text-white leading-relaxed text-sm">${game.notes}</p></div>` : ''}
+                    <div class="border-t border-white/5 pt-4"><p class="text-[10px] text-brand-muted font-mono">Reported on: ${game['date added'] || 'Unknown'}</p></div>
                 </div>
             </div>`;
         modal.classList.remove('hidden');
@@ -1276,23 +1019,22 @@
         lucide.createIcons();
 
         const captureContainer = document.createElement('div');
-        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#2E1A47', backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '30px 30px', padding: '40px', borderRadius: '20px', zIndex: '-1' });
+        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#2D1B4E', padding: '40px', borderRadius: '20px', zIndex: '-1' });
 
-        const contentHTML = document.getElementById('game-modal-content').innerHTML;
         captureContainer.innerHTML = `
-            <div class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl p-8 w-full shadow-2xl flex flex-col">
+            <div class="relative bg-[#432C7A] border-2 border-white/20 rounded-3xl p-8 w-full shadow-2xl flex flex-col font-sans">
                 <div class="flex gap-8 p-1">
                     <div class="flex flex-col gap-4" style="width: 33%;">${document.querySelector('#game-modal-content .w-full.md\\:w-1\\/3').innerHTML}</div>
                     <div style="width: 67%;">${document.querySelector('#game-modal-content .w-full.md\\:w-2\\/3').innerHTML}</div>
                 </div>
-                <div class="mt-8 mx-2 pb-2 pt-4 border-t border-white/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-logo text-white text-lg tracking-tight">RYAN RETRO</span></div><span class="font-mono text-purple-300 text-xs">ryanretro.com</span></div>
+                <div class="mt-8 mx-2 pb-2 pt-4 border-t border-white/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-bold text-white text-lg tracking-tight">RYAN RETRO</span></div><span class="font-mono text-white/50 text-xs">ryanretro.com</span></div>
             </div>`;
         document.body.appendChild(captureContainer);
 
-        html2canvas(captureContainer, { backgroundColor: '#2E1A47', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
+        html2canvas(captureContainer, { backgroundColor: '#2D1B4E', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
             document.body.removeChild(captureContainer);
             const link = document.createElement('a');
-            link.download = 'RyanRetro-GameCard.png';
+            link.download = 'RyanRetro-Report.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
             btn.innerHTML = originalIcon;
@@ -1311,8 +1053,7 @@
         const btn = e.target.closest('button');
         if(!btn) return;
         perfFilter = btn.dataset.perf;
-        document.querySelectorAll('#perf-filters button').forEach(b => b.classList.remove('filter-active'));
-        btn.classList.add('filter-active');
+        updatePerfButtons();
         applySearchAndSort();
     });
 
@@ -1342,6 +1083,22 @@
     const formSystemSelect = document.getElementById('form-system-select');
     const dynamicFieldsContainer = document.getElementById('dynamic-fields');
 
+    // 1. PERFORMANCE DROPDOWN COLORING (Moved outside so it only initializes once)
+    const perfSelect = document.getElementById('form-performance');
+    if (perfSelect) {
+        const updateColor = () => {
+            perfSelect.className = 'brand-input w-full rounded-lg px-4 py-2 font-bold transition-colors'; // reset base classes
+            if (perfSelect.value === 'Perfect') perfSelect.classList.add('text-green-400', 'bg-green-400/10', 'border-green-400/20');
+            else if (perfSelect.value === 'Great') perfSelect.classList.add('text-blue-400', 'bg-blue-400/10', 'border-blue-400/20');
+            else if (perfSelect.value === 'Playable') perfSelect.classList.add('text-orange-400', 'bg-orange-400/10', 'border-orange-400/20');
+            else if (perfSelect.value === 'Unplayable') perfSelect.classList.add('text-red-400', 'bg-red-400/10', 'border-red-400/20');
+            else perfSelect.classList.add('text-white');
+        };
+        perfSelect.addEventListener('change', updateColor);
+        updateColor(); // Trigger once on load
+    }
+
+    // 2. DYNAMIC FIELDS UPDATE
     function updateFormFields(sysId) {
         dynamicFieldsContainer.innerHTML = '';
 
@@ -1358,11 +1115,11 @@
 
             if (field.type === 'select') {
                 const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-                inputHtml = `<select name="${field.key}" class="form-input font-body" ${req}>${options}</select>`;
+                inputHtml = `<select name="${field.key}" class="brand-input w-full rounded-lg px-4 py-2" ${req}>${options}</select>`;
             } else {
-                inputHtml = `<input type="text" name="${field.key}" class="form-input font-body" ${req}>`;
+                inputHtml = `<input type="text" name="${field.key}" class="brand-input w-full rounded-lg px-4 py-2" ${req}>`;
             }
-            div.innerHTML = `<label class="block text-xs font-bold text-gray-400 mb-1 capitalize">${field.label} ${star}</label>${inputHtml}`;
+            div.innerHTML = `<label class="block text-xs font-bold text-brand-muted mb-1 capitalize">${field.label} ${star}</label>${inputHtml}`;
             dynamicFieldsContainer.appendChild(div);
         });
 
@@ -1370,8 +1127,8 @@
         if (DEVICE.variants && DEVICE.variants.length > 1) {
             const div = document.createElement('div');
             const options = DEVICE.variants.map(v => `<option value="${v.id}">${v.label}</option>`).join('');
-            div.innerHTML = `<label class="block text-xs font-bold text-gray-400 mb-1">Chipset *</label>
-                             <select id="form-chipset-select" name="chipset" class="form-input font-body" required>${options}</select>`;
+            div.innerHTML = `<label class="block text-xs font-bold text-brand-muted mb-1">Chipset *</label>
+                             <select id="form-chipset-select" name="chipset" class="brand-input w-full rounded-lg px-4 py-2" required>${options}</select>`;
             dynamicFieldsContainer.appendChild(div);
 
             if(currentVariant) {
@@ -1381,34 +1138,6 @@
 
         document.getElementById('hidden-system').value = sysId;
         document.getElementById('hidden-device').value = DEVICE.name;
-        colorizePerformanceSelects();
-    }
-
-    function colorizePerformanceSelects() {
-        const selects = document.querySelectorAll('select[name="performance"]');
-        selects.forEach(sel => {
-            const apply = () => {
-                sel.classList.remove('perf-perfect', 'perf-great', 'perf-playable', 'perf-unplayable');
-                if(sel.value === 'Perfect') sel.classList.add('perf-perfect');
-                else if(sel.value === 'Great') sel.classList.add('perf-great');
-                else if(sel.value === 'Playable') sel.classList.add('perf-playable');
-                else if(sel.value === 'Unplayable') sel.classList.add('perf-unplayable');
-            };
-            sel.addEventListener('change', apply);
-            apply();
-        });
-        const mainPerf = document.getElementById('form-performance');
-        if(mainPerf) {
-             const applyMain = () => {
-                mainPerf.classList.remove('perf-perfect', 'perf-great', 'perf-playable', 'perf-unplayable');
-                if(mainPerf.value === 'Perfect') mainPerf.classList.add('perf-perfect');
-                else if(mainPerf.value === 'Great') mainPerf.classList.add('perf-great');
-                else if(mainPerf.value === 'Playable') mainPerf.classList.add('perf-playable');
-                else if(mainPerf.value === 'Unplayable') mainPerf.classList.add('perf-unplayable');
-             };
-             mainPerf.addEventListener('change', applyMain);
-             applyMain();
-        }
     }
 
     formSystemSelect.addEventListener('change', (e) => updateFormFields(e.target.value));
