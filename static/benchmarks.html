@@ -13,172 +13,77 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Kanit:ital,wght@0,300;0,400;0,600;0,800;1,800&family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#2D1B4E',       // Deep Soft Purple
+                            card: '#432C7A',     // Lighter Grape
+                            hover: '#5B3EA8',    // Bright Purple
+                            accent: '#FFFFFF',   // Pure White
+                            muted: '#D4BBFF',    // Soft Lavender Text
+                            red: '#FF0000'       // YouTube Red
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        /* --- THEME --- */
+        /* Custom Scrollbar - Prettier & Non-overlapping */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            margin: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+            transition: background 0.3s;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        /* Animations */
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        /* --- BENCHMARK SPECIFIC TABLE STYLES --- */
         :root {
-            --bg-deep: #1a0b2e;
-            --bg-gradient: radial-gradient(circle at top center, #3b0764, #1a0b2e);
-
-            --card-border: rgba(255, 255, 255, 0.2);
-            --card-border-hover: rgba(255, 255, 255, 0.5);
-
-            --accent-yellow: #fbbf24;
-            --accent-red: #ef4444;
-            --accent-purple: #a855f7;
-            --accent-cyan: #22d3ee;
-
-            --text-main: #ffffff;
-            --text-sub: #e2e8f0;
-
-            --bg-card: #3D255D;
+            --first-col-width: 240px; /* Default stretchable width */
         }
 
-        body {
-            background-color: var(--bg-deep);
-            background-image: var(--bg-gradient);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Typography */
-        .font-display { font-family: 'Outfit', sans-serif; }
-        .font-logo { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
-        .font-retro { font-family: 'Kanit', sans-serif; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
-        .font-pixel { font-family: 'VT323', monospace; }
-        .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        /* Bento Card Styles (Flat Theme) */
-        .bento-card {
-            border: 2px solid var(--card-border);
-            border-radius: 32px;
-            transition: all 0.2s ease-in-out;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 8px 0 rgba(0,0,0,0.3);
-            transform: translateY(0);
-            background-color: var(--bg-card); /* Default card bg */
-        }
-        .bento-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--card-border-hover);
-            box-shadow: 0 12px 0 rgba(0,0,0,0.3);
-        }
-
-        /* Nav Pills */
-        .nav-pill {
-            padding: 8px 16px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.7);
-            transition: all 0.2s;
-            border: 1px solid transparent;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .nav-pill:hover, .nav-pill.active {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        /* Social Buttons */
-        .social-btn {
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.7);
-            transition: all 0.2s;
-        }
-        .social-btn:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.3);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* --- BENCHMARK SPECIFIC --- */
-
-        /* Controls Panel Dynamic Colors */
-        #controlsPanel {
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-        }
-
-        /* Mode Colors */
-        .panel-yellow {
-            background-color: #fbbf24 !important; /* Yellow */
-            color: #451a03 !important;
-            border-color: #f59e0b !important;
-        }
-        .panel-red {
-            background-color: #be123c !important; /* Rose/Red */
-            color: white !important;
-            border-color: #9f1239 !important;
-        }
-        .panel-blue {
-            background-color: #2563eb !important; /* Darker Blue (Royal Blue) */
-            color: white !important;
-            border-color: #1d4ed8 !important;
-        }
-
-        /* Toggle Buttons inside colored panel */
-        .toggle-btn {
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-family: 'Kanit', sans-serif;
-            font-weight: 700;
-            font-size: 12px;
-            text-transform: uppercase;
-            border: 2px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.2); /* Semi-transparent */
-            color: inherit;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .toggle-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-        .toggle-btn.active {
-            background: white;
-            color: black;
-            border-color: white;
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .toggle-btn.off {
-            opacity: 0.5;
-            text-decoration: line-through;
-        }
-
-        /* Adjust internal text for dark/light modes */
-        .panel-yellow .text-white\/50 { color: rgba(0,0,0,0.5); }
-        .panel-red .text-white\/50, .panel-blue .text-white\/50 { color: rgba(255,255,255,0.6); }
-
-        /* Table Styling */
         .rr-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            color: var(--text-sub);
+            color: white;
+            table-layout: fixed; /* Important for resizing to work strictly */
         }
 
         .rr-table th {
-            background: #2E1A47; /* Matching dark theme header from handheld logic */
+            background: #432C7A; /* brand-card */
             padding: 16px;
             text-align: center;
             font-family: 'Kanit', sans-serif;
@@ -186,222 +91,263 @@
             text-transform: uppercase;
             font-size: 13px;
             letter-spacing: 0.05em;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             position: sticky;
             top: 0;
             z-index: 50;
             vertical-align: bottom;
-            color: var(--accent-cyan);
+            color: #D4BBFF; /* brand-muted */
+            width: 150px; /* Default for other columns */
         }
 
-        .rr-table th:first-child {
+        /* The First Column (Game) - Resizable */
+        .rr-table th:first-child,
+        .rr-table td:first-child {
             text-align: left;
             position: sticky;
             left: 0;
             z-index: 60;
-            background: #2E1A47;
-            border-right: 2px solid rgba(255,255,255,0.1);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            width: var(--first-col-width);
+            max-width: var(--first-col-width);
+            min-width: 100px;
         }
 
-.rr-table td {
+        .rr-table th:first-child {
+            background: #432C7A;
+            cursor: pointer; /* Keeps sort pointer */
+        }
+
+        .rr-table td {
             padding: 12px 16px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Changed from VT323 */
-            font-size: 15px; /* Adjusted from 18px to match the new font weight */
+            font-family: 'Kanit', sans-serif;
+            font-size: 14px;
             text-align: center;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .rr-table td:first-child {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Kanit', sans-serif;
             font-size: 14px;
-            font-weight: 600;
-            text-align: left;
+            font-weight: 700;
             color: white;
-            position: sticky;
-            left: 0;
-            background: #2a1540; /* Slightly different for row header */
-            border-right: 2px solid rgba(255,255,255,0.1);
+            background: #2D1B4E; /* brand-bg */
             z-index: 40;
+        }
+
+        /* Resizer Handle */
+        .resizer {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            cursor: col-resize;
+            user-select: none;
+            touch-action: none;
+            z-index: 100;
+            transition: background 0.2s;
+        }
+        .resizer:hover, .resizer.resizing {
+            background: #5B3EA8; /* brand-hover */
         }
 
         /* Row hover effect */
         .rr-table tbody tr {
-            cursor: pointer;
             transition: background-color 0.2s;
         }
         .rr-table tbody tr:hover td {
             background: rgba(255,255,255,0.1);
         }
+        /* Fix hover for sticky columns */
+        .rr-table tbody tr:hover td:first-child {
+            background: #432C7A;
+        }
 
         /* Highlight Cells */
         .best-cell {
-            background: rgba(16, 185, 129, 0.2) !important;
-            color: #34d399 !important;
+            background: rgba(74, 222, 128, 0.2) !important;
+            color: #4ade80 !important;
             font-weight: bold;
-            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.5);
+            box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.5);
         }
         .runs-great {
-            background: rgba(132, 204, 22, 0.2) !important;
-            color: #a3e635 !important;
+            background: rgba(74, 222, 128, 0.2) !important;
+            color: #4ade80 !important;
+            font-weight: bold;
+            box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.5);
         }
-
-        /* Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 5px; border: 2px solid var(--bg-deep); }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
 
         /* Sortable */
         th.sortable { cursor: pointer; user-select: none; transition: color 0.2s; }
         th.sortable:hover { color: white; }
-        th.sortable::after { content: '↕'; display: inline-block; margin-left: 5px; opacity: 0.3; font-size: 10px; }
-        th.sortable[data-sort-dir="asc"]::after { content: '▲'; opacity: 1; color: var(--accent-yellow); }
-        th.sortable[data-sort-dir="desc"]::after { content: '▼'; opacity: 1; color: var(--accent-yellow); }
 
         /* Mini Mode */
         .mini-mode .rr-table th, .mini-mode .rr-table td { padding: 8px; font-size: 12px; }
         .mini-mode .chipset-label { display: none; }
 
-        /* Animations */
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-        .animate-popIn { animation: popIn 0.3s ease-out forwards; }
+        /* Toggle Buttons */
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 0.75rem; /* text-xs */
+            background-color: #2D1B4E; /* brand-bg */
+            color: #D4BBFF; /* brand-muted */
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .toggle-btn:hover {
+            color: white;
+            background-color: #5B3EA8; /* brand-hover */
+        }
+        .toggle-btn.active {
+            background-color: white;
+            color: #2D1B4E; /* brand-bg */
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .toggle-btn.off {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        /* Specific Color overrides for Mode Buttons */
+        .mode-btn-switch.active { background-color: #ef4444; color: white; }
+        .mode-btn-windows.active { background-color: #3b82f6; color: white; }
+        .mode-btn-combined.active { background-color: #ffffff; color: #2D1B4E; }
+
+        /* Ensure modal uses Kanit */
+        #game-details-modal { font-family: 'Kanit', sans-serif; }
+
     </style>
 </head>
-<body>
+<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
 
-    <div class="fixed top-0 left-0 w-full h-[600px] bg-gradient-to-b from-[#4c1d95]/40 to-transparent -z-10 pointer-events-none"></div>
-    <div class="fixed top-[-200px] right-[-200px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
-
-    <header class="sticky top-0 z-50 bg-[#1a0b2e]/95 border-b border-white/10 backdrop-blur-xl">
-        <div class="container mx-auto px-4 h-24 flex justify-between items-center">
+    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+        <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
 
             <a href="/" class="flex items-center gap-3 group shrink-0">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 border-2 border-white/20 group-hover:border-[#fbbf24] transition-all shadow-[0_4px_0_rgba(0,0,0,0.2)] group-hover:shadow-[0_6px_0_rgba(0,0,0,0.2)] group-active:translate-y-1 group-active:shadow-none">
-                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover rounded-xl">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <div class="hidden sm:flex flex-col">
-                    <span class="font-display text-xl font-bold text-white tracking-wide leading-none">Ryan Retro</span>
-                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">You're always welcome here</span>
-                </div>
+                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
             </a>
 
-            <nav class="hidden xl:flex items-center gap-1 bg-black/20 p-1.5 rounded-full border border-white/10">
-                <a href="/reviews" class="nav-pill"><i data-lucide="star" class="w-3.5 h-3.5"></i> Reviews</a>
-                <a href="/benchmarks" class="nav-pill active"><i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Benchmarks</a>
-                <a href="/comparisons" class="nav-pill"><i data-lucide="arrow-right-left" class="w-3.5 h-3.5"></i> Comparisons</a>
-                <a href="/gotw" class="nav-pill"><i data-lucide="gamepad-2" class="w-3.5 h-3.5"></i> GOTW</a>
-                <a href="/patrons" class="nav-pill"><i data-lucide="heart" class="w-3.5 h-3.5"></i> Patrons</a>
+            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Shop</a>
             </nav>
 
             <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-white/10">
-                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="social-btn" title="YouTube"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                    <a href="https://x.com/RyanRetroYT" target="_blank" class="social-btn" title="X (Twitter)">
-                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="social-btn" title="Instagram"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="social-btn" title="TikTok">
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
                         <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
-                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="social-btn" title="Discord"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="social-btn" title="Facebook"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="social-btn" title="Threads"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
                 </div>
 
-                <a href="/store" id="header-shop-btn" target="_blank" class="hidden sm:flex items-center gap-2 text-xs font-bold text-white/80 hover:text-white transition-colors uppercase tracking-widest px-5 py-2.5 border-2 border-white/10 hover:border-white/30 rounded-full bg-white/5">
-                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop
-                </a>
-
-                <button id="mobile-menu-btn" class="xl:hidden text-white/70 hover:text-white p-2.5 border-2 border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden xl:hidden border-t border-white/10 bg-[#1a0b2e] p-4 flex flex-col gap-2 shadow-2xl">
-             <div class="grid grid-cols-2 gap-2 mb-2">
-                 <a href="/" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="star" class="w-4 h-4"></i> Reviews</a>
-                 <a href="/benchmarks" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4"></i> Benchmarks</a>
-                 <a href="/comparisons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="arrow-right-left" class="w-4 h-4"></i> Comparisons</a>
-                 <a href="/store" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Shop</a>
-                 <a href="/gotw" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="gamepad-2" class="w-4 h-4"></i> GOTW</a>
-                 <a href="/patrons" class="p-3 font-bold bg-white/5 rounded-xl text-white text-center border border-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-2"><i data-lucide="heart" class="w-4 h-4"></i> Patrons</a>
-             </div>
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-2">
+                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+            </div>
 
-             <div class="flex justify-between items-center mt-2 px-2 pt-4 border-t border-white/10">
-                 <span class="text-xs font-bold text-white/30 uppercase">Connect</span>
-                 <div class="flex gap-3 flex-wrap justify-end">
-                     <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                     <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-                     <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                     <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                     <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/60 hover:text-white"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
-                 </div>
-             </div>
+            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <main class="container mx-auto px-4 lg:px-6 py-8 flex-grow">
 
-        <section class="mb-8 text-center" data-aos="fade-down">
-            <h1 class="font-display font-black text-4xl md:text-5xl text-white drop-shadow-lg mb-2">
-                VALUE <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">BENCHMARKS</span>
+        <section class="mb-8" data-aos="fade-up">
+            <h1 class="font-extrabold text-3xl md:text-5xl text-white tracking-tight">
+                Handheld <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Benchmarks</span>
             </h1>
-            <p class="text-white/60 font-medium max-w-2xl mx-auto">
-                Compare FPS across handhelds. Click any row to see full details and box art.
-            </p>
         </section>
 
-        <div id="controlsPanel" class="bento-card p-6 mb-8 panel-yellow" data-aos="fade-up">
+        <!-- Controls Panel -->
+        <div id="controlsPanel" class="bg-brand-card rounded-2xl border border-white/5 p-6 mb-8 shadow-xl" data-aos="fade-up">
 
-            <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-6 mb-6 pb-6 border-b border-white/20">
+            <!-- Mode Selection -->
+            <div class="flex flex-col md:flex-row flex-wrap items-center justify-between gap-6 mb-6 pb-6 border-b border-white/5">
                 <div class="flex items-center gap-3">
-                    <span class="font-retro text-xs text-white/50 uppercase tracking-widest">System:</span>
-                    <button class="toggle-btn mode-toggle active" data-mode="combined">ALL</button>
-                    <button class="toggle-btn mode-toggle" data-mode="switch">Switch</button>
-                    <button class="toggle-btn mode-toggle" data-mode="windows">Windows</button>
+                    <span class="font-bold text-xs text-brand-muted uppercase tracking-widest">System:</span>
+                    <button class="toggle-btn mode-toggle mode-btn-combined active" data-mode="combined">ALL</button>
+                    <button class="toggle-btn mode-toggle mode-btn-switch" data-mode="switch">Switch</button>
+                    <button class="toggle-btn mode-toggle mode-btn-windows" data-mode="windows">Windows</button>
+                </div>
+
+                <div class="flex items-center gap-3">
+                     <span class="font-bold text-xs text-brand-muted uppercase tracking-widest">View:</span>
+                     <button id="toggleMiniMode" class="toggle-btn feat-mini"><i data-lucide="smartphone" class="w-3 h-3 inline mr-1"></i> Compact</button>
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row flex-wrap items-center justify-center gap-4 mb-8">
-                <span class="font-retro text-xs text-white/50 uppercase tracking-widest">Devices:</span>
-                <div class="flex flex-wrap justify-center gap-2">
-                    <button class="toggle-btn active device-toggle" data-col-index="1"><span class="w-2 h-2 rounded-full bg-green-500"></span> RP5</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="2"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> RPG2</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="3"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Odin2P</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="4"><span class="w-2 h-2 rounded-full bg-orange-400"></span> Konkr</button>
-                    <button class="toggle-btn off device-toggle" data-col-index="5"><span class="w-2 h-2 rounded-full bg-pink-400"></span> Fold7</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="6"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Odin3</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="7"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> SteamDeck</button>
+            <!-- Devices Selection -->
+            <div class="flex flex-col md:flex-row flex-wrap items-center gap-4 mb-8">
+                <span class="font-bold text-xs text-brand-muted uppercase tracking-widest shrink-0">Devices:</span>
+                <div class="flex flex-wrap gap-2">
+                    <button class="toggle-btn active device-toggle" data-col-index="1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span> Retroid Pocket 5</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="2"><span class="w-2 h-2 rounded-full bg-yellow-400 inline-block mr-1"></span> Retroid Pocket G2</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="3"><span class="w-2 h-2 rounded-full bg-blue-400 inline-block mr-1"></span> AYN Odin 2 Portal</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="4"><span class="w-2 h-2 rounded-full bg-orange-400 inline-block mr-1"></span> Konkr Pocket Fit</button>
+                    <button class="toggle-btn off device-toggle" data-col-index="5"><span class="w-2 h-2 rounded-full bg-pink-400 inline-block mr-1"></span> Samsung Fold 7</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="6"><span class="w-2 h-2 rounded-full bg-purple-400 inline-block mr-1"></span> AYN Odin 3</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="7"><span class="w-2 h-2 rounded-full bg-cyan-400 inline-block mr-1"></span> Steam Deck</button>
                 </div>
             </div>
 
-            <div class="flex flex-wrap items-center justify-center gap-3">
-                <button id="toggleHighlight" class="toggle-btn feat-highlight"><i data-lucide="zap" class="w-3 h-3"></i> Highlight Best</button>
-                <button id="toggleColorMode" class="toggle-btn feat-ranking"><i data-lucide="bar-chart" class="w-3 h-3"></i> Ranking Mode</button>
-                <button id="toggleValueMode" class="toggle-btn feat-value"><i data-lucide="dollar-sign" class="w-3 h-3"></i> Value Mode</button>
-                <button id="toggleRunsGreat" class="toggle-btn feat-great"><i data-lucide="check-circle" class="w-3 h-3"></i> Runs Great</button>
-                <button id="toggleMiniMode" class="toggle-btn feat-mini"><i data-lucide="smartphone" class="w-3 h-3"></i> Mini View</button>
+            <!-- Feature Toggles -->
+            <div class="bg-brand-bg/30 rounded-xl p-4 border border-white/5 flex flex-wrap items-center justify-center gap-3">
+                <button id="toggleHighlight" class="toggle-btn feat-highlight"><i data-lucide="zap" class="w-3 h-3 inline mr-1"></i> Highlight Best</button>
+                <button id="toggleColorMode" class="toggle-btn feat-ranking"><i data-lucide="bar-chart" class="w-3 h-3 inline mr-1"></i> Ranking Mode</button>
+                <button id="toggleValueMode" class="toggle-btn feat-value"><i data-lucide="dollar-sign" class="w-3 h-3 inline mr-1"></i> Value Mode</button>
+                <button id="toggleRunsGreat" class="toggle-btn feat-great"><i data-lucide="check-circle" class="w-3 h-3 inline mr-1"></i> Runs Great</button>
             </div>
         </div>
 
-        <div id="benchCard" class="bento-card p-0 overflow-hidden" data-aos="fade-up" data-aos-delay="100">
-            <div class="overflow-x-auto custom-scrollbar w-full max-h-[800px]">
+        <!-- Benchmark Table Card -->
+        <div id="benchCard" class="bg-brand-bg rounded-2xl border border-white/5 shadow-xl overflow-hidden mb-8" data-aos="fade-up" data-aos-delay="100">
+            <!-- Added pr-1 to container to prevent overlap of vertical scrollbar -->
+            <div class="overflow-x-auto custom-scrollbar w-full max-h-[800px] pr-1">
 
                 <table class="rr-table" data-mode="combined">
                     <thead>
                         <tr>
-                            <th class="sortable" data-col="0">Game</th>
-                            <th data-col-index="1"><span class="text-green-400">RP5</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">SD 865</div></th>
-                            <th data-col-index="2"><span class="text-yellow-400">RPG2</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G2 Gen 2</div></th>
-                            <th data-col-index="3"><span class="text-blue-400">Odin 2 P</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Gen 2</div></th>
-                            <th data-col-index="4"><span class="text-orange-400">Konkr</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G3 Gen 3</div></th>
-                            <th data-col-index="5"><span class="text-pink-400">Fold 7</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="6"><span class="text-purple-400">Odin 3</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">AMD APU</div></th>
+                            <th class="sortable relative" data-col="0">Game <div class="resizer"></div></th>
+                            <th data-col-index="1"><span class="text-green-400">Retroid Pocket 5</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400">Retroid Pocket G2</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400">Konkr Pocket Fit</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400">Samsung Fold 7</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400">AYN Odin 3</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">AMD APU</div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -436,18 +382,18 @@
                 <table class="rr-table hidden" data-mode="switch">
                     <thead>
                         <tr>
-                            <th class="sortable" data-col="0">Game</th>
-                            <th data-col-index="1"><span class="text-green-400">RP5</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">SD 865</div></th>
-                            <th data-col-index="2"><span class="text-yellow-400">RPG2</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G2 Gen 2</div></th>
-                            <th data-col-index="3"><span class="text-blue-400">Odin 2 P</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Gen 2</div></th>
-                            <th data-col-index="4"><span class="text-orange-400">Konkr</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G3 Gen 3</div></th>
-                            <th data-col-index="5"><span class="text-pink-400">Fold 7</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="6"><span class="text-purple-400">Odin 3</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">AMD APU</div></th>
+                            <th class="sortable relative" data-col="0">Game <div class="resizer"></div></th>
+                            <th data-col-index="1"><span class="text-green-400">Retroid Pocket 5</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400">Retroid Pocket G2</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400">Konkr Pocket Fit</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400">Samsung Fold 7</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400">AYN Odin 3</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">AMD APU</div></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>Captain Toad</td><td>45</td><td>75</td><td>80</td><td>155</td><td>75</td><td>160</td><td>Untested</td></tr>
+                        <tr><td>Captain Toad: Treasure Tracker</td><td>45</td><td>75</td><td>80</td><td>155</td><td>75</td><td>160</td><td>Untested</td></tr>
                         <tr><td>Donut County</td><td>38</td><td>80</td><td>76</td><td>156</td><td>75</td><td>85</td><td>Untested</td></tr>
                         <tr><td>FIFA 18</td><td>60</td><td>73</td><td>86</td><td>150</td><td>82</td><td>100</td><td>Untested</td></tr>
                         <tr><td>Golf Story</td><td>126</td><td>126</td><td>175</td><td>185</td><td>180</td><td>240</td><td>Untested</td></tr>
@@ -466,14 +412,14 @@
                 <table class="rr-table hidden" data-mode="windows">
                     <thead>
                         <tr>
-                            <th class="sortable" data-col="0">Game</th>
-                            <th data-col-index="1"><span class="text-green-400">RP5</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">SD 865</div></th>
-                            <th data-col-index="2"><span class="text-yellow-400">RPG2</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G2 Gen 2</div></th>
-                            <th data-col-index="3"><span class="text-blue-400">Odin 2 P</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Gen 2</div></th>
-                            <th data-col-index="4"><span class="text-orange-400">Konkr</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">G3 Gen 3</div></th>
-                            <th data-col-index="5"><span class="text-pink-400">Fold 7</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="6"><span class="text-purple-400">Odin 3</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-white/40 font-normal mt-1 chipset-label">AMD APU</div></th>
+                            <th class="sortable relative" data-col="0">Game <div class="resizer"></div></th>
+                            <th data-col-index="1"><span class="text-green-400">Retroid Pocket 5</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400">Retroid Pocket G2</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400">Konkr Pocket Fit</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400">Samsung Fold 7</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400">AYN Odin 3</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">AMD APU</div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -491,10 +437,10 @@
                         <tr><td>Traveller’s Rest</td><td>-</td><td>40</td><td>30</td><td>50</td><td>40</td><td>70</td><td>78</td></tr>
                     </tbody>
                 </table>
-
             </div>
 
-            <div class="bg-black/40 p-4 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-white/50">
+            <!-- Legend Footer -->
+            <div class="bg-black/20 p-4 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-brand-muted">
                 <div class="flex items-center gap-3">
                     <span>RANKING:</span>
                     <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-500"></span> Low</div>
@@ -505,90 +451,84 @@
             </div>
         </div>
 
+        <!-- Notes Section -->
         <div class="mt-8 text-center" data-aos="fade-up">
-            <button id="toggleNotes" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3 rounded-xl font-retro text-xs transition-all">
+            <button id="toggleNotes" class="bg-brand-card hover:bg-brand-hover border border-white/5 text-white px-6 py-3 rounded-xl font-bold text-xs transition-all">
                 <i data-lucide="info" class="inline w-4 h-4 mr-2"></i> SHOW NOTES
             </button>
 
-            <div id="notesContent" class="hidden mt-6 bento-card p-8 text-left max-w-4xl mx-auto">
+            <div id="notesContent" class="hidden mt-6 bg-brand-card border border-white/5 rounded-2xl p-8 text-left max-w-4xl mx-auto shadow-xl">
                  <div class="grid md:grid-cols-2 gap-8 mb-8">
                      <div>
-                         <h3 class="font-retro text-yellow-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Performance Measurement</h3>
-                         <p class="text-white/60 text-sm leading-relaxed">
-                            Please note that these tests utilize "eyeballed" FPS averages observed during active gameplay. They were not captured using scientific frame-time analysis tools or specialized benchmarking software. These values should be viewed as rough guidelines and performance estimates rather than precise scientific measurements.
+                         <h3 class="font-bold text-yellow-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Performance Measurement</h3>
+                         <p class="text-brand-muted text-sm leading-relaxed">
+                           Please note that these tests utilize "eyeballed" FPS averages observed during active gameplay. They were not captured using scientific frame-time analysis tools.
                          </p>
                      </div>
                      <div>
-                        <h3 class="font-retro text-green-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Value Mode</h3>
-                        <p class="text-white/60 text-sm leading-relaxed">
-                            Value Mode displays the "Price per Frame" for each device. This is calculated by taking the cost of the handheld at the time of filming and dividing it by the average FPS achieved in that specific game ($/FPS). Lower values indicate better cost-to-performance efficiency.
+                        <h3 class="font-bold text-green-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Value Mode</h3>
+                        <p class="text-brand-muted text-sm leading-relaxed">
+                           Value Mode displays the "Price per Frame" for each device. This is calculated by taking the cost of the handheld at the time of filming and dividing it by the average FPS ($/FPS).
                         </p>
                      </div>
                      <div>
-                        <h3 class="font-retro text-blue-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Runs Great</h3>
-                        <p class="text-white/60 text-sm leading-relaxed">
-                            The "Runs Great" highlight indicates that the handheld achieved the expected playable target for that title. This threshold is typically 30 FPS for demanding AAA/3D games and 60 FPS for lighter or 2D titles.
+                        <h3 class="font-bold text-blue-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Runs Great</h3>
+                        <p class="text-brand-muted text-sm leading-relaxed">
+                           The "Runs Great" highlight indicates that the handheld achieved the expected playable target for that title (typically 30 FPS for AAA/3D, 60 FPS for 2D).
                         </p>
                      </div>
                  </div>
 
-                 <div class="mt-8 pt-8 border-t border-white/10">
-                     <h3 class="font-retro text-purple-400 text-sm mb-4">Device Specs & Pricing (Time of Filming)</h3>
+                 <div class="mt-8 pt-8 border-t border-white/5">
+                     <h3 class="font-bold text-purple-400 text-sm mb-4">Device Specs & Pricing (Time of Filming)</h3>
                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 text-xs">
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-green-400 font-bold block mb-1 text-sm">Retroid Pocket 5 ($199)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> Snapdragon 865</span>
-                                <span><span class="text-white/30">RAM:</span> 8GB</span>
-                                <span><span class="text-white/30">Storage:</span> 128GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: Snapdragon 865</span>
+                                <span>RAM: 8GB</span>
                              </div>
                          </div>
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-yellow-400 font-bold block mb-1 text-sm">Retroid Pocket G2 ($219)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> Snapdragon G2 Gen 2</span>
-                                <span><span class="text-white/30">RAM:</span> 8GB</span>
-                                <span><span class="text-white/30">Storage:</span> 128GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: Snapdragon G2 Gen 2</span>
+                                <span>RAM: 8GB</span>
                              </div>
                          </div>
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-blue-400 font-bold block mb-1 text-sm">AYN Odin 2 Portal ($329)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> Snapdragon 8 Gen 2</span>
-                                <span><span class="text-white/30">RAM:</span> 8GB</span>
-                                <span><span class="text-white/30">Storage:</span> 128GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: Snapdragon 8 Gen 2</span>
+                                <span>RAM: 8GB</span>
                              </div>
                          </div>
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-orange-400 font-bold block mb-1 text-sm">Konkr Pocket Fit ($329)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> Snapdragon G3 Gen 3</span>
-                                <span><span class="text-white/30">RAM:</span> 12GB</span>
-                                <span><span class="text-white/30">Storage:</span> 256GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: Snapdragon G3 Gen 3</span>
+                                <span>RAM: 12GB</span>
                              </div>
                          </div>
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-pink-400 font-bold block mb-1 text-sm">Samsung Fold 7 ($1719)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> Snapdragon 8 Elite</span>
-                                <span><span class="text-white/30">RAM:</span> 12GB</span>
-                                <span><span class="text-white/30">Storage:</span> 512GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: Snapdragon 8 Elite</span>
+                                <span>RAM: 12GB</span>
                              </div>
                          </div>
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-purple-400 font-bold block mb-1 text-sm">AYN Odin 3 ($449)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> Snapdragon 8 Elite</span>
-                                <span><span class="text-white/30">RAM:</span> 16GB</span>
-                                <span><span class="text-white/30">Storage:</span> 512GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: Snapdragon 8 Elite</span>
+                                <span>RAM: 16GB</span>
                              </div>
                          </div>
-                         <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
                              <span class="text-cyan-400 font-bold block mb-1 text-sm">Steam Deck ($399)</span>
-                             <div class="text-white/60 flex flex-col gap-1">
-                                <span><span class="text-white/30">Chip:</span> AMD Custom APU</span>
-                                <span><span class="text-white/30">RAM:</span> 16GB</span>
-                                <span><span class="text-white/30">Storage:</span> 512GB</span>
+                             <div class="text-brand-muted flex flex-col gap-1">
+                                <span>Chip: AMD Custom APU</span>
+                                <span>RAM: 16GB</span>
                              </div>
                          </div>
                      </div>
@@ -598,38 +538,41 @@
 
     </main>
 
+    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center flex-wrap gap-6 mb-6">
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+            </div>
+            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+        </div>
+    </footer>
+
+    <!-- Benchmark Detail Modal -->
     <div id="game-details-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="game-modal-bg"></div>
-        <div id="game-card-wrapper" class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl w-full max-w-2xl shadow-2xl animate-popIn flex flex-col max-h-[90vh] overflow-hidden">
+        <div class="absolute inset-0 bg-brand-bg/90 backdrop-blur-sm" id="game-modal-bg"></div>
+        <div id="game-card-wrapper" class="relative bg-brand-card border-2 border-white/20 rounded-3xl w-full max-w-2xl shadow-2xl animate-pop-in flex flex-col max-h-[90vh] overflow-hidden">
             <div class="flex justify-between items-center p-4 border-b border-white/10 bg-black/20 shrink-0">
-                <span class="font-retro text-white/50 text-sm pl-2">BENCHMARK DETAILS</span>
+                <span class="font-bold text-brand-muted text-xs pl-2 tracking-widest uppercase">BENCHMARK DETAILS</span>
                 <div class="flex gap-2">
                     <button id="screenshot-game-modal" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex items-center gap-2" title="Save Card">
                         <i data-lucide="camera" class="w-5 h-5"></i>
-                        <span class="font-bold text-xs hidden sm:inline">SAVE</span>
+                        <span class="font-bold text-xs hidden sm:inline">SAVE CARD</span>
                     </button>
                     <button id="close-game-modal" class="text-white/70 hover:text-white hover:bg-red-500/20 p-2 rounded-lg transition-colors">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
-            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow">
+            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow text-white">
                 </div>
         </div>
     </div>
-
-    <footer class="bg-black/20 py-10 text-center border-t border-white/5 mt-auto">
-        <div class="flex justify-center flex-wrap gap-4 mb-6">
-            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="YouTube"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-            <a href="https://x.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="X (Twitter)"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
-            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="TikTok"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Discord"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-white/40 hover:text-[#fbbf24] transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10" title="Threads"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
-        </div>
-        <p class="text-xs font-bold text-white/20 uppercase tracking-widest">Ryan Retro • 2026</p>
-    </footer>
 
     <script>
         lucide.createIcons();
@@ -879,13 +822,6 @@
                 document.querySelectorAll('.mode-toggle').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 activeMode = btn.dataset.mode;
-
-                // Update Control Panel Style
-                controlsPanel.classList.remove('panel-yellow', 'panel-red', 'panel-blue');
-                if (activeMode === 'combined') controlsPanel.classList.add('panel-yellow');
-                else if (activeMode === 'switch') controlsPanel.classList.add('panel-red');
-                else if (activeMode === 'windows') controlsPanel.classList.add('panel-blue');
-
                 updateTableVisibility();
 
                 // Re-apply current feature
@@ -965,7 +901,9 @@
 
         // Sorting Logic
         document.querySelectorAll('th.sortable').forEach(th => {
-            th.addEventListener('click', function() {
+            th.addEventListener('click', function(e) {
+                if (e.target.classList.contains('resizer')) return; // Ignore clicks on resizer
+
                 const table = th.closest('table');
                 const tbody = table.querySelector('tbody');
                 const rowsArray = Array.from(tbody.rows);
@@ -1000,6 +938,36 @@
             });
         });
 
+        // --- RESIZABLE COLUMN LOGIC ---
+        document.querySelectorAll('.resizer').forEach(resizer => {
+            let startX, startWidth;
+            const th = resizer.parentElement;
+
+            resizer.addEventListener('mousedown', initResize);
+
+            function initResize(e) {
+                startX = e.clientX;
+                startWidth = parseInt(window.getComputedStyle(th).width, 10);
+                resizer.classList.add('resizing');
+                document.documentElement.addEventListener('mousemove', doResize);
+                document.documentElement.addEventListener('mouseup', stopResize);
+                e.preventDefault(); // Prevent text selection
+            }
+
+            function doResize(e) {
+                const width = startWidth + (e.clientX - startX);
+                if (width > 80) { // Minimum width constraint
+                    document.documentElement.style.setProperty('--first-col-width', `${width}px`);
+                }
+            }
+
+            function stopResize() {
+                resizer.classList.remove('resizing');
+                document.documentElement.removeEventListener('mousemove', doResize);
+                document.documentElement.removeEventListener('mouseup', stopResize);
+            }
+        });
+
         // --- GAME MODAL LOGIC ---
 
         const modal = document.getElementById('game-details-modal');
@@ -1010,91 +978,48 @@
         // Add Click listeners to all rows
         function attachRowListeners() {
             document.querySelectorAll('.rr-table tbody tr').forEach(row => {
-                row.addEventListener('click', () => openBenchmarkModal(row));
+                row.addEventListener('click', (e) => {
+                    // Prevent modal opening if clicking the first column (likely resizing intent/misclick)
+                    // or better, just if clicking resizer (handled in sortable logic)
+                    // But if user clicks text in 1st col, open modal.
+                    openBenchmarkModal(row)
+                });
             });
         }
 
         function openBenchmarkModal(row) {
-            // 1. Get exact Game Name
             const gameName = row.children[0].innerText.trim();
 
-            // 2. HARDCODED "SOURCE OF TRUTH"
-            // This dictionary maps your specific table names to exact 600x900 (vertical) images.
-            // No searching. No guessing. 100% accuracy.
             const GAME_COVERS = {
-  // --- Nintendo / Exclusives ---
-  "Captain Toad: Treasure Tracker":
-    "https://static.wikia.nocookie.net/nintendo/images/e/e9/Captain_Toad_Treasure_Switch_EU.jpg/revision/latest?cb=20190915115715&path-prefix=en",
-  "Golf Story":
-    "https://images.launchbox-app.com/e31a54d2-7ba1-443d-864e-cb9a680f6e75.jpg",
-  "Pokémon Sword (Battle)":
-    "https://archives.bulbagarden.net/media/upload/thumb/4/47/Sword_EN_boxart.png/640px-Sword_EN_boxart.png",
-  "Pokémon Sword (Open)":
-    "https://archives.bulbagarden.net/media/upload/thumb/4/47/Sword_EN_boxart.png/640px-Sword_EN_boxart.png",
-  "Zelda: Breath of the Wild":
-    "https://images-na.ssl-images-amazon.com/images/I/91DgUPPHMGL._SL1500_.jpg",
-  "Zelda: Tears of the Kingdom":
-    "https://static.wikia.nocookie.net/nintendo/images/2/2a/The_Legend_of_Zelda_Tears_of_the_Kingdom_box_art_South_Korea.png/revision/latest/scale-to-width-down/250?cb=20240130073833&path-prefix=en",
+              "Captain Toad: Treasure Tracker": "https://static.wikia.nocookie.net/nintendo/images/e/e9/Captain_Toad_Treasure_Switch_EU.jpg/revision/latest?cb=20190915115715&path-prefix=en",
+              "Golf Story": "https://images.launchbox-app.com/e31a54d2-7ba1-443d-864e-cb9a680f6e75.jpg",
+              "Pokémon Sword (Battle)": "https://archives.bulbagarden.net/media/upload/thumb/4/47/Sword_EN_boxart.png/640px-Sword_EN_boxart.png",
+              "Pokémon Sword (Open)": "https://archives.bulbagarden.net/media/upload/thumb/4/47/Sword_EN_boxart.png/640px-Sword_EN_boxart.png",
+              "Zelda: Breath of the Wild": "https://images-na.ssl-images-amazon.com/images/I/91DgUPPHMGL._SL1500_.jpg",
+              "Zelda: Tears of the Kingdom": "https://static.wikia.nocookie.net/nintendo/images/2/2a/The_Legend_of_Zelda_Tears_of_the_Kingdom_box_art_South_Korea.png/revision/latest/scale-to-width-down/250?cb=20240130073833&path-prefix=en",
+              "Zelda: Echoes of Widsom": "https://static.honestgamers.com/images/games/19/84/17/17189/5.jpg",
+              "Cuphead": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/268910/library_600x900.jpg",
+              "Cyberpunk 2077": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/library_600x900.jpg",
+              "Donut County": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/702670/library_600x900.jpg",
+              "Elden Ring": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/library_600x900.jpg",
+              "FIFA 18": "https://static.wikia.nocookie.net/nintendo/images/f/fb/FIFA_18_%28NA_-_Final%29.png/revision/latest?cb=20170914032140&path-prefix=en",
+              "Gris": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/683320/library_600x900.jpg",
+              "GTA V": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/271590/library_600x900.jpg",
+              "Hades 2": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145350/library_600x900.jpg",
+              "Hollow Knight Silksong": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1030300/library_600x900.jpg",
+              "Monster Boy and the Cursed Kingdom": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/449610/library_600x900.jpg",
+              "Need for Speed Rivals": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1262600/library_600x900.jpg",
+              "Skyrim": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/489830/library_600x900.jpg",
+              "Slay the Spire": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/646570/library_600x900.jpg",
+              "Tennis in the Face": "https://prod-images.blacknut.net/65fae0a22227219ef319e43d_sm.jpg",
+              "Tomb Raider": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/203160/library_600x900.jpg",
+              "Traveller’s Rest": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1139980/library_600x900.jpg",
+              "The Witcher 3": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/library_600x900.jpg",
+              "Megabonk": "https://gfn.ru/media/images/box_art_image-megabonk-b6f8044a.original.jpg",
+            };
 
-  // FIX: your Nintendo "Echoes" slug is often the one that breaks.
-  // This one is a direct, hotlinkable cover image.
-  "Zelda: Echoes of Widsom":
-    "https://static.honestgamers.com/images/games/19/84/17/17189/5.jpg", // :contentReference[oaicite:1]{index=1}
-
-  // --- Steam / Multiplatform (Using Steam Library Vertical Art) ---
-  "Cuphead":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/268910/library_600x900.jpg",
-  "Cyberpunk 2077":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/library_600x900.jpg",
-  "Donut County":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/702670/library_600x900.jpg",
-  "Elden Ring":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/library_600x900.jpg",
-
-  // FIX: use the actual full-size Wikipedia file (not a random thumbnail).
-  "FIFA 18":
-    "https://static.wikia.nocookie.net/nintendo/images/f/fb/FIFA_18_%28NA_-_Final%29.png/revision/latest?cb=20170914032140&path-prefix=en", // :contentReference[oaicite:2]{index=2}
-
-  "Gris":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/683320/library_600x900.jpg",
-  "GTA V":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/271590/library_600x900.jpg",
-  "Hades 2":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1145350/library_600x900.jpg",
-  "Hollow Knight Silksong":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1030300/library_600x900.jpg",
-  "Monster Boy and the Cursed Kingdom":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/449610/library_600x900.jpg",
-  "Need for Speed Rivals":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1262600/library_600x900.jpg",
-  "Skyrim":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/489830/library_600x900.jpg",
-  "Slay the Spire":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/646570/library_600x900.jpg",
-
-  // FIX: 394290 does NOT have library_600x900.jpg, but it DOES have a portrait asset.
-  "Tennis in the Face":
-    "https://prod-images.blacknut.net/65fae0a22227219ef319e43d_sm.jpg", // :contentReference[oaicite:3]{index=3}
-
-  "Tomb Raider":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/203160/library_600x900.jpg",
-  "Traveller’s Rest":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1139980/library_600x900.jpg",
-  "The Witcher 3":
-    "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/library_600x900.jpg",
-
-  // --- Niche / manual fallbacks ---
-  "Megabonk":
-    "https://gfn.ru/media/images/box_art_image-megabonk-b6f8044a.original.jpg",
-};
-
-
-            // 3. Select Art
             let boxArtUrl = GAME_COVERS[gameName];
-
-            // 4. Fail-safe (Only searches if you add a new game and forget to update the list above)
             if (!boxArtUrl) {
-                console.warn("Missing explicit cover for:", gameName);
                 const suffix = " Box Art";
                 boxArtUrl = `https://tse2.mm.bing.net/th?q=${encodeURIComponent(gameName + suffix)}&w=300&h=450&c=7&rs=1&p=0`;
             }
@@ -1102,11 +1027,9 @@
             const initials = gameName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
             const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
 
-            // 5. Build Results HTML (Standard Logic)
             let resultsHtml = '';
             for(let i=1; i<=DEVICE_COUNT; i++) {
                 if(!columnVisibility[i]) continue;
-
                 const cell = row.children[i];
                 if(!cell) continue;
 
@@ -1117,25 +1040,23 @@
                 const colorClass = deviceColors[i];
 
                 resultsHtml += `
-                    <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/5">
+                    <div class="flex justify-between items-center p-3 bg-brand-bg/50 rounded-lg border border-white/5">
                         <span class="font-bold text-sm ${colorClass}">${deviceName}</span>
-                        <span class="font-body font-bold text-white text-lg">${val} <span class="text-xs text-white/30 font-normal">FPS</span></span>
+                        <span class="font-mono font-bold text-white text-lg">${val} <span class="text-xs text-brand-muted font-normal font-sans">FPS</span></span>
                     </div>
                 `;
             }
 
-            // 6. Populate Modal
             modalContent.innerHTML = `
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="w-full md:w-1/3">
-                        <div class="rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 aspect-[2/3] bg-black/50 relative group">
+                        <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10 aspect-[2/3] bg-black/50 relative group">
                             <img src="${boxArtUrl}" crossorigin="anonymous" class="w-full h-full object-cover" onerror="this.src='${fallbackArt}'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#1a0b2e] to-transparent opacity-60"></div>
                         </div>
                     </div>
                     <div class="w-full md:w-2/3 flex flex-col">
-                        <h2 class="font-display font-black text-3xl text-white mb-1 leading-tight">${gameName}</h2>
-                        <span class="text-white/40 text-xs font-bold uppercase tracking-widest mb-6">Benchmark Results</span>
+                        <h2 class="font-extrabold text-3xl text-white mb-1 leading-tight">${gameName}</h2>
+                        <span class="text-brand-muted text-xs font-bold uppercase tracking-widest mb-6">Benchmark Results</span>
 
                         <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
                             ${resultsHtml}
@@ -1145,42 +1066,33 @@
             `;
 
             modal.classList.remove('hidden');
+            lucide.createIcons();
         }
 
-        // Close Modal
         const closeModal = () => modal.classList.add('hidden');
         closeBtn.addEventListener('click', closeModal);
         bg.addEventListener('click', closeModal);
 
-        // Screenshot Feature (Bonus)
+        // Screenshot Feature
         document.getElementById('screenshot-game-modal').addEventListener('click', function() {
             const btn = this;
             const originalIcon = btn.innerHTML;
             btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i>`;
             lucide.createIcons();
 
-            // Create temporary container for capture (like in handheld.html)
             const captureContainer = document.createElement('div');
             Object.assign(captureContainer.style, {
-                position: 'fixed',
-                top: '-9999px',
-                left: '-9999px',
-                width: '800px', // Fixed width for consistent capture
-                backgroundColor: '#1a0b2e', // Solid deep purple background
-                backgroundImage: 'radial-gradient(circle at top center, #3b0764, #1a0b2e)',
-                padding: '40px',
-                borderRadius: '20px',
-                zIndex: '-1'
+                position: 'fixed', top: '-9999px', left: '-9999px', width: '800px',
+                backgroundColor: '#2D1B4E', padding: '40px', borderRadius: '20px', zIndex: '-1'
             });
 
-            // Reconstruct content for capture with solid styles
             const content = document.getElementById('game-modal-content').innerHTML;
             captureContainer.innerHTML = `
-                <div class="relative bg-[#3D255D] border-2 border-white/20 rounded-3xl p-8 shadow-2xl flex flex-col text-white font-sans">
+                <div class="relative bg-[#432C7A] border-2 border-white/20 rounded-3xl p-8 shadow-2xl flex flex-col text-white font-sans">
                     ${content}
                     <div class="mt-8 pt-4 border-t border-white/10 flex justify-between items-center">
                         <div class="flex items-center gap-2">
-                            <span class="font-display font-bold text-xl tracking-tight">Ryan Retro</span>
+                            <span class="font-bold text-xl tracking-tight">Ryan Retro</span>
                         </div>
                         <span class="font-mono text-white/50 text-xs">ryanretro.com</span>
                     </div>
@@ -1189,13 +1101,7 @@
             document.body.appendChild(captureContainer);
 
             html2canvas(captureContainer, {
-                backgroundColor: '#1a0b2e',
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                logging: false,
-                width: 800,
-                windowWidth: 800
+                backgroundColor: '#2D1B4E', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 800, windowWidth: 800
             }).then(canvas => {
                 document.body.removeChild(captureContainer);
                 const link = document.createElement('a');
