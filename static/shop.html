@@ -1,1899 +1,1014 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ryan Retro Shop - Best Deals on Handhelds, Accessories, and Retro Gear.">
-  <title>Ryan Retro Shop - Best Deals & Gear</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&display=swap');
-    
-    :root {
-      /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
-      --gb-grey: #e0e0e0;
-      --gb-dark-grey: #c4c4c4;
-      --gb-shadow: #9e9e9e;
-      --gb-highlight: #ffffff;
-      --gb-accent: #6b7280;
-      
-      --bg-body: #f0f0f0;
-      --bg-panel: #e5e7eb; /* gray-200 */
-      --text-main: #111827;
-      --text-muted: #4b5563;
-      --border-color: #000000;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro | Shop</title>
+    <meta name="description" content="Ryan Retro Shop - Best Deals on Handhelds, Accessories, and Retro Gear.">
 
-    /* DARK MODE VARIABLES */
-    body.dark-mode {
-      --gb-grey: #4b5563;        /* Gray 600 - Lighter face for contrast */
-      --gb-dark-grey: #111827;   /* Gray 900 - Dark sides/thickness */
-      --gb-shadow: #000000;      /* Deep shadow */
-      --gb-highlight: rgba(255,255,255,0.15); /* Sharp edge highlight */
-      --gb-accent: #9ca3af;
-      
-      --bg-body: #111827;        /* Very dark background for page */
-      --bg-panel: #1f2937;       /* Panel backgrounds */
-      --text-main: #d1d5db;      /* Light text */
-      --text-muted: #9ca3af;
-      --border-color: #000000;   
-    }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    .retro-font { font-family: 'Press Start 2P', cursive; }
-    
-    /* BACKGROUND TEXTURE - Solid Color Only */
-    body {
-        background-color: var(--bg-body);
-        color: var(--text-main);
-        transition: background-color 0.3s, color 0.3s;
-    }
-    
-    .bg-overlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
-        pointer-events: none;
-        z-index: -1;
-    }
-    .pixel-btn { transition: all 0.1s ease; }
-    .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
-    
-    /* Snappy Entry Animation */
-    @keyframes popIn {
-        0% { opacity: 0; transform: translateY(10px) scale(0.98); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .cart-animate {
-        animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        opacity: 0; /* Hidden initially until animation starts */
-    }
-    
-    /* GAMEBOY CARTRIDGE STYLES */
-    .gb-cartridge {
-        background-color: var(--gb-grey);
-        border-radius: 5px 5px 15px 5px; 
-        padding: 12px;
-        position: relative;
-        box-shadow: 
-            inset 3px 3px 5px var(--gb-highlight), 
-            inset -3px -3px 5px rgba(0,0,0,0.2),    
-            8px 8px 15px rgba(0,0,0,0.3);             
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        border-right: 6px solid var(--gb-dark-grey); 
-        border-bottom: 6px solid var(--gb-dark-grey); 
-        transition: transform 0.2s, background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 
-    body.dark-mode .gb-cartridge {
-        box-shadow: 
-            inset 2px 2px 3px var(--gb-highlight), 
-            inset -2px -2px 3px rgba(0,0,0,0.6),    
-            0px 15px 25px rgba(0,0,0,0.6); 
-    }
-    
-    .gb-cartridge:hover {
-        transform: translateY(-5px);
-    }
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#2D1B4E',       // Deep Soft Purple
+                            card: '#432C7A',     // Lighter Grape
+                            hover: '#5B3EA8',    // Bright Purple
+                            accent: '#FFFFFF',   // Pure White
+                            muted: '#D4BBFF',    // Soft Lavender Text
+                            red: '#FF0000'       // YouTube Red
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
-    /* The depressed area at the top saying "RYAN BOY" */
-    .gb-header-depression {
-        background-color: var(--gb-grey);
-        border-radius: 12px 12px 0 0;
-        height: 28px;
-        margin-bottom: 12px;
-        box-shadow: 
-            inset 2px 2px 5px rgba(0,0,0,0.15),
-            inset -1px -1px 2px var(--gb-highlight);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: background-color 0.3s, box-shadow 0.3s;
-    }
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #2D1B4E; }
+        ::-webkit-scrollbar-thumb { background: #432C7A; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5B3EA8; }
 
-    body.dark-mode .gb-header-depression {
-        box-shadow: 
-            inset 3px 3px 6px rgba(0,0,0,0.6),
-            inset -1px -1px 2px rgba(255,255,255,0.1);
-        border: none;
-    }
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px; width: 16px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            cursor: pointer;
+            background: #432C7A;
+            border-radius: 2px;
+        }
 
-    .gb-header-text {
-        font-family: sans-serif;
-        font-weight: 900;
-        font-style: italic;
-        color: var(--gb-grey); 
-        text-shadow: 
-            1px 1px 0 var(--gb-highlight), 
-            -1px -1px 0 rgba(0,0,0,0.1);
-        font-size: 10px;
-        letter-spacing: 1px;
-        transition: color 0.3s;
-    }
-
-    /* The "Sticker" containing the image */
-    .gb-sticker {
-        background: #222;
-        border-radius: 8px;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        border: 1px solid #999;
-        aspect-ratio: 1 / 0.85; 
-        flex-shrink: 0;
-        margin-bottom: 10px;
-    }
-    .gb-sticker img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .gb-content {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    /* INSERT BUTTON STYLES */
-    .gb-insert-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: auto;
-        padding-top: 8px;
-        padding-bottom: 4px;
-        opacity: 0.5;
-        transition: all 0.2s;
-        cursor: pointer;
-        border-top: 1px solid transparent;
-    }
-    .gb-insert-btn:hover {
-        opacity: 1;
-        background: rgba(255,255,255,0.3);
-        border-top: 1px solid rgba(255,255,255,0.8);
-        border-radius: 4px;
-    }
-    body.dark-mode .gb-insert-btn:hover {
-        background: rgba(255,255,255,0.1);
-        border-top: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    /* ------------------------------------------- */
-    /* BIG WIDESCREEN PAK (MODAL) STYLES */
-    /* ------------------------------------------- */
-    
-    #bigRyanPak {
-        background-color: var(--gb-grey);
-        border-radius: 20px 20px 60px 20px; 
-        box-shadow: 
-            inset 4px 4px 10px var(--gb-highlight),
-            inset -6px -6px 15px rgba(0,0,0,0.2),
-            0 50px 100px rgba(0,0,0,0.5);
-        border-right: 12px solid var(--gb-dark-grey);
-        border-bottom: 12px solid var(--gb-dark-grey);
-        position: relative;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.3s, border-color 0.3s;
-    }
-    
-    body.dark-mode #bigRyanPak {
-        box-shadow: 
-            inset 4px 4px 10px var(--gb-highlight), 
-            inset -6px -6px 15px rgba(0,0,0,0.5),
-            0 50px 100px rgba(0,0,0,0.9);
-    }
-    
-    .pak-active { transform: translateY(0) !important; }
-    
-    .big-pak-depression {
-        background-color: var(--gb-grey);
-        border-radius: 20px 20px 0 0;
-        height: 50px;
-        margin-bottom: 20px;
-        box-shadow: 
-            inset 3px 3px 8px rgba(0,0,0,0.15),
-            inset -2px -2px 4px var(--gb-highlight);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        transition: background-color 0.3s;
-    }
-    body.dark-mode .big-pak-depression {
-        box-shadow: 
-            inset 5px 5px 10px rgba(0,0,0,0.6),
-            inset -2px -2px 4px rgba(255,255,255,0.1);
-        border: none;
-    }
-
-    .big-pak-text {
-        font-family: sans-serif;
-        font-weight: 900;
-        font-style: italic;
-        color: var(--gb-grey);
-        text-shadow: 
-            2px 2px 0 var(--gb-highlight), 
-            -2px -2px 0 rgba(0,0,0,0.1);
-        font-size: 24px;
-        letter-spacing: 4px;
-        transition: color 0.3s;
-    }
-    
-    .big-pak-sticker-area {
-        background: #111;
-        border-radius: 12px;
-        border: 2px solid #888;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        position: relative;
-    }
-    
-    /* Split Screen Layout inside the "Sticker" */
-    .pak-split-layout {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    @media (min-width: 768px) {
-        .pak-split-layout { flex-direction: row; }
-    }
-    
-    .pak-media-side {
-        flex: 1;
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        min-height: 250px;
-        border-right: 2px solid #333;
-    }
-    .pak-info-side {
-        flex: 1;
-        background: #fdfdfd; /* White label paper look */
-        padding: 24px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        color: #000;
-        box-shadow: inset 10px 0 20px rgba(0,0,0,0.05); 
-        transition: background-color 0.3s, color 0.3s;
-    }
-    body.dark-mode .pak-info-side {
-        background-color: #1f2937;
-        color: #d1d5db;
-    }
-    
-    .pak-grips {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 16px;
-        padding-bottom: 8px;
-        opacity: 0.3;
-    }
-    .pak-grip-line {
-        width: 6px;
-        height: 40px;
-        background: #000;
-        border-radius: 4px;
-        box-shadow: 1px 1px 0 rgba(255,255,255,0.5);
-    }
-    
-    .retro-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    
-    /* Brand Colors */
-    .store-brand.active { background: #3B82F6; }
-    .store-ali.active { background: #EF4444; }
-    .store-amz.active { background: #F59E0B; color: black; }
-    .store-pow.active { background: #008c69; }
-    
-    .c-price { font-family: 'Press Start 2P', cursive; font-size: 0.65rem; color: inherit; margin-right: 1.5rem; width: 100px; text-align: right; flex-shrink: 0; font-weight: bold; }
-    
-    /* --- COUPON STYLES --- */
-    .link-group {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        width: 100%;
-    }
-    .coupon-badge {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 0.6rem;
-        padding: 6px 8px 4px 8px;
-        border-left: 1px solid #000;
-        border-right: 1px solid #000;
-        border-bottom: 1px solid #000;
-        border-bottom-left-radius: 6px;
-        border-bottom-right-radius: 6px;
-        text-align: center;
-        width: 90%;
-        margin-top: -4px;
-        position: relative;
-        z-index: 0;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 6px;
-        transition: transform 0.1s;
-    }
-    .coupon-badge:hover { transform: translateY(2px); }
-    .coupon-badge:active { transform: translateY(4px); }
-    
-    /* Power Switch Styles (Updated for Responsiveness) */
-    .power-switch-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        margin-bottom: 8px;
-        width: 100%; /* Ensure container takes full width if needed */
-    }
-    .power-switch-track {
-        width: 360px;
-        max-width: 100%; /* Fix for mobile screens */
-        height: 32px;
-        background-color: #d1d5db;
-        border-radius: 4px;
-        border: 2px solid #9ca3af;
-        position: relative;
-        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
-        display: flex;
-        cursor: pointer;
-        overflow: hidden;
-        transition: background-color 0.3s, border-color 0.3s;
-    }
-    body.dark-mode .power-switch-track {
-        background-color: #4b5563; 
-        border-color: #000000;
-    }
-
-    .power-switch-thumb {
-        width: 33.33%; /* Fluid width */
-        height: calc(100% + 2px); 
-        background-color: #374151;
-        border-radius: 2px;
-        position: absolute;
-        top: -1px;
-        left: 33.33%; /* Start center */
-        transition: left 0.3s cubic-bezier(0.4, 0.0, 0.2, 1), background-color 0.3s;
-        box-shadow: 
-            2px 2px 5px rgba(0,0,0,0.3),
-            inset 1px 1px 2px rgba(255,255,255,0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2;
-    }
-    body.dark-mode .power-switch-thumb {
-        background-color: #1f2937;
-        box-shadow: 
-            2px 2px 5px rgba(0,0,0,0.5),
-            inset 1px 1px 2px rgba(255,255,255,0.05);
-    }
-
-    .thumb-ridges { display: flex; flex-direction: column; gap: 3px; }
-    .thumb-ridge {
-        width: 30px;
-        height: 2px;
-        background-color: #1f2937;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .power-label-container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: space-between;
-        pointer-events: none;
-    }
-    .power-label {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 8px;
-        color: #6b7280;
-        transition: all 0.3s;
-        width: 33.33%; /* Fluid width */
-        z-index: 3;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%; 
-        padding-bottom: 3px;
-    }
-    body.dark-mode .power-label { color: #9ca3af; }
-    
-    .power-label.active { 
-        color: #d1d5db;
-        text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-    }
-    body.dark-mode .power-label.active { color: #f3f4f6; }
-
-    .switch-title {
-        font-family: 'Press Start 2P', cursive;
-        font-size: 10px;
-        color: #374151;
-        margin-bottom: 2px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: color 0.3s;
-    }
-    body.dark-mode .switch-title { color: #d1d5db; }
-
-    .led-indicator {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        background: #9ca3af;
-        box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
-        transition: background 0.3s, box-shadow 0.3s;
-    }
-    .led-indicator.on {
-        background: #ef4444;
-        box-shadow: 0 0 5px #ef4444, inset -1px -1px 2px rgba(0,0,0,0.2);
-    }
-
-    /* Unified Filter Dropdown */
-    .unified-filter-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        margin-top: 0.5rem;
-        width: 300px;
-        background-color: var(--gb-grey);
-        border: 4px solid #999;
-        z-index: 100;
-        box-shadow: 12px 12px 0 rgba(0,0,0,0.2);
-        max-height: 80vh;
-        overflow-y: auto;
-        color: var(--text-main);
-    }
-    body.dark-mode .unified-filter-menu { border-color: #4b5563; }
-    .unified-filter-menu.open { display: block; }
-    
-    .filter-section-header {
-      background: #c0c0c0;
-      padding: 10px 16px;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 9px;
-      color: #000;
-      border-bottom: 2px solid #999;
-      letter-spacing: 1px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    body.dark-mode .filter-section-header { background: #4b5563; color: #fff; border-bottom-color: #1f2937; }
-
-    .filter-option {
-      display: flex;
-      align-items: center;
-      padding: 12px 16px;
-      cursor: pointer;
-      transition: all 0.1s;
-      border-bottom: 1px solid #ccc;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 8px;
-      text-transform: uppercase;
-      color: #333;
-    }
-    body.dark-mode .filter-option { border-bottom-color: #4b5563; color: #d1d5db; }
-
-    .filter-option:hover { background-color: #fff; color: #000; }
-    body.dark-mode .filter-option:hover { background-color: #1f2937; color: #fff; }
-
-    .filter-option.active { color: #000; background-color: #fff; font-weight: bold; }
-    body.dark-mode .filter-option.active { background-color: #111827; color: #fff; }
-
-    /* Slider styling */
-    .retro-slider {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 8px;
-      background: #999;
-      outline: none;
-      border: 2px solid #555;
-      margin: 10px 0;
-    }
-    .retro-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      background: #e0e0e0;
-      cursor: pointer;
-      border: 2px solid #000;
-      box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-    }
-    .filter-checkbox, .filter-radio {
-      appearance: none;
-      width: 14px;
-      height: 14px;
-      border: 2px solid #555;
-      background: white;
-      margin-right: 12px;
-      position: relative;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .filter-radio { border-radius: 50%; }
-    .filter-checkbox:checked, .filter-radio:checked { background: #000; border-color: #000; }
-    .filter-checkbox:checked::after {
-      content: '✓';
-      position: absolute;
-      top: -3px; left: 1px;
-      color: #fff;
-      font-weight: bold;
-      font-size: 10px;
-    }
-    
-    /* DARK MODE SPECIFIC OVERRIDES FOR TAILWIND CLASSES */
-    body.dark-mode header,
-    body.dark-mode footer {
-        background-color: var(--gb-grey) !important;
-        border-color: var(--gb-dark-grey) !important;
-    }
-    
-    body.dark-mode #mainControlPanel {
-        background-color: var(--gb-grey) !important;
-        border-color: var(--gb-dark-grey) !important;
-    }
-    
-    body.dark-mode h1, 
-    body.dark-mode h2, 
-    body.dark-mode h3 {
-        color: #fff !important;
-    }
-    
-    body.dark-mode p {
-        color: #d1d5db !important; /* gray-300 */
-    }
-    
-    /* Input/Select overrides in dark mode */
-    body.dark-mode input,
-    body.dark-mode select {
-        background-color: #1f2937 !important; /* gray-800 */
-        color: #fff !important;
-        border-color: #4b5563 !important; /* gray-600 */
-    }
-    
-    /* Button overrides in dark mode */
-    body.dark-mode .bg-gray-100 {
-        background-color: #1f2937 !important;
-        color: #fff !important;
-    }
-    body.dark-mode .bg-gray-100:hover {
-        background-color: #374151 !important;
-    }
-    
-    /* Flash Deals Modal Dark Mode */
-    body.dark-mode .bg-gray-200 {
-        background-color: #374151 !important;
-        border-color: #1f2937 !important;
-    }
-    body.dark-mode .bg-white {
-        background-color: #1f2937 !important;
-        border-color: #4b5563 !important;
-        color: #fff !important;
-    }
-    
-    body.dark-mode .gb-content h3 { color: #fff !important; }
-    body.dark-mode .gb-content p { color: #d1d5db !important; }
-    body.dark-mode .gb-insert-btn span { color: #d1d5db !important; }
-    body.dark-mode svg.fill-black { fill: #fff !important; }
-    
-    /* RYAN BOY Header Text Color Override for Dark Mode */
-    body.dark-mode .gb-header-text,
-    body.dark-mode .big-pak-text {
-        color: #e5e7eb !important;
-        text-shadow: 2px 2px 0 rgba(0,0,0,0.9), -1px -1px 0 rgba(255,255,255,0.2) !important;
-    }
-    
-    /* Affiliate Banner Dark Mode Override */
-    body.dark-mode .bg-yellow-50 {
-        background-color: #362F08 !important; 
-        border-color: #facc15 !important;
-        color: #fef08a !important; 
-    }
-    body.dark-mode .bg-yellow-50 p,
-    body.dark-mode .bg-yellow-50 h3 {
-        color: #fef08a !important; 
-    }
-    body.dark-mode .bg-yellow-400 {
-        background-color: #facc15 !important; 
-        color: #000 !important;
-    }
-
-    body.dark-mode #tierLabel,
-    body.dark-mode #budgetLabel {
-        color: #fff !important;
-    }
-    body.dark-mode .text-gray-600 {
-        color: #d1d5db !important; 
-    }
-
-    .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-    
-    @media (max-width: 768px) {
-      .header-container { flex-direction: column; gap: 0.25rem; }
-      .c-stores { display: none; }
-      .c-price { display: block; margin-right: 0.5rem; width: auto; font-size: 0.55rem; }
-      
-      .unified-filter-menu {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 90vw;
-        max-width: 320px;
-        margin-top: 0;
-        box-shadow: 0 0 100px rgba(0,0,0,0.9);
-        border: 4px solid #000;
-        max-height: 80vh; 
-        overflow-y: auto;
-      }
-      
-      #bigRyanPak {
-        height: 90vh;
-        border-radius: 10px;
-        border-right-width: 6px;
-        border-bottom-width: 6px;
-      }
-      .pak-split-layout { flex-direction: column; }
-      .pak-media-side { min-height: 200px; flex: 0 0 200px; }
-      
-      /* Mobile Scale for Power Switch Container */
-      .power-switch-container {
-        transform: scale(0.95);
-        transform-origin: center;
-      }
-    }
-  </style>
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        
+        .glass-panel {
+            background: rgba(67, 44, 122, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
-<body class="font-sans overflow-x-hidden pb-8 dark-mode">
-<div class="bg-overlay"></div>
+<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
 
-<div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
-    <div class="absolute inset-0" onclick="toggleNav()"></div>
-    
-    <div class="bg-gray-200 border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
-        
-        <div class="bg-gray-800 text-white p-2 mb-1 flex justify-between items-center border-b-2 border-black">
-            <span class="retro-font text-xs">PAUSE MENU</span>
-            <button onclick="toggleNav()" class="text-white hover:text-red-400">
-                <i data-feather="x" class="w-4 h-4"></i>
-            </button>
-        </div>
+    <!-- HEADER (Exact Match to Homepage) -->
+    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+        <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
 
-        <div class="flex flex-col gap-1" id="navLinksList">
-            <a href="benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">BENCHMARKS</span>
-                <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <a href="handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">HANDHELDS</span>
-                <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">HOME</span>
-                <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <a href="patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">PATRONS</span>
-                <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <a href="store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">STORE</span>
-                <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-        </div>
-        
-        <div class="h-0.5 bg-gray-400 my-1"></div>
-
-        <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
-             <span class="retro-font text-[10px] group-hover:text-white">SWITCH THEME</span>
-             <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
-        </div>
-
-        <div class="mt-1 text-center pb-1">
-            <span class="text-[8px] retro-font text-gray-500">SELECT OPTION</span>
-        </div>
-    </div>
-</div>
-
-<div id="ryanBoyModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center pointer-events-none p-4">
-  <div class="absolute inset-0 bg-black/90 transition-opacity opacity-0 pointer-events-auto" id="rbBackdrop" onclick="closeRyanBoy()"></div>
-  
-  <div id="bigRyanPak" class="w-full max-w-5xl h-auto md:h-[650px] flex flex-col pointer-events-auto z-10 transform translate-y-[120%]">
-      
-      <div class="big-pak-depression">
-          <span class="big-pak-text">RYAN BOY</span>
-      </div>
-      
-      <div class="px-4 md:px-8 flex-1 overflow-hidden flex flex-col mb-4">
-          <div class="big-pak-sticker-area flex-1">
-              <div class="pak-split-layout" id="rbScreenContent">
-                  </div>
-          </div>
-      </div>
-      
-      <div class="pb-2 flex flex-col items-center justify-center">
-          <div class="opacity-30 drop-shadow-md cursor-pointer hover:opacity-50 transition-opacity" onclick="closeRyanBoy()" title="Close Cart">
-              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="fill-black">
-                 <path d="M12 21L2 5H22L12 21Z" />
-              </svg>
-          </div>
-      </div>
-      
-  </div>
-</div>
-
-<header class="bg-gray-100 py-3 md:py-6 border-b-4 border-gray-400 shadow-md transition-colors duration-300 relative z-50">
-  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container gap-4">
-    
-    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-        
-        <button id="navToggle" class="p-3 bg-gray-800 text-white hover:bg-gray-700 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
-            <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-            <span class="retro-font text-[10px] hidden md:block">MENU</span>
-        </button>
-
-        <a href="/" class="flex items-center gap-3 md:gap-4">
-            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-                class="w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-gray-400 bg-gray-200" alt="Ryan Retro Logo">
-            <div class="flex flex-col">
-                <h1 class="retro-font text-sm md:text-xl text-gray-800 leading-tight">RYAN'S STORE</h1>
-                <span class="retro-font text-[8px] text-gray-500 uppercase">Affiliate Links</span>
-            </div>
-        </a>
-    </div>
-
-    <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto order-3 md:order-3 mt-2 md:mt-0">
-      
-      <button id="openFlashDealsBtn" 
-              class="px-3 py-2 md:py-4 md:px-4 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] w-full md:w-auto hidden">
-          <i data-feather="zap" class="w-4 h-4 md:w-5 md:h-5"></i>
-          <span>DEALS</span>
-      </button>
-
-      <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
-        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
-          FIND ME
-        </span>
-        <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-           <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
-             <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
-             <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-           </a>
-           <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-           </a>
-           <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
-           </a>
-           <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-           </a>
-        </div>
-      </div>
-
-      <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
-        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
-          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
-        </span>
-        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-          <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-          </svg>
-          <span class="tracking-tight">JOIN PATREON</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</header>
-<section id="mainContentSection" class="py-8 container mx-auto px-4">
-  
-  <div class="bg-yellow-50 border-4 border-yellow-400 text-yellow-800 p-4 mb-8 rounded-lg shadow-lg flex flex-col md:flex-row items-center gap-4 text-center md:text-left cart-animate" style="animation-delay: 0.1s;">
-      <div class="bg-yellow-400 text-white p-3 rounded-full border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.1)] flex-shrink-0">
-          <i data-feather="heart" class="w-6 h-6 fill-current"></i>
-      </div>
-      <div class="flex-1">
-          <h3 class="retro-font text-xs font-bold mb-1 uppercase">Support The Channel</h3>
-          <p class="font-sans text-xs md:text-sm leading-relaxed">
-              These are affiliate links. Using them costs you nothing, but it helps me keep buying handhelds to review for you! Thank you for your support! ❤️
-          </p>
-      </div>
-  </div>
-
-  <div id="mainControlPanel" class="bg-gray-200 p-6 rounded-lg border-4 border-gray-400 shadow-xl flex flex-col gap-6 transition-colors duration-300">
-    
-    <div class="power-switch-container">
-        <div class="switch-title">
-            <div id="powerLed" class="led-indicator on"></div>
-            <span>CATEGORY</span>
-        </div>
-        <div class="power-switch-track" id="powerSwitchTrack">
-            <div class="power-label-container">
-                <span class="power-label" data-pos="0">HANDHELD</span>
-                <span class="power-label active" data-pos="1">ALL</span>
-                <span class="power-label" data-pos="2">ACCESSORIES</span>
-            </div>
-            <div class="power-switch-thumb" id="powerSwitchThumb">
-                <div class="thumb-ridges">
-                    <div class="thumb-ridge"></div>
-                    <div class="thumb-ridge"></div>
-                    <div class="thumb-ridge"></div>
-                    <div class="thumb-ridge"></div>
+            <a href="/" class="flex items-center gap-3 group shrink-0">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-            </div>
-        </div>
-    </div>
+                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
+            </a>
 
-    <div class="w-full relative" id="searchBarContainer">
-      <i data-feather="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5"></i>
-      <input type="text" id="searchInput" placeholder="SEARCH GEAR..." 
-             class="w-full bg-white border-4 border-gray-400 text-gray-800 text-center px-4 py-4 rounded focus:outline-none focus:border-purple-500 retro-font text-sm uppercase shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1)]">
-    </div>
-    
-    <div class="grid grid-cols-2 md:grid md:grid-cols-3 gap-2 md:gap-4 w-full items-center" id="filterRow">
-      <div class="relative w-full md:w-auto md:justify-self-start" id="filterWidget">
-          <button id="filterBtn" class="bg-gray-100 hover:bg-white text-black px-4 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
-              <i data-feather="filter" class="w-4 h-4"></i>
-              <span id="filterBtnText">FILTERS</span>
-              <i data-feather="chevron-down" class="w-4 h-4"></i>
-          </button>
-          
-          <div id="filterMenu" class="unified-filter-menu rounded no-scrollbar">
-              <div class="filter-section-header">
-                  <span>PLAYABLE UP TO</span>
-                  <span id="tierLabel" class="text-black">ALL</span>
-              </div>
-              <div class="px-4 py-3 bg-gray-100 border-b border-gray-300">
-                  <input type="range" id="tierRange" min="0" max="4" value="0" step="1" class="retro-slider">
-                  <div class="flex justify-between text-[12px] text-gray-600 font-bold retro-font mt-2">
-                      <span>ALL</span>
-                      <span>PS1</span>
-                      <span>GC</span>
-                      <span>SW</span>
-                      <span>PC</span>
-                  </div>
-              </div>
-              <div class="filter-section-header">
-                  <span>BUDGET</span>
-                  <span id="budgetLabel" class="text-black">$500</span>
-              </div>
-              <div class="px-4 py-2 bg-gray-100 border-b border-gray-300">
-                  <input type="range" id="budgetRange" min="0" max="500" value="500" step="10" class="retro-slider">
-              </div>
-              <div class="filter-section-header">AVAILABILITY</div>
-              <label class="filter-option">
-                  <input type="radio" name="status" class="filter-radio status-opt" value="all" checked>
-                  <span>Show All</span>
-              </label>
-              <label class="filter-option">
-                  <input type="radio" name="status" class="filter-radio status-opt" value="available">
-                  <span>Available Now</span>
-              </label>
-              <div class="filter-section-header">CATEGORY</div>
-              <label class="filter-option">
-                  <input type="radio" name="category" class="filter-radio cat-opt" value="all" checked>
-                  <span>All Gear</span>
-              </label>
-              <label class="filter-option">
-                  <input type="radio" name="category" class="filter-radio cat-opt" value="Handhelds">
-                  <span>Handhelds</span>
-              </label>
-              <label class="filter-option">
-                  <input type="radio" name="category" class="filter-radio cat-opt" value="Accessories">
-                  <span>Accessories</span>
-              </label>
-              <div class="filter-section-header">BRANDS</div>
-              <div id="brandOptionsList"></div>
-              <div class="filter-section-header">STORES</div>
-              <label class="filter-option">
-                  <input type="checkbox" class="filter-checkbox store-opt" value="official">
-                  <span>Official Stores</span>
-              </label>
-              <label class="filter-option">
-                  <input type="checkbox" class="filter-checkbox store-opt" value="aliexpress">
-                  <span>AliExpress</span>
-              </label>
-              <label class="filter-option">
-                  <input type="checkbox" class="filter-checkbox store-opt" value="amazon">
-                  <span>Amazon</span>
-              </label>
-              <label class="filter-option">
-                  <input type="checkbox" class="filter-checkbox store-opt" value="powkiddy">
-                  <span>Powkiddy</span>
-              </label>
-          </div>
-      </div>
-      
-      <div class="relative w-full md:w-auto md:justify-self-center">
-        <select id="sortFilter" class="appearance-none bg-gray-100 text-black pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-purple-500 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
-          <option value="default">SORT: NEW</option>
-          <option value="price-asc">PRICE: LOW ⬆</option>
-          <option value="price-desc">PRICE: HIGH ⬇</option>
-        </select>
-        <i data-feather="chevron-down" class="absolute right-2 top-3.5 w-4 h-4 text-gray-500 pointer-events-none"></i>
-      </div>
-      
-      <div class="relative w-full md:w-auto col-span-2 md:col-span-1 md:justify-self-end">
-        <select id="currencyFilter" class="appearance-none bg-gray-100 text-purple-700 font-bold pl-4 pr-10 py-3 rounded pixel-btn retro-font text-[10px] uppercase border-2 border-black cursor-pointer focus:outline-none focus:border-purple-500 w-full md:w-auto shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
-          <option value="USD">USD $</option>
-          <option value="EUR">EUR €</option>
-          <option value="GBP">GBP £</option>
-          <option value="KRW">KRW ₩</option>
-          <option value="CAD">CAD $</option>
-          <option value="AUD">AUD $</option>
-        </select>
-        <i data-feather="chevron-down" class="absolute right-2 top-3.5 w-4 h-4 text-gray-500 pointer-events-none"></i>
-      </div>
-    </div>
-  </div>
-</section>
-<section class="container mx-auto px-4 min-h-[50vh]">
-  <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-300">
-    </div>
-</section>
-<template id="productTemplate">
-  <div class="gb-cartridge cart-animate">
-    <div class="gb-header-depression">
-        <span class="gb-header-text">RYAN BOY</span>
-    </div>
-    <div class="gb-sticker group card-img-wrapper">
-      <img src="" alt="" class="product-img transition-transform duration-300 group-hover:scale-105">
-    </div>
-    <div class="gb-content card-content">
-      <h3 class="retro-font text-xs text-black mb-1 leading-tight product-title truncate font-bold">Product Name</h3>
-      <p class="text-gray-600 text-[10px] mb-4 flex-1 product-desc line-clamp-2 leading-relaxed">Description goes here.</p>
-      
-      <div class="space-y-1 product-links"></div>
-      
-      <button class="gb-insert-btn w-full group">
-         <div class="flex flex-col items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
-            <span class="retro-font text-[8px] font-bold text-black group-hover:text-purple-600">INSERT CART</span>
-            <div class="mt-1">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="fill-black group-hover:fill-purple-600 transition-colors">
-                    <path d="M12 21L2 5H22L12 21Z" />
-                </svg>
-            </div>
-         </div>
-      </button>
-    </div>
-  </div>
-</template>
+            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-white transition-colors">Shop</a>
+            </nav>
 
-<div id="flashDealsModal" class="fixed inset-0 z-[80] hidden">
-  <div id="flashDealsBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="bg-gray-200 rounded-lg border-4 border-gray-400 w-full max-w-2xl overflow-hidden relative shadow-2xl flex flex-col max-h-[80vh]">
-      <div class="p-4 border-b-4 border-gray-400 flex items-center justify-between bg-red-600 text-white">
-        <h2 class="retro-font text-sm uppercase flex items-center gap-2"><i data-feather="zap" class="w-4 h-4"></i> CURRENT FLASH DEALS</h2>
-        <button id="closeFlashDeals" class="pixel-btn bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded retro-font text-[10px] border-2 border-white">CLOSE</button>
-      </div>
-      <div class="p-6 overflow-y-auto no-scrollbar space-y-4" id="flashDealsList">
-        </div>
-    </div>
-  </div>
-</div>
-
-<footer class="bg-gray-100 py-8 mt-12 border-t-4 border-gray-300 transition-colors duration-300">
-  <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
-    <p>Links may be affiliate links. I earn a small commission at no extra cost to you.</p>
-    <p class="mt-2">© 2025 Ryan Retro</p>
-  </div>
-</footer>
-<script>
-  // --- DARK MODE LOGIC (Updated) ---
-  const body = document.body;
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const themeIcon = document.getElementById('themeIcon');
-
-  // Check Local Storage
-  // Default is now DARK. Only switch to LIGHT if explicitly saved.
-  if (localStorage.getItem('theme') === 'light') {
-      body.classList.remove('dark-mode');
-      themeIcon.setAttribute('data-feather', 'moon');
-  } else {
-      body.classList.add('dark-mode');
-      themeIcon.setAttribute('data-feather', 'sun');
-  }
-
-  darkModeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-          localStorage.setItem('theme', 'dark');
-          themeIcon.setAttribute('data-feather', 'sun');
-      } else {
-          localStorage.setItem('theme', 'light');
-          themeIcon.setAttribute('data-feather', 'moon');
-      }
-      feather.replace();
-  });
-
-  // --- NAVIGATION LOGIC ---
-  const navToggle = document.getElementById('navToggle');
-  const navOverlay = document.getElementById('navOverlay');
-  const navBox = document.getElementById('navBox');
-
-  window.toggleNav = () => {
-      const isHidden = navOverlay.classList.contains('hidden');
-      if (isHidden) {
-          navOverlay.classList.remove('hidden');
-          setTimeout(() => {
-              navBox.classList.remove('scale-95', 'opacity-0');
-              navBox.classList.add('scale-100', 'opacity-100');
-          }, 10);
-      } else {
-          navBox.classList.remove('scale-100', 'opacity-100');
-          navBox.classList.add('scale-95', 'opacity-0');
-          setTimeout(() => {
-              navOverlay.classList.add('hidden');
-          }, 200);
-      }
-  };
-
-  navToggle.addEventListener('click', toggleNav);
-
-  // Auto-Highlight Active Page
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-item').forEach(link => {
-      const href = link.getAttribute('href');
-      // Check if href matches current path OR if we are on root and href is index.html
-      if (href === currentPath || (currentPath === '' && href === 'index.html')) {
-          link.classList.add('bg-red-600', 'border-black', 'text-white');
-          link.classList.remove('border-transparent', 'bg-white');
-          link.querySelector('span').classList.add('text-white');
-          link.querySelector('i').classList.add('text-white');
-          link.querySelector('i').classList.remove('text-gray-400');
-      }
-  });
-
-// Tiers: 0=All, 1=PS1, 2=Gamecube, 3=Switch, 4=PC
-  const officialProducts = [
-    { 
-      "id": "rp6", 
-      "name": "Retroid Pocket 6", 
-      "category": "Handhelds", 
-      "releaseDate": "2025-01-15", 
-      "badge": "Pre-order 🔥", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp6.png", 
-      "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "steam_deck", 
-      "name": "Steam Deck", 
-      "category": "Handhelds", 
-      "releaseDate": "2023-11-16", 
-      "tier": 4, 
-      "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg", 
-      "description": "The standard for PC handheld gaming. Play your Steam library on the go.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 559.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rp5", 
-      "name": "Retroid Pocket 5", 
-      "category": "Handhelds", 
-      "releaseDate": "2024-09-01", 
-      "tier": 2, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp5.png", 
-      "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" }, 
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "mangmi_air_x", 
-      "name": "Mangmi Air X", 
-      "category": "Handhelds", 
-      "releaseDate": "2026-01-10", 
-      "badge": "New Release ✨", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/mangmi%20air%20x.png", 
-      "description": "A new contender enters the ring. Ultra-lightweight design meets heavy-hitting performance.", 
-      "links": [
-        { "store": "Official", "url": "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr", "price": 89.99, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rp_mini2", 
-      "name": "Retroid Pocket Mini V2", 
-      "category": "Handhelds", 
-      "releaseDate": "2024-08-15", 
-      "tier": 2, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp%20mini.png", 
-      "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" }, 
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" }, 
-        { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "ayaneo_pocket_air_mini", 
-      "name": "Ayaneo Pocket Air Mini", 
-      "category": "Handhelds", 
-      "releaseDate": "2025-12-25", 
-      "badge": "Premium 💎", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/ayaneo%20pocket%20air%20mini.png", 
-      "description": "Ayaneo's signature OLED quality shrunk down into a pocketable Android form factor.", 
-      "links": [
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c34ldFrn", "price": 113.49, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "trimui_smart_pro_s", 
-      "name": "TrimUI Smart Pro S", 
-      "category": "Handhelds", 
-      "releaseDate": "2025-12-15", 
-      "badge": "Upgrade 🚀", 
-      "tier": 2, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/trimui%20smart%20pro%20s.png", 
-      "description": "The 'S' stands for Speed. The sequel to the budget king with improved internals for better PSP emulation.", 
-      "links": [
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3d4sfRf", "price": 91.85, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "trimui_smart_pro", 
-      "name": "TrimUI Smart Pro", 
-      "category": "Handhelds", 
-      "releaseDate": "2023-11-01", 
-      "tier": 1, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/trimui%20smart%20pro.png", 
-      "description": "The 16:9 budget favorite. Excellent screen and ergonomics for wide-screen retro gaming.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/4piaw4j", "price": 89.99, "currency": "$" },
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3po77XX", "price": 57.77, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rp_classic", 
-      "name": "Retroid Pocket Classic", 
-      "category": "Handhelds", 
-      "releaseDate": "2024-11-20", 
-      "tier": 2, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp%20classic.png", 
-      "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" }, 
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3BX5yfb", "price": 171.62, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rp_flip2", 
-      "name": "Retroid Pocket Flip 2", 
-      "category": "Handhelds", 
-      "releaseDate": "2024-07-01", 
-      "tier": 2, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp%20flip%202.png", 
-      "description": "The clamshell returns. Snapdragon 865 performance.", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rpg2", 
-      "name": "Retroid Pocket G2 Handheld", 
-      "category": "Handhelds", 
-      "releaseDate": "2024-12-01", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/retroid%20pocket%20g2.png", 
-      "description": "Premium mid-range Android handheld.", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" },
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3a6yCjb", "price": 224.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rg34xx", 
-      "name": "Anbernic RG34XX", 
-      "category": "Handhelds", 
-      "releaseDate": "2026-01-05", 
-      "badge": "Hot Item 🔥", 
-      "tier": 1, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rg34xx.png", 
-      "description": "The classic form factor refined. A perfect pocket companion for 8-bit and 16-bit classics.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/49kYAZJ", "price": 79.98, "currency": "$" },
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3cp23I9", "price": 67.61, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "miyoo_mini_v4", 
-      "name": "Miyoo Mini v4", 
-      "category": "Handhelds", 
-      "releaseDate": "2023-09-01", 
-      "tier": 1, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/miyoo%20mini.png", 
-      "description": "Tiny horizontal legend.", 
-      "links": [
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3b0uLQt", "price": 51, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "miyoo_mini_plus", 
-      "name": "Miyoo Mini Plus", 
-      "category": "Handhelds", 
-      "releaseDate": "2023-03-01", 
-      "tier": 1, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/miyoo%20mini%20plus.png", 
-      "description": "The vertical standard.", 
-      "links": [
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4n4CCil", "price": 69.57, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "anker_power", 
-      "name": "Anker 25000mAh Power Bank", 
-      "category": "Accessories", 
-      "tier": 0, 
-      "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg", 
-      "description": "140W fast charging.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "ugreen_power", 
-      "name": "UGreen 25000mAh Power Bank", 
-      "category": "Accessories", 
-      "tier": 0, 
-      "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg", 
-      "description": "Reliable 25k bank.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "ugreen_dock", 
-      "name": "UGreen 9-in-1 Dock", 
-      "category": "Accessories", 
-      "tier": 0, 
-      "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg", 
-      "description": "4K@60Hz HDMI.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "rp_ds_addon", 
-      "name": "Retroid Dual Screen Add-on", 
-      "category": "Accessories", 
-      "tier": 0, 
-      "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811", 
-      "description": "AMOLED secondary screen.", 
-      "links": [
-        { "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "gamesir_g8p", 
-      "name": "GameSir G8 Plus", 
-      "category": "Accessories", 
-      "tier": 0, 
-      "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif", 
-      "description": "Ultimate controller.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "odin3", 
-      "name": "AYN Odin 3", 
-      "category": "Handhelds", 
-      "badge": "Pre-order 🔥", 
-      "releaseDate": "2025-02-01", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/odin%203.png", 
-      "description": "Snapdragon 8 Elite flagship.", 
-      "links": [
-        { "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "odin2_portal", 
-      "name": "AYN Odin2 Portal", 
-      "category": "Handhelds", 
-      "releaseDate": "2024-05-15", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/odin%202%20portal.png", 
-      "description": "7-inch OLED powerhouse.", 
-      "links": [
-        { "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "ayn_thor", 
-      "name": "AYN Thor", 
-      "category": "Handhelds", 
-      "badge": "Pre-order 🔥", 
-      "releaseDate": "2025-03-01", 
-      "tier": 3, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/thor.png", 
-      "description": "Dual-screen OLED clamshell.", 
-      "links": [
-        { "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "sd_card", 
-      "name": "SanDisk Extreme 512GB", 
-      "category": "Accessories", 
-      "tier": 0, 
-      "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg", 
-      "description": "Reliable library storage.", 
-      "links": [
-        { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
-      ] 
-    },
-    { 
-      "id": "anbernic_rg477v", 
-      "name": "Anbernic RG477V", 
-      "category": "Handhelds", 
-      "releaseDate": "2025-12-20", 
-      "badge": "New Arrival ✨", 
-      "tier": 2, 
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rg477v.png", 
-      "description": "Brand new vertical powerhouse! Get it while it's on discount.", 
-      "links": [
-        { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3nmWU5X", "price": 199.00, "currency": "$" }
-      ] 
-    },
-    {
-      "id": "trimui_brick_hammer",
-      "name": "TrimUI Brick Hammer",
-      "category": "Handhelds",
-      "releaseDate": "2024-11-15",
-      "badge": "Best Value 🎁",
-      "tier": 1,
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/brick%20hammer.png",
-      "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
-      "links": [
-        { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 80.75, "currency": "$", "coupon": "TRIMUIMC15" },
-        { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" },
-        { "store": "PowKiddy", "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro", "price": 80.75, "currency": "$", "coupon": "RYAN" }
-      ]
-    },
-    {
-      "id": "trimui_brick",
-      "name": "TrimUI Brick",
-      "category": "Handhelds",
-      "releaseDate": "2024-10-10",
-      "badge": "Best Value 🎁",
-      "tier": 1,
-      "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/brick.png",
-      "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
-      "links": [
-        { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 72.75, "currency": "$", "coupon": "TRIMUIMC15" },
-        { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" },
-        { "store": "PowKiddy", "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro", "price": 61.75, "currency": "$", "coupon": "RYAN" }
-      ]
-    }
-  ];
-  
-  // --- FLASH DEALS DATA ---
-  const flashDeals = [
-    { title: "Samsung EVO 512GB MicroSD", price: "$34.99", discount: "40% OFF", link: "https://amzn.to/example", store: "Amazon" },
-    { title: "Anbernic RG35XX Plus", price: "$55.00", discount: "FLASH SALE", link: "https://aliexpress.com/example", store: "AliExpress", coupon: "RG35XXDEAL" },
-    { title: "Miyoo Mini Plus (Purple)", price: "$58.00", discount: "LIMITED STOCK", link: "https://aliexpress.com/example", store: "AliExpress" }
-  ];
-
-  let allProducts = JSON.parse(JSON.stringify(officialProducts));
-  let currentView = 'grid', currentCurrency = 'USD', currentCategory = 'all', currentStatus = 'all', currentBrand = 'all', currentSort = 'default', currentSearch = '', currentBudget = 500, currentTier = 0;
-  let storeFilters = new Set();
-  
-  // 1. URL ID DETECTION
-  let urlParams = new URLSearchParams(window.location.search);
-  let explicitId = urlParams.get('id');
-  let pathSegment = window.location.pathname.replace(/^\/|\/$/g, ''); 
-  
-  if (pathSegment === 'store' || pathSegment === 'shop' || pathSegment.includes('.html') || pathSegment.includes('/')) {
-      pathSegment = null;
-  }
-  let urlProductId = explicitId || pathSegment;
-  const productExists = allProducts.some(p => p.id === urlProductId);
-  
-  if (urlProductId && !productExists && !explicitId) {
-      console.log("Ignoring invalid path ID:", urlProductId);
-      urlProductId = null;
-  }
-  const tierMap = { 0: "ALL", 1: "PS1", 2: "GAMECUBE", 3: "SWITCH", 4: "PC" };
-  const exchangeRates = { USD: 1, EUR: 0.92, GBP: 0.78, KRW: 1375, CAD: 1.36, AUD: 1.52 };
-  const currencySymbols = { USD: '$', EUR: '€', GBP: '£', KRW: '₩', CAD: '$', AUD: '$' };
-  function convertFromUSD(usd, cur) { return cur === 'USD' ? usd : usd * (exchangeRates[cur] || 1); }
-  function formatPrice(amt, cur) {
-    const sym = currencySymbols[cur] || '$';
-    return cur === 'KRW' ? `${sym}${Math.round(amt).toLocaleString()}` : `${sym}${Number(amt).toFixed(2)}`;
-  }
-  function getCheapestLink(p) {
-    const valid = (p.links || []).filter(l => l.price > 0 && l.url !== '#');
-    return valid.length ? [...valid].sort((a,b) => a.price - b.price)[0] : null;
-  }
-  function populateBrandOptions() {
-    const list = document.getElementById('brandOptionsList');
-    const brands = Array.from(new Set(allProducts.map(p => p.name.split(' ')[0].toUpperCase()))).sort();
-    list.innerHTML = `<label class="filter-option"><input type="radio" name="brand" class="filter-radio brand-opt" value="all" checked><span>All Brands</span></label>`;
-    brands.forEach(b => list.insertAdjacentHTML('beforeend', `<label class="filter-option"><input type="radio" name="brand" class="filter-radio brand-opt" value="${b}"><span>${b}</span></label>`));
-    document.querySelectorAll('.brand-opt').forEach(opt => opt.addEventListener('change', (e) => { currentBrand = e.target.value; updateFilters(); }));
-  }
-  function matchesFilters(p) {
-    if (urlProductId) {
-        return p.id === urlProductId; 
-    }
-    if (currentCategory !== 'all' && p.category !== currentCategory) return false;
-    const cheapest = getCheapestLink(p);
-    if (cheapest && cheapest.price > currentBudget) return false;
-    if (currentTier > 0) {
-        if (p.category === 'Accessories') return false;
-        if (p.category === 'Handhelds' && (p.tier || 0) < currentTier) return false;
-    }
-    if (currentBrand !== 'all' && !p.name.toUpperCase().startsWith(currentBrand)) return false;
-    if (currentStatus === 'available' && (p.badge || '').toLowerCase().includes('pre-order')) return false;
-    if (currentSearch && !p.name.toLowerCase().includes(currentSearch.toLowerCase())) return false;
-    if (storeFilters.size > 0) {
-        const hasStore = (p.links || []).some(l => {
-            const s = l.store.toLowerCase();
-            if (storeFilters.has('official') && (s.includes('official') || s.includes('goretroid') || s.includes('ayntec'))) return true;
-            if (storeFilters.has('aliexpress') && s.includes('ali')) return true;
-            if (storeFilters.has('amazon') && s.includes('amazon')) return true;
-            if (storeFilters.has('powkiddy') && s.includes('powkiddy')) return true;
-            return false;
-        });
-        if (!hasStore) return false;
-    }
-    return true;
-  }
-  function renderProducts() {
-    const grid = document.getElementById('productGrid');
-    
-    // SINGLE VIEW SETUP
-    if (urlProductId) {
-        const p = allProducts.find(x => x.id === urlProductId);
-        grid.className = 'max-w-5xl mx-auto'; 
-        grid.innerHTML = '';
-        if (p) {
-            const card = renderGridCard(p, true);
-            grid.appendChild(card);
-        } else {
-            grid.innerHTML = `
-              <div class="col-span-full flex flex-col items-center justify-center py-20 text-center animate-pulse">
-                <div class="gb-cartridge w-64 h-64 flex flex-col items-center justify-center mb-6 opacity-50">
-                   <i data-feather="alert-octagon" class="w-16 h-16 text-gray-400 mb-2"></i>
-                   <span class="retro-font text-[10px] text-gray-500">MISSING CART</span>
-                </div>
-                <h2 class="retro-font text-xl text-black mb-4">INSERT CARTRIDGE</h2>
-                <p class="text-gray-600 text-xs mb-6 max-w-md retro-font leading-relaxed">THE GAME CART YOU ARE LOOKING FOR<br>IS NOT IN THE SLOT.</p>
-                <a href="/" class="px-6 py-3 bg-gray-800 text-white rounded pixel-btn retro-font text-xs border-2 border-black hover:bg-gray-700 transition-colors">RETURN TO TITLE</a>
-              </div>
-            `;
-        }
-        feather.replace(); 
-        return; 
-    }
-    // NORMAL RENDERING
-    const products = allProducts.filter(matchesFilters).sort((a,b) => {
-        if(currentSort === 'default') return new Date(b.releaseDate || '2000-01-01') - new Date(a.releaseDate || '2000-01-01');
-        const ap = getCheapestLink(a)?.price || Infinity, bp = getCheapestLink(b)?.price || Infinity;
-        return currentSort === 'price-asc' ? ap - bp : bp - ap;
-    });
-    
-    grid.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8';
-    
-    grid.innerHTML = products.length ? '' : `
-      <div class="col-span-full flex flex-col items-center justify-center py-20 text-center opacity-70">
-         <i data-feather="frown" class="w-12 h-12 text-gray-400 mb-4"></i>
-         <div class="text-gray-500 retro-font text-xs">NO GAME CARTS FOUND.</div>
-      </div>
-    `;
-    products.forEach(p => grid.appendChild(renderGridCard(p, false)));
-    feather.replace(); 
-  }
-  function renderGridCard(p, isSingleView = false) {
-    const node = document.getElementById('productTemplate').content.firstElementChild.cloneNode(true);
-    node.dataset.pid = p.id;
-    
-    // --- LAYOUT ADJUSTMENT FOR SINGLE VIEW ---
-    if (isSingleView) {
-        node.classList.remove('flex-col', 'h-full');
-        node.classList.add('flex', 'flex-col', 'md:flex-row', 'h-auto', 'md:min-h-[500px]');
-        
-        const imgContainer = node.querySelector('.group'); 
-        imgContainer.classList.add('md:w-1/2', 'shrink-0', 'mr-8');
-        
-        const contentContainer = node.querySelector('.card-content');
-        contentContainer.classList.add('md:w-1/2', 'flex', 'flex-col', 'justify-center', 'p-8');
-        
-        const title = node.querySelector('.product-title');
-        title.classList.replace('text-xs', 'text-2xl');
-        title.classList.add('md:text-3xl', 'mb-4');
-        
-        const desc = node.querySelector('.product-desc');
-        desc.classList.replace('text-[10px]', 'text-base');
-        desc.classList.add('md:text-lg', 'mb-8');
-    } else {
-        node.style.cursor = 'pointer';
-        node.onclick = (e) => {
-            if (e.target.closest('a') || e.target.closest('.coupon-badge') || e.target.closest('.card-img-wrapper')) return;
-            openRyanBoy(node);
-        };
-    }
-
-    node.querySelector('.product-img').src = p.image;
-    
-    const imgWrapper = node.querySelector('.card-img-wrapper');
-    const cheapestLink = getCheapestLink(p);
-    
-    if (cheapestLink) {
-        imgWrapper.style.cursor = 'pointer';
-        imgWrapper.setAttribute('title', `Open cheapest deal ($${cheapestLink.price})`);
-        imgWrapper.onclick = (e) => {
-            e.stopPropagation(); 
-            window.open(cheapestLink.url, '_blank');
-        };
-    }
-    node.querySelector('.product-title').textContent = p.name;
-    node.querySelector('.product-desc').textContent = p.description;
-    
-    const linksW = node.querySelector('.product-links');
-    
-    // SORT LINKS BY PRICE ASCENDING
-    const sortedLinks = (p.links || []).sort((a,b) => a.price - b.price);
-    
-    sortedLinks.forEach(l => {
-      let btnBg = 'bg-gray-800 text-white';
-      let badgeBg = 'bg-gray-700 text-gray-300';
-      const s = l.store.toLowerCase();
-      if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-         btnBg = 'bg-blue-600 text-white';
-         badgeBg = 'bg-blue-800 text-blue-100';
-      }
-      else if(s.includes('ali')) {
-         btnBg = 'bg-red-600 text-white';
-         badgeBg = 'bg-red-800 text-red-100';
-      }
-      else if(s.includes('amazon')) {
-         btnBg = 'bg-yellow-500 text-black';
-         badgeBg = 'bg-yellow-700 text-yellow-100';
-      }
-      else if(s.includes('powkiddy')) {
-         btnBg = 'bg-[#008c69] text-white';
-         badgeBg = 'bg-[#004d3a] text-green-100';
-      }
-      const couponHtml = l.coupon 
-        ? `<div class="coupon-badge ${badgeBg}" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
-             <span>CODE: ${l.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
-           </div>` 
-        : '';
-
-      const wrapperHtml = `
-        <div class="link-group">
-          <a href="${l.url}" target="_blank" class="${btnBg} w-full px-3 py-2 rounded pixel-btn border border-black flex items-center justify-between relative z-10 shadow-sm">
-            <span class="retro-font text-[8px] uppercase">${l.store}</span>
-            <span class="retro-font text-[8px] font-bold">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
-          </a>
-          ${couponHtml}
-        </div>
-      `;
-      
-      linksW.insertAdjacentHTML('beforeend', wrapperHtml);
-    });
-    return node;
-  }
-  
-  function updateFilters() { const activeC = (currentStatus !== 'all' ? 1 : 0) + (currentCategory !== 'all' ? 1 : 0) + (currentBrand !== 'all' ? 1 : 0) + storeFilters.size + (currentBudget < 500 ? 1 : 0) + (currentTier > 0 ? 1 : 0); document.getElementById('filterBtnText').textContent = activeC > 0 ? `FILTERS (${activeC})` : 'FILTERS'; renderProducts(); }
-  
-  // --- FLASH DEALS LOGIC ---
-  const flashDealsModal = document.getElementById('flashDealsModal');
-  const flashDealsList = document.getElementById('flashDealsList');
-  
-  document.getElementById('openFlashDealsBtn').onclick = () => {
-      renderFlashDeals();
-      flashDealsModal.classList.remove('hidden');
-  };
-  
-  document.getElementById('closeFlashDeals').onclick = () => {
-      flashDealsModal.classList.add('hidden');
-  };
-  
-  document.getElementById('flashDealsBackdrop').onclick = () => {
-      flashDealsModal.classList.add('hidden');
-  };
-
-  function renderFlashDeals() {
-      flashDealsList.innerHTML = '';
-      if(flashDeals.length === 0) {
-          flashDealsList.innerHTML = '<div class="text-center p-4 retro-font text-xs text-gray-500">NO FLASH DEALS RIGHT NOW. CHECK BACK SOON!</div>';
-          return;
-      }
-      
-      flashDeals.forEach(deal => {
-          let btnBg = 'bg-gray-800 text-white';
-          let badgeBg = 'bg-gray-700 text-gray-300';
-          const s = deal.store.toLowerCase();
-          
-          if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-             btnBg = 'bg-blue-600 text-white hover:bg-blue-500';
-             badgeBg = 'bg-blue-800 text-blue-100';
-          }
-          else if(s.includes('ali')) {
-             btnBg = 'bg-red-600 text-white hover:bg-red-500';
-             badgeBg = 'bg-red-800 text-red-100';
-          }
-          else if(s.includes('amazon')) {
-             btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400';
-             badgeBg = 'bg-yellow-700 text-yellow-100';
-          }
-          else if(s.includes('powkiddy')) {
-             btnBg = 'bg-[#008c69] text-white hover:bg-[#00a87d]';
-             badgeBg = 'bg-[#004d3a] text-green-100';
-          }
-
-          const couponHtml = deal.coupon 
-            ? `<div class="bg-gray-100 border border-gray-400 px-2 py-1 rounded text-[10px] font-bold text-red-600 flex items-center gap-1 cursor-pointer hover:bg-gray-200" onclick="navigator.clipboard.writeText('${deal.coupon}'); alert('Code copied: ${deal.coupon}')">
-                 <span>CODE: ${deal.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
-               </div>` 
-            : '';
-
-          const itemHtml = `
-            <div class="bg-white border-4 border-gray-300 p-4 rounded flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
-                <div class="flex-1 text-center md:text-left">
-                    <h3 class="retro-font text-xs font-bold mb-1">${deal.title}</h3>
-                    <div class="flex items-center justify-center md:justify-start gap-2">
-                        <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase border border-red-200">${deal.discount}</span>
-                        ${couponHtml}
-                    </div>
-                </div>
-                <div class="flex flex-col items-end gap-1 w-full md:w-auto">
-                    <a href="${deal.link}" target="_blank" class="${btnBg} px-4 py-2 rounded pixel-btn border-2 border-black flex items-center justify-center gap-2 w-full md:w-auto shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-                        <span class="retro-font text-[10px] uppercase">${deal.store}</span>
-                        <span class="retro-font text-[10px] font-bold bg-black/20 px-2 py-0.5 rounded">${deal.price}</span>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                </div>
+
+                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-2">
+                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+            </div>
+
+            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow relative">
+        <!-- Support Banner -->
+        <div class="container mx-auto px-4 lg:px-6 pt-6">
+            <div class="bg-gradient-to-r from-brand-card to-brand-bg border border-white/10 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 text-center md:text-left shadow-lg relative overflow-hidden group">
+                <div class="absolute inset-0 bg-brand-hover/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="bg-white/10 p-3 rounded-full shrink-0 animate-float">
+                    <i data-lucide="heart" class="w-6 h-6 text-brand-red fill-brand-red"></i>
+                </div>
+                <div class="flex-1 relative z-10">
+                    <h3 class="font-bold text-white text-sm uppercase tracking-wide mb-1">Support The Channel</h3>
+                    <p class="text-brand-muted text-xs md:text-sm leading-relaxed max-w-2xl">
+                        These are affiliate links. Using them costs you nothing, but it helps me keep buying handhelds to review for you! Thank you for your support!
+                    </p>
+                </div>
+                <a href="https://patreon.com/ryanretro" target="_blank" class="shrink-0 bg-white text-brand-bg font-bold text-xs px-4 py-2 rounded-lg hover:bg-brand-muted transition-colors flex items-center gap-2 z-10">
+                    Join Patreon <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Controls Section -->
+        <section class="container mx-auto px-4 lg:px-6 py-8">
+            <div class="flex flex-col gap-6">
+                <!-- Search & Main Toggles -->
+                <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div class="relative w-full">
+                        <input type="text" id="searchInput" placeholder="Search for handhelds, accessories..." class="w-full bg-brand-bg border border-brand-card rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-brand-muted focus:ring-1 focus:ring-brand-muted transition-all placeholder-brand-muted/50 text-white shadow-inner">
+                        <i data-lucide="search" class="absolute left-3 top-3.5 w-4 h-4 text-brand-muted"></i>
+                    </div>
+
+                    <!-- Filter Toggle -->
+                    <button id="toggleFilterBtn" class="flex items-center gap-2 px-6 py-3 bg-brand-card hover:bg-brand-hover text-white rounded-xl text-sm font-bold transition-all border border-white/5 w-full md:w-auto justify-center whitespace-nowrap shadow-lg">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filters & Sort
+                        <i data-lucide="chevron-down" class="w-3 h-3 transition-transform" id="filterChevron"></i>
+                    </button>
+                </div>
+
+                <!-- Expanded Filters Panel -->
+                <div id="filterPanel" class="hidden bg-brand-card/50 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        
+                        <!-- Col 1: Sort & Currency -->
+                        <div class="space-y-6">
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Sort By</h4>
+                                <select id="sortFilter" class="w-full bg-brand-bg border border-white/10 text-white text-sm rounded-lg p-2.5 focus:border-brand-muted focus:outline-none">
+                                    <option value="default">Newest Arrivals</option>
+                                    <option value="price-asc">Price: Low to High</option>
+                                    <option value="price-desc">Price: High to Low</option>
+                                </select>
+                            </div>
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Currency</h4>
+                                <select id="currencyFilter" class="w-full bg-brand-bg border border-white/10 text-white text-sm rounded-lg p-2.5 focus:border-brand-muted focus:outline-none">
+                                    <option value="USD">USD $</option>
+                                    <option value="EUR">EUR €</option>
+                                    <option value="GBP">GBP £</option>
+                                    <option value="KRW">KRW ₩</option>
+                                    <option value="CAD">CAD $</option>
+                                    <option value="AUD">AUD $</option>
+                                </select>
+                            </div>
+                        </div>
+
+                         <!-- Col 2: Categories -->
+                        <div class="space-y-3">
+                            <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Category</h4>
+                            <div class="flex flex-col gap-2">
+                                <button class="cat-pill w-full text-left px-4 py-2 rounded-lg text-sm font-bold text-brand-muted hover:text-white transition-all data-[active=true]:bg-brand-hover data-[active=true]:text-white data-[active=true]:shadow-md border border-white/5 bg-brand-bg/50" data-cat="all" data-active="true">All Items</button>
+                                <button class="cat-pill w-full text-left px-4 py-2 rounded-lg text-sm font-bold text-brand-muted hover:text-white transition-all data-[active=true]:bg-brand-hover data-[active=true]:text-white data-[active=true]:shadow-md border border-white/5 bg-brand-bg/50" data-cat="Handhelds">Handhelds Only</button>
+                                <button class="cat-pill w-full text-left px-4 py-2 rounded-lg text-sm font-bold text-brand-muted hover:text-white transition-all data-[active=true]:bg-brand-hover data-[active=true]:text-white data-[active=true]:shadow-md border border-white/5 bg-brand-bg/50" data-cat="Accessories">Accessories Only</button>
+                            </div>
+                        </div>
+
+                        <!-- Col 3: Tier Slider -->
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Power Tier</h4>
+                                <span id="tierLabel" class="text-xs font-bold text-white bg-brand-hover px-2 py-0.5 rounded">ALL</span>
+                            </div>
+                            <input type="range" id="tierRange" min="0" max="4" value="0" step="1" class="w-full">
+                            <div class="flex justify-between text-[10px] text-brand-muted font-bold">
+                                <span>ALL</span>
+                                <span>PS1</span>
+                                <span>GC</span>
+                                <span>SW</span>
+                                <span>PC</span>
+                            </div>
+                            <p class="text-[10px] text-brand-muted/60 italic mt-2">Note: Selecting a specific tier will hide all accessories.</p>
+                        </div>
+
+                        <!-- Col 4: Budget & Toggles -->
+                        <div class="space-y-6">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Max Budget</h4>
+                                    <span id="budgetLabel" class="text-xs font-bold text-white bg-brand-hover px-2 py-0.5 rounded">$500</span>
+                                </div>
+                                <input type="range" id="budgetRange" min="0" max="500" value="500" step="10" class="w-full">
+                            </div>
+
+                            <!-- Toggles -->
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Availability</h4>
+                                <div class="flex flex-col gap-2">
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" id="availCheck" class="peer h-4 w-4 appearance-none rounded border border-white/20 bg-brand-bg checked:bg-brand-hover checked:border-white transition-all">
+                                            <i data-lucide="check" class="absolute left-0.5 top-0.5 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none"></i>
+                                        </div>
+                                        <span class="text-sm text-brand-muted group-hover:text-white transition-colors">Available Now Only</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <div class="relative flex items-center">
+                                            <input type="checkbox" id="officialStoreCheck" class="store-opt peer h-4 w-4 appearance-none rounded border border-white/20 bg-brand-bg checked:bg-brand-hover checked:border-white transition-all" value="official">
+                                            <i data-lucide="check" class="absolute left-0.5 top-0.5 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none"></i>
+                                        </div>
+                                        <span class="text-sm text-brand-muted group-hover:text-white transition-colors">Official Stores Only</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-          `;
-          flashDealsList.insertAdjacentHTML('beforeend', itemHtml);
-      });
-      feather.replace();
-  }
+        </section>
 
-  // --- BIG RYAN PAK LOGIC ---
-  const rbModal = document.getElementById('ryanBoyModal');
-  const rbBackdrop = document.getElementById('rbBackdrop');
-  const rbPak = document.getElementById('bigRyanPak');
-  const rbScreen = document.getElementById('rbScreenContent');
-  
-  window.openRyanBoy = (el) => {
-    // Find product ID from parent
-    const card = el.closest('[data-pid]');
-    if(!card) return; // Safety check
-    const pid = card.dataset.pid;
-    const product = allProducts.find(p => p.id === pid);
-    
-    if(!product) return;
-    
-    // Calculate the best link for the image click
-    const cheapest = getCheapestLink(product);
-    const currentProductLink = cheapest ? cheapest.url : '#';
-    
-    // Generate Links List HTML
-    let linksHtml = '';
-    const sortedLinks = (product.links || []).sort((a,b) => a.price - b.price);
-    
-    sortedLinks.forEach(l => {
-        let btnBg = 'bg-gray-800 text-white';
-        let badgeBg = 'bg-gray-700 text-gray-300';
-        const s = l.store.toLowerCase();
+        <!-- Product Grid -->
+        <section class="container mx-auto px-4 lg:px-6 pb-20 min-h-[50vh]">
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products injected via JS -->
+            </div>
+        </section>
+
+        <!-- Modals -->
         
-        if(s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-           btnBg = 'bg-blue-600 text-white hover:bg-blue-500';
-           badgeBg = 'bg-blue-800 text-blue-100';
-        }
-        else if(s.includes('ali')) {
-           btnBg = 'bg-red-600 text-white hover:bg-red-500';
-           badgeBg = 'bg-red-800 text-red-100';
-        }
-        else if(s.includes('amazon')) {
-           btnBg = 'bg-yellow-500 text-black hover:bg-yellow-400';
-           badgeBg = 'bg-yellow-700 text-yellow-100';
-        }
-        else if(s.includes('powkiddy')) {
-           btnBg = 'bg-[#008c69] text-white hover:bg-[#00a87d]';
-           badgeBg = 'bg-[#004d3a] text-green-100';
-        }
-
-        const couponHtml = l.coupon 
-          ? `<div class="coupon-badge ${badgeBg} mt-1 w-fit mx-0" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied: ${l.coupon}')">
-               <span>CODE: ${l.coupon}</span> <i data-feather="clipboard" class="w-3 h-3"></i>
-             </div>` 
-          : '';
-
-        linksHtml += `
-            <div class="mb-3">
-                <a href="${l.url}" target="_blank" class="${btnBg} px-4 py-3 rounded pixel-btn border-2 border-black flex justify-between items-center group transition-colors shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
-                    <div class="flex flex-col">
-                        <span class="retro-font text-[10px] uppercase">${l.store}</span>
+        <!-- Product Detail Modal -->
+        <div id="productModal" class="fixed inset-0 z-[100] hidden">
+            <div class="absolute inset-0 bg-brand-bg/90 backdrop-blur-md" id="productModalBackdrop"></div>
+            <div class="absolute inset-0 flex items-center justify-center p-4">
+                <div id="productModalContent" class="bg-brand-card w-full max-w-4xl max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl flex flex-col md:flex-row overflow-hidden transform scale-95 opacity-0 transition-all duration-300">
+                    
+                    <!-- Image Side -->
+                    <div class="w-full md:w-1/2 bg-black/20 p-8 flex items-center justify-center relative group">
+                        <img id="modalImg" src="" class="max-h-[300px] md:max-h-[400px] object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105">
                     </div>
-                    <span class="retro-font text-xs font-bold">${formatPrice(convertFromUSD(l.price, currentCurrency), currentCurrency)}</span>
-                </a>
-                ${couponHtml}
-            </div>
-        `;
-    });
-    // BIG PAK LAYOUT
-    rbScreen.innerHTML = `
-        <div class="pak-media-side cursor-pointer group relative overflow-hidden" onclick="window.open('${currentProductLink}', '_blank')" title="Visit Store">
-            <img src="${product.image}" class="w-full h-full object-cover shadow-2xl transition-transform duration-500 group-hover:scale-105">
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-white/10 transition-colors pointer-events-none"></div>
-            <div class="absolute bottom-4 right-4 bg-yellow-400 text-black px-3 py-2 text-[10px] retro-font uppercase rounded shadow-lg border-2 border-black transform translate-y-20 group-hover:translate-y-0 transition-transform duration-300 z-10">
-                GO TO STORE ↗
-            </div>
-        </div>
-        <div class="pak-info-side">
-            <h2 class="text-3xl font-bold font-sans uppercase mb-1 leading-tight tracking-tight">${product.name}</h2>
-            <div class="h-1 w-20 bg-black mb-4"></div>
-            
-            <p class="text-sm text-gray-700 leading-relaxed mb-6 font-medium">
-                ${product.description}
-            </p>
-            
-            <div class="mb-6">
-                <h3 class="text-[10px] retro-font text-gray-400 mb-3 border-b pb-1">PURCHASE OPTIONS</h3>
-                ${linksHtml}
-            </div>
-            
-            <div class="mt-auto">
-                <h3 class="text-[10px] retro-font text-gray-400 mb-3 border-b pb-1">RYAN RETRO CHANNEL</h3>
-                <a href="https://www.youtube.com/@RyanRetro/search?query=${encodeURIComponent(product.name)}" target="_blank" class="block bg-red-600 hover:bg-red-700 text-white p-4 text-center rounded flex items-center justify-center gap-3 transition-colors shadow-lg group border-2 border-black pixel-btn shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]">
-                    <i data-feather="youtube" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
-                    <span class="font-bold text-sm">WATCH VIDEOS</span>
-                </a>
-            </div>
-        </div>
-    `;
-    feather.replace();
-    // Show Modal
-    rbModal.classList.remove('hidden');
-    
-    // Animate In
-    setTimeout(() => {
-        rbBackdrop.classList.remove('opacity-0');
-        rbPak.classList.add('pak-active');
-    }, 10);
-  };
-  window.closeRyanBoy = () => {
-    rbPak.classList.remove('pak-active');
-    rbBackdrop.classList.add('opacity-0');
-    setTimeout(() => {
-        rbModal.classList.add('hidden');
-    }, 400);
-  };
-  // --- FILTERS & INIT ---
-  
-  // Power Switch Logic (Updated for Responsiveness)
-  const powerTrack = document.getElementById('powerSwitchTrack');
-  const powerThumb = document.getElementById('powerSwitchThumb');
-  const powerLed = document.getElementById('powerLed');
-  const powerLabels = document.querySelectorAll('.power-label');
-  
-  powerTrack.addEventListener('click', (e) => {
-      const rect = powerTrack.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const width = rect.width;
-      
-      let newPos = 1; // Default to center (ALL)
-      
-      // Use percentages for click areas (33.33% each)
-      if (clickX < (width * 0.33)) newPos = 0; // Handheld
-      else if (clickX > (width * 0.66)) newPos = 2; // Accessory
-      else newPos = 1; // Center
-      
-      // Move Thumb using Percentage
-      powerThumb.style.left = (newPos * 33.33) + '%'; 
-      
-      // Update Labels
-      powerLabels.forEach(l => l.classList.remove('active'));
-      document.querySelector(`.power-label[data-pos="${newPos}"]`).classList.add('active');
-      
-      // Update LED
-      powerLed.classList.add('on');
-      
-      // Set Logic
-      if (newPos === 0) currentCategory = 'Handhelds';
-      else if (newPos === 1) currentCategory = 'all';
-      else if (newPos === 2) currentCategory = 'Accessories';
-      
-      // Update Radio Buttons Sync
-      const radio = document.querySelector(`.cat-opt[value="${currentCategory}"]`);
-      if(radio) radio.checked = true;
-      
-      updateFilters();
-  });
-  
-  if (urlProductId) {
-      document.getElementById('mainControlPanel').style.display = 'none';
-      const mainSection = document.getElementById('mainContentSection');
-      mainSection.classList.remove('py-8');
-      mainSection.classList.add('pt-4', 'pb-8');
-  }
-  document.getElementById('filterBtn').onclick = (e) => { e.stopPropagation(); document.getElementById('filterMenu').classList.toggle('open'); };
-  document.onclick = (e) => { if(!document.getElementById('filterWidget').contains(e.target)) document.getElementById('filterMenu').classList.remove('open'); };
-  document.getElementById('budgetRange').oninput = (e) => { currentBudget = parseInt(e.target.value); document.getElementById('budgetLabel').textContent = `$${currentBudget}`; updateFilters(); };
-  document.getElementById('tierRange').oninput = (e) => { currentTier = parseInt(e.target.value); document.getElementById('tierLabel').textContent = tierMap[currentTier]; updateFilters(); };
-  document.getElementById('sortFilter').onchange = (e) => { currentSort = e.target.value; renderProducts(); };
-  document.querySelectorAll('.status-opt, .cat-opt').forEach(o => o.onchange = (e) => { 
-      if(o.classList.contains('status-opt')) currentStatus = e.target.value; 
-      if(o.classList.contains('cat-opt')) {
-          currentCategory = e.target.value; 
-          // Sync Power Switch
-          let pos = 1;
-          if(currentCategory === 'Handhelds') pos = 0;
-          if(currentCategory === 'Accessories') pos = 2;
-          
-          // Use percentage for sync movement
-          powerThumb.style.left = (pos * 33.33) + '%';
-          
-          powerLabels.forEach(l => l.classList.remove('active'));
-          document.querySelector(`.power-label[data-pos="${pos}"]`).classList.add('active');
-      }
-      updateFilters(); 
-  });
-  document.querySelectorAll('.store-opt').forEach(o => o.onchange = (e) => { e.target.checked ? storeFilters.add(e.target.value) : storeFilters.delete(e.target.value); updateFilters(); });
-  document.getElementById('searchInput').oninput = (e) => { currentSearch = e.target.value; renderProducts(); };
-  document.getElementById('currencyFilter').onchange = (e) => { currentCurrency = e.target.value; renderProducts(); };
 
-  document.addEventListener('DOMContentLoaded', () => { populateBrandOptions(); renderProducts(); feather.replace(); });
-</script>
+                    <!-- Info Side -->
+                    <div class="w-full md:w-1/2 p-6 md:p-8 flex flex-col bg-brand-card overflow-y-auto custom-scrollbar">
+                        <div class="flex justify-end items-start mb-2">
+                            <button id="closeModalBtn" class="text-brand-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
+                                <i data-lucide="x" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                        
+                        <h2 id="modalTitle" class="text-3xl font-extrabold text-white mb-4 leading-tight">Product Title</h2>
+                        <p id="modalDesc" class="text-brand-muted text-sm leading-relaxed mb-8">Description...</p>
+
+                        <div class="space-y-4 mb-8">
+                            <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                <i data-lucide="shopping-bag" class="w-3 h-3 text-brand-muted"></i> Purchase Options
+                            </h3>
+                            <div id="modalLinks" class="flex flex-col gap-3">
+                                <!-- Links injected here -->
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-6 border-t border-white/5">
+                            <a id="modalYoutubeLink" href="#" target="_blank" class="flex items-center justify-center gap-3 w-full py-3 bg-brand-red hover:bg-red-600 text-white rounded-xl font-bold text-sm transition-all hover:shadow-lg hover:shadow-red-900/30">
+                                <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                                Watch Videos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER (Exact Match to Homepage) -->
+    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center mt-auto">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center flex-wrap gap-6 mb-6">
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+            </div>
+            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+        </div>
+    </footer>
+
+    <!-- PRODUCT TEMPLATE (Hidden) -->
+    <template id="productCardTemplate">
+        <div class="group bg-brand-card rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 transition-all hover:-translate-y-1 hover:shadow-2xl flex flex-col h-full cursor-pointer relative product-card">
+            <!-- Image Area -->
+            <div class="aspect-[4/3] bg-black/20 p-6 flex items-center justify-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-brand-hover/10 opacity-0 group-hover:opacity-100 transition-opacity z-0"></div>
+                <img src="" class="card-img w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-110">
+                <!-- Badges removed from card view -->
+            </div>
+            
+            <!-- Content Area -->
+            <div class="p-5 flex flex-col flex-grow">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="card-cat text-[10px] font-bold text-brand-muted uppercase tracking-wider">Handheld</span>
+                    <span class="card-price text-sm font-bold text-white bg-white/10 px-2 py-0.5 rounded">$000</span>
+                </div>
+                <h3 class="card-title font-bold text-white text-lg mb-2 leading-tight group-hover:text-brand-muted transition-colors">Product Name</h3>
+                <!-- Description removed -->
+                
+                <div class="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span class="text-[10px] text-brand-muted font-bold flex items-center gap-1">
+                        <i data-lucide="store" class="w-3 h-3"></i> <span class="store-count">3 Stores</span>
+                    </span>
+                    <button class="text-xs font-bold text-white bg-brand-bg px-3 py-1.5 rounded-lg group-hover:bg-brand-hover transition-colors">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // Init AOS & Icons
+        AOS.init({ once: true, offset: 50, duration: 800 });
+        lucide.createIcons();
+
+        // ------------------------------------------------------------------
+        // DATA
+        // ------------------------------------------------------------------
+        const products = [
+             { 
+              "id": "rp6", 
+              "name": "Retroid Pocket 6", 
+              "category": "Handhelds", 
+              "releaseDate": "2025-01-15", 
+              "badge": "Pre-order 🔥", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp6.png", 
+              "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "steam_deck", 
+              "name": "Steam Deck", 
+              "category": "Handhelds", 
+              "releaseDate": "2023-11-16", 
+              "tier": 4, 
+              "image": "https://m.media-amazon.com/images/I/516sb3osGJL._SL1231_.jpg", 
+              "description": "The standard for PC handheld gaming. Play your Steam library on the go.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/3XSu5Fe", "price": 559.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rp5", 
+              "name": "Retroid Pocket 5", 
+              "category": "Handhelds", 
+              "releaseDate": "2024-09-01", 
+              "tier": 2, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png", 
+              "description": "Snapdragon 865 power in a premium 5.5\" OLED shell.", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 199.00, "currency": "$" }, 
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4PGUhcl", "price": 204.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "mangmi_air_x", 
+              "name": "Mangmi Air X", 
+              "category": "Handhelds", 
+              "releaseDate": "2026-01-10", 
+              "badge": "New Release ✨", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png", 
+              "description": "A new contender enters the ring. Ultra-lightweight design meets heavy-hitting performance.", 
+              "links": [
+                { "store": "Official", "url": "https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr", "price": 89.99, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rp_mini2", 
+              "name": "Retroid Pocket Mini V2", 
+              "category": "Handhelds", 
+              "releaseDate": "2024-08-15", 
+              "tier": 2, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png", 
+              "description": "A compact powerhouse featuring a 3.92\" OLED (1240x1080) and Snapdragon 865.", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 179.00, "currency": "$" }, 
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c2viGFHB", "price": 204.00, "currency": "$" }, 
+                { "store": "Amazon", "url": "https://amzn.to/4iXk4jH", "price": 229.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "ayaneo_pocket_air_mini", 
+              "name": "Ayaneo Pocket Air Mini", 
+              "category": "Handhelds", 
+              "releaseDate": "2025-12-25", 
+              "badge": "Premium 💎", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/ayaneo%20pocket%20air%20mini.png", 
+              "description": "Ayaneo's signature OLED quality shrunk down into a pocketable Android form factor.", 
+              "links": [
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c34ldFrn", "price": 113.49, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "trimui_smart_pro_s", 
+              "name": "TrimUI Smart Pro S", 
+              "category": "Handhelds", 
+              "releaseDate": "2025-12-15", 
+              "badge": "Upgrade 🚀", 
+              "tier": 2, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", // Closest TrimUI match
+              "description": "The 'S' stands for Speed. The sequel to the budget king with improved internals for better PSP emulation.", 
+              "links": [
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3d4sfRf", "price": 91.85, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "trimui_smart_pro", 
+              "name": "TrimUI Smart Pro", 
+              "category": "Handhelds", 
+              "releaseDate": "2023-11-01", 
+              "tier": 1, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", // Closest TrimUI match
+              "description": "The 16:9 budget favorite. Excellent screen and ergonomics for wide-screen retro gaming.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/4piaw4j", "price": 89.99, "currency": "$" },
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3po77XX", "price": 57.77, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rp_classic", 
+              "name": "Retroid Pocket Classic", 
+              "category": "Handhelds", 
+              "releaseDate": "2024-11-20", 
+              "tier": 2, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png", 
+              "description": "Vertical nostalgia meets modern power. Snapdragon G1 Gen 2 with a 4-inch OLED screen.", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT", "price": 129.00, "currency": "$" }, 
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3BX5yfb", "price": 171.62, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rp_flip2", 
+              "name": "Retroid Pocket Flip 2", 
+              "category": "Handhelds", 
+              "releaseDate": "2024-07-01", 
+              "tier": 2, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png", 
+              "description": "The clamshell returns. Snapdragon 865 performance.", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT", "price": 209.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rpg2", 
+              "name": "Retroid Pocket G2", 
+              "category": "Handhelds", 
+              "releaseDate": "2024-12-01", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png", 
+              "description": "Premium mid-range Android handheld.", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 219.00, "currency": "$" },
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3a6yCjb", "price": 224.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rg34xx", 
+              "name": "Anbernic RG34XX", 
+              "category": "Handhelds", 
+              "releaseDate": "2026-01-05", 
+              "badge": "Hot Item 🔥", 
+              "tier": 1, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png", 
+              "description": "The classic form factor refined. A perfect pocket companion for 8-bit and 16-bit classics.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/49kYAZJ", "price": 79.98, "currency": "$" },
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3cp23I9", "price": 67.61, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "miyoo_mini_v4", 
+              "name": "Miyoo Mini v4", 
+              "category": "Handhelds", 
+              "releaseDate": "2023-09-01", 
+              "tier": 1, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/miyoo%20mini.png", 
+              "description": "Tiny horizontal legend.", 
+              "links": [
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3b0uLQt", "price": 51, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "miyoo_mini_plus", 
+              "name": "Miyoo Mini Plus", 
+              "category": "Handhelds", 
+              "releaseDate": "2023-03-01", 
+              "tier": 1, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/miyoo%20mini%20plus.png", 
+              "description": "The vertical standard.", 
+              "links": [
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c4n4CCil", "price": 69.57, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "anker_power", 
+              "name": "Anker 25000mAh Power Bank", 
+              "category": "Accessories", 
+              "tier": 0, 
+              "image": "https://m.media-amazon.com/images/I/71K65j4IrHL._AC_SL1500_.jpg", 
+              "description": "140W fast charging.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/3KJgFII", "price": 109.99, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "ugreen_power", 
+              "name": "UGreen 25000mAh Power Bank", 
+              "category": "Accessories", 
+              "tier": 0, 
+              "image": "https://m.media-amazon.com/images/I/61zJaUu71qL._AC_SL1500_.jpg", 
+              "description": "Reliable 25k bank.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/44p6Iqm", "price": 89.99, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "ugreen_dock", 
+              "name": "UGreen 9-in-1 Dock", 
+              "category": "Accessories", 
+              "tier": 0, 
+              "image": "https://m.media-amazon.com/images/I/71riM53nk3L._AC_SL1500_.jpg", 
+              "description": "4K@60Hz HDMI.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/4s2934T", "price": 39.99, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "rp_ds_addon", 
+              "name": "Retroid Dual Screen Add-on", 
+              "category": "Accessories", 
+              "tier": 0, 
+              "image": "https://www.goretroid.com/cdn/shop/files/1_22073d25-7a85-49cc-b893-fbc79dc3ae63_1024x1024@2x.jpg?v=1749457811", 
+              "description": "AMOLED secondary screen.", 
+              "links": [
+                { "store": "Official", "url": "https://www.goretroid.com/products/retroid-dual-screen-add-on?sca_ref=7339476.fIz7oKv7uT", "price": 69.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "gamesir_g8p", 
+              "name": "GameSir G8 Plus", 
+              "category": "Accessories", 
+              "tier": 0, 
+              "image": "https://ae-pic-a1.aliexpress-media.com/kf/S3fe49083af5143dfaf0968cf77d823720.jpg_960x960q75.jpg_.avif", 
+              "description": "Ultimate controller.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/4q4zTqZ", "price": 79.99, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "odin3", 
+              "name": "AYN Odin 3", 
+              "category": "Handhelds", 
+              "badge": "Pre-order 🔥", 
+              "releaseDate": "2025-02-01", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png", 
+              "description": "Snapdragon 8 Elite flagship.", 
+              "links": [
+                { "store": "Official", "url": "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "odin2_portal", 
+              "name": "AYN Odin2 Portal", 
+              "category": "Handhelds", 
+              "releaseDate": "2024-05-15", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png", 
+              "description": "7-inch OLED powerhouse.", 
+              "links": [
+                { "store": "Official", "url": "https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td", "price": 329.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "ayn_thor", 
+              "name": "AYN Thor", 
+              "category": "Handhelds", 
+              "badge": "Pre-order 🔥", 
+              "releaseDate": "2025-03-01", 
+              "tier": 3, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/thor.png", 
+              "description": "Dual-screen OLED clamshell.", 
+              "links": [
+                { "store": "Official", "url": "https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td", "price": 299.00, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "sd_card", 
+              "name": "SanDisk Extreme 512GB", 
+              "category": "Accessories", 
+              "tier": 0, 
+              "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg", 
+              "description": "Reliable library storage.", 
+              "links": [
+                { "store": "Amazon", "url": "https://amzn.to/44tg0ln", "price": 59.99, "currency": "$" }
+              ] 
+            },
+            { 
+              "id": "anbernic_rg477v", 
+              "name": "Anbernic RG477V", 
+              "category": "Handhelds", 
+              "releaseDate": "2025-12-20", 
+              "badge": "New Arrival ✨", 
+              "tier": 2, 
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rg477v.png", 
+              "description": "Brand new vertical powerhouse! Get it while it's on discount.", 
+              "links": [
+                { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3nmWU5X", "price": 199.00, "currency": "$" }
+              ] 
+            },
+            {
+              "id": "trimui_brick_hammer",
+              "name": "TrimUI Brick Hammer",
+              "category": "Handhelds",
+              "releaseDate": "2024-11-15",
+              "badge": "Best Value 🎁",
+              "tier": 1,
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", // Using Brick image
+              "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
+              "links": [
+                { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 80.75, "currency": "$", "coupon": "TRIMUIMC15" },
+                { "store": "Amazon", "url": "https://amzn.to/3MBZ1qY", "price": 95.99, "currency": "$" },
+                { "store": "PowKiddy", "url": "https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro", "price": 80.75, "currency": "$", "coupon": "RYAN" }
+              ]
+            },
+            {
+              "id": "trimui_brick",
+              "name": "TrimUI Brick",
+              "category": "Handhelds",
+              "releaseDate": "2024-10-10",
+              "badge": "Best Value 🎁",
+              "tier": 1,
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", 
+              "description": "Compact vertical perfection. 1024x768 resolution in a lightweight, colorful package.",
+              "links": [
+                { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 72.75, "currency": "$", "coupon": "TRIMUIMC15" },
+                { "store": "Amazon", "url": "https://amzn.to/4j3t2Mw", "price": 73.00, "currency": "$" },
+                { "store": "PowKiddy", "url": "https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro", "price": 61.75, "currency": "$", "coupon": "RYAN" }
+              ]
+            }
+        ];
+
+        // ------------------------------------------------------------------
+        // STATE
+        // ------------------------------------------------------------------
+        let currentCurrency = 'USD';
+        const exchangeRates = { USD: 1, EUR: 0.92, GBP: 0.78, KRW: 1375, CAD: 1.36, AUD: 1.52 };
+        const currencySymbols = { USD: '$', EUR: '€', GBP: '£', KRW: '₩', CAD: '$', AUD: '$' };
+        
+        let filters = {
+            search: '',
+            category: 'all',
+            budget: 500,
+            tier: 0,
+            sort: 'default',
+            availableOnly: false,
+            officialOnly: false
+        };
+
+        const tierMap = { 0: "ALL", 1: "PS1", 2: "GC", 3: "SW", 4: "PC" };
+
+        // ------------------------------------------------------------------
+        // HELPERS
+        // ------------------------------------------------------------------
+        function formatPrice(usdPrice) {
+            const rate = exchangeRates[currentCurrency] || 1;
+            const symbol = currencySymbols[currentCurrency] || '$';
+            const price = usdPrice * rate;
+            return currentCurrency === 'KRW' 
+                ? `${symbol}${Math.round(price).toLocaleString()}` 
+                : `${symbol}${price.toFixed(2)}`;
+        }
+
+        function getCheapestPrice(product) {
+            if (!product.links || !product.links.length) return 0;
+            return Math.min(...product.links.map(l => l.price));
+        }
+
+        // ------------------------------------------------------------------
+        // RENDERING
+        // ------------------------------------------------------------------
+        const grid = document.getElementById('productGrid');
+        const template = document.getElementById('productCardTemplate');
+
+        function renderProducts() {
+            grid.innerHTML = '';
+            
+            // Filter Logic
+            const filtered = products.filter(p => {
+                // Search
+                if (filters.search && !p.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
+                
+                // Category
+                if (filters.category !== 'all' && p.category !== filters.category) return false;
+                
+                // Budget
+                const cheapest = getCheapestPrice(p);
+                if (cheapest > filters.budget) return false;
+
+                // Tier (only applies to handhelds)
+                if (filters.tier > 0) {
+                    if (p.category !== 'Handhelds') return false;
+                    if ((p.tier || 0) < filters.tier) return false;
+                }
+
+                // Checkboxes
+                if (filters.availableOnly && p.badge && p.badge.toLowerCase().includes('pre-order')) return false;
+                if (filters.officialOnly) {
+                    const hasOfficial = p.links.some(l => l.store.toLowerCase().includes('official') || l.store.toLowerCase().includes('goretroid') || l.store.toLowerCase().includes('ayntec'));
+                    if (!hasOfficial) return false;
+                }
+
+                return true;
+            });
+
+            // Sort Logic
+            filtered.sort((a, b) => {
+                const priceA = getCheapestPrice(a);
+                const priceB = getCheapestPrice(b);
+                
+                if (filters.sort === 'price-asc') return priceA - priceB;
+                if (filters.sort === 'price-desc') return priceB - priceA;
+                
+                return 0; 
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center flex flex-col items-center">
+                        <i data-lucide="ghost" class="w-12 h-12 text-brand-muted/50 mb-4"></i>
+                        <h3 class="text-white font-bold text-lg">No Items Found</h3>
+                        <p class="text-brand-muted text-sm">Try adjusting your filters or search.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Render Cards
+            filtered.forEach(p => {
+                const clone = template.content.cloneNode(true);
+                const card = clone.querySelector('.product-card');
+                
+                // Data binding
+                const cheapest = getCheapestPrice(p);
+                clone.querySelector('.card-img').src = p.image;
+                clone.querySelector('.card-cat').textContent = p.category;
+                clone.querySelector('.card-price').textContent = formatPrice(cheapest);
+                clone.querySelector('.card-title').textContent = p.name;
+                clone.querySelector('.store-count').textContent = `${p.links.length} Link${p.links.length !== 1 ? 's' : ''}`;
+
+                // Click Event
+                card.onclick = () => openProductModal(p);
+
+                grid.appendChild(clone);
+            });
+
+            lucide.createIcons();
+        }
+
+        // ------------------------------------------------------------------
+        // MODALS
+        // ------------------------------------------------------------------
+        
+        // Product Modal
+        const productModal = document.getElementById('productModal');
+        const productModalContent = document.getElementById('productModalContent');
+        const productModalBackdrop = document.getElementById('productModalBackdrop');
+
+        function openProductModal(p) {
+            // Populate Data
+            const modalImg = document.getElementById('modalImg');
+            modalImg.src = p.image;
+            document.getElementById('modalTitle').textContent = p.name;
+            document.getElementById('modalDesc').textContent = p.description;
+            document.getElementById('modalYoutubeLink').href = `https://www.youtube.com/@RyanRetro/search?query=${encodeURIComponent(p.name)}`;
+
+            // Click Image to Store Logic (Priority: Official -> Amazon -> AliExpress -> Others)
+            let targetLink = null;
+            
+            // Helper to check store name
+            const isStore = (link, name) => link.store.toLowerCase().includes(name);
+            const isOfficial = (link) => {
+                const s = link.store.toLowerCase();
+                return s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi');
+            };
+
+            // Find priority
+            targetLink = p.links.find(l => isOfficial(l));
+            if (!targetLink) targetLink = p.links.find(l => isStore(l, 'amazon'));
+            if (!targetLink) targetLink = p.links.find(l => isStore(l, 'ali'));
+            if (!targetLink && p.links.length > 0) targetLink = p.links[0];
+
+            // Apply Click Event
+            if (targetLink) {
+                modalImg.style.cursor = 'pointer';
+                modalImg.onclick = () => window.open(targetLink.url, '_blank');
+                modalImg.title = `Buy from ${targetLink.store}`;
+            } else {
+                modalImg.style.cursor = 'default';
+                modalImg.onclick = null;
+                modalImg.title = '';
+            }
+
+            // Links
+            const linksContainer = document.getElementById('modalLinks');
+            linksContainer.innerHTML = '';
+            
+            // Sort links by price
+            const sortedLinks = [...p.links].sort((a,b) => a.price - b.price);
+
+            sortedLinks.forEach(l => {
+                // Styles based on store
+                let bgClass = "bg-brand-bg hover:bg-black";
+                let icon = "shopping-bag";
+                const s = l.store.toLowerCase();
+                
+                if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
+                    bgClass = "bg-blue-600 hover:bg-blue-700";
+                    icon = "star";
+                } else if (s.includes('ali')) {
+                    bgClass = "bg-red-600 hover:bg-red-700";
+                    icon = "shopping-cart";
+                } else if (s.includes('amazon')) {
+                    bgClass = "bg-yellow-500 hover:bg-yellow-600 text-black";
+                    icon = "package";
+                }
+
+                const couponHtml = l.coupon ? 
+                    `<div class="flex items-center gap-2 mt-1 cursor-pointer group/coupon" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied!')">
+                        <span class="text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-white border border-white/20 group-hover/coupon:border-white transition-colors">CODE: ${l.coupon}</span>
+                        <i data-lucide="copy" class="w-3 h-3 text-brand-muted"></i>
+                    </div>` : '';
+
+                const el = document.createElement('div');
+                el.className = `flex flex-col p-3 rounded-xl border border-white/5 ${bgClass} transition-all group`;
+                
+                const textColor = bgClass.includes('yellow') ? 'text-black' : 'text-white';
+                const subTextColor = bgClass.includes('yellow') ? 'text-black/70' : 'text-brand-muted';
+
+                el.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="${icon}" class="w-4 h-4 ${textColor}"></i>
+                            <span class="font-bold text-sm ${textColor}">${l.store}</span>
+                        </div>
+                        <span class="font-bold text-sm ${textColor}">${formatPrice(l.price)}</span>
+                    </div>
+                    ${couponHtml}
+                `;
+                
+                // Click wrapper
+                el.style.cursor = 'pointer';
+                el.onclick = (e) => {
+                    if(!e.target.closest('.group\\/coupon')) window.open(l.url, '_blank');
+                };
+
+                linksContainer.appendChild(el);
+            });
+            lucide.createIcons();
+
+            // Show
+            productModal.classList.remove('hidden');
+            setTimeout(() => {
+                productModalContent.classList.remove('scale-95', 'opacity-0');
+                productModalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeProductModal() {
+            productModalContent.classList.remove('scale-100', 'opacity-100');
+            productModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => productModal.classList.add('hidden'), 300);
+        }
+
+        document.getElementById('closeModalBtn').onclick = closeProductModal;
+        productModalBackdrop.onclick = closeProductModal;
+
+        // ------------------------------------------------------------------
+        // EVENT LISTENERS
+        // ------------------------------------------------------------------
+        
+        // Filter Panel Toggle
+        const filterBtn = document.getElementById('toggleFilterBtn');
+        const filterPanel = document.getElementById('filterPanel');
+        const filterChevron = document.getElementById('filterChevron');
+
+        filterBtn.onclick = () => {
+            filterPanel.classList.toggle('hidden');
+            filterChevron.classList.toggle('rotate-180');
+        };
+
+        // Inputs
+        document.getElementById('searchInput').oninput = (e) => { filters.search = e.target.value; renderProducts(); };
+        document.getElementById('sortFilter').onchange = (e) => { filters.sort = e.target.value; renderProducts(); };
+        
+        // Category Pills
+        document.querySelectorAll('.cat-pill').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.cat-pill').forEach(b => b.setAttribute('data-active', 'false'));
+                btn.setAttribute('data-active', 'true');
+                filters.category = btn.dataset.cat;
+                renderProducts();
+            };
+        });
+
+        // Sliders
+        const tierRange = document.getElementById('tierRange');
+        const tierLabel = document.getElementById('tierLabel');
+        tierRange.oninput = (e) => {
+            filters.tier = parseInt(e.target.value);
+            tierLabel.textContent = tierMap[filters.tier];
+            renderProducts();
+        };
+
+        const budgetRange = document.getElementById('budgetRange');
+        const budgetLabel = document.getElementById('budgetLabel');
+        budgetRange.oninput = (e) => {
+            filters.budget = parseInt(e.target.value);
+            budgetLabel.textContent = `$${filters.budget}`;
+            renderProducts();
+        };
+
+        // Checkboxes
+        document.getElementById('availCheck').onchange = (e) => { filters.availableOnly = e.target.checked; renderProducts(); };
+        document.getElementById('officialStoreCheck').onchange = (e) => { filters.officialOnly = e.target.checked; renderProducts(); };
+
+        // Currency
+        const updateCurrency = (val) => {
+            currentCurrency = val;
+            renderProducts();
+        };
+
+        document.getElementById('currencyFilter').onchange = (e) => updateCurrency(e.target.value);
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Init
+        renderProducts();
+
+    </script>
 </body>
 </html>
