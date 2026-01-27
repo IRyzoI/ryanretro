@@ -352,15 +352,10 @@
                     <span class="card-price text-sm font-bold text-white bg-white/10 px-2 py-0.5 rounded">$000</span>
                 </div>
                 <h3 class="card-title font-bold text-white text-lg mb-2 leading-tight group-hover:text-brand-muted transition-colors">Product Name</h3>
-                <!-- Description removed -->
                 
-                <div class="mt-auto pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span class="text-[10px] text-brand-muted font-bold flex items-center gap-1">
-                        <i data-lucide="store" class="w-3 h-3"></i> <span class="store-count">3 Stores</span>
-                    </span>
-                    <button class="text-xs font-bold text-white bg-brand-bg px-3 py-1.5 rounded-lg group-hover:bg-brand-hover transition-colors">
-                        View Details
-                    </button>
+                <!-- NEW: Direct Links Container -->
+                <div class="card-links mt-auto pt-3 flex flex-col gap-2">
+                    <!-- Links injected via JS -->
                 </div>
             </div>
         </div>
@@ -811,9 +806,45 @@
                 clone.querySelector('.card-cat').textContent = p.category;
                 clone.querySelector('.card-price').textContent = formatPrice(cheapest);
                 clone.querySelector('.card-title').textContent = p.name;
-                clone.querySelector('.store-count').textContent = `${p.links.length} Link${p.links.length !== 1 ? 's' : ''}`;
+                
+                // INJECT LINKS DIRECTLY ON CARD
+                const linksContainer = clone.querySelector('.card-links');
+                const sortedLinks = [...p.links].sort((a,b) => a.price - b.price);
 
-                // Click Event
+                sortedLinks.forEach(l => {
+                    let bgClass = "bg-brand-bg hover:bg-black text-white";
+                    let icon = "shopping-bag";
+                    const s = l.store.toLowerCase();
+                    
+                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
+                        bgClass = "bg-blue-600 hover:bg-blue-700 text-white";
+                        icon = "star";
+                    } else if (s.includes('ali')) {
+                        bgClass = "bg-red-600 hover:bg-red-700 text-white";
+                        icon = "shopping-cart";
+                    } else if (s.includes('amazon')) {
+                        bgClass = "bg-yellow-500 hover:bg-yellow-600 text-black";
+                        icon = "package";
+                    }
+
+                    const btn = document.createElement('a');
+                    btn.href = l.url;
+                    btn.target = "_blank";
+                    btn.className = `flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all ${bgClass} border border-white/5`;
+                    // STOP PROPAGATION SO CLICKING "BUY" DOESN'T OPEN MODAL
+                    btn.onclick = (e) => e.stopPropagation(); 
+                    
+                    btn.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="${icon}" class="w-3 h-3"></i>
+                            <span>${l.store}</span>
+                        </div>
+                        <span>${formatPrice(l.price)}</span>
+                    `;
+                    linksContainer.appendChild(btn);
+                });
+
+                // Click Event for Modal
                 card.onclick = () => openProductModal(p);
 
                 grid.appendChild(clone);
