@@ -153,9 +153,6 @@
                         These are affiliate links. Using them costs you nothing, but it helps me keep buying handhelds to review for you! Thank you for your support!
                     </p>
                 </div>
-                <a href="https://patreon.com/ryanretro" target="_blank" class="shrink-0 bg-white text-brand-bg font-bold text-xs px-4 py-2 rounded-lg hover:bg-brand-muted transition-colors flex items-center gap-2 z-10">
-                    Join Patreon <i data-lucide="external-link" class="w-3 h-3"></i>
-                </a>
             </div>
         </div>
 
@@ -273,50 +270,7 @@
             </div>
         </section>
 
-        <!-- Modals -->
-        
-        <!-- Product Detail Modal -->
-        <div id="productModal" class="fixed inset-0 z-[100] hidden">
-            <div class="absolute inset-0 bg-brand-bg/90 backdrop-blur-md" id="productModalBackdrop"></div>
-            <div class="absolute inset-0 flex items-center justify-center p-4">
-                <div id="productModalContent" class="bg-brand-card w-full max-w-4xl max-h-[90vh] rounded-3xl border border-white/10 shadow-2xl flex flex-col md:flex-row overflow-hidden transform scale-95 opacity-0 transition-all duration-300">
-                    
-                    <!-- Image Side -->
-                    <div class="w-full md:w-1/2 bg-black/20 p-8 flex items-center justify-center relative group">
-                        <img id="modalImg" src="" class="max-h-[300px] md:max-h-[400px] object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105">
-                    </div>
-
-                    <!-- Info Side -->
-                    <div class="w-full md:w-1/2 p-6 md:p-8 flex flex-col bg-brand-card overflow-y-auto custom-scrollbar">
-                        <div class="flex justify-end items-start mb-2">
-                            <button id="closeModalBtn" class="text-brand-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
-                                <i data-lucide="x" class="w-6 h-6"></i>
-                            </button>
-                        </div>
-                        
-                        <h2 id="modalTitle" class="text-3xl font-extrabold text-white mb-4 leading-tight">Product Title</h2>
-                        <p id="modalDesc" class="text-brand-muted text-sm leading-relaxed mb-8">Description...</p>
-
-                        <div class="space-y-4 mb-8">
-                            <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                                <i data-lucide="shopping-bag" class="w-3 h-3 text-brand-muted"></i> Purchase Options
-                            </h3>
-                            <div id="modalLinks" class="flex flex-col gap-3">
-                                <!-- Links injected here -->
-                            </div>
-                        </div>
-
-                        <div class="mt-auto pt-6 border-t border-white/5">
-                            <a id="modalYoutubeLink" href="#" target="_blank" class="flex items-center justify-center gap-3 w-full py-3 bg-brand-red hover:bg-red-600 text-white rounded-xl font-bold text-sm transition-all hover:shadow-lg hover:shadow-red-900/30">
-                                <i data-lucide="play" class="w-5 h-5 fill-current"></i>
-                                Watch Videos
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!-- (Modals have been removed as requested) -->
     </main>
 
     <!-- FOOTER (Exact Match to Homepage) -->
@@ -337,9 +291,9 @@
 
     <!-- PRODUCT TEMPLATE (Hidden) -->
     <template id="productCardTemplate">
-        <div class="group bg-brand-card rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 transition-all hover:-translate-y-1 hover:shadow-2xl flex flex-col h-full cursor-pointer relative product-card">
-            <!-- Image Area -->
-            <div class="aspect-[4/3] bg-black/20 p-6 flex items-center justify-center relative overflow-hidden">
+        <div class="group bg-brand-card rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 transition-all hover:-translate-y-1 hover:shadow-2xl flex flex-col h-full relative product-card">
+            <!-- Image Area (Now clickable to best link) -->
+            <div class="img-container aspect-[4/3] bg-black/20 p-6 flex items-center justify-center relative overflow-hidden">
                 <div class="absolute inset-0 bg-brand-hover/10 opacity-0 group-hover:opacity-100 transition-opacity z-0"></div>
                 <img src="" class="card-img w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-110">
                 <!-- Badges removed from card view -->
@@ -353,7 +307,7 @@
                 </div>
                 <h3 class="card-title font-bold text-white text-lg mb-2 leading-tight group-hover:text-brand-muted transition-colors">Product Name</h3>
                 
-                <!-- NEW: Direct Links Container -->
+                <!-- Direct Links Container -->
                 <div class="card-links mt-auto pt-3 flex flex-col gap-2">
                     <!-- Links injected via JS -->
                 </div>
@@ -735,6 +689,28 @@
             return Math.min(...product.links.map(l => l.price));
         }
 
+        // Priority Logic: Official -> AliExpress -> Amazon -> Others
+        function getBestLink(p) {
+            if (!p.links || !p.links.length) return null;
+            
+            const isStore = (link, name) => link.store.toLowerCase().includes(name);
+            const isOfficial = (link) => {
+                const s = link.store.toLowerCase();
+                return s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi');
+            };
+
+            // 1. Official
+            let target = p.links.find(l => isOfficial(l));
+            // 2. AliExpress
+            if (!target) target = p.links.find(l => isStore(l, 'ali'));
+            // 3. Amazon
+            if (!target) target = p.links.find(l => isStore(l, 'amazon'));
+            // 4. Default to first available
+            if (!target) target = p.links[0];
+            
+            return target ? target.url : null;
+        }
+
         // ------------------------------------------------------------------
         // RENDERING
         // ------------------------------------------------------------------
@@ -806,8 +782,26 @@
                 clone.querySelector('.card-cat').textContent = p.category;
                 clone.querySelector('.card-price').textContent = formatPrice(cheapest);
                 clone.querySelector('.card-title').textContent = p.name;
+
+                // CLICK LOGIC: Image & Title -> Best Link (No Modal)
+                const bestUrl = getBestLink(p);
                 
-                // INJECT LINKS DIRECTLY ON CARD
+                // Image Click
+                const imgContainer = clone.querySelector('.img-container');
+                if(bestUrl) {
+                    imgContainer.style.cursor = 'pointer';
+                    imgContainer.onclick = () => window.open(bestUrl, '_blank');
+                    imgContainer.title = "Go to store";
+                }
+
+                // Title Click
+                const title = clone.querySelector('.card-title');
+                if(bestUrl) {
+                    title.style.cursor = 'pointer';
+                    title.onclick = () => window.open(bestUrl, '_blank');
+                }
+                
+                // INJECT INDIVIDUAL LINKS (Buttons)
                 const linksContainer = clone.querySelector('.card-links');
                 const sortedLinks = [...p.links].sort((a,b) => a.price - b.price);
 
@@ -831,7 +825,7 @@
                     btn.href = l.url;
                     btn.target = "_blank";
                     btn.className = `flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all ${bgClass} border border-white/5`;
-                    // STOP PROPAGATION SO CLICKING "BUY" DOESN'T OPEN MODAL
+                    // STOP PROPAGATION (Just in case, though card wrapper has no click event now)
                     btn.onclick = (e) => e.stopPropagation(); 
                     
                     btn.innerHTML = `
@@ -844,132 +838,11 @@
                     linksContainer.appendChild(btn);
                 });
 
-                // Click Event for Modal
-                card.onclick = () => openProductModal(p);
-
                 grid.appendChild(clone);
             });
 
             lucide.createIcons();
         }
-
-        // ------------------------------------------------------------------
-        // MODALS
-        // ------------------------------------------------------------------
-        
-        // Product Modal
-        const productModal = document.getElementById('productModal');
-        const productModalContent = document.getElementById('productModalContent');
-        const productModalBackdrop = document.getElementById('productModalBackdrop');
-
-        function openProductModal(p) {
-            // Populate Data
-            const modalImg = document.getElementById('modalImg');
-            modalImg.src = p.image;
-            document.getElementById('modalTitle').textContent = p.name;
-            document.getElementById('modalDesc').textContent = p.description;
-            document.getElementById('modalYoutubeLink').href = `https://www.youtube.com/@RyanRetro/search?query=${encodeURIComponent(p.name)}`;
-
-            // Click Image to Store Logic (Priority: Official -> Amazon -> AliExpress -> Others)
-            let targetLink = null;
-            
-            // Helper to check store name
-            const isStore = (link, name) => link.store.toLowerCase().includes(name);
-            const isOfficial = (link) => {
-                const s = link.store.toLowerCase();
-                return s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi');
-            };
-
-            // Find priority
-            targetLink = p.links.find(l => isOfficial(l));
-            if (!targetLink) targetLink = p.links.find(l => isStore(l, 'amazon'));
-            if (!targetLink) targetLink = p.links.find(l => isStore(l, 'ali'));
-            if (!targetLink && p.links.length > 0) targetLink = p.links[0];
-
-            // Apply Click Event
-            if (targetLink) {
-                modalImg.style.cursor = 'pointer';
-                modalImg.onclick = () => window.open(targetLink.url, '_blank');
-                modalImg.title = `Buy from ${targetLink.store}`;
-            } else {
-                modalImg.style.cursor = 'default';
-                modalImg.onclick = null;
-                modalImg.title = '';
-            }
-
-            // Links
-            const linksContainer = document.getElementById('modalLinks');
-            linksContainer.innerHTML = '';
-            
-            // Sort links by price
-            const sortedLinks = [...p.links].sort((a,b) => a.price - b.price);
-
-            sortedLinks.forEach(l => {
-                // Styles based on store
-                let bgClass = "bg-brand-bg hover:bg-black";
-                let icon = "shopping-bag";
-                const s = l.store.toLowerCase();
-                
-                if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-                    bgClass = "bg-blue-600 hover:bg-blue-700";
-                    icon = "star";
-                } else if (s.includes('ali')) {
-                    bgClass = "bg-red-600 hover:bg-red-700";
-                    icon = "shopping-cart";
-                } else if (s.includes('amazon')) {
-                    bgClass = "bg-yellow-500 hover:bg-yellow-600 text-black";
-                    icon = "package";
-                }
-
-                const couponHtml = l.coupon ? 
-                    `<div class="flex items-center gap-2 mt-1 cursor-pointer group/coupon" onclick="navigator.clipboard.writeText('${l.coupon}'); alert('Code copied!')">
-                        <span class="text-[10px] font-mono bg-white/10 px-2 py-0.5 rounded text-white border border-white/20 group-hover/coupon:border-white transition-colors">CODE: ${l.coupon}</span>
-                        <i data-lucide="copy" class="w-3 h-3 text-brand-muted"></i>
-                    </div>` : '';
-
-                const el = document.createElement('div');
-                el.className = `flex flex-col p-3 rounded-xl border border-white/5 ${bgClass} transition-all group`;
-                
-                const textColor = bgClass.includes('yellow') ? 'text-black' : 'text-white';
-                const subTextColor = bgClass.includes('yellow') ? 'text-black/70' : 'text-brand-muted';
-
-                el.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="${icon}" class="w-4 h-4 ${textColor}"></i>
-                            <span class="font-bold text-sm ${textColor}">${l.store}</span>
-                        </div>
-                        <span class="font-bold text-sm ${textColor}">${formatPrice(l.price)}</span>
-                    </div>
-                    ${couponHtml}
-                `;
-                
-                // Click wrapper
-                el.style.cursor = 'pointer';
-                el.onclick = (e) => {
-                    if(!e.target.closest('.group\\/coupon')) window.open(l.url, '_blank');
-                };
-
-                linksContainer.appendChild(el);
-            });
-            lucide.createIcons();
-
-            // Show
-            productModal.classList.remove('hidden');
-            setTimeout(() => {
-                productModalContent.classList.remove('scale-95', 'opacity-0');
-                productModalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeProductModal() {
-            productModalContent.classList.remove('scale-100', 'opacity-100');
-            productModalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => productModal.classList.add('hidden'), 300);
-        }
-
-        document.getElementById('closeModalBtn').onclick = closeProductModal;
-        productModalBackdrop.onclick = closeProductModal;
 
         // ------------------------------------------------------------------
         // EVENT LISTENERS
