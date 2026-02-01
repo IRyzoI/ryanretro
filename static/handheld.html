@@ -411,7 +411,12 @@
         cons: ["D-pad up top is uncomfortable for some", "Comfort could be better"],
         ytId: "UCh9GxjM-FNuSWv7xqn3UKVw", ytQuery: "retroid pocket 5", ytUrl: "https://www.youtube.com/@RyanRetro/search?query=retroid%20pocket%205",
         aliases: ["Retroid Pocket5","RP5"],
-        variants: [{id: "sd865", label: "Snapdragon 865"}]
+        variants: [{id: "sd865", label: "Snapdragon 865"}],
+        pinnedVideo: {
+            videoId: "73qGupmtvko",
+            title: "Retroid Pocket 5 | 7 Months Later",
+            publishedAt: "2025-06-03"
+        }
       },
       "Retroid Pocket 6": {
         name: "Retroid Pocket 6",
@@ -491,8 +496,8 @@
         aliases: ["Odin2 Portal"],
         variants: [{id: "sd8g2", label: "Snapdragon 8 Gen 2"}]
       },
-      "AYN Odin 3": {
-        name: "AYN Odin 3",
+      "Odin 3": {
+        name: "Odin 3",
         img: "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png",
         link: "https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td",
         chipset: "Snapdragon 8 Elite", screen: "6\" AMOLED 1080p 120Hz", battery: "8000 mAh", os: "Android 15", ram: "Up to 24GB LPDDR5x", storage: "Up to 1TB UFS 4.0",
@@ -791,7 +796,7 @@
         loadSystemData('switch');
         updatePerfButtons();
 
-        // 5. Fetch Video (Live from API)
+        // 5. Fetch Video (Live from API or Pinned)
         fetchLatestVideo();
 
         // Mobile Menu
@@ -827,6 +832,25 @@
     }
 
     async function fetchLatestVideo() {
+        // --- PINNED VIDEO CHECK ---
+        // If the device config has a hardcoded video, use it and skip the fetch
+        if (DEVICE.pinnedVideo) {
+             const vid = DEVICE.pinnedVideo;
+             const embed = document.getElementById('main-video-embed');
+             embed.innerHTML = `<iframe src="https://www.youtube.com/embed/${vid.videoId}" class="w-full h-full" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+             document.getElementById('video-title').textContent = vid.title;
+             
+             // Simple date parsing or usage of string
+             // Assuming format YYYY-MM-DD from tool or manual entry
+             const d = new Date(vid.publishedAt);
+             if (!isNaN(d.getTime())) {
+                 document.getElementById('video-date').textContent = d.toLocaleDateString();
+             } else {
+                 document.getElementById('video-date').textContent = vid.publishedAt; 
+             }
+             return; 
+        }
+
         try {
             const channelId = DEVICE.ytId || "UCh9GxjM-FNuSWv7xqn3UKVw";
             const query = DEVICE.ytQuery || DEVICE.name;
