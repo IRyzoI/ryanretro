@@ -77,18 +77,31 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center py-10 px-4">
 
     <!-- Header -->
-    <div class="max-w-6xl w-full mb-8 text-center">
+    <div class="max-w-6xl w-full mb-8 text-center relative">
         <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
             <i class="fa-brands fa-youtube mr-2"></i>Channel & Global Grabber
         </h1>
         <p class="text-slate-400">Deep scan channels or search YouTube globally. Bulk grab URLs, Thumbs, and Info Cards.</p>
+        
+        <!-- View Toggle -->
+        <div class="absolute top-0 right-0 hidden md:block">
+             <button id="viewSavedBtn" onclick="toggleSavedView()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 transition-colors flex items-center gap-2 text-sm shadow-lg">
+                <i class="fa-solid fa-cloud"></i> View Saved Collection <span id="savedBadge" class="bg-purple-600 text-white text-[10px] px-1.5 rounded-full hidden">0</span>
+            </button>
+        </div>
+        <!-- Mobile View Toggle -->
+        <div class="mt-4 md:hidden">
+             <button id="viewSavedBtnMobile" onclick="toggleSavedView()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 transition-colors flex items-center justify-center gap-2 text-sm shadow-lg">
+                <i class="fa-solid fa-cloud"></i> View Saved Collection
+            </button>
+        </div>
     </div>
 
     <!-- Main App Container -->
     <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-6">
 
         <!-- Left Column: Controls (Span 4) -->
-        <div class="md:col-span-4 space-y-6">
+        <div id="leftColumn" class="md:col-span-4 space-y-6 transition-all duration-300">
             
             <!-- Step 1: API Key -->
             <div class="glass-panel p-6 rounded-2xl shadow-xl">
@@ -104,11 +117,13 @@
                 </div>
 
                 <label class="block text-xs font-medium text-slate-400 mb-1">YouTube Data API Key</label>
-                <!-- Pre-filled API Key -->
-                <input type="password" id="apiKey" value="AIzaSyC1HQz96KkU-j60QK-5Fr7EOJ-m5vfzdPE" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors text-white mb-2">
-                <div class="flex items-center">
-                    <input type="checkbox" id="saveKey" checked class="mr-2 rounded bg-slate-800 border-slate-600 text-purple-500 focus:ring-purple-500">
-                    <label for="saveKey" class="text-xs text-slate-400">Remember Key</label>
+                <input type="password" id="apiKey" placeholder="Paste your API Key here" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors text-white mb-2">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="saveKey" checked class="mr-2 rounded bg-slate-800 border-slate-600 text-purple-500 focus:ring-purple-500">
+                        <label for="saveKey" class="text-xs text-slate-400">Remember Key</label>
+                    </div>
+                    <span id="authStatus" class="text-[10px] text-slate-500">Connecting...</span>
                 </div>
             </div>
 
@@ -125,9 +140,28 @@
                 <!-- Type Toggle (Shorts/Long/All) -->
                 <label class="block text-xs font-medium text-slate-400 mb-1">Video Type</label>
                 <div class="flex bg-slate-800 p-1 rounded-lg mb-4">
-                    <button onclick="setTypeFilter('all')" id="typeAllBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white">All</button>
+                    <button onclick="setTypeFilter('all')" id="typeAllBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500">All</button>
                     <button onclick="setTypeFilter('long')" id="typeLongBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">Long Form</button>
                     <button onclick="setTypeFilter('shorts')" id="typeShortsBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">Shorts</button>
+                </div>
+
+                <!-- Viral Filter Toggle -->
+                <label class="block text-xs font-medium text-slate-400 mb-1">Min. Viral Score (Views / Subs)</label>
+                <div class="flex bg-slate-800 p-1 rounded-lg mb-4">
+                    <button onclick="setViralFilter('all')" id="viralAllBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500">All</button>
+                    <button onclick="setViralFilter(10)" id="viral10Btn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">> 10x</button>
+                    <button onclick="setViralFilter(50)" id="viral50Btn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">> 50x</button>
+                    <button onclick="setViralFilter(100)" id="viral100Btn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">> 100x</button>
+                </div>
+
+                <!-- Min Views Toggle -->
+                <label class="block text-xs font-medium text-slate-400 mb-1">Min. Views</label>
+                <div class="flex bg-slate-800 p-1 rounded-lg mb-4 gap-1">
+                    <button onclick="setViewFilter(0)" id="viewAllBtn" class="flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500">All</button>
+                    <button onclick="setViewFilter(100000)" id="view100kBtn" class="flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">100k</button>
+                    <button onclick="setViewFilter(250000)" id="view250kBtn" class="flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">250k</button>
+                    <button onclick="setViewFilter(500000)" id="view500kBtn" class="flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">500k</button>
+                    <button onclick="setViewFilter(1000000)" id="view1mBtn" class="flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">1M</button>
                 </div>
 
                 <div id="channelInputGroup">
@@ -169,13 +203,13 @@
         </div>
 
         <!-- Right Column: Results (Span 8) -->
-        <div class="md:col-span-8 glass-panel rounded-2xl shadow-xl flex flex-col h-[700px] overflow-hidden relative">
+        <div id="resultsColumn" class="md:col-span-8 glass-panel rounded-2xl shadow-xl flex flex-col h-[700px] overflow-hidden relative transition-all duration-300">
             
             <!-- Toolbar -->
             <div class="p-4 border-b border-slate-700 flex flex-col gap-3 bg-slate-800/50">
                 
                 <div class="flex justify-between items-center">
-                    <h2 class="font-semibold text-slate-200">Results</h2>
+                    <h2 id="resultsTitle" class="font-semibold text-slate-200">Results</h2>
                     <!-- Sort Control -->
                     <select id="sortOrder" onchange="sortResults(this.value)" class="custom-select bg-slate-800 text-xs text-slate-300 border border-slate-700 rounded px-2 py-1 focus:outline-none focus:border-purple-500">
                         <option value="viewsHigh">Views (High to Low)</option>
@@ -245,16 +279,146 @@
     <!-- Hidden Canvas for generating images -->
     <canvas id="exportCanvas" class="hidden"></canvas>
 
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let currentUser = null;
+        let savedCardsMap = {}; // Local cache of saved cards
+
+        // --- Auth & Init ---
+        const initAuth = async () => {
+            document.getElementById('authStatus').innerText = "Auth...";
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (e) {
+                console.error("Auth failed", e);
+                document.getElementById('authStatus').innerText = "Offline";
+            }
+        };
+
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authStatus').innerText = "Cloud Ready";
+                document.getElementById('authStatus').className = "text-[10px] text-green-400";
+                subscribeToSavedCards(user.uid);
+            } else {
+                document.getElementById('authStatus').innerText = "Disconnected";
+                savedCardsMap = {};
+                window.updateSavedStateUI();
+            }
+        });
+
+        // --- Firestore Logic ---
+
+        function subscribeToSavedCards(userId) {
+            const colRef = collection(db, 'artifacts', appId, 'users', userId, 'saved_cards');
+            
+            // Listen for real-time updates
+            onSnapshot(colRef, (snapshot) => {
+                const newMap = {};
+                snapshot.forEach(doc => {
+                    newMap[doc.id] = doc.data();
+                });
+                savedCardsMap = newMap;
+                
+                // Update badge
+                const count = Object.keys(newMap).length;
+                const badge = document.getElementById('savedBadge');
+                if(badge) {
+                    badge.innerText = count;
+                    badge.classList.toggle('hidden', count === 0);
+                }
+
+                // If currently viewing Saved Collection, re-render it
+                if (window.isViewingSaved) {
+                    window.renderSavedList();
+                } else {
+                    // Just update buttons in search results
+                    window.updateSavedStateUI();
+                }
+            }, (error) => {
+                console.error("Firestore error:", error);
+            });
+        }
+
+        // --- Global Exports ---
+        
+        window.toggleSaveCard = async (videoIndex, fromSavedView = false) => {
+            if (!currentUser) return alert("Cloud not connected.");
+            
+            // If we are in saved view, the index maps to the savedCards array, not allVideos
+            let video = null;
+            
+            if (fromSavedView) {
+                // In saved view, we usually pass the ID directly or object, but here let's handle deletion
+                // For toggle from saved view, we really only delete.
+                // Re-using logic: if we pass an object, use it.
+                if (typeof videoIndex === 'object') video = videoIndex;
+            } else {
+                video = window.allVideos[videoIndex];
+            }
+
+            if (!video) return;
+
+            const videoId = video.videoId;
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'saved_cards', videoId);
+
+            if (savedCardsMap[videoId]) {
+                // Unsave
+                try {
+                    await deleteDoc(docRef);
+                    // UI updates via snapshot listener
+                } catch (e) { console.error("Remove failed", e); }
+            } else {
+                // Save
+                try {
+                    // Sanitize undefineds
+                    const data = JSON.parse(JSON.stringify(video)); 
+                    await setDoc(docRef, data);
+                } catch (e) { console.error("Save failed", e); }
+            }
+        };
+
+        // Expose map for checking status
+        window.getSavedStatus = (videoId) => !!savedCardsMap[videoId];
+        
+        // Expose getSavedVideos for the view
+        window.getSavedVideosArray = () => Object.values(savedCardsMap);
+
+    </script>
+
+    <!-- Main Logic -->
     <script>
         // --- State ---
-        let allVideos = [];
+        window.allVideos = [];
         let selectedIndices = new Set();
         let isSearching = false;
         let shouldStop = false;
         let scannedTotal = 0;
-        let currentMode = 'channel'; // 'channel' or 'global'
-        let typeFilter = 'all'; // 'all', 'long', 'shorts'
-        let currentChannelSubs = 0; // For channel mode
+        let currentMode = 'channel'; 
+        let typeFilter = 'all'; 
+        let viralFilter = 'all'; // 'all', 10, 50, 100
+        let viewFilter = 0; // '0' is all, else number threshold
+        let currentChannelSubs = 0;
+        
+        // View State
+        window.isViewingSaved = false;
 
         // --- Init ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -266,11 +430,125 @@
         });
 
         function toggleHelp() {
-            const el = document.getElementById('api-help');
-            el.classList.toggle('hidden');
+            document.getElementById('api-help').classList.toggle('hidden');
         }
 
+        // --- View Toggle Logic ---
+        
+        function toggleSavedView() {
+            window.isViewingSaved = !window.isViewingSaved;
+            const leftCol = document.getElementById('leftColumn');
+            const resultsCol = document.getElementById('resultsColumn');
+            const btnText = document.querySelectorAll('#viewSavedBtn, #viewSavedBtnMobile');
+            
+            if (window.isViewingSaved) {
+                // Show Saved View
+                leftCol.classList.add('hidden');
+                resultsCol.className = "md:col-span-12 glass-panel rounded-2xl shadow-xl flex flex-col h-[700px] overflow-hidden relative transition-all duration-300";
+                
+                document.getElementById('resultsTitle').innerText = "My Saved Collection";
+                document.getElementById('emptyState').innerHTML = `<i class="fa-solid fa-cloud text-6xl mb-4"></i><p>Your saved cards will appear here.</p>`;
+                
+                btnText.forEach(btn => btn.innerHTML = `<i class="fa-solid fa-arrow-left"></i> Back to Search`);
+                
+                renderSavedList();
+            } else {
+                // Show Search View
+                leftCol.classList.remove('hidden');
+                resultsCol.className = "md:col-span-8 glass-panel rounded-2xl shadow-xl flex flex-col h-[700px] overflow-hidden relative transition-all duration-300";
+                
+                document.getElementById('resultsTitle').innerText = "Results";
+                document.getElementById('emptyState').innerHTML = `<i class="fa-solid fa-layer-group text-6xl mb-4"></i><p>Enter details and click "Start Scan"</p>`;
+                
+                btnText.forEach(btn => btn.innerHTML = `<i class="fa-solid fa-cloud"></i> View Saved Collection <span id="savedBadge2" class="bg-purple-600 text-white text-[10px] px-1.5 rounded-full hidden">0</span>`);
+                
+                // Sync badge visibility
+                const count = window.getSavedVideosArray ? window.getSavedVideosArray().length : 0;
+                const badge2 = document.getElementById('savedBadge2');
+                if(badge2) {
+                    badge2.innerText = count;
+                    badge2.classList.toggle('hidden', count === 0);
+                }
+
+                updateResultsUI();
+            }
+        }
+
+        function renderSavedList() {
+            const savedVideos = window.getSavedVideosArray();
+            const list = document.getElementById('resultsList');
+            const countDisplay = document.getElementById('countDisplay'); 
+            
+            if (savedVideos.length === 0) {
+                list.innerHTML = document.getElementById('emptyState').outerHTML;
+                return;
+            }
+
+            list.innerHTML = '';
+            
+            // Let's sort by date descending
+            savedVideos.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            savedVideos.forEach((video) => {
+                const row = document.createElement('div');
+                row.className = `flex flex-col md:flex-row items-center gap-4 p-4 rounded-xl bg-slate-800 border border-slate-700 hover:border-purple-500/50 transition-all group`;
+                
+                const durationText = formatTime(video.duration);
+                const durationBadge = video.duration > 0 ? 
+                    `<span class="absolute bottom-1 right-1 bg-black/80 text-[10px] px-1.5 rounded text-white font-mono z-10">${durationText}</span>` : '';
+
+                // Viral Badge
+                let viralBadge = '';
+                if (video.viralScore > 1.0) {
+                    viralBadge = `<span class="text-[10px] text-green-400 font-bold bg-green-900/30 px-1.5 py-0.5 rounded border border-green-800/50 ml-2">🚀 ${video.viralScore.toFixed(1)}x</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-4 w-full md:w-auto justify-center">
+                        <button onclick='window.toggleSaveCard(${JSON.stringify(video)}, true)' class="text-red-400 hover:text-red-300 p-2" title="Remove from Saved">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="relative shrink-0">
+                        <img src="${video.thumb}" class="w-full md:w-40 h-auto rounded-lg border border-slate-600 shadow-lg object-cover" alt="Thumb">
+                        ${durationBadge}
+                    </div>
+
+                    <div class="flex-1 min-w-0 text-center md:text-left w-full">
+                        <div class="flex items-start justify-between">
+                            <h4 class="text-sm font-bold text-slate-100 mb-1 leading-tight select-text" title="${video.title}">${video.title}</h4>
+                        </div>
+                        <div class="text-xs text-slate-400 mb-1">${video.channelTitle} • ${video.date}</div>
+                        <div class="flex items-center gap-2 justify-center md:justify-start mb-2 text-xs">
+                             <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline truncate">Watch</a>
+                            <span class="text-slate-500">•</span>
+                            <span class="text-slate-400 font-mono">${formatViews(video.viewCount)} views</span>
+                            ${viralBadge}
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                             <button onclick="downloadThumb('${video.videoId}')" class="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] py-1 px-3 rounded-full transition-colors flex items-center gap-1 border border-slate-600">
+                                <i class="fa-regular fa-image"></i> Thumb
+                            </button>
+                            <button onclick='downloadCardObject(${JSON.stringify(video)})' class="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] py-1 px-3 rounded-full transition-colors flex items-center gap-1 border border-slate-600">
+                                <i class="fa-solid fa-id-card"></i> Card
+                            </button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // --- Helper for Saved View Card Download ---
+        function downloadCardObject(video) {
+            generateCardBlob(video).then(blob => { saveAs(blob, `card_${video.videoId}.png`); }).catch(e => alert("Error"));
+        }
+
+        // --- Mode Logic ---
         function setMode(mode) {
+            if(window.isViewingSaved) toggleSavedView(); 
             currentMode = mode;
             const chanBtn = document.getElementById('modeChannelBtn');
             const globBtn = document.getElementById('modeGlobalBtn');
@@ -298,13 +576,7 @@
 
         function setTypeFilter(type) {
             typeFilter = type;
-            // Update UI buttons
-            const btns = {
-                'all': document.getElementById('typeAllBtn'),
-                'long': document.getElementById('typeLongBtn'),
-                'shorts': document.getElementById('typeShortsBtn')
-            };
-
+            const btns = { 'all': document.getElementById('typeAllBtn'), 'long': document.getElementById('typeLongBtn'), 'shorts': document.getElementById('typeShortsBtn') };
             for (const [key, btn] of Object.entries(btns)) {
                 if (key === type) {
                     btn.className = "flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500";
@@ -312,7 +584,34 @@
                     btn.className = "flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white";
                 }
             }
-            // Re-render results with filter applied
+            updateResultsUI();
+        }
+
+        function setViralFilter(val) {
+            viralFilter = val;
+            const btns = { 'all': 'viralAllBtn', 10: 'viral10Btn', 50: 'viral50Btn', 100: 'viral100Btn' };
+            for (const [v, id] of Object.entries(btns)) {
+                const btn = document.getElementById(id);
+                if (String(v) === String(val)) {
+                     btn.className = "flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500";
+                } else {
+                     btn.className = "flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white";
+                }
+            }
+            updateResultsUI();
+        }
+
+        function setViewFilter(val) {
+            viewFilter = val;
+            const btns = { 0: 'viewAllBtn', 100000: 'view100kBtn', 250000: 'view250kBtn', 500000: 'view500kBtn', 1000000: 'view1mBtn' };
+            for (const [v, id] of Object.entries(btns)) {
+                const btn = document.getElementById(id);
+                if (Number(v) === val) {
+                     btn.className = "flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500";
+                } else {
+                     btn.className = "flex-1 text-[10px] font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white";
+                }
+            }
             updateResultsUI();
         }
 
@@ -349,8 +648,7 @@
             return num.toString();
         }
 
-        // --- Core Logic ---
-
+        // --- Core Search Logic ---
         function stopScan() {
             shouldStop = true;
             document.getElementById('loaderStatus').innerText = "Stopping...";
@@ -358,7 +656,8 @@
 
         async function startSearch() {
             if (isSearching) return;
-            
+            if (window.isViewingSaved) toggleSavedView(); 
+
             const apiKey = document.getElementById('apiKey').value.trim();
             const handleInput = document.getElementById('channelHandle').value.trim();
             const query = document.getElementById('searchTerm').value.trim();
@@ -370,14 +669,12 @@
 
             if (saveKey) localStorage.setItem('yt_api_key', apiKey);
             
-            // Reset
             isSearching = true;
             shouldStop = false;
             allVideos = [];
             selectedIndices.clear();
             scannedTotal = 0;
             currentChannelSubs = 0;
-            
             document.getElementById('sortOrder').value = 'viewsHigh';
             
             updateResultsUI();
@@ -385,7 +682,6 @@
             document.getElementById('scannedDisplay').innerText = "0";
             document.getElementById('countDisplay').innerText = "0";
             
-            // UI State
             document.getElementById('loader').classList.remove('hidden');
             document.getElementById('searchBtn').classList.add('hidden');
             document.getElementById('stopBtn').classList.remove('hidden');
@@ -402,11 +698,8 @@
                     await executeGlobalSearch(query, apiKey, null);
                 }
 
-                if (shouldStop) {
-                    showStatus(`Stopped. Found ${allVideos.length}.`, "text-yellow-400");
-                } else {
-                    showStatus(`Completed! Found ${allVideos.length}.`, "text-green-400");
-                }
+                if (shouldStop) showStatus(`Stopped. Found ${allVideos.length}.`, "text-yellow-400");
+                else showStatus(`Completed! Found ${allVideos.length}.`, "text-green-400");
 
             } catch (err) {
                 console.error(err);
@@ -420,28 +713,21 @@
             }
         }
 
-        // --- CHANNEL & GLOBAL UTILS ---
-        
+        // --- API Functions (unchanged logic) ---
         async function fetchChannelStatsBatch(channelIds, apiKey) {
             if (!channelIds || channelIds.length === 0) return {};
-            // API limit 50
             const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds.join(',')}&key=${apiKey}`;
             const res = await fetch(url);
             const data = await res.json();
             const stats = {};
             if (data.items) {
-                data.items.forEach(c => {
-                    stats[c.id] = parseInt(c.statistics.subscriberCount || 0);
-                });
+                data.items.forEach(c => { stats[c.id] = parseInt(c.statistics.subscriberCount || 0); });
             }
             return stats;
         }
 
-        // --- GLOBAL SEARCH LOGIC ---
-        
         async function executeGlobalSearch(query, apiKey, pageToken) {
              if (shouldStop) return;
-
              const MAX_PAGES = 4;
              let currentPage = 0;
              let nextPage = pageToken;
@@ -449,24 +735,18 @@
              while(currentPage < MAX_PAGES && !shouldStop) {
                  const pageParam = nextPage ? `&pageToken=${nextPage}` : '';
                  const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id&q=${encodeURIComponent(query)}&type=video&order=viewCount&maxResults=50${pageParam}&key=${apiKey}`;
-                 
                  document.getElementById('loaderStatus').innerText = `Fetching Page ${currentPage + 1}...`;
-                 
                  const res = await fetch(searchUrl);
                  const data = await res.json();
-                 
                  if (data.error) throw new Error(data.error.message);
                  if (!data.items || data.items.length === 0) break;
                  
                  const ids = data.items.map(item => item.id.videoId).join(',');
-                 
-                 // Fetch Snippet + Statistics + ContentDetails
                  const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${ids}&key=${apiKey}`;
                  const detailsRes = await fetch(detailsUrl);
                  const detailsData = await detailsRes.json();
                  
                  if (detailsData.items) {
-                     // Need channel subs for viral score
                      const channelIds = [...new Set(detailsData.items.map(v => v.snippet.channelId))];
                      const channelStats = await fetchChannelStatsBatch(channelIds, apiKey);
 
@@ -474,28 +754,20 @@
                         const views = parseInt(item.statistics ? item.statistics.viewCount : "0");
                         const subs = channelStats[item.snippet.channelId] || 0;
                         const viralScore = subs > 0 ? (views / subs) : 0;
-
                         return {
-                            title: item.snippet.title,
-                            videoId: item.id,
-                            channelId: item.snippet.channelId,
-                            channelTitle: item.snippet.channelTitle,
-                            dateObj: new Date(item.snippet.publishedAt),
+                            title: item.snippet.title, videoId: item.id, channelId: item.snippet.channelId,
+                            channelTitle: item.snippet.channelTitle, dateObj: new Date(item.snippet.publishedAt),
                             date: new Date(item.snippet.publishedAt).toLocaleDateString(),
                             thumb: item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres.url : (item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : item.snippet.thumbnails.medium.url),
-                            viewCount: views,
-                            duration: parseDuration(item.contentDetails ? item.contentDetails.duration : ""),
-                            channelSubs: subs,
-                            viralScore: viralScore
+                            viewCount: views, duration: parseDuration(item.contentDetails ? item.contentDetails.duration : ""),
+                            channelSubs: subs, viralScore: viralScore
                         };
                      });
-                     
                      allVideos = [...allVideos, ...newVideos];
                      scannedTotal += newVideos.length; 
                      document.getElementById('scannedDisplay').innerText = scannedTotal;
                      sortResults(document.getElementById('sortOrder').value, true);
                  }
-
                  nextPage = data.nextPageToken;
                  if (!nextPage) break;
                  currentPage++;
@@ -503,48 +775,33 @@
              }
         }
 
-        // --- CHANNEL SCAN LOGIC ---
-
         async function getChannelInfo(handle, apiKey) {
-            // Get ID first
             let cleanHandle = handle.replace(/\/$/, '').split('/').pop().trim();
             const handleWithAt = cleanHandle.startsWith('UC') ? cleanHandle : (cleanHandle.startsWith('@') ? cleanHandle : '@' + cleanHandle);
-            
             let channelId = null;
-
-            // Try Handle
             if (handleWithAt.startsWith('@')) {
                 try {
                     let url = `https://www.googleapis.com/youtube/v3/channels?part=id,contentDetails,statistics&forHandle=${encodeURIComponent(handleWithAt)}&key=${apiKey}`;
-                    let res = await fetch(url);
-                    let data = await res.json();
+                    let res = await fetch(url); let data = await res.json();
                     if (data.items && data.items.length > 0) {
                         currentChannelSubs = parseInt(data.items[0].statistics.subscriberCount || 0);
                         return data.items[0].contentDetails.relatedPlaylists.uploads;
                     }
                 } catch (e) { console.warn(e); }
             }
-
-            // Fallback Search
             if (!cleanHandle.startsWith('UC')) {
                 try {
                     const queryTerm = cleanHandle.startsWith('@') ? cleanHandle : cleanHandle; 
                     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(queryTerm)}&key=${apiKey}`;
-                    const searchRes = await fetch(searchUrl);
-                    const searchData = await searchRes.json();
+                    const searchRes = await fetch(searchUrl); const searchData = await searchRes.json();
                     if (searchData.error) throw new Error("Search API Error: " + searchData.error.message);
                     if (!searchData.items || searchData.items.length === 0) return null;
                     channelId = searchData.items[0].snippet.channelId;
                 } catch (e) { throw new Error(e.message); }
-            } else {
-                channelId = cleanHandle;
-            }
-
-            // Get Details
+            } else { channelId = cleanHandle; }
             try {
                 const detailsUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails,statistics&id=${channelId}&key=${apiKey}`;
-                const detailsRes = await fetch(detailsUrl);
-                const detailsData = await detailsRes.json();
+                const detailsRes = await fetch(detailsUrl); const detailsData = await detailsRes.json();
                 if (detailsData.error) throw new Error(detailsData.error.message);
                 if (detailsData.items && detailsData.items.length > 0) {
                     currentChannelSubs = parseInt(detailsData.items[0].statistics.subscriberCount || 0);
@@ -557,15 +814,11 @@
         async function fetchVideoDetails(videoIds, apiKey) {
             if (!videoIds || videoIds.length === 0) return {};
             const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}&key=${apiKey}`;
-            const res = await fetch(url);
-            const data = await res.json();
+            const res = await fetch(url); const data = await res.json();
             const detailsMap = {};
             if (data.items) {
                 data.items.forEach(item => {
-                    detailsMap[item.id] = {
-                        viewCount: item.statistics.viewCount,
-                        duration: parseDuration(item.contentDetails.duration)
-                    };
+                    detailsMap[item.id] = { viewCount: item.statistics.viewCount, duration: parseDuration(item.contentDetails.duration) };
                 });
             }
             return detailsMap;
@@ -576,55 +829,39 @@
             const pageTokenParam = pageToken ? `&pageToken=${pageToken}` : '';
             const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50${pageTokenParam}&key=${apiKey}`;
             document.getElementById('loaderStatus').innerText = `Scanned: ${scannedTotal} | Found: ${allVideos.length}`;
-            const response = await fetch(url);
-            const data = await response.json();
+            const response = await fetch(url); const data = await response.json();
             if (data.error) throw new Error(data.error.message);
             if (!data.items) return;
-
             scannedTotal += data.items.length;
             document.getElementById('scannedDisplay').innerText = scannedTotal;
-
             const lowercaseQuery = query.toLowerCase();
-            const matches = data.items.filter(item => {
-                const title = item.snippet.title.toLowerCase();
-                return title.includes(lowercaseQuery);
-            });
-
+            const matches = data.items.filter(item => { return item.snippet.title.toLowerCase().includes(lowercaseQuery); });
             if (matches.length > 0) {
                 const ids = matches.map(m => m.snippet.resourceId.videoId).join(',');
                 const detailsMap = await fetchVideoDetails(ids, apiKey);
-                
                 const enrichedMatches = matches.map(item => {
                     const vid = item.snippet.resourceId.videoId;
                     const details = detailsMap[vid] || { viewCount: "0", duration: 0 };
                     const views = parseInt(details.viewCount);
                     const viralScore = currentChannelSubs > 0 ? (views / currentChannelSubs) : 0;
-                    
                     return {
-                        title: item.snippet.title,
-                        videoId: vid,
-                        channelId: item.snippet.channelId,
-                        channelTitle: item.snippet.channelTitle,
-                        dateObj: new Date(item.snippet.publishedAt),
+                        title: item.snippet.title, videoId: vid, channelId: item.snippet.channelId,
+                        channelTitle: item.snippet.channelTitle, dateObj: new Date(item.snippet.publishedAt),
                         date: new Date(item.snippet.publishedAt).toLocaleDateString(),
                         thumb: item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres.url : (item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : item.snippet.thumbnails.medium.url),
-                        viewCount: views,
-                        duration: details.duration,
-                        channelSubs: currentChannelSubs,
-                        viralScore: viralScore
+                        viewCount: views, duration: details.duration, channelSubs: currentChannelSubs, viralScore: viralScore
                     };
                 });
                 allVideos = [...allVideos, ...enrichedMatches];
                 sortResults(document.getElementById('sortOrder').value, true); 
             }
-
             if (data.nextPageToken) {
                 await new Promise(r => setTimeout(r, 50));
                 await scanPlaylistRecursive(playlistId, query, apiKey, data.nextPageToken);
             }
         }
 
-        // --- Sorting & Selection ---
+        // --- Sorting & UI & Helpers ---
         function sortResults(mode, redraw = true) {
             if (allVideos.length === 0) return;
             switch(mode) {
@@ -641,27 +878,18 @@
         function toggleSelectAll() {
             const checkbox = document.getElementById('selectAllBox');
             if (checkbox.checked) {
-                const visible = getFilteredVideos();
-                visible.forEach(v => {
-                   const realIdx = allVideos.indexOf(v);
-                   if(realIdx > -1) selectedIndices.add(realIdx);
-                });
-            } else {
-                selectedIndices.clear();
-            }
-            updateResultsUI();
-            updateSelectionUI();
+                getFilteredVideos().forEach(v => { const realIdx = allVideos.indexOf(v); if(realIdx > -1) selectedIndices.add(realIdx); });
+            } else { selectedIndices.clear(); }
+            updateResultsUI(); updateSelectionUI();
         }
 
         function toggleSelection(index) {
-            if (selectedIndices.has(index)) selectedIndices.delete(index);
-            else selectedIndices.add(index);
+            if (selectedIndices.has(index)) selectedIndices.delete(index); else selectedIndices.add(index);
             updateSelectionUI();
             const visible = getFilteredVideos();
             const allVisibleSelected = visible.length > 0 && visible.every(v => selectedIndices.has(allVideos.indexOf(v)));
             const checkbox = document.getElementById('selectAllBox');
-            checkbox.checked = allVisibleSelected;
-            checkbox.indeterminate = !allVisibleSelected && selectedIndices.size > 0;
+            checkbox.checked = allVisibleSelected; checkbox.indeterminate = !allVisibleSelected && selectedIndices.size > 0;
         }
 
         function updateSelectionUI() {
@@ -669,27 +897,39 @@
             const countEl = document.getElementById('selectionCount');
             const bulkActions = document.getElementById('bulkActions');
             if (count > 0) {
-                countEl.innerText = `${count} selected`;
-                countEl.classList.remove('hidden');
+                countEl.innerText = `${count} selected`; countEl.classList.remove('hidden');
                 bulkActions.classList.remove('opacity-50', 'pointer-events-none');
             } else {
-                countEl.classList.add('hidden');
-                bulkActions.classList.add('opacity-50', 'pointer-events-none');
+                countEl.classList.add('hidden'); bulkActions.classList.add('opacity-50', 'pointer-events-none');
             }
         }
 
         function getFilteredVideos() {
             return allVideos.filter(v => {
-                // Short is <= 60s
-                if (typeFilter === 'shorts') return v.duration <= 60;
-                // Long is > 60s
-                if (typeFilter === 'long') return v.duration > 60;
+                if (typeFilter === 'shorts' && v.duration > 60) return false;
+                if (typeFilter === 'long' && v.duration <= 60) return false;
+                
+                if (viralFilter !== 'all') {
+                    const score = v.viralScore || 0;
+                    if (score < viralFilter) return false;
+                }
+
+                if (viewFilter > 0) {
+                    const views = v.viewCount || 0;
+                    if (views < viewFilter) return false;
+                }
                 return true;
             });
         }
 
-        // --- UI Rendering ---
+        // --- EXPOSED TO MODULE ---
+        // We attach this to window so the module can call it when auth state updates
+        window.updateSavedStateUI = updateResultsUI;
+
         function updateResultsUI() {
+            // If viewing saved collection, don't run this standard search render
+            if(window.isViewingSaved) return;
+
             const list = document.getElementById('resultsList');
             const filteredVideos = getFilteredVideos();
             const countDisplay = document.getElementById('countDisplay');
@@ -709,7 +949,6 @@
                 const row = document.createElement('div');
                 row.className = `flex flex-col md:flex-row items-center gap-4 p-4 rounded-xl border transition-all group animate-in ${isSelected ? 'bg-slate-700/50 border-purple-500/50' : 'bg-slate-800 border-slate-700 hover:border-slate-500'}`;
                 
-                // Show exact duration for debugging/verification
                 const durationText = formatTime(video.duration);
                 const durationBadge = video.duration > 0 ? 
                     `<span class="absolute bottom-1 right-1 bg-black/80 text-[10px] px-1.5 rounded text-white font-mono z-10">${durationText}</span>` : '';
@@ -721,6 +960,12 @@
                 } else if (video.viralScore > 0) {
                     viralBadge = `<span class="text-[10px] text-slate-500 font-mono ml-2" title="Views / Subs Ratio">${video.viralScore.toFixed(2)}x</span>`;
                 }
+
+                // Cloud Save State
+                const isSaved = window.getSavedStatus && window.getSavedStatus(video.videoId);
+                const saveIcon = isSaved ? `<i class="fa-solid fa-cloud text-purple-400"></i>` : `<i class="fa-solid fa-cloud-arrow-up"></i>`;
+                const saveTitle = isSaved ? "Unsave Card" : "Save Card to Cloud";
+                const saveClass = isSaved ? "bg-purple-900/50 hover:bg-purple-800 text-purple-200 border-purple-700" : "bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white border-slate-600";
 
                 row.innerHTML = `
                     <div class="flex items-center gap-4 w-full md:w-auto">
@@ -751,6 +996,9 @@
                             <button onclick="downloadCard(${index})" class="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] py-1 px-3 rounded-full transition-colors flex items-center gap-1 border border-slate-600">
                                 <i class="fa-solid fa-id-card"></i> Card
                             </button>
+                            <button onclick="window.toggleSaveCard(${index})" class="${saveClass} text-[10px] py-1 px-3 rounded-full transition-colors flex items-center gap-1 border" title="${saveTitle}">
+                                ${saveIcon}
+                            </button>
                         </div>
                     </div>
                 `;
@@ -765,8 +1013,7 @@
             el.innerText = msg;
         }
 
-        // --- CARD & DOWNLOAD LOGIC ---
-
+        // --- Card Generation (Blob) ---
         function generateCardBlob(video) {
             return new Promise((resolve, reject) => {
                 const canvas = document.createElement('canvas');
@@ -777,66 +1024,42 @@
                 img.onerror = () => { img.src = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`; };
 
                 img.onload = () => {
-                    const OUTPUT_WIDTH = 1280; 
-                    const targetAspect = 16 / 9;
-                    const sourceW = img.naturalWidth;
-                    const sourceH = img.naturalHeight;
+                    const OUTPUT_WIDTH = 1280; const targetAspect = 16 / 9;
+                    const sourceW = img.naturalWidth; const sourceH = img.naturalHeight;
                     const sourceAspect = sourceW / sourceH;
-                    
                     let drawX = 0, drawY = 0, drawW = sourceW, drawH = sourceH;
                     if (sourceAspect < targetAspect) { drawH = sourceW / targetAspect; drawY = (sourceH - drawH) / 2; } 
                     else if (sourceAspect > targetAspect) { drawW = sourceH * targetAspect; drawX = (sourceW - drawW) / 2; }
 
-                    const outImageH = OUTPUT_WIDTH / targetAspect; 
-                    const textAreaHeight = 160; 
-                    canvas.width = OUTPUT_WIDTH;
-                    canvas.height = outImageH + textAreaHeight;
+                    const outImageH = OUTPUT_WIDTH / targetAspect; const textAreaHeight = 160; 
+                    canvas.width = OUTPUT_WIDTH; canvas.height = outImageH + textAreaHeight;
 
-                    // Background
-                    ctx.fillStyle = "#1e293b"; 
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    // Main Image
+                    ctx.fillStyle = "#1e293b"; ctx.fillRect(0, 0, canvas.width, canvas.height);
                     ctx.drawImage(img, drawX, drawY, drawW, drawH, 0, 0, OUTPUT_WIDTH, outImageH);
 
-                    const padding = 50;
-                    const textStartX = padding;
-                    ctx.textBaseline = "top";
+                    const padding = 50; const textStartX = padding; ctx.textBaseline = "top";
                     let titleY = outImageH + 40;
 
-                    // Title
                     ctx.fillStyle = "#ffffff";
                     let titleFontSize = 48;
                     ctx.font = `bold ${titleFontSize}px Inter, Arial, sans-serif`;
                     const maxWidth = OUTPUT_WIDTH - (padding * 2);
                     let metrics = ctx.measureText(video.title);
-                    if (metrics.width > maxWidth) {
-                        titleFontSize = 34;
-                        ctx.font = `bold ${titleFontSize}px Inter, Arial, sans-serif`;
-                    }
+                    if (metrics.width > maxWidth) { titleFontSize = 34; ctx.font = `bold ${titleFontSize}px Inter, Arial, sans-serif`; }
                     ctx.fillText(video.title, textStartX, titleY, maxWidth);
 
-                    // Metadata Row
                     const metaFontSize = 24;
                     ctx.font = `400 ${metaFontSize}px Inter, Arial, sans-serif`;
                     ctx.fillStyle = "#94a3b8"; 
                     let metaY = titleY + titleFontSize + 12;
                     const channelName = video.channelTitle || "@RyanRetro";
-                    
-                    // Add Subscriber Count
                     const subsVal = video.channelSubs ? formatViews(video.channelSubs) : "0";
                     const subsText = ` • ${subsVal} subs`;
-
                     const viewsText = video.viewCount && video.viewCount !== "0" ? ` • ${parseInt(video.viewCount).toLocaleString()} views` : "";
-                    
-                    // Add Viral Score
                     let viralText = "";
-                    if (video.viralScore !== undefined && video.viralScore > 0) {
-                         viralText = ` • ${video.viralScore.toFixed(1)}x Score`;
-                    }
+                    if (video.viralScore !== undefined && video.viralScore > 0) { viralText = ` • ${video.viralScore.toFixed(1)}x Score`; }
 
                     ctx.fillText(`${channelName}${subsText}${viewsText}${viralText} • ${video.date}`, textStartX, metaY, maxWidth);
-
                     canvas.toBlob((blob) => { resolve(blob); });
                 };
             });
@@ -846,73 +1069,54 @@
             const selected = allVideos.filter((_, i) => selectedIndices.has(i));
             const source = selected.length > 0 ? selected : allVideos;
             if (source.length === 0) return;
-
-            const zipLoader = document.getElementById('zipLoader');
-            const statusEl = document.getElementById('zipStatus');
-            zipLoader.classList.remove('hidden');
-
+            document.getElementById('zipLoader').classList.remove('hidden');
             try {
-                const zip = new JSZip();
-                const folder = zip.folder("info_cards");
+                const zip = new JSZip(); const folder = zip.folder("info_cards");
                 let processed = 0;
                 for (const video of source) {
-                    statusEl.innerText = `Generating Card ${processed + 1}/${source.length}: ${video.title.substring(0, 15)}...`;
                     try {
                         const blob = await generateCardBlob(video);
                         const safeTitle = video.title.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
                         folder.file(`${safeTitle}.png`, blob);
-                    } catch (e) { folder.file(`FAILED_${video.videoId}.txt`, "Error"); }
+                    } catch (e) { }
                     processed++;
                 }
-                statusEl.innerText = "Compressing ZIP...";
                 const content = await zip.generateAsync({type:"blob"});
                 saveAs(content, "youtube_cards.zip");
                 showStatus("Cards ZIP started!", "text-green-400");
             } catch (e) { showStatus("Error creating ZIP", "text-red-400"); } 
-            finally { zipLoader.classList.add('hidden'); }
+            finally { document.getElementById('zipLoader').classList.add('hidden'); }
         }
 
         async function downloadSelectedZip() {
             const selected = allVideos.filter((_, i) => selectedIndices.has(i));
             const source = selected.length > 0 ? selected : allVideos;
             if (source.length === 0) return;
-            const zipLoader = document.getElementById('zipLoader');
-            const statusEl = document.getElementById('zipStatus');
-            zipLoader.classList.remove('hidden');
+            document.getElementById('zipLoader').classList.remove('hidden');
             try {
-                const zip = new JSZip();
-                const folder = zip.folder("thumbnails");
-                let processed = 0;
+                const zip = new JSZip(); const folder = zip.folder("thumbnails");
                 for (const video of source) {
-                    statusEl.innerText = `Fetching ${processed + 1}/${source.length}...`;
                     try {
-                        const url = `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`;
-                        const response = await fetch(url);
+                        const response = await fetch(`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`);
                         if (!response.ok) throw new Error("Failed");
                         const blob = await response.blob();
                         const safeTitle = video.title.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
                         folder.file(`${safeTitle}.jpg`, blob);
-                    } catch (e) { folder.file(`FAILED_${video.videoId}.txt`, "Error"); }
-                    processed++;
+                    } catch (e) { }
                 }
-                statusEl.innerText = "Compressing...";
                 const content = await zip.generateAsync({type:"blob"});
                 saveAs(content, "youtube_thumbnails.zip");
                 showStatus("Thumbs ZIP started!", "text-green-400");
             } catch (e) { showStatus("Error creating ZIP.", "text-red-400"); } 
-            finally { zipLoader.classList.add('hidden'); }
+            finally { document.getElementById('zipLoader').classList.add('hidden'); }
         }
 
         function copySelectedJSON() {
             const selected = allVideos.filter((_, i) => selectedIndices.has(i));
             const source = selected.length > 0 ? selected : allVideos;
             if (source.length === 0) return;
-            const json = JSON.stringify(source.map(v => ({
-                title: v.title, url: `https://www.youtube.com/watch?v=${v.videoId}`,
-                videoId: v.videoId, views: parseInt(v.viewCount), thumbnail: v.thumb, date: v.date
-            })), null, 2);
-            const textarea = document.createElement('textarea');
-            textarea.value = json; document.body.appendChild(textarea); textarea.select();
+            const json = JSON.stringify(source.map(v => ({ title: v.title, url: `https://www.youtube.com/watch?v=${v.videoId}`, videoId: v.videoId, views: parseInt(v.viewCount), thumbnail: v.thumb, date: v.date })), null, 2);
+            const textarea = document.createElement('textarea'); textarea.value = json; document.body.appendChild(textarea); textarea.select();
             document.execCommand('copy'); document.body.removeChild(textarea);
             showStatus("JSON Array copied!", "text-blue-400");
         }
@@ -922,25 +1126,22 @@
             const sourceArray = selectedIndices.size > 0 ? allVideos.filter((_, i) => selectedIndices.has(i)) : allVideos;
             let text = "";
             if (mode === 'url') text = sourceArray.map(v => `https://www.youtube.com/watch?v=${v.videoId}`).join('\n');
-            const textarea = document.createElement('textarea');
-            textarea.value = text; document.body.appendChild(textarea); textarea.select();
+            const textarea = document.createElement('textarea'); textarea.value = text; document.body.appendChild(textarea); textarea.select();
             document.execCommand('copy'); document.body.removeChild(textarea);
             showStatus("Copied to clipboard!", "text-green-400");
         }
 
         async function downloadThumb(videoId) {
-            const url = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
             try {
-                const response = await fetch(url); const blob = await response.blob();
+                const response = await fetch(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`); const blob = await response.blob();
                 saveAs(blob, `thumb_${videoId}.jpg`);
-            } catch (e) { window.open(url, '_blank'); }
+            } catch (e) { window.open(`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`, '_blank'); }
         }
 
         function downloadCard(index) {
             const video = allVideos[index];
             generateCardBlob(video).then(blob => { saveAs(blob, `card_${video.videoId}.png`); }).catch(e => alert("Error"));
         }
-
     </script>
 </body>
 </html>
