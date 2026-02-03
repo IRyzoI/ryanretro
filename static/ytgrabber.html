@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro URL & Asset Grabber</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- ZIP Utilities for Bulk Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #1e293b; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeIn 0.3s ease-out forwards; }
+        
+        /* Checkbox styling */
+        .custom-checkbox {
+            appearance: none;
+            background-color: #334155;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.15em;
+            height: 1.15em;
+            border: 1px solid #475569;
+            border-radius: 0.15em;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .custom-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em white;
+            transform-origin: center;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        .custom-checkbox:checked {
+            background-color: #9333ea; /* Purple 600 */
+            border-color: #9333ea;
+        }
+        .custom-checkbox:checked::before {
+            transform: scale(1);
+        }
+        
+        /* Select Dropdown */
+        .custom-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            appearance: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Header -->
+    <div class="max-w-6xl w-full mb-8 text-center">
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">
+            <i class="fa-brands fa-youtube mr-2"></i>Channel & Global Grabber
+        </h1>
+        <p class="text-slate-400">Deep scan channels or search YouTube globally. Bulk grab URLs, Thumbs, and Info Cards.</p>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-12 gap-6">
+
+        <!-- Left Column: Controls (Span 4) -->
+        <div class="md:col-span-4 space-y-6">
+            
+            <!-- Step 1: API Key -->
+            <div class="glass-panel p-6 rounded-2xl shadow-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-purple-300">1. Setup</h2>
+                    <button onclick="toggleHelp()" class="text-xs text-slate-400 hover:text-white underline">Need a Key?</button>
+                </div>
+                
+                <div id="api-help" class="hidden text-xs text-slate-300 bg-slate-800 p-3 rounded mb-4 border border-slate-700">
+                    1. Go to Google Cloud Console.<br>
+                    2. Enable "YouTube Data API v3".<br>
+                    3. Create Credentials (API Key).
+                </div>
+
+                <label class="block text-xs font-medium text-slate-400 mb-1">YouTube Data API Key</label>
+                <!-- Pre-filled API Key -->
+                <input type="password" id="apiKey" value="AIzaSyC1HQz96KkU-j60QK-5Fr7EOJ-m5vfzdPE" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors text-white mb-2">
+                <div class="flex items-center">
+                    <input type="checkbox" id="saveKey" checked class="mr-2 rounded bg-slate-800 border-slate-600 text-purple-500 focus:ring-purple-500">
+                    <label for="saveKey" class="text-xs text-slate-400">Remember Key</label>
+                </div>
+            </div>
+
+            <!-- Step 2: Search Criteria -->
+            <div class="glass-panel p-6 rounded-2xl shadow-xl">
+                <h2 class="text-lg font-semibold text-purple-300 mb-4">2. Search Options</h2>
+                
+                <!-- Search Mode Toggle -->
+                <div class="flex bg-slate-800 p-1 rounded-lg mb-4">
+                    <button onclick="setMode('channel')" id="modeChannelBtn" class="flex-1 text-xs font-medium py-2 rounded-md transition-all bg-purple-600 text-white">Channel Scan</button>
+                    <button onclick="setMode('global')" id="modeGlobalBtn" class="flex-1 text-xs font-medium py-2 rounded-md transition-all text-slate-400 hover:text-white">Global Search</button>
+                </div>
+
+                <!-- Type Toggle (Shorts/Long/All) -->
+                <label class="block text-xs font-medium text-slate-400 mb-1">Video Type</label>
+                <div class="flex bg-slate-800 p-1 rounded-lg mb-4">
+                    <button onclick="setTypeFilter('all')" id="typeAllBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white">All</button>
+                    <button onclick="setTypeFilter('long')" id="typeLongBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">Long Form</button>
+                    <button onclick="setTypeFilter('shorts')" id="typeShortsBtn" class="flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white">Shorts</button>
+                </div>
+
+                <div id="channelInputGroup">
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Channel Handle or ID</label>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="channelHandle" value="@RyanRetro" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors text-white">
+                    </div>
+                </div>
+
+                <label id="searchLabel" class="block text-xs font-medium text-slate-400 mb-1">Filter Title (Scan Mode) or Search Query</label>
+                <input type="text" id="searchTerm" value="Retroid Pocket 5" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors text-white mb-4">
+
+                <div class="flex gap-2">
+                    <button id="searchBtn" onclick="startSearch()" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg transform transition hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center gap-2">
+                        <i id="searchIcon" class="fa-solid fa-satellite-dish"></i> <span id="searchBtnText">Start Scan</span>
+                    </button>
+                    <button id="stopBtn" onclick="stopScan()" class="hidden bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                        <i class="fa-solid fa-stop"></i>
+                    </button>
+                </div>
+                <p id="statusMsg" class="text-xs text-center mt-3 text-slate-400 min-h-[1.5em]"></p>
+            </div>
+            
+            <!-- Stats -->
+            <div class="glass-panel p-6 rounded-2xl shadow-xl text-center">
+                <div class="grid grid-cols-2 gap-4 mb-2">
+                    <div>
+                        <h3 class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-1">Scanned</h3>
+                        <div id="scannedDisplay" class="text-xl font-mono text-slate-400">0</div>
+                    </div>
+                    <div>
+                        <h3 class="text-purple-400 text-[10px] uppercase tracking-wider font-bold mb-1">Matches</h3>
+                        <div id="countDisplay" class="text-3xl font-bold text-white">0</div>
+                    </div>
+                </div>
+                <div id="selectionCount" class="text-xs text-purple-300 mt-2 hidden">0 selected</div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Results (Span 8) -->
+        <div class="md:col-span-8 glass-panel rounded-2xl shadow-xl flex flex-col h-[700px] overflow-hidden relative">
+            
+            <!-- Toolbar -->
+            <div class="p-4 border-b border-slate-700 flex flex-col gap-3 bg-slate-800/50">
+                
+                <div class="flex justify-between items-center">
+                    <h2 class="font-semibold text-slate-200">Results</h2>
+                    <!-- Sort Control -->
+                    <select id="sortOrder" onchange="sortResults(this.value)" class="custom-select bg-slate-800 text-xs text-slate-300 border border-slate-700 rounded px-2 py-1 focus:outline-none focus:border-purple-500">
+                        <option value="viewsHigh">Views (High to Low)</option>
+                        <option value="viewsLow">Views (Low to High)</option>
+                        <option value="viralHigh">Viral Score (High to Low)</option>
+                        <option value="viralLow">Viral Score (Low to High)</option>
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                </div>
+
+                <!-- Filters & Actions -->
+                <div class="flex justify-between items-center text-xs text-slate-400 border-t border-slate-700/50 pt-2 flex-wrap gap-2">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="selectAllBox" onchange="toggleSelectAll()" class="custom-checkbox">
+                            <label for="selectAllBox" class="cursor-pointer hover:text-white">Select All</label>
+                        </div>
+                        
+                        <!-- Bulk Actions -->
+                        <div id="bulkActions" class="flex gap-2 opacity-50 pointer-events-none transition-opacity border-l border-slate-700 pl-4">
+                            <button onclick="downloadSelectedZip()" class="text-purple-300 hover:text-white flex items-center gap-1" title="Download Thumbnails as ZIP">
+                                <i class="fa-solid fa-file-zipper"></i> Zip Thumbs
+                            </button>
+                            <button onclick="downloadSelectedCardsZip()" class="text-pink-300 hover:text-white flex items-center gap-1" title="Generate and ZIP Info Cards">
+                                <i class="fa-solid fa-id-card"></i> Zip Cards
+                            </button>
+                            <button onclick="copySelectedJSON()" class="text-blue-300 hover:text-white flex items-center gap-1" title="Copy Data as JSON">
+                                <i class="fa-solid fa-code"></i> JSON
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                         <button onclick="copyToClipboard('url')" class="hover:text-white underline">Copy URLs</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="resultsList" class="flex-1 overflow-y-auto custom-scroll p-4 space-y-3">
+                
+                <!-- Empty State -->
+                <div id="emptyState" class="h-full flex flex-col items-center justify-center text-slate-500 opacity-60">
+                    <i class="fa-solid fa-layer-group text-6xl mb-4"></i>
+                    <p>Enter details and click "Start Scan"</p>
+                </div>
+
+            </div>
+            
+            <!-- Loading Overlay -->
+            <div id="loader" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 hidden">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div>
+                <p class="text-purple-300 animate-pulse font-medium">Working...</p>
+                <p id="loaderStatus" class="text-xs text-slate-400 mt-2">Connecting...</p>
+            </div>
+             <!-- Zip Overlay -->
+             <div id="zipLoader" class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center z-20 hidden">
+                <div class="animate-bounce text-4xl mb-2">📦</div>
+                <p class="text-purple-300 font-bold mb-1">Processing...</p>
+                <p id="zipStatus" class="text-xs text-slate-400">Please wait...</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Hidden Canvas for generating images -->
+    <canvas id="exportCanvas" class="hidden"></canvas>
+
+    <script>
+        // --- State ---
+        let allVideos = [];
+        let selectedIndices = new Set();
+        let isSearching = false;
+        let shouldStop = false;
+        let scannedTotal = 0;
+        let currentMode = 'channel'; // 'channel' or 'global'
+        let typeFilter = 'all'; // 'all', 'long', 'shorts'
+        let currentChannelSubs = 0; // For channel mode
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('yt_api_key');
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+                document.getElementById('saveKey').checked = true;
+            }
+        });
+
+        function toggleHelp() {
+            const el = document.getElementById('api-help');
+            el.classList.toggle('hidden');
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            const chanBtn = document.getElementById('modeChannelBtn');
+            const globBtn = document.getElementById('modeGlobalBtn');
+            const chanInput = document.getElementById('channelInputGroup');
+            const label = document.getElementById('searchLabel');
+            const btnText = document.getElementById('searchBtnText');
+            const icon = document.getElementById('searchIcon');
+
+            if (mode === 'channel') {
+                chanBtn.className = "flex-1 text-xs font-medium py-2 rounded-md transition-all bg-purple-600 text-white shadow-lg";
+                globBtn.className = "flex-1 text-xs font-medium py-2 rounded-md transition-all text-slate-400 hover:text-white";
+                chanInput.classList.remove('hidden');
+                label.innerText = "Filter Title (Scan Mode)";
+                btnText.innerText = "Start Scan";
+                icon.className = "fa-solid fa-satellite-dish";
+            } else {
+                globBtn.className = "flex-1 text-xs font-medium py-2 rounded-md transition-all bg-purple-600 text-white shadow-lg";
+                chanBtn.className = "flex-1 text-xs font-medium py-2 rounded-md transition-all text-slate-400 hover:text-white";
+                chanInput.classList.add('hidden');
+                label.innerText = "Global Search Query";
+                btnText.innerText = "Search YouTube";
+                icon.className = "fa-brands fa-youtube";
+            }
+        }
+
+        function setTypeFilter(type) {
+            typeFilter = type;
+            // Update UI buttons
+            const btns = {
+                'all': document.getElementById('typeAllBtn'),
+                'long': document.getElementById('typeLongBtn'),
+                'shorts': document.getElementById('typeShortsBtn')
+            };
+
+            for (const [key, btn] of Object.entries(btns)) {
+                if (key === type) {
+                    btn.className = "flex-1 text-xs font-medium py-1.5 rounded-md transition-all bg-slate-600 text-white shadow-sm ring-1 ring-slate-500";
+                } else {
+                    btn.className = "flex-1 text-xs font-medium py-1.5 rounded-md transition-all text-slate-400 hover:text-white";
+                }
+            }
+            // Re-render results with filter applied
+            updateResultsUI();
+        }
+
+        // --- Helpers ---
+        function parseDuration(duration) {
+            if (!duration) return 0;
+            const matches = duration.match(/[0-9]+[HMS]/g);
+            if (!matches) return 0;
+            let seconds = 0;
+            matches.forEach(part => {
+                const unit = part.slice(-1);
+                const val = parseInt(part.slice(0, -1));
+                if (unit === 'H') seconds += val * 3600;
+                if (unit === 'M') seconds += val * 60;
+                if (unit === 'S') seconds += val;
+            });
+            return seconds;
+        }
+
+        function formatTime(sec) {
+            if (!sec && sec !== 0) return "--:--";
+            const h = Math.floor(sec / 3600);
+            const m = Math.floor((sec % 3600) / 60);
+            const s = sec % 60;
+            if (h > 0) return `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            return `${m}:${s.toString().padStart(2,'0')}`;
+        }
+
+        function formatViews(num) {
+            if (!num) return '0';
+            num = parseInt(num);
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        // --- Core Logic ---
+
+        function stopScan() {
+            shouldStop = true;
+            document.getElementById('loaderStatus').innerText = "Stopping...";
+        }
+
+        async function startSearch() {
+            if (isSearching) return;
+            
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const handleInput = document.getElementById('channelHandle').value.trim();
+            const query = document.getElementById('searchTerm').value.trim();
+            const saveKey = document.getElementById('saveKey').checked;
+
+            if (!apiKey) { showStatus("Please enter an API Key", "text-red-400"); return; }
+            if (currentMode === 'channel' && !handleInput) { showStatus("Please enter a Channel Handle", "text-red-400"); return; }
+            if (currentMode === 'global' && !query) { showStatus("Please enter a search term", "text-red-400"); return; }
+
+            if (saveKey) localStorage.setItem('yt_api_key', apiKey);
+            
+            // Reset
+            isSearching = true;
+            shouldStop = false;
+            allVideos = [];
+            selectedIndices.clear();
+            scannedTotal = 0;
+            currentChannelSubs = 0;
+            
+            document.getElementById('sortOrder').value = 'viewsHigh';
+            
+            updateResultsUI();
+            updateSelectionUI();
+            document.getElementById('scannedDisplay').innerText = "0";
+            document.getElementById('countDisplay').innerText = "0";
+            
+            // UI State
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('searchBtn').classList.add('hidden');
+            document.getElementById('stopBtn').classList.remove('hidden');
+
+            try {
+                if (currentMode === 'channel') {
+                    showStatus("Resolving channel...");
+                    const playlistId = await getChannelInfo(handleInput, apiKey);
+                    if (!playlistId) throw new Error("Could not find Channel. Check handle or API Key.");
+                    showStatus(`Scanning archives...`);
+                    await scanPlaylistRecursive(playlistId, query, apiKey, null);
+                } else {
+                    showStatus("Searching YouTube Global...");
+                    await executeGlobalSearch(query, apiKey, null);
+                }
+
+                if (shouldStop) {
+                    showStatus(`Stopped. Found ${allVideos.length}.`, "text-yellow-400");
+                } else {
+                    showStatus(`Completed! Found ${allVideos.length}.`, "text-green-400");
+                }
+
+            } catch (err) {
+                console.error(err);
+                showStatus(err.message, "text-red-400");
+                document.getElementById('loaderStatus').innerText = "Error";
+            } finally {
+                isSearching = false;
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('searchBtn').classList.remove('hidden');
+                document.getElementById('stopBtn').classList.add('hidden');
+            }
+        }
+
+        // --- CHANNEL & GLOBAL UTILS ---
+        
+        async function fetchChannelStatsBatch(channelIds, apiKey) {
+            if (!channelIds || channelIds.length === 0) return {};
+            // API limit 50
+            const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channelIds.join(',')}&key=${apiKey}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const stats = {};
+            if (data.items) {
+                data.items.forEach(c => {
+                    stats[c.id] = parseInt(c.statistics.subscriberCount || 0);
+                });
+            }
+            return stats;
+        }
+
+        // --- GLOBAL SEARCH LOGIC ---
+        
+        async function executeGlobalSearch(query, apiKey, pageToken) {
+             if (shouldStop) return;
+
+             const MAX_PAGES = 4;
+             let currentPage = 0;
+             let nextPage = pageToken;
+
+             while(currentPage < MAX_PAGES && !shouldStop) {
+                 const pageParam = nextPage ? `&pageToken=${nextPage}` : '';
+                 const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=id&q=${encodeURIComponent(query)}&type=video&order=viewCount&maxResults=50${pageParam}&key=${apiKey}`;
+                 
+                 document.getElementById('loaderStatus').innerText = `Fetching Page ${currentPage + 1}...`;
+                 
+                 const res = await fetch(searchUrl);
+                 const data = await res.json();
+                 
+                 if (data.error) throw new Error(data.error.message);
+                 if (!data.items || data.items.length === 0) break;
+                 
+                 const ids = data.items.map(item => item.id.videoId).join(',');
+                 
+                 // Fetch Snippet + Statistics + ContentDetails
+                 const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${ids}&key=${apiKey}`;
+                 const detailsRes = await fetch(detailsUrl);
+                 const detailsData = await detailsRes.json();
+                 
+                 if (detailsData.items) {
+                     // Need channel subs for viral score
+                     const channelIds = [...new Set(detailsData.items.map(v => v.snippet.channelId))];
+                     const channelStats = await fetchChannelStatsBatch(channelIds, apiKey);
+
+                     const newVideos = detailsData.items.map(item => {
+                        const views = parseInt(item.statistics ? item.statistics.viewCount : "0");
+                        const subs = channelStats[item.snippet.channelId] || 0;
+                        const viralScore = subs > 0 ? (views / subs) : 0;
+
+                        return {
+                            title: item.snippet.title,
+                            videoId: item.id,
+                            channelId: item.snippet.channelId,
+                            channelTitle: item.snippet.channelTitle,
+                            dateObj: new Date(item.snippet.publishedAt),
+                            date: new Date(item.snippet.publishedAt).toLocaleDateString(),
+                            thumb: item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres.url : (item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : item.snippet.thumbnails.medium.url),
+                            viewCount: views,
+                            duration: parseDuration(item.contentDetails ? item.contentDetails.duration : ""),
+                            channelSubs: subs,
+                            viralScore: viralScore
+                        };
+                     });
+                     
+                     allVideos = [...allVideos, ...newVideos];
+                     scannedTotal += newVideos.length; 
+                     document.getElementById('scannedDisplay').innerText = scannedTotal;
+                     sortResults(document.getElementById('sortOrder').value, true);
+                 }
+
+                 nextPage = data.nextPageToken;
+                 if (!nextPage) break;
+                 currentPage++;
+                 await new Promise(r => setTimeout(r, 100));
+             }
+        }
+
+        // --- CHANNEL SCAN LOGIC ---
+
+        async function getChannelInfo(handle, apiKey) {
+            // Get ID first
+            let cleanHandle = handle.replace(/\/$/, '').split('/').pop().trim();
+            const handleWithAt = cleanHandle.startsWith('UC') ? cleanHandle : (cleanHandle.startsWith('@') ? cleanHandle : '@' + cleanHandle);
+            
+            let channelId = null;
+
+            // Try Handle
+            if (handleWithAt.startsWith('@')) {
+                try {
+                    let url = `https://www.googleapis.com/youtube/v3/channels?part=id,contentDetails,statistics&forHandle=${encodeURIComponent(handleWithAt)}&key=${apiKey}`;
+                    let res = await fetch(url);
+                    let data = await res.json();
+                    if (data.items && data.items.length > 0) {
+                        currentChannelSubs = parseInt(data.items[0].statistics.subscriberCount || 0);
+                        return data.items[0].contentDetails.relatedPlaylists.uploads;
+                    }
+                } catch (e) { console.warn(e); }
+            }
+
+            // Fallback Search
+            if (!cleanHandle.startsWith('UC')) {
+                try {
+                    const queryTerm = cleanHandle.startsWith('@') ? cleanHandle : cleanHandle; 
+                    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(queryTerm)}&key=${apiKey}`;
+                    const searchRes = await fetch(searchUrl);
+                    const searchData = await searchRes.json();
+                    if (searchData.error) throw new Error("Search API Error: " + searchData.error.message);
+                    if (!searchData.items || searchData.items.length === 0) return null;
+                    channelId = searchData.items[0].snippet.channelId;
+                } catch (e) { throw new Error(e.message); }
+            } else {
+                channelId = cleanHandle;
+            }
+
+            // Get Details
+            try {
+                const detailsUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails,statistics&id=${channelId}&key=${apiKey}`;
+                const detailsRes = await fetch(detailsUrl);
+                const detailsData = await detailsRes.json();
+                if (detailsData.error) throw new Error(detailsData.error.message);
+                if (detailsData.items && detailsData.items.length > 0) {
+                    currentChannelSubs = parseInt(detailsData.items[0].statistics.subscriberCount || 0);
+                    return detailsData.items[0].contentDetails.relatedPlaylists.uploads;
+                }
+            } catch (e) { throw new Error("Channel details lookup failed: " + e.message); }
+            return null;
+        }
+
+        async function fetchVideoDetails(videoIds, apiKey) {
+            if (!videoIds || videoIds.length === 0) return {};
+            const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=${videoIds}&key=${apiKey}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const detailsMap = {};
+            if (data.items) {
+                data.items.forEach(item => {
+                    detailsMap[item.id] = {
+                        viewCount: item.statistics.viewCount,
+                        duration: parseDuration(item.contentDetails.duration)
+                    };
+                });
+            }
+            return detailsMap;
+        }
+
+        async function scanPlaylistRecursive(playlistId, query, apiKey, pageToken) {
+            if (shouldStop) return;
+            const pageTokenParam = pageToken ? `&pageToken=${pageToken}` : '';
+            const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=50${pageTokenParam}&key=${apiKey}`;
+            document.getElementById('loaderStatus').innerText = `Scanned: ${scannedTotal} | Found: ${allVideos.length}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.error) throw new Error(data.error.message);
+            if (!data.items) return;
+
+            scannedTotal += data.items.length;
+            document.getElementById('scannedDisplay').innerText = scannedTotal;
+
+            const lowercaseQuery = query.toLowerCase();
+            const matches = data.items.filter(item => {
+                const title = item.snippet.title.toLowerCase();
+                return title.includes(lowercaseQuery);
+            });
+
+            if (matches.length > 0) {
+                const ids = matches.map(m => m.snippet.resourceId.videoId).join(',');
+                const detailsMap = await fetchVideoDetails(ids, apiKey);
+                
+                const enrichedMatches = matches.map(item => {
+                    const vid = item.snippet.resourceId.videoId;
+                    const details = detailsMap[vid] || { viewCount: "0", duration: 0 };
+                    const views = parseInt(details.viewCount);
+                    const viralScore = currentChannelSubs > 0 ? (views / currentChannelSubs) : 0;
+                    
+                    return {
+                        title: item.snippet.title,
+                        videoId: vid,
+                        channelId: item.snippet.channelId,
+                        channelTitle: item.snippet.channelTitle,
+                        dateObj: new Date(item.snippet.publishedAt),
+                        date: new Date(item.snippet.publishedAt).toLocaleDateString(),
+                        thumb: item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres.url : (item.snippet.thumbnails.high ? item.snippet.thumbnails.high.url : item.snippet.thumbnails.medium.url),
+                        viewCount: views,
+                        duration: details.duration,
+                        channelSubs: currentChannelSubs,
+                        viralScore: viralScore
+                    };
+                });
+                allVideos = [...allVideos, ...enrichedMatches];
+                sortResults(document.getElementById('sortOrder').value, true); 
+            }
+
+            if (data.nextPageToken) {
+                await new Promise(r => setTimeout(r, 50));
+                await scanPlaylistRecursive(playlistId, query, apiKey, data.nextPageToken);
+            }
+        }
+
+        // --- Sorting & Selection ---
+        function sortResults(mode, redraw = true) {
+            if (allVideos.length === 0) return;
+            switch(mode) {
+                case 'newest': allVideos.sort((a, b) => b.dateObj - a.dateObj); break;
+                case 'oldest': allVideos.sort((a, b) => a.dateObj - b.dateObj); break;
+                case 'viewsHigh': allVideos.sort((a, b) => b.viewCount - a.viewCount); break;
+                case 'viewsLow': allVideos.sort((a, b) => a.viewCount - b.viewCount); break;
+                case 'viralHigh': allVideos.sort((a, b) => b.viralScore - a.viralScore); break;
+                case 'viralLow': allVideos.sort((a, b) => a.viralScore - b.viralScore); break;
+            }
+            if (redraw) updateResultsUI();
+        }
+
+        function toggleSelectAll() {
+            const checkbox = document.getElementById('selectAllBox');
+            if (checkbox.checked) {
+                const visible = getFilteredVideos();
+                visible.forEach(v => {
+                   const realIdx = allVideos.indexOf(v);
+                   if(realIdx > -1) selectedIndices.add(realIdx);
+                });
+            } else {
+                selectedIndices.clear();
+            }
+            updateResultsUI();
+            updateSelectionUI();
+        }
+
+        function toggleSelection(index) {
+            if (selectedIndices.has(index)) selectedIndices.delete(index);
+            else selectedIndices.add(index);
+            updateSelectionUI();
+            const visible = getFilteredVideos();
+            const allVisibleSelected = visible.length > 0 && visible.every(v => selectedIndices.has(allVideos.indexOf(v)));
+            const checkbox = document.getElementById('selectAllBox');
+            checkbox.checked = allVisibleSelected;
+            checkbox.indeterminate = !allVisibleSelected && selectedIndices.size > 0;
+        }
+
+        function updateSelectionUI() {
+            const count = selectedIndices.size;
+            const countEl = document.getElementById('selectionCount');
+            const bulkActions = document.getElementById('bulkActions');
+            if (count > 0) {
+                countEl.innerText = `${count} selected`;
+                countEl.classList.remove('hidden');
+                bulkActions.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                countEl.classList.add('hidden');
+                bulkActions.classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function getFilteredVideos() {
+            return allVideos.filter(v => {
+                // Short is <= 60s
+                if (typeFilter === 'shorts') return v.duration <= 60;
+                // Long is > 60s
+                if (typeFilter === 'long') return v.duration > 60;
+                return true;
+            });
+        }
+
+        // --- UI Rendering ---
+        function updateResultsUI() {
+            const list = document.getElementById('resultsList');
+            const filteredVideos = getFilteredVideos();
+            const countDisplay = document.getElementById('countDisplay');
+            countDisplay.innerText = filteredVideos.length; 
+            const scrollPos = list.scrollTop;
+
+            if (filteredVideos.length === 0) {
+                if(!isSearching) list.innerHTML = document.getElementById('emptyState').outerHTML;
+                else list.innerHTML = `<div class="text-center text-slate-500 py-10">No videos match the filters.</div>`;
+                return;
+            }
+            list.innerHTML = '';
+            
+            filteredVideos.forEach((video) => {
+                const index = allVideos.indexOf(video); 
+                const isSelected = selectedIndices.has(index);
+                const row = document.createElement('div');
+                row.className = `flex flex-col md:flex-row items-center gap-4 p-4 rounded-xl border transition-all group animate-in ${isSelected ? 'bg-slate-700/50 border-purple-500/50' : 'bg-slate-800 border-slate-700 hover:border-slate-500'}`;
+                
+                // Show exact duration for debugging/verification
+                const durationText = formatTime(video.duration);
+                const durationBadge = video.duration > 0 ? 
+                    `<span class="absolute bottom-1 right-1 bg-black/80 text-[10px] px-1.5 rounded text-white font-mono z-10">${durationText}</span>` : '';
+
+                // Viral Badge
+                let viralBadge = '';
+                if (video.viralScore > 1.0) {
+                    viralBadge = `<span class="text-[10px] text-green-400 font-bold bg-green-900/30 px-1.5 py-0.5 rounded border border-green-800/50 ml-2" title="Views / Subs Ratio">🚀 ${video.viralScore.toFixed(1)}x</span>`;
+                } else if (video.viralScore > 0) {
+                    viralBadge = `<span class="text-[10px] text-slate-500 font-mono ml-2" title="Views / Subs Ratio">${video.viralScore.toFixed(2)}x</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection(${index})" class="custom-checkbox shrink-0">
+                    </div>
+                    
+                    <div class="relative shrink-0 cursor-pointer" onclick="toggleSelection(${index})">
+                        <img src="${video.thumb}" class="w-full md:w-40 h-auto rounded-lg border border-slate-600 shadow-lg object-cover" alt="Thumb">
+                        ${durationBadge}
+                    </div>
+
+                    <div class="flex-1 min-w-0 text-center md:text-left w-full">
+                        <div class="flex items-start justify-between">
+                            <h4 class="text-sm font-bold text-slate-100 mb-1 leading-tight select-text" title="${video.title}">${video.title}</h4>
+                        </div>
+                        <div class="text-xs text-slate-400 mb-1">${video.channelTitle} • ${video.date}</div>
+                        <div class="flex items-center gap-2 justify-center md:justify-start mb-2 text-xs">
+                             <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" class="text-blue-400 hover:text-blue-300 hover:underline truncate">Watch</a>
+                            <span class="text-slate-500">•</span>
+                            <span class="text-slate-400 font-mono">${formatViews(video.viewCount)} views</span>
+                            ${viralBadge}
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                             <button onclick="downloadThumb('${video.videoId}')" class="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] py-1 px-3 rounded-full transition-colors flex items-center gap-1 border border-slate-600">
+                                <i class="fa-regular fa-image"></i> Thumb
+                            </button>
+                            <button onclick="downloadCard(${index})" class="bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-[10px] py-1 px-3 rounded-full transition-colors flex items-center gap-1 border border-slate-600">
+                                <i class="fa-solid fa-id-card"></i> Card
+                            </button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+            if (list.childElementCount > 0) list.scrollTop = scrollPos;
+        }
+
+        function showStatus(msg, colorClass = "text-slate-400") {
+            const el = document.getElementById('statusMsg');
+            el.className = `text-xs text-center mt-3 min-h-[1.5em] ${colorClass}`;
+            el.innerText = msg;
+        }
+
+        // --- CARD & DOWNLOAD LOGIC ---
+
+        function generateCardBlob(video) {
+            return new Promise((resolve, reject) => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.src = `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`;
+                img.onerror = () => { img.src = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`; };
+
+                img.onload = () => {
+                    const OUTPUT_WIDTH = 1280; 
+                    const targetAspect = 16 / 9;
+                    const sourceW = img.naturalWidth;
+                    const sourceH = img.naturalHeight;
+                    const sourceAspect = sourceW / sourceH;
+                    
+                    let drawX = 0, drawY = 0, drawW = sourceW, drawH = sourceH;
+                    if (sourceAspect < targetAspect) { drawH = sourceW / targetAspect; drawY = (sourceH - drawH) / 2; } 
+                    else if (sourceAspect > targetAspect) { drawW = sourceH * targetAspect; drawX = (sourceW - drawW) / 2; }
+
+                    const outImageH = OUTPUT_WIDTH / targetAspect; 
+                    const textAreaHeight = 160; 
+                    canvas.width = OUTPUT_WIDTH;
+                    canvas.height = outImageH + textAreaHeight;
+
+                    // Background
+                    ctx.fillStyle = "#1e293b"; 
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Main Image
+                    ctx.drawImage(img, drawX, drawY, drawW, drawH, 0, 0, OUTPUT_WIDTH, outImageH);
+
+                    const padding = 50;
+                    const textStartX = padding;
+                    ctx.textBaseline = "top";
+                    let titleY = outImageH + 40;
+
+                    // Title
+                    ctx.fillStyle = "#ffffff";
+                    let titleFontSize = 48;
+                    ctx.font = `bold ${titleFontSize}px Inter, Arial, sans-serif`;
+                    const maxWidth = OUTPUT_WIDTH - (padding * 2);
+                    let metrics = ctx.measureText(video.title);
+                    if (metrics.width > maxWidth) {
+                        titleFontSize = 34;
+                        ctx.font = `bold ${titleFontSize}px Inter, Arial, sans-serif`;
+                    }
+                    ctx.fillText(video.title, textStartX, titleY, maxWidth);
+
+                    // Metadata Row
+                    const metaFontSize = 24;
+                    ctx.font = `400 ${metaFontSize}px Inter, Arial, sans-serif`;
+                    ctx.fillStyle = "#94a3b8"; 
+                    let metaY = titleY + titleFontSize + 12;
+                    const channelName = video.channelTitle || "@RyanRetro";
+                    
+                    // Add Subscriber Count
+                    const subsVal = video.channelSubs ? formatViews(video.channelSubs) : "0";
+                    const subsText = ` • ${subsVal} subs`;
+
+                    const viewsText = video.viewCount && video.viewCount !== "0" ? ` • ${parseInt(video.viewCount).toLocaleString()} views` : "";
+                    
+                    // Add Viral Score
+                    let viralText = "";
+                    if (video.viralScore !== undefined && video.viralScore > 0) {
+                         viralText = ` • ${video.viralScore.toFixed(1)}x Score`;
+                    }
+
+                    ctx.fillText(`${channelName}${subsText}${viewsText}${viralText} • ${video.date}`, textStartX, metaY, maxWidth);
+
+                    canvas.toBlob((blob) => { resolve(blob); });
+                };
+            });
+        }
+
+        async function downloadSelectedCardsZip() {
+            const selected = allVideos.filter((_, i) => selectedIndices.has(i));
+            const source = selected.length > 0 ? selected : allVideos;
+            if (source.length === 0) return;
+
+            const zipLoader = document.getElementById('zipLoader');
+            const statusEl = document.getElementById('zipStatus');
+            zipLoader.classList.remove('hidden');
+
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder("info_cards");
+                let processed = 0;
+                for (const video of source) {
+                    statusEl.innerText = `Generating Card ${processed + 1}/${source.length}: ${video.title.substring(0, 15)}...`;
+                    try {
+                        const blob = await generateCardBlob(video);
+                        const safeTitle = video.title.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+                        folder.file(`${safeTitle}.png`, blob);
+                    } catch (e) { folder.file(`FAILED_${video.videoId}.txt`, "Error"); }
+                    processed++;
+                }
+                statusEl.innerText = "Compressing ZIP...";
+                const content = await zip.generateAsync({type:"blob"});
+                saveAs(content, "youtube_cards.zip");
+                showStatus("Cards ZIP started!", "text-green-400");
+            } catch (e) { showStatus("Error creating ZIP", "text-red-400"); } 
+            finally { zipLoader.classList.add('hidden'); }
+        }
+
+        async function downloadSelectedZip() {
+            const selected = allVideos.filter((_, i) => selectedIndices.has(i));
+            const source = selected.length > 0 ? selected : allVideos;
+            if (source.length === 0) return;
+            const zipLoader = document.getElementById('zipLoader');
+            const statusEl = document.getElementById('zipStatus');
+            zipLoader.classList.remove('hidden');
+            try {
+                const zip = new JSZip();
+                const folder = zip.folder("thumbnails");
+                let processed = 0;
+                for (const video of source) {
+                    statusEl.innerText = `Fetching ${processed + 1}/${source.length}...`;
+                    try {
+                        const url = `https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`;
+                        const response = await fetch(url);
+                        if (!response.ok) throw new Error("Failed");
+                        const blob = await response.blob();
+                        const safeTitle = video.title.replace(/[^a-z0-9]/gi, '_').substring(0, 50);
+                        folder.file(`${safeTitle}.jpg`, blob);
+                    } catch (e) { folder.file(`FAILED_${video.videoId}.txt`, "Error"); }
+                    processed++;
+                }
+                statusEl.innerText = "Compressing...";
+                const content = await zip.generateAsync({type:"blob"});
+                saveAs(content, "youtube_thumbnails.zip");
+                showStatus("Thumbs ZIP started!", "text-green-400");
+            } catch (e) { showStatus("Error creating ZIP.", "text-red-400"); } 
+            finally { zipLoader.classList.add('hidden'); }
+        }
+
+        function copySelectedJSON() {
+            const selected = allVideos.filter((_, i) => selectedIndices.has(i));
+            const source = selected.length > 0 ? selected : allVideos;
+            if (source.length === 0) return;
+            const json = JSON.stringify(source.map(v => ({
+                title: v.title, url: `https://www.youtube.com/watch?v=${v.videoId}`,
+                videoId: v.videoId, views: parseInt(v.viewCount), thumbnail: v.thumb, date: v.date
+            })), null, 2);
+            const textarea = document.createElement('textarea');
+            textarea.value = json; document.body.appendChild(textarea); textarea.select();
+            document.execCommand('copy'); document.body.removeChild(textarea);
+            showStatus("JSON Array copied!", "text-blue-400");
+        }
+
+        function copyToClipboard(mode) {
+            if (allVideos.length === 0) return showStatus("Nothing to copy!", "text-yellow-400");
+            const sourceArray = selectedIndices.size > 0 ? allVideos.filter((_, i) => selectedIndices.has(i)) : allVideos;
+            let text = "";
+            if (mode === 'url') text = sourceArray.map(v => `https://www.youtube.com/watch?v=${v.videoId}`).join('\n');
+            const textarea = document.createElement('textarea');
+            textarea.value = text; document.body.appendChild(textarea); textarea.select();
+            document.execCommand('copy'); document.body.removeChild(textarea);
+            showStatus("Copied to clipboard!", "text-green-400");
+        }
+
+        async function downloadThumb(videoId) {
+            const url = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            try {
+                const response = await fetch(url); const blob = await response.blob();
+                saveAs(blob, `thumb_${videoId}.jpg`);
+            } catch (e) { window.open(url, '_blank'); }
+        }
+
+        function downloadCard(index) {
+            const video = allVideos[index];
+            generateCardBlob(video).then(blob => { saveAs(blob, `card_${video.videoId}.png`); }).catch(e => alert("Error"));
+        }
+
+    </script>
+</body>
+</html>
