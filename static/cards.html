@@ -3,26 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan Retro - Game Showcase Animation</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Ryan Retro - Showcase Animation</title>
+    
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config to match your site -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#2D1B4E',       // Deep Soft Purple
+                            card: '#432C7A',     // Lighter Grape
+                            hover: '#5B3EA8',    // Bright Purple
+                            accent: '#FFFFFF',   // Pure White
+                            muted: '#D4BBFF',    // Soft Lavender Text
+                            red: '#FF0000',      // YouTube Red
+                            
+                            // Mapped difficulty colors to fit the theme better
+                            easy: '#4ade80',     // Soft Green
+                            medium: '#fbbf24',   // Soft Amber
+                            hard: '#f43f5e'      // Soft Rose
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
         :root {
-            --bg-color: #111;
-            --easy-color: #00ff9d;
-            --medium-color: #ffaa00;
-            --hard-color: #ff0055;
             --card-width: 240px;
             --card-height: 340px;
         }
 
         body {
             margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: white;
-            font-family: 'Inter', sans-serif;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
@@ -35,41 +60,15 @@
         #drop-zone {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 255, 157, 0.2);
-            border: 10px dashed var(--easy-color);
+            background: rgba(45, 27, 78, 0.9);
+            backdrop-filter: blur(8px);
             z-index: 2000;
             display: none;
             justify-content: center;
             align-items: center;
-            font-family: 'Press Start 2P', cursive;
-            font-size: 2rem;
-            color: white;
-            pointer-events: none;
+            flex-direction: column;
+            gap: 1rem;
         }
-
-        #status-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 1px solid #555;
-            font-size: 0.9rem;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .status-dot {
-            width: 10px; height: 10px;
-            background: #ff0055;
-            border-radius: 50%;
-            animation: blink 1s infinite;
-        }
-        @keyframes blink { 50% { opacity: 0.5; } }
 
         /* --- STAGE --- */
         #stage {
@@ -92,15 +91,11 @@
 
         .category-title {
             position: absolute;
-            top: 12%; 
-            font-family: 'Press Start 2P', cursive;
-            font-size: 4rem;
-            text-transform: uppercase;
-            text-shadow: 6px 6px 0px #000;
-            z-index: 500;
-            opacity: 0;
+            top: 15%; 
             width: 100%;
             text-align: center;
+            z-index: 500;
+            opacity: 0;
         }
 
         .card {
@@ -108,24 +103,25 @@
             width: var(--card-width);
             height: var(--card-height);
             left: 50%;
-            top: 58%; 
+            top: 55%; 
             margin-left: calc(var(--card-width) * -0.5); 
             margin-top: calc(var(--card-height) * -0.5);
-            border-radius: 12px;
+            border-radius: 1rem; /* rounded-2xl */
             transform-origin: center center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-            background: #222;
-            will-change: transform, opacity;
+            /* REMOVED default huge shadow to prevent ugly stacking */
+            box-shadow: none; 
+            will-change: transform, opacity, box-shadow;
+            transform-style: preserve-3d;
         }
 
         .card-inner {
             position: relative;
             width: 100%;
             height: 100%;
-            border-radius: 12px;
+            border-radius: 1rem;
             overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.15);
-            background: #1a1a1a;
+            background: #432C7A; /* brand-card */
+            border: 1px solid rgba(212, 187, 255, 0.1);
         }
 
         .card img {
@@ -133,11 +129,12 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            background: #222;
+            background: #432C7A;
             position: relative;
             z-index: 2;
         }
 
+        /* Fallback text when no image */
         .card-fallback {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -146,72 +143,33 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 10px;
+            padding: 20px;
             z-index: 1;
-            background-size: 100% 100%;
         }
 
-        .card-fallback h3 {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.7rem;
-            line-height: 1.4;
-            color: white;
-            background: rgba(0,0,0,0.8);
-            padding: 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            word-break: break-word;
-        }
-
-        /* Ambient effects */
-        .retro-grid {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: -1;
-            opacity: 0.5;
-        }
-
-        .vignette {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 40%, black 140%);
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .scanlines {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 0, 0, 0.3) 3px
-            );
-            z-index: 1001;
-            pointer-events: none;
+        /* Background Gradient to match site feel */
+        .bg-gradient-radial {
+            background: radial-gradient(circle at 50% 0%, #432C7A 0%, #2D1B4E 60%, #1a0f2e 100%);
         }
     </style>
 </head>
-<body>
+<body class="bg-brand-bg text-brand-accent font-sans antialiased bg-gradient-radial selection:bg-brand-muted selection:text-brand-bg">
 
-    <div class="retro-grid"></div>
-    <div class="vignette"></div>
-    <div class="scanlines"></div>
-
-    <div id="drop-zone">DROP IMAGES HERE!</div>
+    <!-- Drop Zone Overlay -->
+    <div id="drop-zone" class="border-4 border-dashed border-brand-muted/30 m-4 rounded-3xl">
+        <div class="text-4xl font-extrabold text-white">DROP IMAGES HERE</div>
+        <div class="text-brand-muted font-medium">To replace game covers</div>
+    </div>
     
-    <div id="status-bar">
-        <div class="status-dot" id="status-dot"></div>
-        <span id="status-text">Waiting for images...</span>
+    <!-- Status Bar (Hidden for recording) -->
+    <div id="status-bar" style="display: none;" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-brand-card/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-xl z-50 flex items-center gap-3 transition-all hover:border-white/30">
+        <div class="w-2.5 h-2.5 rounded-full bg-brand-red animate-pulse" id="status-dot"></div>
+        <span id="status-text" class="text-sm font-bold text-brand-muted tracking-wide">Waiting for images...</span>
     </div>
 
+    <!-- Main 3D Stage -->
     <div id="stage">
-        <!-- Groups will be injected here -->
+        <!-- Groups injected via JS -->
     </div>
 
     <script>
@@ -220,7 +178,7 @@
             {
                 id: "easy",
                 category: "Easy",
-                color: "#00ff9d",
+                colorClass: "text-brand-easy",
                 games: [
                     { name: "Dispatch", steamId: null },
                     { name: "Coffee Talk", steamId: "914800" },
@@ -240,7 +198,7 @@
             {
                 id: "medium",
                 category: "Medium",
-                color: "#ffaa00",
+                colorClass: "text-brand-medium",
                 games: [
                     { name: "Hades II", steamId: "1145350" },
                     { name: "Slay The Spire", steamId: "646570" },
@@ -254,7 +212,7 @@
             {
                 id: "hard",
                 category: "Hard",
-                color: "#ff0055",
+                colorClass: "text-brand-hard",
                 games: [
                     { name: "Witcher 3", steamId: "292030" },
                     { name: "Immortals Fenyx", steamId: "2221920" },
@@ -269,55 +227,56 @@
         const statusText = document.getElementById('status-text');
         const statusDot = document.getElementById('status-dot');
         const stage = document.getElementById('stage');
+        // Define shadow style here for consistency
+        const SHADOW_STYLE = "0 25px 50px -12px rgba(0, 0, 0, 0.5)";
 
         // --- HELPERS ---
         const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
         const getSteamUrl = (id) => `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${id}/library_600x900.jpg`;
 
-        // --- INIT: BUILD DOM IMMEDIATELY ---
+        // --- INIT: BUILD DOM ---
         function initDOM() {
             gamesData.forEach(groupData => {
-                // Create Group Container
                 const groupEl = document.createElement('div');
                 groupEl.className = 'category-group';
                 groupEl.id = `group-${groupData.id}`;
                 
-                // Title
                 const titleEl = document.createElement('div');
-                titleEl.className = 'category-title';
+                titleEl.className = `category-title text-6xl md:text-8xl font-extrabold tracking-tighter drop-shadow-2xl ${groupData.colorClass}`;
                 titleEl.textContent = groupData.category;
-                titleEl.style.color = groupData.color;
                 groupEl.appendChild(titleEl);
 
-                // Create Cards
                 const centerIndex = Math.floor(groupData.games.length / 2);
 
                 groupData.games.forEach((game, index) => {
                     const card = document.createElement('div');
                     card.className = 'card';
                     
-                    // Z-Index: Center is highest, sides are lower
                     const dist = Math.abs(index - centerIndex);
                     card.style.zIndex = 100 - dist;
 
-                    // Inner Content
+                    // Initial Shadow Logic: Only the center card gets a shadow initially
+                    // This creates the "Single Card Shadow" look for the stack
+                    if (index === centerIndex) {
+                        card.style.boxShadow = SHADOW_STYLE;
+                    }
+
                     const inner = document.createElement('div');
-                    inner.className = 'card-inner';
-                    inner.style.borderColor = `${groupData.color}40`; 
-
-                    // Fallback
+                    inner.className = 'card-inner group transition-colors duration-300';
+                    
                     const fallback = document.createElement('div');
-                    fallback.className = 'card-fallback';
-                    fallback.style.background = `linear-gradient(135deg, ${groupData.color} 0%, #111 100%)`;
-                    fallback.innerHTML = `<h3>${game.name}</h3>`;
+                    fallback.className = 'card-fallback bg-brand-card';
+                    
+                    const fallbackTitle = document.createElement('h3');
+                    fallbackTitle.className = 'font-bold text-brand-muted text-lg uppercase tracking-wide leading-tight';
+                    fallbackTitle.textContent = game.name;
+                    fallback.appendChild(fallbackTitle);
 
-                    // Image
                     const img = document.createElement('img');
-                    img.className = 'game-card-img';
+                    img.className = 'game-card-img transition-opacity duration-300';
                     img.dataset.gamename = game.name;
                     img.setAttribute('referrerpolicy', 'no-referrer');
                     
-                    // Initial Source Logic
                     if (game.steamId) img.src = getSteamUrl(game.steamId);
                     else img.style.display = 'none';
 
@@ -343,7 +302,8 @@
             const files = Array.from(e.dataTransfer.files);
             if (files.length > 0) {
                 statusText.textContent = `Processing ${files.length} uploads...`;
-                statusDot.style.background = '#ffff00';
+                statusDot.classList.remove('bg-brand-red', 'bg-green-500');
+                statusDot.classList.add('bg-yellow-400');
             }
 
             files.forEach(file => {
@@ -363,12 +323,9 @@
             let matchedCount = 0;
             document.querySelectorAll('.game-card-img').forEach(img => {
                 const nName = normalize(img.dataset.gamename);
-                
-                // Try finding match
                 let match = null;
                 if(userImages[nName]) match = userImages[nName];
                 else {
-                    // Fuzzy search
                     for(let key in userImages) {
                         if(key.includes(nName) || nName.includes(key)) {
                             match = userImages[key];
@@ -384,7 +341,8 @@
                 }
             });
             statusText.textContent = `Active. Matched ${matchedCount} custom images.`;
-            statusDot.style.background = '#00ff00';
+            statusDot.classList.remove('bg-yellow-400', 'bg-brand-red');
+            statusDot.classList.add('bg-green-500');
         }
 
         // --- ANIMATION TIMELINE ---
@@ -404,50 +362,55 @@
 
                 // 2. Animate Title In
                 sequence.fromTo(titleEl, 
-                    { opacity: 0, scale: 0.5, y: 50 },
-                    { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.5)" }
+                    { opacity: 0, scale: 0.9, y: 20, filter: "blur(10px)" },
+                    { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out" }
                 );
 
                 // 3. Intro Cards (Fly up from bottom, stacked)
+                // IMPORTANT: We reset the box-shadows here. 
+                // Only the center card (which is on top) gets a shadow, making the stack look like "1 card".
                 sequence.fromTo(cards, 
-                    { y: 800, rotationX: 45, opacity: 0, scale: 0.5 },
+                    { 
+                        y: 1000, 
+                        rotationX: 30, 
+                        opacity: 0, 
+                        scale: 0.8,
+                        boxShadow: (i) => (i === centerIndex) ? SHADOW_STYLE : "none"
+                    },
                     { 
                         y: 0, 
                         rotationX: 0, 
                         opacity: 1, 
                         scale: 1, 
-                        duration: 0.8, 
+                        duration: 1, 
                         stagger: 0.05, 
                         ease: "power4.out" 
                     }, 
-                    "-=0.3"
+                    "-=0.4"
                 );
 
                 // 4. FAN OUT (Uniform Pyramid)
                 sequence.add("fan");
                 
-                const xSpacing = 155; // Slightly tighter to keep small cards close
+                const xSpacing = 160; 
                 
                 groupData.games.forEach((_, i) => {
-                    const offset = i - centerIndex; // e.g. -2, -1, 0, 1, 2
-                    
-                    // Linear Size Decay: 1.3 -> 1.2 -> 1.1 -> 1.0 ...
-                    const scaleVal = Math.max(0.6, 1.3 - (Math.abs(offset) * 0.1));
-                    
-                    // Uniform Rotation: each card tilts 4 degrees more than the last
-                    const rotation = offset * 4; 
+                    const offset = i - centerIndex; 
+                    const scaleVal = Math.max(0.7, 1.25 - (Math.abs(offset) * 0.1));
+                    const rotation = offset * 3; 
 
-                    // Position (Pure X)
                     const xPos = offset * xSpacing;
-                    const yPos = 0; 
+                    const yPos = Math.abs(offset) * 15; 
 
                     sequence.to(cards[i], {
                         x: xPos,
                         y: yPos,
                         rotation: rotation,
                         scale: scaleVal,
-                        duration: 1.2,
-                        ease: "power3.out"
+                        // Animate shadow IN for all cards as they separate
+                        boxShadow: SHADOW_STYLE, 
+                        duration: 1.4,
+                        ease: "power3.inOut"
                     }, "fan");
                 });
 
@@ -456,17 +419,21 @@
 
                 // 6. Exit
                 sequence.to(cards, {
-                    y: 800,
-                    rotation: (i) => (i - centerIndex) * 10,
+                    y: 1000,
+                    rotation: (i) => (i - centerIndex) * 5,
                     opacity: 0,
-                    duration: 0.6,
-                    stagger: 0.02,
-                    ease: "power2.in"
+                    duration: 0.8,
+                    stagger: 0.03,
+                    ease: "power3.in"
                 });
 
-                sequence.to(titleEl, { opacity: 0, duration: 0.3 }, "-=0.3");
+                sequence.to(titleEl, { 
+                    opacity: 0, 
+                    y: -20,
+                    filter: "blur(10px)",
+                    duration: 0.5 
+                }, "-=0.6");
                 
-                // Hide container after done
                 sequence.set(groupEl, { visibility: 'hidden' });
 
                 masterTl.add(sequence);
