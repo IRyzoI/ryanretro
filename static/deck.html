@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan Retro - Broadcast Deck</title>
+    
+    <!-- Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for UI -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#2D1B4E',
+                            card: '#432C7A',
+                            accent: '#FFFFFF',
+                            muted: '#D4BBFF',
+                            easy: '#4ade80',
+                            medium: '#fbbf24',
+                            hard: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- CORE STYLES --- */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+        }
+
+        /* --- BACKGROUND MODES --- */
+        .bg-transparent-check {
+            background-color: #1a1a1a;
+            background-image: 
+                linear-gradient(45deg, #222 25%, transparent 25%), 
+                linear-gradient(-45deg, #222 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #222 75%), 
+                linear-gradient(-45deg, transparent 75%, #222 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        /* --- THE TOP BAR (OVERLAY) --- */
+        #broadcast-overlay {
+            position: absolute;
+            top: 0; /* FLUSH TOP for easy cropping */
+            left: 0;
+            width: 100%; /* FULL WIDTH - No sides to key out */
+            height: 180px; /* Fixed height container */
+            
+            z-index: 100;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center content in the bar */
+            
+            /* Container Style - Rectangular */
+            background: #2D1B4E;
+            border-bottom: 3px solid rgba(255,255,255,0.15); /* Bottom edge definition */
+            border-radius: 0; /* NO ROUNDED CORNERS */
+            
+            /* Sizing */
+            padding: 10px 40px;
+            box-shadow: none; /* No shadow for clean crop */
+        }
+
+        /* 3D Box Art Container */
+        .box-art-container {
+            width: 90px;
+            height: 130px; 
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 800px;
+            margin-right: 40px;
+            z-index: 20;
+            will-change: transform;
+        }
+
+        .box-art-face {
+            width: 100%; height: 100%;
+            border-radius: 4px; /* Slight rounding on box art is fine */
+            overflow: hidden;
+            background: #2D1B4E;
+            position: relative;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .box-art-spine {
+            position: absolute;
+            top: 1px; bottom: 1px; left: -8px;
+            width: 8px;
+            background: #2a1b45;
+            transform-origin: right;
+            transform: rotateY(-90deg);
+            border-radius: 2px 0 0 2px;
+            filter: brightness(0.6);
+        }
+
+        .box-art-img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }
+
+        /* Text Container */
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 10;
+            text-align: left;
+            /* Allow text to take space but not push too hard */
+            max-width: 800px; 
+            opacity: 1; /* Ensure default is visible */
+        }
+
+        .info-category-pill {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 4px; /* Squared off slightly to match bar */
+            font-size: 0.9rem; 
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            width: fit-content;
+        }
+
+        #overlay-title {
+            font-size: 3rem; /* Big and bold for 4K */
+            line-height: 1;
+        }
+
+        /* --- CONTROL PANEL (UI) --- */
+        #control-panel {
+            width: 380px;
+            background: #1e1e1e;
+            border-left: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #111; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #666; }
+
+        .game-btn:hover { transform: translateX(4px); }
+        .game-btn.active { background: #432C7A; border-color: #D4BBFF; }
+
+        /* ACTIVE STATE for current game */
+        .game-btn.is-active {
+            border-left: 4px solid #D4BBFF;
+            background: #2a2a2a;
+        }
+
+        #drop-zone {
+            border: 2px dashed #555;
+            transition: all 0.2s;
+        }
+        #drop-zone.drag-over { border-color: #D4BBFF; background: rgba(212, 187, 255, 0.1); }
+    </style>
+</head>
+<body class="bg-transparent-check text-white flex overflow-hidden">
+
+    <!-- MAIN STAGE (This is what you record) -->
+    <div id="stage" class="flex-1 relative overflow-hidden transition-colors duration-300">
+        
+        <!-- Broadcast Overlay Group (TOP BAR) -->
+        <div id="broadcast-overlay" style="opacity: 0; visibility: hidden;">
+            
+            <!-- 3D Box Art -->
+            <div class="box-art-container">
+                <div class="box-art-spine"></div>
+                <div class="box-art-face">
+                    <img id="overlay-img" src="" class="box-art-img" alt="Game Cover">
+                </div>
+            </div>
+
+            <!-- Text Info -->
+            <div class="info-panel">
+                <div id="overlay-category" class="info-category-pill bg-brand-medium text-black">
+                    Medium
+                </div>
+                <h1 id="overlay-title" class="font-extrabold tracking-tight text-white">
+                    Example Game
+                </h1>
+            </div>
+
+        </div>
+
+        <!-- Safe Area Guides (Toggleable) -->
+        <div id="safe-guides" class="absolute inset-10 border-2 border-dashed border-red-500/30 pointer-events-none hidden">
+            <div class="absolute bottom-0 left-0 bg-red-500/50 text-xs px-2 py-1">Safe Area</div>
+        </div>
+
+    </div>
+
+    <!-- CONTROL PANEL (Do not record this part) -->
+    <div id="control-panel" class="h-full flex flex-col relative">
+        
+        <!-- Header -->
+        <div class="p-6 border-b border-gray-800 bg-[#161616]">
+            <h2 class="text-xl font-bold flex items-center gap-2 mb-1">
+                <i data-lucide="monitor-play" class="w-5 h-5 text-brand-muted"></i>
+                Broadcast Deck
+            </h2>
+            <p class="text-xs text-gray-500">Ryan Retro • 4K Full Bar</p>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto custom-scroll p-4 space-y-6">
+
+            <!-- Background Toggles -->
+            <div class="bg-gray-800/50 rounded-lg p-3">
+                <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">Background (For Separation)</label>
+                <div class="grid grid-cols-4 gap-2 mb-2">
+                    <button onclick="setBg('check')" class="p-2 rounded bg-gray-700 hover:bg-gray-600 text-[10px] text-center border border-transparent focus:border-white">Check</button>
+                    <button onclick="setBg('#000000')" class="p-2 rounded bg-black hover:bg-gray-900 text-[10px] text-center border border-transparent focus:border-white">Black</button>
+                    <button onclick="setBg('#00b140')" class="p-2 rounded bg-green-600 hover:bg-green-500 text-[10px] text-center border border-transparent focus:border-white">Green</button>
+                    <button onclick="setBg('#ff00ff')" class="p-2 rounded bg-fuchsia-600 hover:bg-fuchsia-500 text-[10px] text-center border border-transparent focus:border-white">Magenta</button>
+                </div>
+                
+                <div class="flex items-center gap-2 bg-gray-900/50 p-2 rounded">
+                    <label class="text-[10px] text-gray-400 font-bold whitespace-nowrap">CUSTOM:</label>
+                    <input type="color" id="bg-picker" value="#2D1B4E" class="h-6 w-8 p-0 border-0 rounded cursor-pointer bg-transparent" oninput="setBg(this.value)">
+                    <span class="text-[10px] text-gray-500 italic">Click to pick any color</span>
+                </div>
+            </div>
+
+            <!-- Manual Input -->
+            <div class="bg-gray-800/50 rounded-lg p-3">
+                <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">Quick Edit / Manual</label>
+                <input type="text" id="manual-title" placeholder="Title (e.g. Starting Soon)" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-sm mb-2 focus:outline-none focus:border-brand-muted">
+                <div class="flex gap-2">
+                    <select id="manual-cat" class="bg-gray-900 border border-gray-700 rounded px-2 py-2 text-sm text-gray-400 focus:outline-none">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="brand">Brand</option>
+                    </select>
+                    <button onclick="triggerManual()" class="flex-1 bg-brand-card hover:bg-brand-hover text-white rounded text-sm font-bold transition-colors">
+                        UPDATE / SHOW
+                    </button>
+                </div>
+            </div>
+
+            <!-- Game List -->
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider">Game Library</label>
+                    <div class="flex gap-2">
+                        <button id="btn-play-all" onclick="togglePlayAll()" class="text-xs text-green-400 hover:text-green-300 font-bold border border-green-500/30 px-2 py-1 rounded bg-green-500/10 flex-1">
+                            PLAY ALL LOOP
+                        </button>
+                        <button onclick="hideOverlay()" class="text-xs text-red-400 hover:text-red-300 font-bold border border-red-500/30 px-2 py-1 rounded bg-red-500/10">
+                            HIDE CURRENT
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="game-list" class="space-y-1">
+                    <!-- Games injected here -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Drag & Drop Area -->
+        <div id="drop-zone" class="p-6 bg-[#161616] border-t border-gray-800 text-center cursor-pointer">
+            <i data-lucide="image-plus" class="w-6 h-6 mx-auto mb-2 text-gray-500"></i>
+            <p class="text-xs text-gray-400 font-medium">Drag & Drop Cover Art</p>
+            <p class="text-[10px] text-gray-600 mt-1">Filename must match game name</p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- UTILS ---
+        const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        // --- DATA ---
+        const gamesData = [
+            { id: "easy", label: "Easy", color: "#4ade80", games: [
+                { name: "Dispatch", steamId: null },
+                { name: "Coffee Talk", steamId: "914800" },
+                { name: "Unpacking", steamId: "1135690" },
+                { name: "A Little to the Left", steamId: "1623880" },
+                { name: "Cast n Chill", steamId: null },
+                { name: "Dave the Diver", steamId: "1868140" },
+                { name: "Monster Boy and the Cursed Kingdom", steamId: "709630" },
+                { name: "Hollow Knight Silksong", steamId: "1030300" },
+                { name: "Cuphead", steamId: "268910" },
+                { name: "Evoland", steamId: "233350" },
+                { name: "Coromon", steamId: "1218210" },
+                { name: "Stardew Valley", steamId: "413150" },
+                { name: "The Home County", steamId: null }
+            ]},
+            { id: "medium", label: "Medium", color: "#fbbf24", games: [
+                { name: "Hades II", steamId: "1145350" },
+                { name: "Slay The Spire", steamId: "646570" },
+                { name: "Megabonk", steamId: null },
+                { name: "Need for Speed Rivals", steamId: "126260" },
+                { name: "The Elder Scrolls V: Skyrim", steamId: "489830" },
+                { name: "Tomb Raider", steamId: "203160" },
+                { name: "Grand Theft Auto V", steamId: "271590" }
+            ]},
+            { id: "hard", label: "Hard", color: "#f43f5e", games: [
+                { name: "The Witcher 3: Wild Hunt", steamId: "292030" },
+                { name: "Immortals Fenyx Rising", steamId: "2221920" },
+                { name: "Elden Ring", steamId: "1245620" },
+                { name: "Cyberpunk 2077", steamId: "1091500" }
+            ]}
+        ];
+
+        // --- STATE ---
+        let customImages = {};
+        let currentTimeline = null;
+        let isOverlayActive = false;
+        let currentActiveTitle = "";
+        let isSequencing = false;
+        let idleTimeline = null;
+        let loadingId = 0; // Tracks which image load is "current"
+
+        // --- DOM ELEMENTS ---
+        const stage = document.getElementById('stage');
+        const gameListEl = document.getElementById('game-list');
+        const dropZone = document.getElementById('drop-zone');
+        // Manual inputs
+        const manualTitleInput = document.getElementById('manual-title');
+        const manualCatSelect = document.getElementById('manual-cat');
+        const playAllBtn = document.getElementById('btn-play-all');
+
+        const overlay = {
+            group: document.getElementById('broadcast-overlay'),
+            box: document.querySelector('.box-art-container'),
+            img: document.getElementById('overlay-img'),
+            panel: document.querySelector('.info-panel'),
+            title: document.getElementById('overlay-title'),
+            pill: document.getElementById('overlay-category')
+        };
+
+        // --- INITIALIZATION ---
+        lucide.createIcons();
+        renderGameList();
+
+        function renderGameList() {
+            gameListEl.innerHTML = '';
+            gamesData.forEach(cat => {
+                const header = document.createElement('div');
+                header.className = "text-[10px] font-bold text-gray-600 uppercase mt-4 mb-2 pl-2";
+                header.innerText = cat.label;
+                gameListEl.appendChild(header);
+
+                cat.games.forEach(game => {
+                    const btn = document.createElement('button');
+                    btn.id = `btn-${normalize(game.name)}`;
+                    btn.className = "game-btn w-full text-left px-3 py-2 rounded bg-gray-800 border border-gray-700 text-gray-300 text-sm font-medium transition-all flex items-center justify-between group";
+                    btn.innerHTML = `
+                        <span class="truncate pr-2">${game.name}</span>
+                        <span class="opacity-0 group-hover:opacity-100 text-[10px] bg-gray-700 px-1 rounded flex-shrink-0">PLAY</span>
+                    `;
+                    btn.onclick = () => triggerOverlay(game.name, cat.label, cat.color, game.steamId);
+                    gameListEl.appendChild(btn);
+                });
+            });
+        }
+
+        // --- SEQUENCE LOGIC ---
+        async function togglePlayAll() {
+            if (isSequencing) {
+                isSequencing = false;
+                playAllBtn.innerText = "STOPPING...";
+                playAllBtn.classList.remove("bg-red-500/20", "text-red-400", "border-red-500/50");
+                playAllBtn.classList.add("bg-green-500/10", "text-green-400", "border-green-500/30");
+                setTimeout(() => { playAllBtn.innerText = "PLAY ALL LOOP"; }, 500);
+            } else {
+                isSequencing = true;
+                playAllBtn.innerText = "STOP LOOP";
+                playAllBtn.classList.remove("bg-green-500/10", "text-green-400", "border-green-500/30");
+                playAllBtn.classList.add("bg-red-500/20", "text-red-400", "border-red-500/50");
+                
+                if(isOverlayActive) {
+                    hideOverlay();
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+
+                const sequenceList = [];
+                gamesData.forEach(cat => {
+                    cat.games.forEach(g => sequenceList.push({ ...g, catLabel: cat.label, catColor: cat.color }));
+                });
+
+                for (const game of sequenceList) {
+                    if (!isSequencing) break;
+                    const btn = document.getElementById(`btn-${normalize(game.name)}`);
+                    if(btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    triggerOverlay(game.name, game.catLabel, game.catColor, game.steamId);
+                    await new Promise(r => setTimeout(r, 4000));
+
+                    if (!isSequencing) break;
+                    hideOverlay();
+                    await new Promise(r => setTimeout(r, 1500));
+                }
+
+                isSequencing = false;
+                playAllBtn.innerText = "PLAY ALL LOOP";
+                playAllBtn.classList.remove("bg-red-500/20", "text-red-400", "border-red-500/50");
+                playAllBtn.classList.add("bg-green-500/10", "text-green-400", "border-green-500/30");
+            }
+        }
+
+        // --- ANIMATION LOGIC (GSAP) ---
+        function triggerOverlay(title, category, color, steamId, isManual = false) {
+            
+            // Toggle logic: hide if clicking same item
+            if (isOverlayActive && currentActiveTitle === title) {
+                hideOverlay();
+                return;
+            }
+
+            // Update UI Active State
+            document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('is-active'));
+            const activeBtn = document.getElementById(`btn-${normalize(title)}`);
+            if(activeBtn) activeBtn.classList.add('is-active');
+
+            if (!isManual) {
+                manualTitleInput.value = title;
+                for (let i = 0; i < manualCatSelect.options.length; i++) {
+                    if (manualCatSelect.options[i].text === category) {
+                        manualCatSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // --- 1. Calculate Image Source ---
+            let imgSrc = "https://via.placeholder.com/600x900/2D1B4E/ffffff?text=NO+IMAGE";
+            const nName = normalize(title);
+            if (customImages[nName]) {
+                imgSrc = customImages[nName];
+            } else {
+                const fuzzyKey = Object.keys(customImages).find(key => key.includes(nName));
+                if (fuzzyKey) {
+                    imgSrc = customImages[fuzzyKey];
+                } else if (steamId) {
+                    imgSrc = `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${steamId}/library_600x900.jpg`;
+                } else if (isManual) {
+                    const manualFuzzy = Object.keys(customImages).find(key => key.includes(nName));
+                    if(manualFuzzy) imgSrc = customImages[manualFuzzy];
+                    else imgSrc = "https://via.placeholder.com/600x900/432C7A/ffffff?text=RYAN+RETRO";
+                }
+            }
+
+            // --- 2. Prep Load Tracking ---
+            loadingId++;
+            const myId = loadingId;
+
+            // Kill existing tweens immediately
+            if (currentTimeline) currentTimeline.kill();
+            if (idleTimeline) idleTimeline.kill();
+            gsap.killTweensOf([overlay.group, overlay.box, overlay.panel, overlay.pill, overlay.title]);
+
+
+            // --- 3. Define the Sequence to Run After Load ---
+            const showNewContent = () => {
+                if (myId !== loadingId) return; // Cancel if newer click happened
+
+                // Preload Image to prevent "ghosting"
+                const tmpImg = new Image();
+                
+                const onImageReady = () => {
+                    if (myId !== loadingId) return;
+
+                    // Set Content DOM - NOW safe to do
+                    overlay.title.innerText = title;
+                    overlay.pill.innerText = category;
+                    overlay.pill.style.backgroundColor = color;
+                    overlay.pill.style.color = (category === 'Hard' || category === 'Brand') ? 'white' : 'black';
+                    overlay.img.src = imgSrc;
+                    
+                    isOverlayActive = true;
+                    currentActiveTitle = title;
+
+                    // --- CRITICAL FIX: Reset opacity to 1 before animating 'from' ---
+                    // This prevents the "fading from 0 to 0" bug if the previous animation was interrupted.
+                    gsap.set(overlay.panel, { opacity: 1, x: 0 });
+
+                    // Start Entrance Animation
+                    const tl = gsap.timeline({
+                        onComplete: startIdleAnimation
+                    });
+                    currentTimeline = tl;
+
+                    // 1. Reveal Container
+                    gsap.set(overlay.group, { opacity: 1, visibility: 'visible' }); 
+                    gsap.set(overlay.box, { rotationY: 15, rotationX: 5, y: 0 }); 
+
+                    // 2. Pop Box Art
+                    tl.from(overlay.box, {
+                        scale: 0.5,
+                        opacity: 0,
+                        rotationY: 90,
+                        duration: 0.6,
+                        ease: "back.out(1.7)"
+                    });
+
+                    // 3. Slide Text In
+                    tl.from(overlay.panel, {
+                        x: 20,
+                        opacity: 0,
+                        duration: 0.5,
+                        ease: "power2.out"
+                    }, "-=0.4");
+                };
+
+                tmpImg.onload = onImageReady;
+                tmpImg.onerror = onImageReady; // Show anyway even if broken
+                tmpImg.src = imgSrc;
+            };
+
+            // --- 4. Execute: Fade Out Old -> Load New -> Fade In New ---
+            if (isOverlayActive) {
+                // Fade out existing content first
+                gsap.to(overlay.group, { 
+                    opacity: 0, 
+                    duration: 0.2, 
+                    onComplete: () => {
+                        // Ensure it's hidden before swap
+                        gsap.set(overlay.group, { visibility: 'hidden' });
+                        showNewContent(); 
+                    }
+                });
+            } else {
+                showNewContent();
+            }
+        }
+
+        function startIdleAnimation() {
+            if (idleTimeline) idleTimeline.kill();
+            
+            idleTimeline = gsap.timeline({ repeat: -1, yoyo: true });
+            
+            // Subtle bobbing of the box art
+            idleTimeline.to(overlay.box, {
+                y: 5, // move down 5px
+                rotationX: 2, // slightly tilt
+                duration: 2,
+                ease: "sine.inOut"
+            });
+            
+            // Removed text opacity animation to keep it solid and readable
+        }
+
+        function hideOverlay() {
+            if (!isOverlayActive) return;
+            
+            document.querySelectorAll('.game-btn').forEach(b => b.classList.remove('is-active'));
+            currentActiveTitle = "";
+
+            if (currentTimeline) currentTimeline.kill();
+            if (idleTimeline) idleTimeline.kill();
+            
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    isOverlayActive = false;
+                    gsap.set(overlay.group, { visibility: 'hidden' });
+                }
+            });
+            currentTimeline = tl;
+            
+            // Fade Out
+            tl.to(overlay.group, { opacity: 0, duration: 0.3 });
+        }
+
+        // --- MANUAL TRIGGER ---
+        function triggerManual() {
+            const title = manualTitleInput.value || "Live Now";
+            const catSelect = manualCatSelect;
+            const catLabel = catSelect.options[catSelect.selectedIndex].text;
+            
+            let color = '#D4BBFF'; // Brand
+            if(catSelect.value === 'easy') color = '#4ade80';
+            if(catSelect.value === 'medium') color = '#fbbf24';
+            if(catSelect.value === 'hard') color = '#f43f5e';
+
+            triggerOverlay(title, catLabel, color, null, true);
+        }
+
+        // --- DRAG & DROP ---
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        
+        dropZone.addEventListener('drop', (e) => {
+            dropZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const nName = normalize(file.name.split('.')[0]);
+                        customImages[nName] = event.target.result;
+                        
+                        const icon = dropZone.querySelector('svg') || dropZone.querySelector('i');
+                        if(icon) {
+                            const originalColor = icon.style.color;
+                            icon.style.color = '#4ade80';
+                            icon.style.transition = 'color 0.3s';
+                            setTimeout(() => icon.style.color = originalColor, 1000);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        // --- BG HELPERS ---
+        function setBg(value) {
+            if (value === 'check') {
+                stage.className = "flex-1 relative overflow-hidden transition-colors duration-300 bg-transparent-check";
+                stage.style.backgroundColor = '';
+                return;
+            }
+            stage.className = "flex-1 relative overflow-hidden transition-colors duration-300";
+            stage.style.backgroundColor = value;
+        }
+
+    </script>
+</body>
+</html>
