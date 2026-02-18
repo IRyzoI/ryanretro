@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Storyboard Planner</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            850: '#1f2937',
+                            900: '#111827',
+                            950: '#0b0f19',
+                        },
+                        accent: {
+                            DEFAULT: '#3b82f6',
+                            hover: '#2563eb',
+                        },
+                        editor: {
+                            bg: '#4c1d1d',
+                            text: '#fecaca',
+                            border: '#ef4444'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.2s ease-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #e5e7eb;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; 
+        }
+
+        .aspect-video-placeholder {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231f2937' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .drag-over {
+            border-color: #3b82f6 !important;
+            background-color: rgba(59, 130, 246, 0.1) !important;
+        }
+
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header id="project-header" class="bg-gray-900 border-b border-gray-800 z-50 flex-shrink-0 transition-all-300 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 w-full">
+            
+            <div class="flex items-center justify-between py-3">
+                <!-- Title & Expand Toggle -->
+                <div class="flex items-center gap-4">
+                    <!-- Project Switcher Btn -->
+                    <button onclick="openProjectManager()" class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-gray-700 transition-colors text-xs uppercase tracking-wider font-bold">
+                        <i class="fa-solid fa-folder-open"></i> <span class="hidden sm:inline">Projects</span>
+                    </button>
+
+                    <div class="h-6 w-px bg-gray-700"></div>
+
+                    <div class="flex items-center gap-3 cursor-pointer group" onclick="toggleHeader()">
+                        <div id="mini-thumb" class="w-16 h-9 bg-gray-800 rounded border border-gray-700 bg-cover bg-center hidden"></div>
+                        <div>
+                            <h1 id="header-title-display" class="text-lg font-bold text-white group-hover:text-accent transition-colors">Untitled Project</h1>
+                            <p class="text-xs text-gray-500 flex items-center gap-1">
+                                <span id="header-toggle-text">Click to expand</span> <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex items-center gap-3">
+                    <!-- Cloud Status Indicator -->
+                    <button onclick="openCloudSettings()" id="cloud-status-btn" class="flex items-center gap-2 px-3 py-1.5 rounded bg-gray-800 text-xs font-medium text-gray-400 hover:text-white transition-colors border border-transparent">
+                        <i id="cloud-icon" class="fa-solid fa-cloud-slash"></i>
+                        <span id="cloud-text">Offline</span>
+                    </button>
+
+                    <div class="h-6 w-px bg-gray-700 mx-1 hidden sm:block"></div>
+
+                    <div class="flex gap-1">
+                        <button onclick="saveProjectToFile()" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors" title="Export Project JSON">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                        <button onclick="document.getElementById('import-file').click()" class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors" title="Import Project JSON">
+                            <i class="fa-solid fa-upload"></i>
+                        </button>
+                        <input type="file" id="import-file" class="hidden" accept=".json" onchange="importProject(this)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expandable Section -->
+            <div id="header-expanded" class="overflow-hidden transition-all-300 max-h-0 opacity-0">
+                <div class="pb-6 pt-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 space-y-4">
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Project Title</label>
+                            <input type="text" id="project-title" 
+                                class="w-full bg-gray-800 border border-gray-700 rounded p-3 text-white focus:border-accent focus:outline-none text-xl font-semibold"
+                                placeholder="E.g. Seoul Travel Vlog Ep. 1"
+                                oninput="updateProjectData('title', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Concept / Logline</label>
+                            <textarea id="project-desc" 
+                                class="w-full bg-gray-800 border border-gray-700 rounded p-3 text-gray-300 focus:border-accent focus:outline-none h-20 text-sm resize-none"
+                                placeholder="What is the core idea of this video? Who is the audience?"
+                                oninput="updateProjectData('description', this.value)"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-1">
+                        <label class="block text-xs uppercase tracking-wider text-gray-500 font-bold mb-1">Thumbnail Draft</label>
+                        <div id="thumb-dropzone" 
+                             class="aspect-video w-full bg-gray-800 border-2 border-dashed border-gray-700 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-accent hover:bg-gray-800/50 transition-colors relative group overflow-hidden"
+                             onclick="document.getElementById('thumb-input').click()">
+                            
+                            <img id="thumb-preview" class="absolute inset-0 w-full h-full object-cover hidden" alt="Thumbnail">
+                            <div id="thumb-placeholder" class="text-center p-4">
+                                <i class="fa-regular fa-image text-3xl text-gray-600 mb-2 group-hover:text-accent transition-colors"></i>
+                                <p class="text-xs text-gray-500">Click or Drag Image</p>
+                            </div>
+                            <input type="file" id="thumb-input" class="hidden" accept="image/*" onchange="handleImageUpload(this, 'thumbnail')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Toolbar -->
+    <div class="bg-gray-850 border-b border-gray-800 py-2 px-4 flex justify-between items-center shadow-md z-40">
+        <div class="flex gap-1 bg-gray-900 p-1 rounded-lg border border-gray-700">
+            <button onclick="setLayout('grid')" id="btn-grid" class="px-3 py-1.5 rounded text-sm font-medium transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-border-all"></i> <span class="hidden sm:inline">Grid</span>
+            </button>
+            <button onclick="setLayout('horizontal')" id="btn-horizontal" class="px-3 py-1.5 rounded text-sm font-medium transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-table-columns"></i> <span class="hidden sm:inline">Timeline</span>
+            </button>
+            <button onclick="setLayout('vertical')" id="btn-vertical" class="px-3 py-1.5 rounded text-sm font-medium transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-list"></i> <span class="hidden sm:inline">Script</span>
+            </button>
+        </div>
+        
+        <button onclick="addFrame()" class="bg-accent hover:bg-accent-hover text-white px-4 py-1.5 rounded-lg text-sm font-medium shadow-lg shadow-blue-500/20 transition-all transform hover:scale-105 flex items-center gap-2 active:scale-95">
+            <i class="fa-solid fa-plus"></i> Add Frame
+        </button>
+    </div>
+
+    <!-- Main Canvas -->
+    <main class="flex-grow overflow-auto bg-gray-950 p-4 md:p-8 relative">
+        <div id="board" class="transition-all duration-300 min-h-[500px]">
+            <!-- Frames injected here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden absolute inset-0 flex flex-col items-center justify-center text-gray-600 pointer-events-none">
+            <i class="fa-solid fa-film text-6xl mb-4 opacity-20"></i>
+            <p class="text-lg font-medium opacity-50">Start planning your video</p>
+            <p class="text-sm opacity-40">Add a frame to begin</p>
+        </div>
+    </main>
+
+    <!-- Modal: Project Manager -->
+    <div id="project-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center opacity-0 transition-opacity duration-200">
+        <div class="w-full max-w-4xl h-[80vh] bg-gray-900 border border-gray-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-850">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Your Projects</h2>
+                    <p class="text-gray-400 text-sm">Manage and switch between video plans</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="createNewProject()" class="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-900/20 transition-all hover:scale-105">
+                        <i class="fa-solid fa-plus mr-2"></i>New Project
+                    </button>
+                    <button onclick="closeProjectManager()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg text-sm font-medium">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project Grid -->
+            <div id="project-list-container" class="p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Project Cards injected here -->
+            </div>
+            
+            <!-- Empty Projects State -->
+            <div id="no-projects-state" class="hidden flex-grow flex flex-col items-center justify-center text-gray-600">
+                <i class="fa-regular fa-folder-open text-5xl mb-4 opacity-30"></i>
+                <p>No projects found. Create one!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Delete Frame Confirmation -->
+    <div id="delete-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center opacity-0 transition-opacity duration-200">
+        <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-200" id="delete-modal-content">
+            <h3 class="text-lg font-bold text-white mb-2">Delete Frame?</h3>
+            <p class="text-gray-400 text-sm mb-6">This action cannot be undone.</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeDeleteModal()" class="px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors text-sm">Cancel</button>
+                <button id="confirm-delete-btn" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20 transition-colors text-sm font-medium">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Cloud Setup -->
+    <div id="cloud-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center opacity-0 transition-opacity duration-200">
+        <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-lg w-full shadow-2xl">
+            <h3 class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-cloud text-accent mr-2"></i>Cloud Setup</h3>
+            <p class="text-gray-400 text-sm mb-4">Paste your Firebase Config JSON object below to enable collaborative cloud sync. <br>
+            <span class="text-red-300 text-xs">Note: Sync uses the 'Public' path so your editor can see these projects.</span></p>
+            <textarea id="cloud-config-input" class="w-full h-32 bg-gray-950 border border-gray-800 rounded p-3 text-xs text-gray-300 font-mono focus:border-accent focus:outline-none mb-4" placeholder='{ "apiKey": "...", "authDomain": "...", ... }'></textarea>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeCloudModal()" class="px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors text-sm">Cancel</button>
+                <button onclick="saveCloudConfig()" class="px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-white transition-colors text-sm font-medium">Save & Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. State Management ---
+        const LOCAL_STORAGE_KEY = 'ryan_video_planner_v2';
+        const FIREBASE_CONFIG_KEY = 'ryan_video_firebase_config';
+        
+        let currentProjectId = 'default-local-project';
+        let allProjects = []; // List of project metadata
+        let allFrames = [];   // Pool of all frames (filtered by view)
+
+        // Current Project State (Derived)
+        let appState = {
+            title: '',
+            description: '',
+            thumbnail: null,
+            layout: 'grid',
+            isHeaderExpanded: false,
+            // frames: [] -> now filtered from allFrames
+        };
+
+        // Runtime state
+        let db = null;
+        let auth = null;
+        let user = null;
+        let unsubscribeProjects = null;
+        let unsubscribeFrames = null;
+        let frameToDeleteId = null;
+        let isCloudEnabled = false;
+
+        // --- 2. Initialization ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            let envConfig = null;
+            if (typeof __firebase_config !== 'undefined') {
+                try { envConfig = JSON.parse(__firebase_config); } catch(e) {}
+            }
+            const storedConfig = localStorage.getItem(FIREBASE_CONFIG_KEY);
+            
+            if (envConfig) {
+                initFirebase(envConfig);
+            } else if (storedConfig) {
+                try { initFirebase(JSON.parse(storedConfig)); } catch(e) { loadFromLocalStorage(); }
+            } else {
+                loadFromLocalStorage();
+            }
+
+            setupDragAndDrop(document.body);
+            setupDragAndDrop(document.getElementById('thumb-dropzone'), (file) => processImage(file, 'thumbnail'));
+            
+            // Check if we need to show project manager (if no current project)
+            if(!currentProjectId) openProjectManager();
+            else render();
+        });
+
+        // --- 3. Firebase & Sync Logic ---
+
+        function initFirebase(config) {
+            try {
+                if (!firebase.apps.length) firebase.initializeApp(config);
+                auth = firebase.auth();
+                db = firebase.firestore();
+                isCloudEnabled = true;
+                updateCloudUI('syncing');
+
+                const initAuth = async () => {
+                   if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                       await auth.signInWithCustomToken(__initial_auth_token);
+                   } else {
+                       await auth.signInAnonymously();
+                   }
+                };
+                
+                initAuth().catch(err => {
+                    console.error("Auth failed:", err);
+                    updateCloudUI('error');
+                    loadFromLocalStorage();
+                });
+
+                auth.onAuthStateChanged((u) => {
+                    if (u) {
+                        user = u;
+                        setupFirestoreListeners();
+                    }
+                });
+
+            } catch (e) {
+                console.error("Firebase Init Error:", e);
+                updateCloudUI('error');
+                loadFromLocalStorage();
+            }
+        }
+
+        function setupFirestoreListeners() {
+            if (!user || !db) return;
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            // 1. Listen to ALL Projects (Public for collaboration)
+            // Path: artifacts/{appId}/public/data/projects
+            const projectsRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('projects');
+            
+            unsubscribeProjects = projectsRef.onSnapshot((snapshot) => {
+                allProjects = [];
+                snapshot.forEach(doc => {
+                    allProjects.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // If current project doesn't exist in remote (deleted), switch to first or create new
+                if (allProjects.length > 0 && !allProjects.find(p => p.id === currentProjectId)) {
+                    switchProject(allProjects[0].id);
+                } else if (allProjects.length === 0) {
+                     // No projects? Create one automatically? Or wait for user.
+                     // Let's create a default one if empty
+                     createNewProject("Untitled Project");
+                } else {
+                    // Update current project data in appState
+                    const current = allProjects.find(p => p.id === currentProjectId);
+                    if(current) {
+                        appState.title = current.title || '';
+                        appState.description = current.description || '';
+                        appState.thumbnail = current.thumbnail || null;
+                        appState.layout = current.layout || 'grid';
+                        updateHeaderUI();
+                        updateLayoutClasses();
+                        updateActiveButton();
+                    }
+                }
+                
+                renderProjectList();
+                updateCloudUI('saved');
+            }, (error) => {
+                console.error("Projects sync error", error);
+                updateCloudUI('error');
+            });
+
+            // 2. Listen to ALL Frames (Global Pool, filtered client-side)
+            // Path: artifacts/{appId}/public/data/frames
+            // We fetch all to allow fast switching.
+            const framesRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('frames');
+            
+            unsubscribeFrames = framesRef.onSnapshot((snapshot) => {
+                const remoteFrames = [];
+                snapshot.forEach(doc => {
+                    remoteFrames.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Only re-render if data actually changed to avoid cursor jumps
+                // Simple check: length or ID sum
+                allFrames = remoteFrames;
+                renderBoard(); // Board filters by currentProjectId
+                updateCloudUI('saved');
+            }, (error) => {
+                console.error("Frames sync error", error);
+                updateCloudUI('error');
+            });
+        }
+
+        // --- 4. Project Management ---
+
+        function openProjectManager() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            renderProjectList();
+        }
+
+        function closeProjectManager() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        function renderProjectList() {
+            const container = document.getElementById('project-list-container');
+            container.innerHTML = '';
+            
+            if (allProjects.length === 0) {
+                document.getElementById('no-projects-state').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('no-projects-state').classList.add('hidden');
+
+            // Sort by updated date?
+            allProjects.forEach(proj => {
+                const isActive = proj.id === currentProjectId;
+                const card = document.createElement('div');
+                card.className = `bg-gray-800 rounded-xl overflow-hidden border-2 transition-all cursor-pointer hover:scale-105 group relative ${isActive ? 'border-accent ring-2 ring-accent/30' : 'border-gray-700 hover:border-gray-500'}`;
+                card.onclick = () => switchProject(proj.id);
+
+                // Thumbnail area
+                const thumbBg = proj.thumbnail ? `background-image: url(${proj.thumbnail})` : '';
+                card.innerHTML = `
+                    <div class="h-32 bg-gray-900 bg-cover bg-center relative" style="${thumbBg}">
+                        ${!proj.thumbnail ? '<div class="absolute inset-0 flex items-center justify-center text-gray-700"><i class="fa-solid fa-film text-3xl"></i></div>' : ''}
+                        ${isActive ? '<div class="absolute top-2 right-2 bg-accent text-white text-[10px] font-bold px-2 py-1 rounded shadow">ACTIVE</div>' : ''}
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-white truncate">${proj.title || 'Untitled Project'}</h3>
+                        <p class="text-xs text-gray-500 mt-1 line-clamp-2">${proj.description || 'No description'}</p>
+                        <div class="mt-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-[10px] text-gray-600">ID: ${proj.id.substr(0,4)}...</span>
+                            <button onclick="deleteProject(event, '${proj.id}')" class="text-red-400 hover:text-red-300 p-1 hover:bg-red-900/20 rounded"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function createNewProject(title = "New Video Project") {
+            const newId = 'proj_' + Date.now().toString(36);
+            const newProj = {
+                id: newId,
+                title: title,
+                description: '',
+                thumbnail: null,
+                layout: 'grid',
+                createdAt: new Date().toISOString()
+            };
+
+            if (isCloudEnabled) {
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('projects').doc(newId).set(newProj);
+                switchProject(newId);
+            } else {
+                allProjects.push(newProj);
+                switchProject(newId);
+                saveToLocalStorage();
+            }
+        }
+
+        function switchProject(id) {
+            currentProjectId = id;
+            
+            // If local
+            if (!isCloudEnabled) {
+                const p = allProjects.find(px => px.id === id);
+                if(p) {
+                    appState.title = p.title;
+                    appState.description = p.description;
+                    appState.thumbnail = p.thumbnail;
+                    appState.layout = p.layout;
+                }
+                saveToLocalStorage(); // persist last active ID
+            }
+            
+            closeProjectManager();
+            render();
+            // Force scroll to top
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        async function deleteProject(e, id) {
+            e.stopPropagation();
+            if(!confirm("Delete this project? This will hide it from the view (frames are kept in database for safety).")) return;
+
+            if (isCloudEnabled) {
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('projects').doc(id).delete();
+                // Optionally delete frames too, but safer to keep them orphaned for recovery in a real app
+            } else {
+                allProjects = allProjects.filter(p => p.id !== id);
+                // remove frames locally
+                allFrames = allFrames.filter(f => f.projectId !== id);
+                
+                if(currentProjectId === id) {
+                    if(allProjects.length > 0) switchProject(allProjects[0].id);
+                    else createNewProject();
+                } else {
+                    renderProjectList();
+                    saveToLocalStorage();
+                }
+            }
+        }
+
+        // --- 5. Data Saving (Debounced) ---
+
+        const debounce = (func, wait) => {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        };
+
+        const debouncedSaveProject = debounce(async () => {
+            if (!isCloudEnabled) { saveToLocalStorage(); return; }
+            updateCloudUI('syncing');
+            
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const projectRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('projects').doc(currentProjectId);
+
+            try {
+                let thumbToSave = appState.thumbnail;
+                if (thumbToSave && thumbToSave.length > 800000) thumbToSave = null; 
+
+                await projectRef.set({
+                    title: appState.title,
+                    description: appState.description,
+                    thumbnail: thumbToSave,
+                    layout: appState.layout,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+                updateCloudUI('saved');
+            } catch (e) {
+                console.error("Save Project Error", e);
+                updateCloudUI('error');
+            }
+        }, 1000);
+
+        const debouncedSaveFrame = debounce(async (frameId) => {
+            if (!isCloudEnabled) { saveToLocalStorage(); return; }
+            updateCloudUI('syncing');
+
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const frame = allFrames.find(f => f.id === frameId);
+            if (!frame) return;
+
+            const frameRef = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('frames').doc(frameId);
+
+            try {
+                let imgToSave = frame.image;
+                if (imgToSave && imgToSave.length > 800000) imgToSave = null;
+
+                await frameRef.set(frame); // Frame object already has projectId
+                updateCloudUI('saved');
+            } catch (e) {
+                console.error("Save Frame Error", e);
+                updateCloudUI('error');
+            }
+        }, 1000);
+
+        // --- 6. Core Logic ---
+
+        function getProjectFrames() {
+            // Filter global frames by current Project ID and sort by order
+            return allFrames
+                .filter(f => f.projectId === currentProjectId)
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+
+        function createFrameObject() {
+            const currentFrames = getProjectFrames();
+            return {
+                id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+                projectId: currentProjectId,
+                image: null,
+                notes: '',
+                editorNotes: '',
+                hasEditorNote: false,
+                order: currentFrames.length
+            };
+        }
+
+        function addFrame() {
+            if(!currentProjectId) { alert("Please create or select a project first."); return; }
+
+            const newFrame = createFrameObject();
+            allFrames.push(newFrame); // Optimistic local update
+            
+            if (isCloudEnabled) debouncedSaveFrame(newFrame.id);
+            else saveToLocalStorage();
+            
+            renderBoard();
+            
+            setTimeout(() => {
+                const el = document.getElementById(`frame-${newFrame.id}`);
+                if(el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // Delete Logic
+        function requestDeleteFrame(id) {
+            frameToDeleteId = id;
+            const modal = document.getElementById('delete-modal');
+            const content = document.getElementById('delete-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+            document.getElementById('confirm-delete-btn').onclick = () => confirmDeleteFrame();
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('delete-modal');
+            const content = document.getElementById('delete-modal-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); frameToDeleteId = null; }, 200);
+        }
+
+        async function confirmDeleteFrame() {
+            if (!frameToDeleteId) return;
+            const id = frameToDeleteId;
+            closeDeleteModal();
+
+            // Optimistic
+            allFrames = allFrames.filter(f => f.id !== id);
+            renderBoard();
+
+            if (isCloudEnabled) {
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                try {
+                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('frames').doc(id).delete();
+                } catch(e) { console.error("Delete failed", e); }
+            } else {
+                saveToLocalStorage();
+            }
+        }
+
+        function moveFrame(id, direction) {
+            // Get frames only for this project to determine order
+            const projectFrames = getProjectFrames();
+            const index = projectFrames.findIndex(f => f.id === id);
+            if (index < 0) return;
+            
+            // Logic: we swap the 'order' property values, not just array position
+            if (direction === -1 && index > 0) {
+                const prev = projectFrames[index - 1];
+                const curr = projectFrames[index];
+                const tempOrder = curr.order;
+                curr.order = prev.order;
+                prev.order = tempOrder;
+                
+                // Update both
+                if(isCloudEnabled) {
+                    debouncedSaveFrame(curr.id);
+                    debouncedSaveFrame(prev.id);
+                }
+            } else if (direction === 1 && index < projectFrames.length - 1) {
+                const next = projectFrames[index + 1];
+                const curr = projectFrames[index];
+                const tempOrder = curr.order;
+                curr.order = next.order;
+                next.order = tempOrder;
+
+                if(isCloudEnabled) {
+                    debouncedSaveFrame(curr.id);
+                    debouncedSaveFrame(next.id);
+                }
+            }
+
+            if (!isCloudEnabled) saveToLocalStorage();
+            renderBoard();
+        }
+
+        function updateFrameData(id, field, value) {
+            const frame = allFrames.find(f => f.id === id);
+            if (frame) {
+                frame[field] = value;
+                if (isCloudEnabled) debouncedSaveFrame(id);
+                else saveToLocalStorage();
+                
+                if(field === 'hasEditorNote') renderBoard(); 
+            }
+        }
+
+        function updateProjectData(field, value) {
+            appState[field] = value;
+            // Also update the object in allProjects so the modal is correct
+            const p = allProjects.find(proj => proj.id === currentProjectId);
+            if(p) p[field] = value;
+
+            if (isCloudEnabled) debouncedSaveProject();
+            else saveToLocalStorage();
+            
+            if(field === 'title') {
+                document.getElementById('header-title-display').textContent = value || 'Untitled Project';
+            }
+        }
+
+        // --- 7. UI & Image Logic ---
+
+        function handleImageUpload(input, type) {
+            if (input.files && input.files[0]) processImage(input.files[0], type);
+        }
+
+        function handleFrameImage(input, frameId) {
+            if (input.files && input.files[0]) processImage(input.files[0], 'frame', frameId);
+        }
+
+        function processImage(file, type, id = null) {
+            if(!file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 1024;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                    if (type === 'thumbnail') {
+                        appState.thumbnail = dataUrl;
+                        updateProjectData('thumbnail', dataUrl);
+                        render(); 
+                    } else if (type === 'frame' && id) {
+                        updateFrameData(id, 'image', dataUrl);
+                        renderBoard();
+                    }
+                }
+            }
+        }
+
+        function render() {
+            updateHeaderUI();
+            setLayout(appState.layout);
+            renderBoard();
+        }
+
+        function updateHeaderUI() {
+            document.getElementById('project-title').value = appState.title || '';
+            document.getElementById('project-desc').value = appState.description || '';
+            document.getElementById('header-title-display').textContent = appState.title || 'Untitled Project';
+            
+            const expanded = document.getElementById('header-expanded');
+            const toggleText = document.getElementById('header-toggle-text');
+            const miniThumb = document.getElementById('mini-thumb');
+
+            if(appState.isHeaderExpanded) {
+                 expanded.style.maxHeight = '500px';
+                 expanded.style.opacity = '1';
+                 toggleText.textContent = 'Collapse';
+                 miniThumb.classList.add('hidden');
+            } else {
+                 expanded.style.maxHeight = '0';
+                 expanded.style.opacity = '0';
+                 toggleText.textContent = 'Expand';
+                 if(appState.thumbnail) miniThumb.classList.remove('hidden');
+            }
+
+            if (appState.thumbnail) {
+                const img = document.getElementById('thumb-preview');
+                const ph = document.getElementById('thumb-placeholder');
+                img.src = appState.thumbnail;
+                img.classList.remove('hidden');
+                ph.classList.add('hidden');
+                miniThumb.style.backgroundImage = `url(${appState.thumbnail})`;
+            }
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            
+            const framesToRender = getProjectFrames();
+            
+            if(framesToRender.length === 0) {
+                document.getElementById('empty-state').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('empty-state').classList.add('hidden');
+
+            framesToRender.forEach((frame, index) => {
+                const el = document.createElement('div');
+                el.id = `frame-${frame.id}`;
+                el.className = 'bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-lg flex-shrink-0 group relative transition-transform hover:border-gray-700 animate-slide-up';
+                
+                if(appState.layout === 'horizontal') el.classList.add('w-[350px]');
+
+                el.innerHTML = `
+                    <div class="p-3 bg-gray-850 flex justify-between items-center border-b border-gray-800">
+                        <span class="text-xs font-mono text-gray-500 font-bold">#${index + 1}</span>
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="moveFrame('${frame.id}', -1)" class="w-6 h-6 flex items-center justify-center rounded bg-gray-800 hover:bg-gray-700 text-gray-400 text-xs"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button onclick="moveFrame('${frame.id}', 1)" class="w-6 h-6 flex items-center justify-center rounded bg-gray-800 hover:bg-gray-700 text-gray-400 text-xs"><i class="fa-solid fa-arrow-right"></i></button>
+                            <button onclick="requestDeleteFrame('${frame.id}')" class="w-6 h-6 flex items-center justify-center rounded bg-gray-800 hover:bg-red-900/30 text-red-400 text-xs ml-2"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="aspect-video w-full bg-gray-950 relative aspect-video-placeholder group/image" id="drop-${frame.id}">
+                        ${frame.image 
+                            ? `<img src="${frame.image}" class="w-full h-full object-cover">
+                               <button onclick="updateFrameData('${frame.id}', 'image', null)" class="absolute top-2 right-2 bg-black/70 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover/image:opacity-100 transition-opacity hover:bg-red-600"><i class="fa-solid fa-xmark"></i></button>`
+                            : `<div class="absolute inset-0 flex flex-col items-center justify-center text-gray-700 cursor-pointer hover:bg-gray-800/30 transition-colors" onclick="document.getElementById('input-${frame.id}').click()">
+                                 <i class="fa-solid fa-plus text-2xl mb-1"></i>
+                                 <span class="text-xs font-medium">Add Visual</span>
+                               </div>`
+                        }
+                        <input type="file" id="input-${frame.id}" class="hidden" accept="image/*" onchange="handleFrameImage(this, '${frame.id}')">
+                    </div>
+
+                    <div class="p-4 space-y-3">
+                        <textarea placeholder="Action description, camera angle, voiceover..." 
+                            class="w-full bg-transparent text-sm text-gray-300 placeholder-gray-600 resize-none focus:outline-none min-h-[80px]"
+                            oninput="updateFrameData('${frame.id}', 'notes', this.value)">${frame.notes}</textarea>
+                        
+                        ${frame.hasEditorNote 
+                            ? `<div class="relative animate-fade-in">
+                                 <div class="absolute -left-4 top-0 bottom-0 w-1 bg-red-500 rounded-r"></div>
+                                 <div class="bg-editor-bg/20 border border-editor-border/30 rounded p-2">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-[10px] uppercase font-bold text-red-400 tracking-wider">Editor Note</span>
+                                        <button onclick="updateFrameData('${frame.id}', 'hasEditorNote', false)" class="text-gray-500 hover:text-red-400"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <textarea placeholder="VFX, Sound FX, Color Grade instructions..." 
+                                        class="w-full bg-transparent text-sm text-red-200 placeholder-red-900/50 resize-none focus:outline-none min-h-[60px]"
+                                        oninput="updateFrameData('${frame.id}', 'editorNotes', this.value)">${frame.editorNotes}</textarea>
+                                 </div>
+                               </div>`
+                            : `<button onclick="updateFrameData('${frame.id}', 'hasEditorNote', true)" class="text-xs text-gray-500 hover:text-accent flex items-center gap-1 transition-colors">
+                                 <i class="fa-solid fa-pen-to-square"></i> Add Editor Note
+                               </button>`
+                        }
+                    </div>
+                `;
+
+                board.appendChild(el);
+                const dropZone = document.getElementById(`drop-${frame.id}`);
+                setupDragAndDrop(dropZone, (file) => processImage(file, 'frame', frame.id));
+            });
+        }
+
+        // --- 8. Layout & Helper Utils ---
+
+        function setLayout(mode) {
+            appState.layout = mode;
+            if(isCloudEnabled) debouncedSaveProject(); else saveToLocalStorage();
+            updateLayoutClasses();
+            updateActiveButton();
+        }
+
+        function updateActiveButton() {
+            ['grid', 'horizontal', 'vertical'].forEach(mode => {
+                const btn = document.getElementById(`btn-${mode}`);
+                if (mode === appState.layout) {
+                    btn.classList.add('bg-accent', 'text-white');
+                    btn.classList.remove('text-gray-400', 'hover:text-white', 'hover:bg-gray-800');
+                } else {
+                    btn.classList.remove('bg-accent', 'text-white');
+                    btn.classList.add('text-gray-400', 'hover:text-white', 'hover:bg-gray-800');
+                }
+            });
+        }
+
+        function updateLayoutClasses() {
+            const board = document.getElementById('board');
+            board.className = ''; 
+            if (appState.layout === 'grid') board.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'xl:grid-cols-3', '2xl:grid-cols-4', 'gap-6', 'pb-20');
+            else if (appState.layout === 'horizontal') board.classList.add('flex', 'flex-nowrap', 'overflow-x-auto', 'gap-6', 'pb-8', 'items-start', 'h-full');
+            else if (appState.layout === 'vertical') board.classList.add('flex', 'flex-col', 'gap-8', 'max-w-3xl', 'mx-auto', 'pb-20');
+        }
+
+        function toggleHeader() {
+            appState.isHeaderExpanded = !appState.isHeaderExpanded;
+            updateHeaderUI();
+        }
+
+        function updateCloudUI(status) {
+            const btn = document.getElementById('cloud-status-btn');
+            const icon = document.getElementById('cloud-icon');
+            const text = document.getElementById('cloud-text');
+            btn.className = "flex items-center gap-2 px-3 py-1.5 rounded text-xs font-medium transition-colors border border-transparent ";
+
+            if (status === 'offline') {
+                btn.classList.add('bg-gray-800', 'text-gray-400');
+                icon.className = 'fa-solid fa-cloud-slash';
+                text.textContent = 'Offline';
+            } else if (status === 'syncing') {
+                btn.classList.add('bg-blue-900/30', 'text-blue-400', 'border-blue-900');
+                icon.className = 'fa-solid fa-rotate fa-spin';
+                text.textContent = 'Syncing...';
+            } else if (status === 'saved') {
+                btn.classList.add('bg-green-900/30', 'text-green-400', 'border-green-900');
+                icon.className = 'fa-solid fa-check';
+                text.textContent = 'Saved';
+            } else if (status === 'error') {
+                btn.classList.add('bg-red-900/30', 'text-red-400', 'border-red-900');
+                icon.className = 'fa-solid fa-triangle-exclamation';
+                text.textContent = 'Sync Error';
+            }
+        }
+
+        function openCloudSettings() {
+            document.getElementById('cloud-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('cloud-modal').classList.remove('opacity-0'), 10);
+            const existing = localStorage.getItem(FIREBASE_CONFIG_KEY);
+            if(existing) document.getElementById('cloud-config-input').value = existing;
+        }
+
+        function closeCloudModal() {
+            document.getElementById('cloud-modal').classList.add('opacity-0');
+            setTimeout(() => document.getElementById('cloud-modal').classList.add('hidden'), 200);
+        }
+
+        function saveCloudConfig() {
+            const val = document.getElementById('cloud-config-input').value.trim();
+            if(!val) { localStorage.removeItem(FIREBASE_CONFIG_KEY); location.reload(); return; }
+            try {
+                const config = JSON.parse(val);
+                localStorage.setItem(FIREBASE_CONFIG_KEY, JSON.stringify(config));
+                location.reload(); 
+            } catch(e) { alert("Invalid JSON Format"); }
+        }
+
+        function saveToLocalStorage() {
+            try {
+                // Save both the frames AND the project list
+                const localData = {
+                    currentProjectId,
+                    allProjects,
+                    allFrames
+                };
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localData));
+            } catch (e) { console.error("Local Storage Full", e); }
+        }
+
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if(parsed.currentProjectId) {
+                        currentProjectId = parsed.currentProjectId;
+                        allProjects = parsed.allProjects || [];
+                        allFrames = parsed.allFrames || [];
+                        
+                        // Hydrate current appState
+                        const p = allProjects.find(px => px.id === currentProjectId);
+                        if(p) {
+                            appState.title = p.title;
+                            appState.description = p.description;
+                            appState.thumbnail = p.thumbnail;
+                            appState.layout = p.layout || 'grid';
+                        } else if (allProjects.length > 0) {
+                            switchProject(allProjects[0].id);
+                        } else {
+                            createNewProject();
+                        }
+                    } else {
+                        // Migrate v1 data to v2 structure if needed
+                        createNewProject("Imported Project");
+                    }
+                } catch(e) { 
+                    console.error("Corrupt local save", e); 
+                    createNewProject();
+                }
+            } else {
+                createNewProject();
+            }
+            isCloudEnabled = false;
+        }
+
+        function saveProjectToFile() {
+            // Export ONLY current project
+            const exportData = {
+                project: allProjects.find(p => p.id === currentProjectId),
+                frames: getProjectFrames()
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData));
+            const node = document.createElement('a');
+            node.setAttribute("href", dataStr);
+            const fileName = (appState.title || "video-project").replace(/[^a-z0-9]/gi, '_').toLowerCase() + ".json";
+            node.setAttribute("download", fileName);
+            document.body.appendChild(node);
+            node.click();
+            node.remove();
+        }
+
+        function importProject(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    
+                    // Handle V1 import (raw object) vs V2 import (project + frames)
+                    let newFrames = [];
+                    let newTitle = "Imported";
+                    
+                    if(json.frames && json.project) {
+                        // V2 format
+                        newTitle = json.project.title + " (Import)";
+                        newFrames = json.frames;
+                    } else if (json.frames && Array.isArray(json.frames)) {
+                        // V1 format
+                        newTitle = (json.title || "Imported") + " (Import)";
+                        newFrames = json.frames;
+                    }
+
+                    if(confirm(`Import "${newTitle}"? This will create a new project.`)) {
+                         createNewProject(newTitle).then(() => {
+                            // After creating project and switching ID, add frames
+                            newFrames.forEach(f => {
+                                const nf = { ...f, id: Date.now().toString(36) + Math.random().toString(36).substr(2), projectId: currentProjectId };
+                                allFrames.push(nf);
+                                if(isCloudEnabled) debouncedSaveFrame(nf.id);
+                            });
+                            if(!isCloudEnabled) saveToLocalStorage();
+                            render();
+                         });
+                    }
+                } catch (err) { alert("Invalid JSON"); }
+            };
+            reader.readAsText(file);
+        }
+
+        function setupDragAndDrop(element, callback) {
+            if (!element) return;
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                element.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+            });
+            element.addEventListener('dragenter', () => element.classList.add('drag-over'), false);
+            element.addEventListener('dragleave', () => element.classList.remove('drag-over'), false);
+            element.addEventListener('drop', (e) => {
+                element.classList.remove('drag-over');
+                if (callback && e.dataTransfer.files && e.dataTransfer.files[0]) callback(e.dataTransfer.files[0]);
+            }, false);
+        }
+
+    </script>
+</body>
+</html>
