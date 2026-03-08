@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Ryan Retro | Device Hub</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +15,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -22,12 +23,10 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#2D1B4E',       // Deep Soft Purple
-                            card: '#432C7A',     // Lighter Grape
-                            hover: '#5B3EA8',    // Bright Purple
-                            accent: '#FFFFFF',   // Pure White
-                            muted: '#D4BBFF',    // Soft Lavender Text
-                            red: '#FF0000'       // YouTube Red
+                            light: '#B9B2DE',  // Logo Background / Main Page Background
+                            main: '#6254A4',   // Gameboy Body / Primary Purple
+                            dark: '#463884',   // Screen Bevel / Shadows / Text
+                            accent: '#FFFFFF', // Text & Highlights
                         }
                     },
                     fontFamily: {
@@ -41,10 +40,15 @@
 
     <style>
         /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; display: block; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; transition: background 0.3s; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; display: block; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: var(--brand-dark); border-radius: 6px; margin: 0 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--brand-light); border-radius: 6px; border: 2px solid var(--brand-dark); }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--brand-accent); }
+
+        body {
+            background-color: #B9B2DE; 
+            color: #463884; 
+        }
 
         /* Animations */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -53,13 +57,14 @@
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
         .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        /* Toast */
+        /* Toast - Updated to Chunky Theme */
         #toast {
-            visibility: hidden; min-width: 250px; background-color: #5B3EA8; color: white;
+            visibility: hidden; min-width: 250px; background-color: #463884; color: white;
             text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 1000;
             left: 50%; bottom: 30px; transform: translateX(-50%);
-            font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 900; 
+            border: 4px solid #FFFFFF;
+            box-shadow: 6px 6px 0px rgba(70, 56, 132, 0.5);
         }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
@@ -68,130 +73,132 @@
         /* Table Styles */
         .sort-indicator { display: inline-block; width: 1.2em; text-align: center; }
 
-        /* Performance Badge Colors (Table & Form) */
-        .perf-perfect { color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.2); }
-        .perf-great { color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); }
-        .perf-playable { color: #facc15; background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.2); }
-        .perf-unplayable { color: #f87171; background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.2); }
+        /* Performance Badge Colors (Chunky style) */
+        .perf-perfect { color: #166534; background: #bbf7d0; border-color: #166534; }
+        .perf-great { color: #075985; background: #bae6fd; border-color: #075985; }
+        .perf-playable { color: #854d0e; background: #fef08a; border-color: #854d0e; }
+        .perf-unplayable { color: #991b1b; background: #fecaca; border-color: #991b1b; }
 
-        /* Form Elements */
+        /* Form Elements - Flat & Chunky */
         .brand-input {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
+            background: #463884;
+            border: 3px solid #B9B2DE;
+            color: #FFFFFF;
+            border-radius: 12px;
             transition: all 0.2s;
+            font-weight: 700;
         }
         .brand-input:focus {
             outline: none;
-            border-color: #D4BBFF;
-            background: rgba(0,0,0,0.4);
+            border-color: #FFFFFF;
+            background: #6254A4;
+            box-shadow: 3px 3px 0px #463884;
+        }
+        .brand-input::placeholder {
+            color: #B9B2DE;
+            opacity: 0.7;
         }
 
-        /* Device Stats Pills - Restored & Themed */
+        /* Device Stats Pills - Chunky */
         .stat-pill {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #463884;
+            border: 2px solid #B9B2DE;
+            box-shadow: 2px 2px 0px #463884;
             padding: 8px;
             border-radius: 12px;
             font-size: 10px;
             display: flex;
-            flex-direction: column; /* Vertical Stack */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
             gap: 4px;
-            color: #D4BBFF; /* brand-muted */
-            font-weight: 700;
+            color: #FFFFFF;
+            font-weight: 800;
             height: 100%;
-            min-height: 60px; /* Ensure height */
+            min-height: 60px;
             line-height: 1.2;
-            transition: background 0.2s, color 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .stat-pill:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.2);
-            color: white;
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0px #463884;
         }
-        .stat-pill i { width: 16px; height: 16px; margin-bottom: 2px; color: white; }
+        .stat-pill i { width: 16px; height: 16px; margin-bottom: 2px; color: #B9B2DE; }
     </style>
 </head>
-<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
+<body class="font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
 
     <div id="toast">Code Copied!</div>
 
-    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+    <header class="sticky top-0 z-50 bg-brand-main border-b-4 border-brand-dark shadow-md">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
-
-            <a href="/" class="flex items-center gap-3 group shrink-0">
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+            <a href="/" class="flex items-center gap-4 group shrink-0">
+                <div class="w-12 h-12 rounded-xl overflow-hidden border-3 border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
+                <span class="font-black text-2xl tracking-tight hidden sm:block text-white">RYAN RETRO</span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
-                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
-                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
-                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
-                <a href="/store" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Shop</a>
+            <nav class="hidden lg:flex items-center gap-6">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Shop</a>
             </nav>
 
             <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
-                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
-                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                    </a>
-                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                <div class="hidden md:flex items-center gap-4 pr-4 border-r-2 border-brand-dark">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
                 </div>
-
-                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
-            <div class="grid grid-cols-2 gap-2">
-                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
-                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
-                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
-                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-4 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-3">
+                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Shop</a>
             </div>
 
-            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
-                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            <div class="flex justify-center flex-wrap gap-4 pt-6 border-t-2 border-brand-dark">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-light hover:text-white"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-light hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-light hover:text-white"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 lg:px-6 py-8">
+    <main class="flex-grow container mx-auto px-4 lg:px-6 py-8 relative z-10">
 
         <section id="hub" class="mb-12" data-aos="fade-up">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 
                 <div class="lg:col-span-4 h-full flex flex-col">
-                    <div class="bg-brand-card rounded-2xl p-6 flex flex-col h-full relative overflow-hidden border border-white/5 shadow-xl">
+                    <div class="bg-brand-main rounded-3xl p-6 flex flex-col h-full relative overflow-hidden border-4 border-brand-dark shadow-[2px_2px_0px_#463884]">
                         <div class="flex justify-between items-start mb-4 relative z-10">
-                            <h1 id="device-name" class="font-extrabold text-3xl text-white uppercase leading-none tracking-tight">DEVICE<br>NAME</h1>
+                            <h1 id="device-name" class="font-black text-3xl text-white uppercase leading-none tracking-tight drop-shadow-sm">DEVICE<br>NAME</h1>
                         </div>
 
                         <div class="flex-grow flex items-center justify-center py-6 relative z-10 min-h-[160px]">
-                            <img id="device-img" src="" class="w-56 object-contain animate-float drop-shadow-2xl" alt="Device">
+                            <img id="device-img" src="" class="w-56 object-contain animate-float drop-shadow-[0_10px_10px_rgba(70,56,132,0.5)]" alt="Device">
                         </div>
 
-                        <!-- Key Stats Grid -->
-                        <div class="grid grid-cols-2 gap-2 mb-6 relative z-10 w-full" id="stats-grid">
+                        <div class="grid grid-cols-2 gap-3 mb-6 relative z-10 w-full" id="stats-grid">
                             <div class="stat-pill"><i data-lucide="cpu"></i> <span id="stat-chip">...</span></div>
                             <div class="stat-pill"><i data-lucide="monitor"></i> <span id="stat-screen">...</span></div>
                             <div class="stat-pill"><i data-lucide="memory-stick"></i> <span id="stat-ram">...</span></div>
@@ -200,29 +207,29 @@
                             <div class="stat-pill"><i data-lucide="smartphone"></i> <span id="stat-os">...</span></div>
                         </div>
 
-                        <a id="affiliate-btn" href="#" target="_blank" class="w-full py-4 bg-white text-brand-bg font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-brand-muted transition-colors relative z-10 mt-auto">
-                            <span>Buy Now</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        <a id="affiliate-btn" href="#" target="_blank" class="w-full py-4 bg-yellow-400 text-brand-dark font-black rounded-xl border-4 border-brand-dark flex items-center justify-center gap-2 hover:bg-yellow-300 hover:-translate-y-1 shadow-[3px_3px_0px_#463884] hover:shadow-[5px_5px_0px_#463884] transition-all relative z-10 mt-auto uppercase tracking-wide">
+                            <span>Buy Now</span> <i data-lucide="arrow-right" class="w-5 h-5"></i>
                         </a>
-                        <p class="text-[10px] font-bold text-brand-muted text-center mt-3 uppercase tracking-wider relative z-10">Affiliate Link • Supports The Channel</p>
+                        <p class="text-[10px] font-black text-brand-light text-center mt-4 uppercase tracking-wider relative z-10">Affiliate Link • Supports The Channel</p>
                     </div>
                 </div>
 
                 <div class="lg:col-span-8 h-full flex flex-col">
-                    <div class="bg-brand-card rounded-2xl p-1 overflow-hidden border border-white/5 shadow-xl h-full flex flex-col">
+                    <div class="bg-brand-main rounded-3xl p-1 overflow-hidden border-4 border-brand-dark shadow-[2px_2px_0px_#463884] h-full flex flex-col">
                         <div class="flex justify-between items-center p-4">
-                            <h2 class="font-bold text-white text-lg flex items-center gap-2">
-                                <i data-lucide="play-circle" class="text-brand-muted w-5 h-5"></i> Video Review
+                            <h2 class="font-black text-white text-xl flex items-center gap-2 uppercase tracking-tight">
+                                <i data-lucide="play-circle" class="text-white w-6 h-6"></i> Video Review
                             </h2>
-                            <a id="channel-link" href="#" target="_blank" class="text-xs font-bold text-brand-muted hover:text-white transition-colors">
+                            <a id="channel-link" href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-xs font-bold text-white hover:text-brand-light transition-colors bg-brand-dark/50 px-3 py-1.5 rounded-lg border-2 border-transparent hover:border-brand-dark">
                                 View Channel &rarr;
                             </a>
                         </div>
-                        <div id="main-video-embed" class="bg-black rounded-xl overflow-hidden relative flex-grow min-h-[300px] lg:min-h-0">
-                            <div class="absolute inset-0 flex items-center justify-center text-white/20 font-bold animate-pulse">LOADING VIDEO...</div>
+                        <div id="main-video-embed" class="bg-brand-dark rounded-2xl overflow-hidden relative flex-grow min-h-[300px] lg:min-h-0 border-y-4 border-brand-dark mx-1">
+                            <div class="absolute inset-0 flex items-center justify-center text-white/50 font-black tracking-widest animate-pulse">LOADING VIDEO...</div>
                         </div>
-                        <div class="p-4">
-                            <h2 id="video-title" class="text-xl font-bold text-white line-clamp-1">Loading Video Title...</h2>
-                            <p class="text-sm font-medium text-brand-muted" id="video-date">...</p>
+                        <div class="p-4 bg-brand-main rounded-b-3xl">
+                            <h2 id="video-title" class="text-xl font-black text-white line-clamp-1 leading-tight">Loading Video Title...</h2>
+                            <p class="text-sm font-bold text-brand-light mt-1" id="video-date">...</p>
                         </div>
                     </div>
                 </div>
@@ -231,19 +238,19 @@
         </section>
 
         <section id="database" data-aos="fade-up">
-            <div class="bg-brand-card rounded-2xl border border-white/5 p-6 lg:p-10 shadow-xl overflow-hidden relative">
+            <div class="bg-brand-main rounded-3xl border-4 border-brand-dark p-6 lg:p-10 shadow-[2px_2px_0px_#463884] overflow-hidden relative">
 
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b-4 border-brand-dark/30 pb-6">
                     <div>
-                        <h2 class="text-3xl font-extrabold text-white">Compatibility</h2>
-                        <p class="text-brand-muted text-sm mt-1">Community tested performance reports</p>
+                        <h2 class="text-4xl font-black text-white uppercase tracking-tight">Compatibility</h2>
+                        <p class="text-brand-light font-bold mt-1">Community tested performance reports</p>
                     </div>
                     <div id="variant-tabs" class="hidden">
-                         <div class="inline-flex flex-wrap gap-2 bg-brand-bg p-1 rounded-lg"></div>
+                         <div class="inline-flex flex-wrap gap-2 bg-brand-dark p-1.5 rounded-xl border-2 border-brand-dark"></div>
                     </div>
                 </div>
 
-                <div id="system-buttons" class="flex flex-wrap gap-2 mb-6 pb-4 border-b border-white/5">
+                <div id="system-buttons" class="flex flex-wrap gap-3 mb-6">
                     <button data-system="switch" class="system-btn">Switch</button>
                     <button data-system="ps2" class="system-btn">PS2</button>
                     <button data-system="ps3" class="system-btn">PS3</button>
@@ -253,9 +260,9 @@
                     <button data-system="wiiu" class="system-btn">Wii U</button>
                 </div>
 
-                <div class="bg-brand-bg/30 rounded-xl p-4 mb-6 border border-white/5">
-                    <div class="flex flex-col md:flex-row gap-4 justify-between items-end md:items-center">
-                        <div id="perf-filters" class="flex flex-wrap gap-2">
+                <div class="bg-brand-dark/30 rounded-2xl p-5 mb-6 border-4 border-brand-dark">
+                    <div class="flex flex-col lg:flex-row gap-4 justify-between items-end lg:items-center">
+                        <div id="perf-filters" class="flex flex-wrap gap-3">
                             <button data-perf="" class="perf-btn">All</button>
                             <button data-perf="Perfect" class="perf-btn">Perfect</button>
                             <button data-perf="Great" class="perf-btn">Great</button>
@@ -263,12 +270,12 @@
                             <button data-perf="Unplayable" class="perf-btn">Unplayable</button>
                         </div>
 
-                        <div class="flex gap-2 w-full md:w-auto">
-                            <div class="relative flex-grow md:flex-grow-0 md:w-64">
-                                <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-brand-muted w-4 h-4"></i>
-                                <input type="text" id="game-search-box" class="w-full bg-brand-bg border border-brand-card rounded-lg pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-brand-muted transition-colors placeholder-brand-muted/50" placeholder="Search games...">
+                        <div class="flex gap-3 w-full lg:w-auto">
+                            <div class="relative flex-grow lg:flex-grow-0 lg:w-72">
+                                <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white w-5 h-5"></i>
+                                <input type="text" id="game-search-box" class="brand-input w-full pl-12 pr-4 py-3 text-sm shadow-inner" placeholder="Search games...">
                             </div>
-                            <select id="rows-per-page" class="bg-brand-bg border border-brand-card rounded-lg px-2 text-sm text-white focus:outline-none cursor-pointer">
+                            <select id="rows-per-page" class="brand-input px-4 text-sm focus:outline-none cursor-pointer">
                                 <option value="10" selected>10</option>
                                 <option value="20">20</option>
                                 <option value="50">50</option>
@@ -277,40 +284,40 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar rounded-xl border border-white/5 bg-brand-bg/20">
+                <div class="overflow-x-auto custom-scrollbar rounded-xl border-4 border-brand-dark bg-white">
                     <table id="compatibility-table" class="min-w-full text-sm text-left">
-                        <thead class="bg-brand-bg text-brand-muted font-bold text-xs uppercase tracking-wider cursor-pointer select-none">
+                        <thead class="bg-brand-dark text-white font-black text-xs uppercase tracking-wider cursor-pointer select-none border-b-4 border-brand-dark">
                             </thead>
-                        <tbody class="divide-y divide-white/5 align-baseline text-white/90">
+                        <tbody class="divide-y-2 divide-brand-light/50 align-baseline text-brand-dark bg-white">
                             </tbody>
                     </table>
                 </div>
 
-                <div id="pagination-controls" class="mt-6 flex items-center justify-center gap-4">
-                    <button id="prev-btn" class="bg-brand-bg hover:bg-brand-hover text-white px-4 py-2 rounded-lg font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed transition-colors">Previous</button>
-                    <span id="page-info" class="font-bold text-sm text-brand-muted">Page 1 of 1</span>
-                    <button id="next-btn" class="bg-brand-bg hover:bg-brand-hover text-white px-4 py-2 rounded-lg font-bold text-xs disabled:opacity-50 disabled:cursor-not-allowed transition-colors">Next</button>
+                <div id="pagination-controls" class="mt-8 flex items-center justify-center gap-4">
+                    <button id="prev-btn" class="bg-brand-dark text-white border-4 border-brand-dark px-5 py-2.5 rounded-xl font-black text-xs shadow-[3px_3px_0px_#B9B2DE] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#B9B2DE] transition-all disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none disabled:cursor-not-allowed uppercase tracking-wide">Previous</button>
+                    <span id="page-info" class="font-black text-sm text-white">Page 1 of 1</span>
+                    <button id="next-btn" class="bg-brand-dark text-white border-4 border-brand-dark px-5 py-2.5 rounded-xl font-black text-xs shadow-[3px_3px_0px_#B9B2DE] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#B9B2DE] transition-all disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none disabled:cursor-not-allowed uppercase tracking-wide">Next</button>
                 </div>
 
-                <div class="text-center mt-12 border-t border-white/5 pt-8">
-                    <p class="text-brand-muted text-sm mb-4">Don't see a game? Help the community.</p>
-                    <button id="add-entry-btn" class="bg-white text-brand-bg px-8 py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition-transform">
+                <div class="text-center mt-12 border-t-4 border-brand-dark/30 pt-8">
+                    <p class="text-white font-bold mb-4 text-lg">Don't see a game? Help the community.</p>
+                    <button id="add-entry-btn" class="bg-white text-brand-dark border-4 border-brand-dark px-8 py-4 rounded-xl font-black text-lg shadow-[4px_4px_0px_#463884] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#463884] transition-all uppercase tracking-wide">
                         ADD YOUR ENTRY
                     </button>
                 </div>
 
-                <div id="add-entry-form-container" class="hidden mt-8 bg-brand-bg p-6 rounded-xl border border-white/10 animate-pop-in">
-                      <h3 class="font-bold text-xl text-white mb-6">Submit Report</h3>
-                      <form id="compatibility-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="add-entry-form-container" class="hidden mt-8 bg-brand-dark p-8 rounded-3xl border-4 border-brand-dark shadow-[6px_6px_0px_#463884] animate-pop-in">
+                      <h3 class="font-black text-2xl text-white mb-6 uppercase tracking-tight">Submit Report</h3>
+                      <form id="compatibility-form" class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                         <div class="md:col-span-2">
-                            <label for="form-game-title" class="block text-xs font-bold text-brand-muted mb-1">Game Title *</label>
-                            <input type="text" id="form-game-title" name="game" class="brand-input w-full rounded-lg px-4 py-2" required placeholder="e.g. Super Mario Odyssey">
+                            <label for="form-game-title" class="block text-sm font-black text-brand-light mb-2 uppercase">Game Title *</label>
+                            <input type="text" id="form-game-title" name="game" class="brand-input w-full px-4 py-3" required placeholder="e.g. Super Mario Odyssey">
                         </div>
 
                         <div>
-                             <label for="form-system-select" class="block text-xs font-bold text-brand-muted mb-1">System *</label>
-                             <select id="form-system-select" name="system" class="brand-input w-full rounded-lg px-4 py-2" required>
+                             <label for="form-system-select" class="block text-sm font-black text-brand-light mb-2 uppercase">System *</label>
+                             <select id="form-system-select" name="system" class="brand-input w-full px-4 py-3" required>
                                  <option value="switch">Nintendo Switch</option>
                                  <option value="ps2">PlayStation 2</option>
                                  <option value="ps3">PlayStation 3</option>
@@ -322,8 +329,8 @@
                         </div>
 
                         <div>
-                            <label for="form-performance" class="block text-xs font-bold text-brand-muted mb-1">Performance *</label>
-                            <select id="form-performance" name="performance" class="brand-input w-full rounded-lg px-4 py-2" required>
+                            <label for="form-performance" class="block text-sm font-black text-brand-light mb-2 uppercase">Performance *</label>
+                            <select id="form-performance" name="performance" class="brand-input w-full px-4 py-3" required>
                                 <option value="Perfect">Perfect</option>
                                 <option value="Great">Great</option>
                                 <option value="Playable">Playable</option>
@@ -331,16 +338,16 @@
                             </select>
                         </div>
 
-                        <div id="dynamic-fields" class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                        <div id="dynamic-fields" class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5"></div>
 
                         <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-brand-muted mb-1">Notes (Optional)</label>
-                            <textarea name="notes" class="brand-input w-full rounded-lg px-4 py-2" rows="3" placeholder="Any special settings?"></textarea>
+                            <label class="block text-sm font-black text-brand-light mb-2 uppercase">Notes (Optional)</label>
+                            <textarea name="notes" class="brand-input w-full px-4 py-3" rows="3" placeholder="Any special settings?"></textarea>
                         </div>
 
-                        <div class="md:col-span-2 flex justify-end gap-3 mt-4 pt-4 border-t border-white/10">
-                            <button type="button" id="cancel-btn" class="px-4 py-2 rounded-lg bg-brand-card hover:bg-brand-hover text-white font-bold text-sm transition-colors">Cancel</button>
-                            <button type="submit" class="px-6 py-2 rounded-lg bg-white text-brand-bg font-bold text-sm shadow-lg hover:bg-brand-muted transition-colors flex items-center justify-center gap-2">Submit</button>
+                        <div class="md:col-span-2 flex justify-end gap-4 mt-6 pt-6 border-t-4 border-brand-main">
+                            <button type="button" id="cancel-btn" class="px-6 py-3 rounded-xl bg-brand-main text-white font-black border-4 border-transparent hover:border-white transition-colors uppercase tracking-wide">Cancel</button>
+                            <button type="submit" class="px-8 py-3 rounded-xl bg-white text-brand-dark font-black border-4 border-brand-main shadow-[4px_4px_0px_#B9B2DE] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#B9B2DE] transition-all flex items-center justify-center gap-2 uppercase tracking-wide">Submit</button>
                         </div>
                         <input type="hidden" id="hidden-device" name="device">
                         <input type="hidden" id="hidden-system" name="system">
@@ -352,37 +359,37 @@
 
     </main>
 
-    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center">
+    <footer class="bg-brand-main py-10 text-center border-t-4 border-brand-dark mt-auto relative z-40">
         <div class="container mx-auto px-6">
             <div class="flex justify-center flex-wrap gap-6 mb-6">
-                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
-                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
-            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+            <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
         </div>
     </footer>
 
     <div id="game-details-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-bg/90 backdrop-blur-sm" id="game-modal-bg"></div>
-        <div id="game-card-wrapper" class="relative bg-brand-card border-2 border-white/20 rounded-3xl w-full max-w-4xl shadow-2xl animate-pop-in flex flex-col max-h-[90vh] overflow-hidden">
-            <div class="flex justify-between items-center p-4 border-b border-white/10 bg-black/20 shrink-0">
-                <span class="font-bold text-brand-muted text-xs pl-2 tracking-widest uppercase">REPORT DETAILS</span>
-                <div class="flex gap-2">
-                    <button id="screenshot-game-modal" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex items-center gap-2" title="Save Card">
-                        <i data-lucide="camera" class="w-5 h-5"></i>
-                        <span class="font-bold text-xs hidden sm:inline">SAVE CARD</span>
+        <div class="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm" id="game-modal-bg"></div>
+        <div id="game-card-wrapper" class="relative bg-brand-light border-4 border-brand-dark rounded-3xl w-full max-w-4xl shadow-[8px_8px_0px_#463884] animate-pop-in flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-5 border-b-4 border-brand-dark bg-brand-main shrink-0">
+                <span class="font-black text-white text-sm pl-2 tracking-widest uppercase">REPORT DETAILS</span>
+                <div class="flex gap-3">
+                    <button id="screenshot-game-modal" class="bg-brand-dark text-white px-3 py-2 rounded-xl border-2 border-brand-dark hover:bg-white hover:text-brand-dark transition-colors flex items-center gap-2 shadow-sm" title="Save Card">
+                        <i data-lucide="camera" class="w-4 h-4"></i>
+                        <span class="font-black text-xs hidden sm:inline uppercase">SAVE CARD</span>
                     </button>
-                    <button id="close-game-modal" class="text-white/70 hover:text-white hover:bg-red-500/20 p-2 rounded-lg transition-colors">
+                    <button id="close-game-modal" class="bg-red-500 text-white px-3 py-2 rounded-xl border-2 border-brand-dark hover:bg-red-400 transition-colors shadow-sm">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
-            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow text-white"></div>
+            <div id="game-modal-content" class="overflow-y-auto custom-scrollbar p-6 md:p-8 grow text-brand-dark bg-brand-light"></div>
         </div>
     </div>
 
@@ -615,24 +622,6 @@
       }
     };
 
-    const SYSTEM_COLORS = {
-        switch: ['bg-red-600', 'text-white'],
-        ps2: ['bg-blue-600', 'text-white'],
-        ps3: ['bg-black', 'text-white'],
-        psvita: ['bg-teal-500', 'text-white'],
-        winlator: ['bg-sky-500', 'text-white'],
-        gamehub: ['bg-blue-900', 'text-white'],
-        wiiu: ['bg-blue-600', 'text-white']
-    };
-
-    const PERF_COLORS = {
-        '': ['bg-white', 'text-brand-bg'], // All
-        'Perfect': ['bg-green-600', 'text-white'],
-        'Great': ['bg-blue-600', 'text-white'],
-        'Playable': ['bg-orange-500', 'text-white'],
-        'Unplayable': ['bg-red-600', 'text-white']
-    };
-
     // System Config
     const SYSTEM_CONFIG = {
         switch:{ columns:[
@@ -726,6 +715,24 @@
         ]
     };
 
+    const SYSTEM_COLORS = {
+        switch: ['bg-red-500', 'text-white'],
+        ps2: ['bg-blue-600', 'text-white'],
+        ps3: ['bg-neutral-800', 'text-white'],
+        psvita: ['bg-teal-500', 'text-white'],
+        winlator: ['bg-sky-500', 'text-white'],
+        gamehub: ['bg-blue-800', 'text-white'],
+        wiiu: ['bg-blue-500', 'text-white']
+    };
+
+    const PERF_COLORS = {
+        '': ['bg-brand-dark', 'text-white'], // All
+        'Perfect': ['bg-green-500', 'text-white'],
+        'Great': ['bg-blue-500', 'text-white'],
+        'Playable': ['bg-orange-500', 'text-white'],
+        'Unplayable': ['bg-red-500', 'text-white']
+    };
+
     // --- STATE MANAGEMENT ---
 
     // Resolve device from URL
@@ -787,7 +794,6 @@
         // Affiliate
         const btn = document.getElementById('affiliate-btn');
         btn.href = DEVICE.link;
-        // document.getElementById('channel-link').href = DEVICE.ytUrl;
 
         // 3. Setup Variant Tabs
         initVariantTabs();
@@ -800,9 +806,13 @@
         fetchLatestVideo();
 
         // Mobile Menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
         
         // Refresh Icons after updating DOM
         lucide.createIcons();
@@ -841,7 +851,6 @@
              document.getElementById('video-title').textContent = vid.title;
              
              // Simple date parsing or usage of string
-             // Assuming format YYYY-MM-DD from tool or manual entry
              const d = new Date(vid.publishedAt);
              if (!isNaN(d.getTime())) {
                  document.getElementById('video-date').textContent = d.toLocaleDateString();
@@ -878,15 +887,15 @@
         const row = wrap.querySelector('div');
         row.innerHTML = '';
 
-        // Class Constants for Toggling
-        const CLASS_ACTIVE = 'bg-white text-brand-bg';
-        const CLASS_INACTIVE = 'bg-brand-card hover:bg-brand-hover text-brand-muted hover:text-white';
+        // Class Constants for Toggling - Chunky style
+        const CLASS_ACTIVE = 'bg-white text-brand-dark border-2 border-brand-dark shadow-none translate-y-0.5';
+        const CLASS_INACTIVE = 'bg-brand-dark text-white border-2 border-brand-dark shadow-[2px_2px_0px_#463884] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#463884]';
 
         DEVICE.variants.forEach((v, i) => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = [
-                'px-3','py-1.5','rounded-md','font-bold','text-xs', 'transition-colors',
+                'px-4','py-1.5','rounded-xl','font-black','text-xs', 'transition-all', 'uppercase',
                 i === 0 ? CLASS_ACTIVE : CLASS_INACTIVE
             ].join(' ');
             btn.textContent = v.label;
@@ -903,10 +912,10 @@
 
             // Reset all buttons to inactive class string
             [...row.children].forEach(b => {
-                 b.className = `px-3 py-1.5 rounded-md font-bold text-xs transition-colors ${CLASS_INACTIVE}`;
+                 b.className = `px-4 py-1.5 rounded-xl font-black text-xs uppercase transition-all ${CLASS_INACTIVE}`;
             });
             // Set active button to active class string
-            btn.className = `px-3 py-1.5 rounded-md font-bold text-xs transition-colors ${CLASS_ACTIVE}`;
+            btn.className = `px-4 py-1.5 rounded-xl font-black text-xs uppercase transition-all ${CLASS_ACTIVE}`;
 
             currentVariant = next;
             loadSystemData(currentSystemId);
@@ -918,20 +927,20 @@
 
     async function loadSystemData(systemId) {
         currentSystemId = systemId;
+        
+        // Update Chunky System Buttons
         document.querySelectorAll('.system-btn').forEach(btn => {
-            const colors = SYSTEM_COLORS[systemId] || ['bg-white', 'text-brand-bg'];
-
-            // Reset base classes
-            btn.className = 'system-btn px-4 py-2 rounded-lg font-bold text-sm bg-brand-bg text-brand-muted hover:text-white hover:bg-brand-hover transition-all';
+            // Default inactive chunky state
+            btn.className = 'system-btn px-5 py-2.5 rounded-xl font-black text-sm bg-brand-dark text-white border-4 border-brand-dark shadow-[4px_4px_0px_#463884] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#463884] transition-all uppercase tracking-wide';
 
             if(btn.dataset.system === systemId) {
-                // Apply active classes
-                btn.classList.remove('bg-brand-bg', 'text-brand-muted', 'hover:bg-brand-hover');
-                btn.classList.add(...colors, 'scale-105', 'shadow-lg');
+                // Active chunky state
+                const colors = SYSTEM_COLORS[systemId] || ['bg-white', 'text-brand-dark'];
+                btn.className = `system-btn px-5 py-2.5 rounded-xl font-black text-sm ${colors[0]} ${colors[1]} border-4 border-brand-dark shadow-[2px_2px_0px_#463884] translate-y-0.5 transition-all uppercase tracking-wide`;
             }
         });
 
-        tableBody.innerHTML = `<tr><td colspan="100" class="p-8 text-center text-brand-muted font-bold"><i data-lucide="loader" class="w-6 h-6 animate-spin mx-auto mb-2 text-white"></i>Loading community reports...</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="100" class="p-8 text-center text-brand-main font-black"><i data-lucide="loader" class="w-8 h-8 animate-spin mx-auto mb-3 text-brand-main"></i>Loading community reports...</td></tr>`;
         lucide.createIcons();
 
         // Fetch Real Data
@@ -968,10 +977,10 @@
             if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
         });
 
-        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-brand-muted font-bold">No results found for this device/filter.</td></tr>`; }
+        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-brand-main font-black">No results found for this device/filter.</td></tr>`; }
         else {
             pageItems.forEach((row, i) => {
-                html += `<tr class="group ${i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'} hover:bg-white/10 transition-colors cursor-pointer" onclick="openGameModal(${startIndex + i})">`;
+                html += `<tr class="group hover:bg-brand-light/20 transition-colors cursor-pointer border-b-2 border-brand-light" onclick="openGameModal(${startIndex + i})">`;
                 config.columns.forEach(col => {
                     let val = row[col.key] || '-';
                     if (col.isStatus) {
@@ -980,8 +989,8 @@
                         else if(val === 'Great') badgeStyle = "perf-great";
                         else if(val === 'Playable') badgeStyle = "perf-playable";
                         else if(val === 'Unplayable') badgeStyle = "perf-unplayable";
-                        html += `<td class="p-4 font-mono text-xs"><span class="${badgeStyle} px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block border">${val}</span></td>`;
-                    } else { html += `<td class="p-4 font-medium text-sm text-brand-muted group-hover:text-white">${val}</td>`; }
+                        html += `<td class="p-4"><span class="${badgeStyle} px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider inline-block border-2 shadow-[2px_2px_0px_currentColor]">${val}</span></td>`;
+                    } else { html += `<td class="p-4 font-bold text-sm text-brand-dark">${val}</td>`; }
                 });
                 html += '</tr>';
             });
@@ -1023,15 +1032,14 @@
     function updatePerfButtons() {
         document.querySelectorAll('.perf-btn').forEach(btn => {
             const type = btn.dataset.perf;
-            const colors = PERF_COLORS[type] || ['bg-white', 'text-brand-bg'];
 
-            // Reset base classes
-            btn.className = 'perf-btn px-4 py-2 rounded-lg font-bold text-sm bg-brand-bg text-brand-muted hover:text-white hover:bg-brand-hover transition-all';
+            // Default chunky inactive class
+            btn.className = 'perf-btn px-4 py-2 rounded-xl font-bold text-sm bg-brand-dark text-white border-4 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#463884] transition-all uppercase tracking-wide';
 
             if(type === perfFilter) {
-                // Apply active classes
-                btn.classList.remove('bg-brand-bg', 'text-brand-muted', 'hover:bg-brand-hover');
-                btn.classList.add(...colors, 'scale-105', 'shadow-lg');
+                // Active chunky class
+                const colors = PERF_COLORS[type] || ['bg-white', 'text-brand-dark'];
+                btn.className = `perf-btn px-4 py-2 rounded-xl font-black text-sm ${colors[0]} ${colors[1]} border-4 border-brand-dark shadow-[1px_1px_0px_#463884] translate-y-0.5 transition-all uppercase tracking-wide`;
             }
         });
     }
@@ -1044,10 +1052,10 @@
         const content = document.getElementById('game-modal-content');
 
         let statusBadge = '';
-if(game.performance === 'Perfect') statusBadge = 'perf-perfect';
-else if(game.performance === 'Great') statusBadge = 'perf-great';
-else if(game.performance === 'Playable') statusBadge = 'perf-playable';
-else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
+        if(game.performance === 'Perfect') statusBadge = 'perf-perfect';
+        else if(game.performance === 'Great') statusBadge = 'perf-great';
+        else if(game.performance === 'Playable') statusBadge = 'perf-playable';
+        else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
 
         const config = SYSTEM_CONFIG[currentSystemId];
         const specialFields = ['game', 'performance', 'notes', 'date added', 'date', 'boxArt', 'chipset'];
@@ -1056,27 +1064,27 @@ else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
         // Simple initial box art logic
         const secondarySearch = `https://tse2.mm.bing.net/th?q=${encodeURIComponent((game.game||'') + ' ' + currentSystemId + ' box art')}&w=400&h=600&c=7&rs=1&p=0`;
         const initials = (game.game||'?').split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-        const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
+        const fallbackArt = `https://placehold.co/300x450/B9B2DE/463884?text=${initials}`;
 
         content.innerHTML = `
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="w-full md:w-1/3 flex flex-col gap-4">
-                    <div class="relative rounded-lg overflow-hidden shadow-2xl border border-white/10 group bg-black">
+                    <div class="relative rounded-2xl overflow-hidden shadow-[4px_4px_0px_#463884] border-4 border-brand-dark group bg-white">
                         <img src="${secondarySearch}" crossorigin="anonymous" alt="${game.game}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity"
                              onError="this.src='${fallbackArt}';">
                     </div>
                 </div>
                 <div class="w-full md:w-2/3">
                     <div class="mb-6">
-                        <h2 class="font-extrabold text-3xl text-white mb-2 leading-tight">${game.game}</h2>
-                        <span class="${statusBadge} px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center justify-center border">${game.performance}</span>
+                        <h2 class="font-black text-4xl text-brand-dark mb-3 leading-none uppercase tracking-tight">${game.game}</h2>
+                        <span class="${statusBadge} px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center justify-center border-2 shadow-[2px_2px_0px_currentColor]">${game.performance}</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        ${gridFields.map(col => `<div class="bg-brand-bg/50 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-[10px] text-brand-muted font-bold uppercase mb-1 leading-none opacity-80">${col.label}</p><p class="font-mono text-white text-sm break-words leading-tight">${game[col.key] || '-'}</p></div>`).join('')}
-                        ${game.chipset ? `<div class="bg-brand-bg/50 px-4 py-3 rounded-xl border border-white/5 flex flex-col justify-center"><p class="text-[10px] text-brand-muted font-bold uppercase mb-1 leading-none opacity-80">Chipset</p><p class="font-mono text-white text-sm break-words leading-tight">${game.chipset}</p></div>` : ''}
+                        ${gridFields.map(col => `<div class="bg-white px-4 py-3 rounded-xl border-4 border-brand-dark shadow-[3px_3px_0px_#463884] flex flex-col justify-center"><p class="text-[10px] text-brand-main font-black uppercase mb-1 leading-none tracking-widest">${col.label}</p><p class="font-bold text-brand-dark text-sm break-words leading-tight">${game[col.key] || '-'}</p></div>`).join('')}
+                        ${game.chipset ? `<div class="bg-white px-4 py-3 rounded-xl border-4 border-brand-dark shadow-[3px_3px_0px_#463884] flex flex-col justify-center"><p class="text-[10px] text-brand-main font-black uppercase mb-1 leading-none tracking-widest">Chipset</p><p class="font-bold text-brand-dark text-sm break-words leading-tight">${game.chipset}</p></div>` : ''}
                     </div>
-                    ${game.notes ? `<div class="bg-brand-bg/50 p-5 rounded-xl border border-white/10 mb-6"><p class="text-xs text-brand-muted font-bold uppercase mb-2 flex items-center gap-2 opacity-80"><i data-lucide="file-text" class="w-4 h-4"></i> Notes</p><p class="font-sans text-white leading-relaxed text-sm">${game.notes}</p></div>` : ''}
-                    <div class="border-t border-white/5 pt-4"><p class="text-[10px] text-brand-muted font-mono">Reported on: ${game['date added'] || 'Unknown'}</p></div>
+                    ${game.notes ? `<div class="bg-white p-5 rounded-2xl border-4 border-brand-dark shadow-[4px_4px_0px_#463884] mb-6"><p class="text-xs text-brand-main font-black uppercase mb-2 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i> Notes</p><p class="font-bold text-brand-dark leading-relaxed text-sm">${game.notes}</p></div>` : ''}
+                    <div class="border-t-4 border-brand-dark/20 pt-4"><p class="text-[10px] text-brand-main font-black uppercase tracking-widest">Reported on: ${game['date added'] || 'Unknown'}</p></div>
                 </div>
             </div>`;
         modal.classList.remove('hidden');
@@ -1087,23 +1095,23 @@ else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
     document.getElementById('screenshot-game-modal').addEventListener('click', function() {
         const btn = this;
         const originalIcon = btn.innerHTML;
-        btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i> <span class="font-bold text-xs hidden sm:inline">SAVING...</span>`;
+        btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> <span class="font-black text-xs hidden sm:inline uppercase">SAVING...</span>`;
         lucide.createIcons();
 
         const captureContainer = document.createElement('div');
-        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#2D1B4E', padding: '40px', borderRadius: '20px', zIndex: '-1' });
+        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#B9B2DE', padding: '40px', borderRadius: '20px', zIndex: '-1' });
 
         captureContainer.innerHTML = `
-            <div class="relative bg-[#432C7A] border-2 border-white/20 rounded-3xl p-8 w-full shadow-2xl flex flex-col font-sans">
+            <div class="relative bg-white border-4 border-[#463884] rounded-3xl p-8 w-full shadow-[8px_8px_0px_#463884] flex flex-col font-sans">
                 <div class="flex gap-8 p-1">
                     <div class="flex flex-col gap-4" style="width: 33%;">${document.querySelector('#game-modal-content .w-full.md\\:w-1\\/3').innerHTML}</div>
                     <div style="width: 67%;">${document.querySelector('#game-modal-content .w-full.md\\:w-2\\/3').innerHTML}</div>
                 </div>
-                <div class="mt-8 mx-2 pb-2 pt-4 border-t border-white/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-bold text-white text-lg tracking-tight">RYAN RETRO</span></div><span class="font-mono text-white/50 text-xs">ryanretro.com</span></div>
+                <div class="mt-8 mx-2 pb-2 pt-5 border-t-4 border-[#B9B2DE] flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-black text-[#463884] text-xl tracking-tight uppercase">RYAN RETRO</span></div><span class="font-black text-[#6254A4] text-xs tracking-widest">ryanretro.com</span></div>
             </div>`;
         document.body.appendChild(captureContainer);
 
-        html2canvas(captureContainer, { backgroundColor: '#2D1B4E', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
+        html2canvas(captureContainer, { backgroundColor: '#B9B2DE', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
             document.body.removeChild(captureContainer);
             const link = document.createElement('a');
             link.download = 'RyanRetro-Report.png';
@@ -1155,15 +1163,15 @@ else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
     const formSystemSelect = document.getElementById('form-system-select');
     const dynamicFieldsContainer = document.getElementById('dynamic-fields');
 
-    // 1. PERFORMANCE DROPDOWN COLORING (Moved outside so it only initializes once)
+    // 1. PERFORMANCE DROPDOWN COLORING
     const perfSelect = document.getElementById('form-performance');
     if (perfSelect) {
         const updateColor = () => {
-            perfSelect.className = 'brand-input w-full rounded-lg px-4 py-2 font-bold transition-colors'; // reset base classes
-            if (perfSelect.value === 'Perfect') perfSelect.classList.add('text-green-400', 'bg-green-400/10', 'border-green-400/20');
-            else if (perfSelect.value === 'Great') perfSelect.classList.add('text-blue-400', 'bg-blue-400/10', 'border-blue-400/20');
-            else if (perfSelect.value === 'Playable') perfSelect.classList.add('text-orange-400', 'bg-orange-400/10', 'border-orange-400/20');
-            else if (perfSelect.value === 'Unplayable') perfSelect.classList.add('text-red-400', 'bg-red-400/10', 'border-red-400/20');
+            perfSelect.className = 'brand-input w-full px-4 py-3 transition-colors'; // reset base classes
+            if (perfSelect.value === 'Perfect') perfSelect.classList.add('text-green-400', 'bg-green-400/10', 'border-green-400/40');
+            else if (perfSelect.value === 'Great') perfSelect.classList.add('text-blue-400', 'bg-blue-400/10', 'border-blue-400/40');
+            else if (perfSelect.value === 'Playable') perfSelect.classList.add('text-orange-400', 'bg-orange-400/10', 'border-orange-400/40');
+            else if (perfSelect.value === 'Unplayable') perfSelect.classList.add('text-red-400', 'bg-red-400/10', 'border-red-400/40');
             else perfSelect.classList.add('text-white');
         };
         perfSelect.addEventListener('change', updateColor);
@@ -1187,11 +1195,11 @@ else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
 
             if (field.type === 'select') {
                 const options = field.suggestions.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-                inputHtml = `<select name="${field.key}" class="brand-input w-full rounded-lg px-4 py-2" ${req}>${options}</select>`;
+                inputHtml = `<select name="${field.key}" class="brand-input w-full px-4 py-3" ${req}>${options}</select>`;
             } else {
-                inputHtml = `<input type="text" name="${field.key}" class="brand-input w-full rounded-lg px-4 py-2" ${req}>`;
+                inputHtml = `<input type="text" name="${field.key}" class="brand-input w-full px-4 py-3" ${req}>`;
             }
-            div.innerHTML = `<label class="block text-xs font-bold text-brand-muted mb-1 capitalize">${field.label} ${star}</label>${inputHtml}`;
+            div.innerHTML = `<label class="block text-sm font-black text-brand-light mb-2 uppercase">${field.label} ${star}</label>${inputHtml}`;
             dynamicFieldsContainer.appendChild(div);
         });
 
@@ -1199,8 +1207,8 @@ else if(game.performance === 'Unplayable') statusBadge = 'perf-unplayable';
         if (DEVICE.variants && DEVICE.variants.length > 1) {
             const div = document.createElement('div');
             const options = DEVICE.variants.map(v => `<option value="${v.id}">${v.label}</option>`).join('');
-            div.innerHTML = `<label class="block text-xs font-bold text-brand-muted mb-1">Chipset *</label>
-                             <select id="form-chipset-select" name="chipset" class="brand-input w-full rounded-lg px-4 py-2" required>${options}</select>`;
+            div.innerHTML = `<label class="block text-sm font-black text-brand-light mb-2 uppercase">Chipset *</label>
+                             <select id="form-chipset-select" name="chipset" class="brand-input w-full px-4 py-3" required>${options}</select>`;
             dynamicFieldsContainer.appendChild(div);
 
             if(currentVariant) {
