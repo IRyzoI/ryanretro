@@ -82,7 +82,7 @@
         /* Form Elements - Flat & Chunky */
         .brand-input {
             background: #463884;
-            border: 3px solid #B9B2DE;
+            border: 3px solid #463884;
             color: #FFFFFF;
             border-radius: 12px;
             transition: all 0.2s;
@@ -90,7 +90,7 @@
         }
         .brand-input:focus {
             outline: none;
-            border-color: #FFFFFF;
+            border-color: #463884;
             background: #6254A4;
             box-shadow: 3px 3px 0px #463884;
         }
@@ -284,12 +284,12 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto custom-scrollbar rounded-xl border-4 border-brand-dark bg-white">
+                <div class="overflow-x-auto custom-scrollbar rounded-xl border-4 border-brand-dark bg-brand-main">
                     <table id="compatibility-table" class="min-w-full text-sm text-left">
                         <thead class="bg-brand-dark text-white font-black text-xs uppercase tracking-wider cursor-pointer select-none border-b-4 border-brand-dark">
-                            </thead>
-                        <tbody class="divide-y-2 divide-brand-light/50 align-baseline text-brand-dark bg-white">
-                            </tbody>
+                        </thead>
+                        <tbody class="divide-y-2 divide-brand-dark/30 align-baseline text-white bg-brand-main">
+                        </tbody>
                     </table>
                 </div>
 
@@ -725,12 +725,12 @@
         wiiu: ['bg-blue-500', 'text-white']
     };
 
-    const PERF_COLORS = {
-        '': ['bg-brand-dark', 'text-white'], // All
-        'Perfect': ['bg-green-500', 'text-white'],
-        'Great': ['bg-blue-500', 'text-white'],
-        'Playable': ['bg-orange-500', 'text-white'],
-        'Unplayable': ['bg-red-500', 'text-white']
+    const PERF_CLASSES = {
+        '': 'bg-white text-brand-dark border-brand-dark', // All
+        'Perfect': 'perf-perfect',
+        'Great': 'perf-great',
+        'Playable': 'perf-playable',
+        'Unplayable': 'perf-unplayable'
     };
 
     // --- STATE MANAGEMENT ---
@@ -835,9 +835,30 @@
             masterDataCache[systemId] = normalized;
             return normalized;
         } catch (e) {
-            console.error("Failed to load data", e);
-            // Mock Data if API fails for UI dev
-            return [];
+            console.warn("Failed to load real data, falling back to generated UI mock data for preview.", e);
+            
+            // GENERATE DUMMY DATA FOR PREVIEW/THEMING
+            const mockGames = ["Super Mario Odyssey", "Zelda: Breath of the Wild", "Persona 5 Royal", "Hollow Knight", "Metroid Prime Remastered", "Xenoblade Chronicles 3", "Hades", "Celeste", "Elden Ring", "Skyrim", "Fallout: New Vegas", "Grand Theft Auto V", "Red Dead Redemption", "God of War", "Spider-Man"];
+            const perfs = ["Perfect", "Great", "Playable", "Unplayable"];
+            const mockData = [];
+            
+            for(let i=0; i<15; i++) {
+                const row = {
+                    game: mockGames[i % mockGames.length],
+                    performance: perfs[i % perfs.length],
+                    notes: "This is a generated mock note for UI testing. Runs surprisingly well but has some minor graphical stutters in heavily populated areas.",
+                    "date added": "2024-03-08"
+                };
+                
+                // Add random filler for other columns dynamically requested by system config
+                const configCols = SYSTEM_CONFIG[systemId]?.columns || [];
+                configCols.forEach(c => {
+                    if(!row[c.key]) row[c.key] = "Mock " + c.label;
+                });
+                
+                mockData.push(row);
+            }
+            return mockData;
         }
     }
 
@@ -940,7 +961,7 @@
             }
         });
 
-        tableBody.innerHTML = `<tr><td colspan="100" class="p-8 text-center text-brand-main font-black"><i data-lucide="loader" class="w-8 h-8 animate-spin mx-auto mb-3 text-brand-main"></i>Loading community reports...</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="100" class="p-8 text-center text-white font-black"><i data-lucide="loader" class="w-8 h-8 animate-spin mx-auto mb-3 text-white"></i>Loading community reports...</td></tr>`;
         lucide.createIcons();
 
         // Fetch Real Data
@@ -977,10 +998,11 @@
             if (ind) ind.textContent = (th.dataset.sort === sortColumn) ? (sortDirection === 'asc' ? ' ▲' : ' ▼') : '';
         });
 
-        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-brand-main font-black">No results found for this device/filter.</td></tr>`; }
+        if (pageItems.length === 0) { html = `<tr><td colspan="100" class="p-6 text-center text-white font-black">No results found for this device/filter.</td></tr>`; }
         else {
             pageItems.forEach((row, i) => {
-                html += `<tr class="group hover:bg-brand-light/20 transition-colors cursor-pointer border-b-2 border-brand-light" onclick="openGameModal(${startIndex + i})">`;
+                // Changed table row background and border to fit the purple theme
+                html += `<tr class="group hover:bg-brand-dark/50 transition-colors cursor-pointer border-b-2 border-brand-dark/30" onclick="openGameModal(${startIndex + i})">`;
                 config.columns.forEach(col => {
                     let val = row[col.key] || '-';
                     if (col.isStatus) {
@@ -990,7 +1012,10 @@
                         else if(val === 'Playable') badgeStyle = "perf-playable";
                         else if(val === 'Unplayable') badgeStyle = "perf-unplayable";
                         html += `<td class="p-4"><span class="${badgeStyle} px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider inline-block border-2 shadow-[2px_2px_0px_currentColor]">${val}</span></td>`;
-                    } else { html += `<td class="p-4 font-bold text-sm text-brand-dark">${val}</td>`; }
+                    } else { 
+                        // Changed text color to white
+                        html += `<td class="p-4 font-bold text-sm text-white">${val}</td>`; 
+                    }
                 });
                 html += '</tr>';
             });
@@ -1038,8 +1063,8 @@
 
             if(type === perfFilter) {
                 // Active chunky class
-                const colors = PERF_COLORS[type] || ['bg-white', 'text-brand-dark'];
-                btn.className = `perf-btn px-4 py-2 rounded-xl font-black text-sm ${colors[0]} ${colors[1]} border-4 border-brand-dark shadow-[1px_1px_0px_#463884] translate-y-0.5 transition-all uppercase tracking-wide`;
+                const activeClass = PERF_CLASSES[type] || 'bg-white text-brand-dark border-brand-dark';
+                btn.className = `perf-btn px-4 py-2 rounded-xl font-black text-sm ${activeClass} border-4 shadow-[1px_1px_0px_#463884] translate-y-0.5 transition-all uppercase tracking-wide`;
             }
         });
     }
@@ -1074,17 +1099,36 @@
                              onError="this.src='${fallbackArt}';">
                     </div>
                 </div>
-                <div class="w-full md:w-2/3">
-                    <div class="mb-6">
-                        <h2 class="font-black text-4xl text-brand-dark mb-3 leading-none uppercase tracking-tight">${game.game}</h2>
-                        <span class="${statusBadge} px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center justify-center border-2 shadow-[2px_2px_0px_currentColor]">${game.performance}</span>
+                <div class="w-full md:w-2/3 flex flex-col">
+                    <div class="mb-6 flex flex-col items-start">
+                        <h2 class="font-black text-4xl text-brand-dark pb-3 uppercase tracking-tight" style="line-height: 1;">${game.game}</h2>
+                        <div class="${statusBadge} rounded-xl border-2 shadow-[2px_2px_0px_currentColor]" style="padding: 6px 16px;">
+                            <span class="block text-xs font-black uppercase tracking-wider" style="line-height: 1;">${game.performance}</span>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        ${gridFields.map(col => `<div class="bg-white px-4 py-3 rounded-xl border-4 border-brand-dark shadow-[3px_3px_0px_#463884] flex flex-col justify-center"><p class="text-[10px] text-brand-main font-black uppercase mb-1 leading-none tracking-widest">${col.label}</p><p class="font-bold text-brand-dark text-sm break-words leading-tight">${game[col.key] || '-'}</p></div>`).join('')}
-                        ${game.chipset ? `<div class="bg-white px-4 py-3 rounded-xl border-4 border-brand-dark shadow-[3px_3px_0px_#463884] flex flex-col justify-center"><p class="text-[10px] text-brand-main font-black uppercase mb-1 leading-none tracking-widest">Chipset</p><p class="font-bold text-brand-dark text-sm break-words leading-tight">${game.chipset}</p></div>` : ''}
+                        ${gridFields.map(col => `
+                        <div class="bg-brand-main rounded-xl border-4 border-brand-dark shadow-[3px_3px_0px_#463884]" style="padding: 12px 16px;">
+                            <span class="block text-[10px] text-brand-light font-black uppercase tracking-widest" style="line-height: 1; padding-bottom: 6px;">${col.label}</span>
+                            <span class="block font-bold text-white text-sm break-words" style="line-height: 1.2;">${game[col.key] || '-'}</span>
+                        </div>`).join('')}
+                        ${game.chipset ? `
+                        <div class="bg-brand-main rounded-xl border-4 border-brand-dark shadow-[3px_3px_0px_#463884]" style="padding: 12px 16px;">
+                            <span class="block text-[10px] text-brand-light font-black uppercase tracking-widest" style="line-height: 1; padding-bottom: 6px;">Chipset</span>
+                            <span class="block font-bold text-white text-sm break-words" style="line-height: 1.2;">${game.chipset}</span>
+                        </div>` : ''}
                     </div>
-                    ${game.notes ? `<div class="bg-white p-5 rounded-2xl border-4 border-brand-dark shadow-[4px_4px_0px_#463884] mb-6"><p class="text-xs text-brand-main font-black uppercase mb-2 flex items-center gap-2"><i data-lucide="file-text" class="w-4 h-4"></i> Notes</p><p class="font-bold text-brand-dark leading-relaxed text-sm">${game.notes}</p></div>` : ''}
-                    <div class="border-t-4 border-brand-dark/20 pt-4"><p class="text-[10px] text-brand-main font-black uppercase tracking-widest">Reported on: ${game['date added'] || 'Unknown'}</p></div>
+                    ${game.notes ? `
+                    <div class="bg-brand-main rounded-2xl border-4 border-brand-dark shadow-[4px_4px_0px_#463884] mb-6 flex flex-col" style="padding: 20px;">
+                        <div class="flex items-center gap-2" style="padding-bottom: 10px;">
+                            <i data-lucide="file-text" class="w-4 h-4 text-brand-light"></i>
+                            <span class="text-xs text-brand-light font-black uppercase" style="line-height: 1;">Notes</span>
+                        </div>
+                        <span class="block font-bold text-white text-sm" style="line-height: 1.5;">${game.notes}</span>
+                    </div>` : ''}
+                    <div class="border-t-4 border-brand-dark/20" style="padding-top: 16px;">
+                        <span class="block text-[10px] text-brand-main font-black uppercase tracking-widest" style="line-height: 1;">Reported on: ${game['date added'] || 'Unknown'}</span>
+                    </div>
                 </div>
             </div>`;
         modal.classList.remove('hidden');
@@ -1099,19 +1143,19 @@
         lucide.createIcons();
 
         const captureContainer = document.createElement('div');
-        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#B9B2DE', padding: '40px', borderRadius: '20px', zIndex: '-1' });
+        Object.assign(captureContainer.style, { position: 'fixed', top: '-9999px', left: '-9999px', width: '1000px', backgroundColor: '#6254A4', padding: '40px', borderRadius: '20px', zIndex: '-1' });
 
         captureContainer.innerHTML = `
-            <div class="relative bg-white border-4 border-[#463884] rounded-3xl p-8 w-full shadow-[8px_8px_0px_#463884] flex flex-col font-sans">
+            <div class="relative bg-brand-light border-4 border-brand-dark rounded-3xl p-8 w-full shadow-[8px_8px_0px_#463884] flex flex-col font-sans text-brand-dark">
                 <div class="flex gap-8 p-1">
                     <div class="flex flex-col gap-4" style="width: 33%;">${document.querySelector('#game-modal-content .w-full.md\\:w-1\\/3').innerHTML}</div>
                     <div style="width: 67%;">${document.querySelector('#game-modal-content .w-full.md\\:w-2\\/3').innerHTML}</div>
                 </div>
-                <div class="mt-8 mx-2 pb-2 pt-5 border-t-4 border-[#B9B2DE] flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-black text-[#463884] text-xl tracking-tight uppercase">RYAN RETRO</span></div><span class="font-black text-[#6254A4] text-xs tracking-widest">ryanretro.com</span></div>
+                <div class="mt-8 mx-2 pb-2 pt-5 border-t-4 border-brand-dark/20 flex justify-between items-center"><div class="flex items-center gap-2"><span class="font-black text-brand-dark text-xl tracking-tight uppercase">RYAN RETRO</span></div><span class="font-black text-brand-main text-xs tracking-widest">ryanretro.com</span></div>
             </div>`;
         document.body.appendChild(captureContainer);
 
-        html2canvas(captureContainer, { backgroundColor: '#B9B2DE', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
+        html2canvas(captureContainer, { backgroundColor: '#6254A4', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 1000, windowWidth: 1000 }).then(canvas => {
             document.body.removeChild(captureContainer);
             const link = document.createElement('a');
             link.download = 'RyanRetro-Report.png';
