@@ -3,147 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Patrons | Ryan Retro</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#B9B2DE',  // Logo Background / Main Page Background
+                            main: '#6254A4',   // Gameboy Body / Primary Purple
+                            dark: '#463884',   // Screen Bevel / Shadows / Text
+                            accent: '#FFFFFF', // Text & Highlights
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700;900&display=swap');
-        
-        :root {
-            /* LIGHT MODE (Default) - GAMEBOY CARTRIDGE COLORS */
-            --gb-grey: #e0e0e0;
-            --gb-dark-grey: #c4c4c4;
-            --gb-shadow: #9e9e9e;
-            --gb-highlight: #ffffff;
-            --gb-accent: #6b7280;
-            
-            --bg-body: #f0f0f0;
-            --bg-panel: #e5e7eb; /* gray-200 */
-            --text-main: #111827;
-            --text-muted: #4b5563;
-            --border-color: #000000;
-        }
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; display: block; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #463884; border-radius: 6px; margin: 0 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #B9B2DE; border-radius: 6px; border: 2px solid #463884; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #FFFFFF; }
 
-        /* DARK MODE VARIABLES */
-        body.dark-mode {
-            --gb-grey: #4b5563;         /* Gray 600 - Lighter face for contrast */
-            --gb-dark-grey: #111827;    /* Gray 900 - Dark sides/thickness */
-            --gb-shadow: #000000;       /* Deep shadow */
-            --gb-highlight: rgba(255,255,255,0.15); /* Sharp edge highlight */
-            --gb-accent: #9ca3af;
-            
-            --bg-body: #111827;         /* Very dark background for page */
-            --bg-panel: #1f2937;        
-            --text-main: #d1d5db;       /* Light text */
-            --text-muted: #9ca3af;
-            --border-color: #000000;   
-        }
-
-        .retro-font { font-family: 'Press Start 2P', cursive; }
-        
-        /* BACKGROUND TEXTURE - Cartridge Case */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
-        }
-        
-        .bg-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* HEADER & UI ELEMENTS */
-        .pixel-btn { transition: all 0.1s ease; }
-        .pixel-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); }
-        
-        .pixel-border { border: 4px solid #000; box-shadow: 8px 8px 0 rgba(0,0,0,0.2); }
-
-        /* DARK MODE SPECIFIC OVERRIDES FOR TAILWIND CLASSES */
-        body.dark-mode header,
-        body.dark-mode footer {
-            background-color: var(--gb-grey) !important;
-            border-color: var(--gb-dark-grey) !important;
-        }
-        
-        body.dark-mode h1, 
-        body.dark-mode h2, 
-        body.dark-mode h3 {
-            color: #fff !important;
-        }
-        
-        body.dark-mode p {
-            color: #d1d5db !important;
-        }
-
-        /* Button overrides in dark mode */
-        body.dark-mode .bg-gray-100 {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-        }
-        body.dark-mode .bg-gray-100:hover {
-            background-color: #374151 !important;
-        }
-
-        /* Flash Deals / Nav Box / Panels Dark Mode */
-        body.dark-mode .bg-gray-200 {
-            background-color: #374151 !important;
-            border-color: #1f2937 !important;
-        }
-        body.dark-mode .bg-white {
-            background-color: #1f2937 !important;
-            border-color: #4b5563 !important;
-            color: #fff !important;
-        }
-
-        /* Fix Nav Item Hovers (Red) */
-        body.dark-mode .nav-item:hover {
-            background-color: #dc2626 !important; /* Red 600 */
-            border-color: #000000 !important;
-            color: #ffffff !important;
-        }
-        
-        /* Fix Dark Mode Toggle Hover (Dark Gray) */
-        body.dark-mode #darkModeToggle:hover {
-            background-color: #111827 !important;
-        }
-
-        /* Fix Text Colors in Containers */
-        body.dark-mode .bg-gray-200 .text-gray-500,
-        body.dark-mode .bg-white .text-gray-500 {
-            color: #9ca3af !important; /* Gray 400 */
-        }
-
-        /* --- Video Mode / Overlay Styles --- */
-        body.video-mode {
-            background: transparent !important;
-            overflow: hidden;
-            background-image: none !important;
-        }
-        body.video-mode header, 
-        body.video-mode footer,
-        body.video-mode #navOverlay,
-        body.video-mode .bg-overlay,
-        body.video-mode .video-hidden {
-            display: none !important;
-        }
-        body.video-mode main {
-            padding-top: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
         /* --- PATRON PAGE SPECIFIC ANIMATIONS --- */
         @keyframes float {
             0% { transform: translateY(0px) rotateX(0deg); }
@@ -161,420 +59,254 @@
             100% { transform: translateX(250%) skewX(-20deg); }
         }
 
-        /* --- 3D Tier Special Effects --- */
-        .tier-3d-card {
-            perspective: 1000px;
-            animation: float 4s ease-in-out infinite;
-            background: linear-gradient(145deg, #1f2937, #111827);
-            border: 2px solid #facc15; 
-            box-shadow: 0 0 15px rgba(250, 204, 21, 0.3), inset 0 0 10px rgba(250, 204, 21, 0.1);
-        }
-
-        .tier-3d-text {
-            background: linear-gradient(to right, #facc15, #f87171, #60a5fa, #facc15);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shine 3s linear infinite;
-            font-weight: 900;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-        }
-
-        /* --- 16-Bit Styles --- */
-        .tier-16bit-card {
-            background: #1f2937;
-            border-left: 4px solid #60a5fa; 
+        /* --- Patron Card Styles (Chunky Theme) --- */
+        .patron-card {
+            background: #6254A4;
+            color: #FFFFFF;
+            border: 3px solid #463884;
+            box-shadow: 3px 3px 0px #463884;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .tier-16bit-card:hover {
-            transform: scale(1.05);
-            background: #374151;
+        .patron-card:hover {
+            transform: scale(1.05) translateY(-2px);
+            background: #463884;
+            box-shadow: 5px 5px 0px #463884;
             z-index: 10;
         }
 
-        /* --- 8-Bit Styles --- */
-        .tier-8bit-card {
-            background: #1f2937;
-            border-left: 4px solid #9ca3af;
-            transition: all 0.2s ease;
+        /* --- Video Mode / Overlay Styles --- */
+        body.video-mode {
+            background: transparent !important;
+            overflow: hidden;
+            background-image: none !important;
         }
-        .tier-8bit-card:hover {
-            transform: scale(1.02);
-            background: #374151;
+        body.video-mode header, 
+        body.video-mode footer,
+        body.video-mode .video-hidden {
+            display: none !important;
         }
-
-        /* Header Responsive Fixes */
-        @media (max-width: 768px) {
-          .header-container { flex-direction: column; gap: 0.25rem; }
+        body.video-mode main {
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
     </style>
 </head>
-<body class="font-sans overflow-x-hidden pb-8 dark-mode">
+<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
 
-<div class="bg-overlay"></div>
-
-<div id="navOverlay" class="fixed inset-0 z-[100] hidden bg-black/80 backdrop-blur-sm flex items-start justify-start p-4">
-    <div class="absolute inset-0" onclick="toggleNav()"></div>
-    
-    <div class="bg-gray-200 border-4 border-gray-400 rounded-lg p-1 w-64 max-w-full shadow-2xl relative mt-16 ml-0 md:ml-4 transform transition-all duration-200 scale-95 opacity-0 flex flex-col gap-1" id="navBox">
-        
-        <div class="bg-gray-800 text-white p-2 mb-1 flex justify-between items-center border-b-2 border-black">
-            <span class="retro-font text-xs">PAUSE MENU</span>
-            <button onclick="toggleNav()" class="text-white hover:text-red-400">
-                <i data-feather="x" class="w-4 h-4"></i>
-            </button>
-        </div>
-
-        <div class="flex flex-col gap-1" id="navLinksList">
-                            <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-red-600 border-2 border-black text-white cursor-pointer group transition-colors">
-                    <span class="retro-font text-[10px]">GAME OF THE WEEK</span>
-                    <i data-feather="crosshair" class="w-4 h-4 text-white"></i>
-                </a>
+    <header class="sticky top-0 z-50 bg-brand-main border-b-4 border-brand-dark shadow-md">
+        <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
             
-            <a href="benchmarks" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">BENCHMARKS</span>
-                <i data-feather="cpu" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
+            <a href="/" class="flex items-center gap-4 group shrink-0">
+                <div class="w-12 h-12 rounded-xl overflow-hidden border-[3px] border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
+                    <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
+                </div>
+                <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">RYAN RETRO</span>
             </a>
 
-            <a href="handheld" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">HANDHELDS</span>
-                <i data-feather="smartphone" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
+            <nav class="hidden lg:flex items-center gap-6">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Benchmarks</a>
+                <!-- Active Page Highlighted -->
+                <a href="/patrons" class="text-sm font-black text-white border-b-2 border-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Shop</a>
+            </nav>
 
-            <a href="/" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">HOME</span>
-                <i data-feather="home" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <a href="patrons" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">PATRONS</span>
-                <i data-feather="users" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-
-            <a href="store" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-red-600 hover:text-white cursor-pointer group transition-colors">
-                <span class="retro-font text-[10px] group-hover:text-white">STORE</span>
-                <i data-feather="shopping-cart" class="w-4 h-4 text-gray-400 group-hover:text-white"></i>
-            </a>
-        </div>
-        
-        <div class="h-0.5 bg-gray-400 my-1"></div>
-
-        <div id="darkModeToggle" class="nav-item flex items-center justify-between px-4 py-3 bg-white border-2 border-transparent hover:border-black hover:bg-gray-800 hover:text-white cursor-pointer group transition-colors">
-             <span class="retro-font text-[10px] group-hover:text-white">SWITCH THEME</span>
-             <i data-feather="sun" class="w-4 h-4 text-gray-400 group-hover:text-white" id="themeIcon"></i>
-        </div>
-
-        <div class="mt-1 text-center pb-1">
-            <span class="text-[8px] retro-font text-gray-500">SELECT OPTION</span>
-        </div>
-    </div>
-</div>
-
-<header class="bg-gray-100 py-3 md:py-6 border-b-4 border-gray-400 shadow-md transition-colors duration-300 relative z-50">
-  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between header-container gap-4">
-    
-    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
-        
-        <button id="navToggle" class="p-3 bg-gray-800 text-white hover:bg-gray-700 rounded pixel-btn border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 group">
-            <i data-feather="menu" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
-            <span class="retro-font text-[10px] hidden md:block">MENU</span>
-        </button>
-
-        <a href="/" class="flex items-center gap-3 md:gap-4">
-            <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png"
-                class="w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-gray-400 bg-gray-200" alt="Ryan Retro Logo">
-            <div class="flex flex-col">
-                <h1 class="retro-font text-sm md:text-xl text-gray-800 leading-tight">PATRONS</h1>
-                <span class="retro-font text-[8px] text-gray-500 uppercase">Supporters</span>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-4 pr-4 border-r-2 border-brand-dark">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors">
+                        <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+                </div>
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
+                </button>
             </div>
-        </a>
-    </div>
-
-    <div class="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto order-3 md:order-3 mt-2 md:mt-0">
-      
-      <button id="openFlashDealsBtn" 
-              class="px-3 py-2 md:py-4 md:px-4 bg-yellow-400 hover:bg-yellow-300 text-black rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)] w-full md:w-auto hidden">
-          <i data-feather="zap" class="w-4 h-4 md:w-5 md:h-5"></i>
-          <span>DEALS</span>
-      </button>
-
-      <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center">
-        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest rounded border border-gray-300 whitespace-nowrap z-10">
-          FIND ME
-        </span>
-        <div class="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-           <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#FF0000] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="YouTube">
-             <i data-feather="youtube" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Instagram">
-             <i data-feather="instagram" class="w-4 h-4 md:w-5 md:h-5"></i>
-           </a>
-           <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="TikTok">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-           </a>
-           <a href="https://discord.gg/RAenS43UV9" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-[#5865F2] text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Discord">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.56 13.56 0 0 0-1.04 2.135 18.237 18.237 0 0 0-4.613 0 13.562 13.562 0 0 0-1.04-2.135.071.071 0 0 0-.079-.037A19.736 19.736 0 0 0 3.67 4.37a.069.069 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-           </a>
-           <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="Threads">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M12.673 13.929C13.22 13.784 13.6 13.313 13.6 12.383C13.6 11.233 12.793 10.237 11.411 10.237C10.026 10.237 9.173 11.196 9.173 12.376C9.173 13.504 9.947 14.542 11.455 14.542C12.062 14.542 12.592 14.364 13.064 14.074L13.805 15.65C13.085 16.037 12.222 16.223 11.366 16.223C8.619 16.223 6.9 14.475 6.9 12.285C6.9 9.808 8.922 7.788 11.751 7.788C14.717 7.788 16.275 9.778 16.275 12.441C16.275 12.695 16.262 12.98 16.241 13.235H18.455C18.486 12.964 18.503 12.69 18.503 12.412C18.503 8.356 15.789 5.6 11.751 5.6C8.016 5.6 5.093 8.441 5.093 12.424C5.093 16.19 7.973 18.995 11.666 18.995C13.565 18.995 15.304 18.366 16.804 17.214L18.156 18.941C16.326 20.404 14.025 21.183 11.621 21.183C6.732 21.183 2.8 17.29 2.8 12.424C2.8 7.378 6.945 3.4 11.751 3.4C17.078 3.4 20.73 7.03 20.73 12.412C20.73 18.81 16.355 20.45 14.546 20.45C13.513 20.45 12.69 20.089 12.33 19.347H12.274L11.838 20.795H9.727L10.96 16.666C10.741 15.862 10.638 15.008 10.638 14.288H12.75C12.75 14.162 12.695 14.053 12.673 13.929Z"/></svg>
-           </a>
-           <a href="https://x.com/RyanRetroYT" target="_blank" class="w-8 h-8 md:w-10 md:h-10 bg-black text-white rounded pixel-btn border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-transform shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" title="X (Twitter)">
-             <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-           </a>
         </div>
-      </div>
 
-      <div class="border-2 border-gray-400 rounded p-2 pt-4 relative group bg-white w-full md:w-auto flex justify-center mt-2 md:mt-0">
-        <span class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gray-100 px-2 text-[8px] text-gray-500 retro-font uppercase tracking-widest flex items-center gap-1 rounded border border-gray-300 whitespace-nowrap z-10">
-          SUPPORT ME <i data-feather="heart" class="w-3 h-3 text-red-500 fill-red-500 animate-pulse"></i>
-        </span>
-        <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-           class="px-4 py-1.5 md:py-2 bg-[#f96854] hover:bg-[#ff8e7d] text-white rounded pixel-btn retro-font text-[10px] md:text-xs uppercase border-2 border-black flex items-center justify-center gap-2 w-full transition-transform hover:scale-105 shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">
-          <svg class="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-          </svg>
-          <span class="tracking-tight">JOIN PATREON</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</header>
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-4 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-3">
+                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Benchmarks</a>
+                <!-- Active Mobile Link -->
+                <a href="/patrons" class="p-3 bg-white border-2 border-brand-dark rounded-xl text-center text-sm font-black text-brand-dark hover:bg-brand-light hover:text-brand-dark transition-colors shadow-sm">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Shop</a>
+            </div>
 
-<main>
-    <section class="pt-8 pb-4 text-center video-hidden">
-        <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-down">
+            <div class="flex justify-center flex-wrap gap-4 pt-6 border-t-2 border-brand-dark">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-light hover:text-white"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-light hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-light hover:text-white"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="pt-12 pb-6 text-center video-hidden">
+            <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-down">
+                
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none text-brand-dark drop-shadow-sm uppercase mb-6 cursor-default">
+                    HALL OF FAME
+                </h1>
+
+                <p class="text-base md:text-xl font-bold text-brand-dark/80 w-full mb-12 max-w-2xl leading-relaxed">
+                    A massive thank you to the legends who support the channel! This dream is becoming possible because of you ❤️
+                </p>
+                
+            </div>
+        </section>
+
+        <div class="container mx-auto px-4 pt-2 pb-16 max-w-5xl video-hidden">
             
-            <h1 class="retro-font text-xl md:text-4xl !text-yellow-400 drop-shadow-md mb-6 cursor-default">
-                HALL OF FAME
-            </h1>
-
-            <p class="text-sm md:text-xl text-gray-400 w-full mb-12">
-                A massive thank you to the legends who support the channel! This dream is becoming possible because of you ❤️
-            </p>
+            <div class="mb-16">
+                <h2 class="font-black text-center text-3xl text-brand-dark mb-10 flex items-center justify-center gap-3 uppercase tracking-tight" data-aos="fade-up">
+                    <i data-lucide="users" class="w-8 h-8"></i> THE RETRO FAMILY
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Calicoma</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Chappers</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Charlie</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Daniel Svensson</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">DM Spectre</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Frostbright Productions</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">John’s Ducks</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Joseph Pizza</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Kahl</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Kevin Wagner</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Materia-listic</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Michael Wells</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Mr. Sir</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">OsakaBoy</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Ricardo Chavarria</span>
+                    </div>
+                    <div class="patron-card p-4 rounded-xl flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
+                        <i data-lucide="star" class="w-5 h-5 text-brand-light flex-shrink-0 fill-current"></i>
+                        <span class="font-bold">Steve Berman</span>
+                    </div>
+                </div>
+            </div>
             
         </div>
-    </section>
 
-    <div class="container mx-auto px-4 pt-2 pb-12 max-w-4xl">
-        
-        <div class="mb-16">
-            <h2 class="retro-font text-center text-2xl !text-yellow-400 mb-8 flex items-center justify-center gap-3" data-aos="fade-up">
-                <i data-feather="box" class="w-8 h-8"></i> 3D TIER
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="tier-3d-card rounded-xl p-8 text-center" data-aos="zoom-in" data-aos-delay="0">
-                    <div class="mb-4 flex justify-center">
-                        <div class="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center border border-purple-500/50">
-                            <i data-feather="video" class="w-8 h-8 text-purple-400"></i>
-                        </div>
-                    </div>
-                    <h3 class="tier-3d-text text-xl md:text-2xl tracking-wide">Frostbright Productions</h3>
-                </div>
-
-                <div class="tier-3d-card rounded-xl p-8 text-center" data-aos="zoom-in" data-aos-delay="150" style="animation-delay: 0.5s;">
-                    <div class="mb-4 flex justify-center">
-                        <div class="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center border border-yellow-400/50">
-                            <i data-feather="zap" class="w-8 h-8 text-yellow-400"></i>
-                        </div>
-                    </div>
-                    <h3 class="tier-3d-text text-xl md:text-2xl tracking-wide">Kahl</h3>
-                </div>
-
-                <div class="tier-3d-card rounded-xl p-8 text-center" data-aos="zoom-in" data-aos-delay="300" style="animation-delay: 1s;">
-                    <div class="mb-4 flex justify-center">
-                        <div class="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center border border-green-500/50">
-                            <i data-feather="cpu" class="w-8 h-8 text-green-400"></i>
-                        </div>
-                    </div>
-                    <h3 class="tier-3d-text text-xl md:text-2xl tracking-wide">Kevin Wagner</h3>
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-16">
-            <h2 class="retro-font text-center text-xl !text-blue-400 mb-6 flex items-center justify-center gap-3" data-aos="fade-up">
-                <i data-feather="layers" class="w-6 h-6"></i> 16-BIT TIER
-            </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                 <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="0">
-                    <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Chappers</span>
-                </div>
-                <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
-                    <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Daniel Svensson</span>
-                </div>
-                <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
-                    <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">DM Spectre</span>
-                </div>
-                 <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
-                    <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Joseph Pizza</span>
-                </div>
-                <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="200">
-                    <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Mr. Sir</span>
-                </div>
-                <div class="tier-16bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="250">
-                    <i data-feather="star" class="w-4 h-4 text-blue-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">OsakaBoy</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-12">
-            <h2 class="retro-font text-center text-lg !text-gray-400 mb-6 flex items-center justify-center gap-3" data-aos="fade-up">
-                <i data-feather="grid" class="w-5 h-5"></i> 8-BIT TIER
-            </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="0">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Calicoma</span>
-                </div>
-                <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="50">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Charlie</span>
-                </div>
-                <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="100">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">John’s Ducks</span>
-                </div>
-                <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="150">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Materia-listic</span>
-                </div>
-                <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="200">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Michael Wells</span>
-                </div>
-                 <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="250">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Ricardo Chavarria</span>
-                </div>
-                <div class="tier-8bit-card p-4 rounded flex items-center gap-3" data-aos="fade-up" data-aos-delay="300">
-                    <i data-feather="heart" class="w-4 h-4 text-gray-400 flex-shrink-0"></i>
-                    <span class="font-bold text-gray-200">Steve Berman</span>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-
-    <!-- MOVED PATRON BUTTON TO BOTTOM -->
-    <section class="pb-12 text-center video-hidden">
-        <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-up">
-            <div class="relative flex items-stretch group/patreon cursor-pointer hover:-translate-y-1 transition-transform duration-200">
-                <div class="absolute -top-7 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-[8px] retro-font px-2 py-1.5 rounded border-2 border-black opacity-0 group-hover/patreon:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20 shadow-lg -translate-y-2 group-hover/patreon:translate-y-0">
-                    JOIN THE RYAN RETRO FAMILY!
-                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black"></div>
-                </div>
-
-                <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
-                   class="bg-[#f96854] hover:bg-[#ff8e7d] text-white px-8 py-5 rounded pixel-border retro-font text-[10px] md:text-sm flex items-center justify-center relative overflow-hidden transition-all duration-300">
+        <!-- BECOME A PATRON BUTTON -->
+        <section class="pb-16 text-center video-hidden">
+            <div class="container mx-auto px-4 flex flex-col items-center" data-aos="fade-up">
+                <div class="relative flex items-stretch group/patreon cursor-pointer hover:-translate-y-1 transition-transform duration-200">
                     
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-1/2 h-full skew-x-[-20deg] animate-[shimmer-sweep_2.5s_infinite_linear] pointer-events-none"></div>
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-brand-dark text-xs font-black px-3 py-2 rounded-lg border-4 border-brand-dark opacity-0 group-hover/patreon:opacity-100 transition-all pointer-events-none whitespace-nowrap z-20 shadow-[3px_3px_0px_#463884] -translate-y-2 group-hover/patreon:translate-y-0">
+                        JOIN THE RYAN RETRO FAMILY!
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-t-brand-dark"></div>
+                    </div>
 
-                    <svg class="w-5 h-5 fill-current mr-3 relative z-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
-                    </svg>
-                    <span class="relative z-10 tracking-wider">BECOME A PATRON</span>
-                </a>
+                    <a href="https://patreon.com/ryanretro" target="_blank" rel="noopener noreferrer"
+                       class="bg-[#f96854] hover:bg-[#ff8e7d] text-white px-8 py-5 rounded-2xl border-4 border-brand-dark shadow-[6px_6px_0px_#463884] font-black text-sm md:text-base flex items-center justify-center relative overflow-hidden transition-all duration-300 hover:shadow-[8px_8px_0px_#463884]">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-1/2 h-full skew-x-[-20deg] animate-[shimmer-sweep_2.5s_infinite_linear] pointer-events-none"></div>
+
+                        <svg class="w-6 h-6 fill-current mr-3 relative z-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/>
+                        </svg>
+                        <span class="relative z-10 tracking-wider">BECOME A PATRON</span>
+                    </a>
+                </div>
             </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-brand-main py-10 text-center border-t-4 border-brand-dark mt-auto relative z-40">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center flex-wrap gap-6 mb-6">
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+            </div>
+            <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
         </div>
-    </section>
+    </footer>
 
-</main>
+    <script>
+        // Init AOS & Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({ once: true, offset: 50, duration: 800 });
+            lucide.createIcons();
 
-<footer class="bg-gray-100 py-8 mt-12 border-t-4 border-gray-300 transition-colors duration-300">
-  <div class="container mx-auto text-center text-gray-500 text-xs retro-font">
-    <div class="flex items-center justify-center mb-4">
-        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/ryan%20retro%20logo.png" 
-             class="w-8 h-8 rounded-full mr-3 opacity-80">
-        <span class="retro-font text-yellow-400 text-sm">RYAN RETRO</span>
-    </div>
-    <p class="mt-2">© 2025 Ryan Retro</p>
-  </div>
-</footer>
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
 
-<script>
-    // --- DARK MODE LOGIC (Updated to match Page 1) ---
-    const body = document.body;
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-
-    // Check Local Storage
-    if (localStorage.getItem('theme') === 'light') {
-        body.classList.remove('dark-mode');
-        themeIcon.setAttribute('data-feather', 'moon');
-    } else {
-        body.classList.add('dark-mode');
-        themeIcon.setAttribute('data-feather', 'sun');
-    }
-
-    darkModeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        if (body.classList.contains('dark-mode')) {
-            localStorage.setItem('theme', 'dark');
-            themeIcon.setAttribute('data-feather', 'sun');
-        } else {
-            localStorage.setItem('theme', 'light');
-            themeIcon.setAttribute('data-feather', 'moon');
-        }
-        feather.replace();
-    });
-
-    // --- NAVIGATION LOGIC ---
-    const navToggle = document.getElementById('navToggle');
-    const navOverlay = document.getElementById('navOverlay');
-    const navBox = document.getElementById('navBox');
-
-    window.toggleNav = () => {
-        const isHidden = navOverlay.classList.contains('hidden');
-        if (isHidden) {
-            navOverlay.classList.remove('hidden');
-            setTimeout(() => {
-                navBox.classList.remove('scale-95', 'opacity-0');
-                navBox.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        } else {
-            navBox.classList.remove('scale-100', 'opacity-100');
-            navBox.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                navOverlay.classList.add('hidden');
-            }, 200);
-        }
-    };
-
-    navToggle.addEventListener('click', toggleNav);
-
-    // Auto-Highlight Active Page
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav-item').forEach(link => {
-        const href = link.getAttribute('href');
-        // Simple highlight check
-        if (href === currentPath || href === 'patrons') {
-            link.classList.add('bg-red-600', 'border-black', 'text-white');
-            link.classList.remove('border-transparent', 'bg-white');
-            link.querySelector('span').classList.add('text-white');
-            link.querySelector('i').classList.add('text-white');
-            link.querySelector('i').classList.remove('text-gray-400');
-        }
-    });
-
-    // --- INIT AOS & VIDEO MODE ---
-    document.addEventListener('DOMContentLoaded', function() {
-        AOS.init({ duration: 800, once: true });
-        feather.replace();
-
-        // Check for URL param ?video=1
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('video') === '1') {
-            document.body.classList.add('video-mode');
-        }
-    });
-</script>
-
+            // Video Mode Hidden Feature Check (Preserved Functionality)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('video') === '1') {
+                document.body.classList.add('video-mode');
+            }
+        });
+    </script>
 </body>
 </html>
