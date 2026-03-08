@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Ryan Retro | Benchmarks</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +14,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -21,17 +22,15 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#2D1B4E',       // Deep Soft Purple
-                            card: '#432C7A',     // Lighter Grape
-                            hover: '#5B3EA8',    // Bright Purple
-                            accent: '#FFFFFF',   // Pure White
-                            muted: '#D4BBFF',    // Soft Lavender Text
-                            red: '#FF0000'       // YouTube Red
+                            light: '#B9B2DE',  // Logo Background / Main Page Background
+                            main: '#6254A4',   // Gameboy Body / Primary Purple
+                            dark: '#463884',   // Screen Bevel / Shadows / Text
+                            accent: '#FFFFFF', // Text & Highlights
                         }
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
+                        mono: ['"Plus Jakarta Sans"', 'monospace'], // using sans for mono to keep it uniform in this theme, or you can add a real mono font
                     }
                 }
             }
@@ -39,28 +38,12 @@
     </script>
 
     <style>
-        /* Custom Scrollbar - Prettier & Non-overlapping */
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            margin: 2px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            border: 2px solid transparent;
-            background-clip: content-box;
-            transition: background 0.3s;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border: 2px solid transparent;
-            background-clip: content-box;
-        }
+        /* Custom Scrollbar - Adapted for both horizontal and vertical */
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; display: block; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #52448F; border-radius: 6px; margin: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #B9B2DE; border-radius: 6px; border: 2px solid #463884; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #FFFFFF; }
+        .custom-scrollbar::-webkit-scrollbar-corner { background-color: #6254A4; }
 
         /* Animations */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -71,7 +54,7 @@
 
         /* --- BENCHMARK SPECIFIC TABLE STYLES --- */
         :root {
-            --first-col-width: 240px; /* Default stretchable width */
+            --first-col-width: 260px; /* Default stretchable width */
         }
 
         .rr-table {
@@ -83,20 +66,20 @@
         }
 
         .rr-table th {
-            background: #432C7A; /* brand-card */
+            background: #463884; /* brand-dark */
             padding: 16px;
             text-align: center;
-            font-family: 'Kanit', sans-serif;
-            font-weight: 800;
+            font-weight: 900;
             text-transform: uppercase;
             font-size: 13px;
             letter-spacing: 0.05em;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 4px solid #B9B2DE;
+            border-right: 2px solid rgba(185, 178, 222, 0.2);
             position: sticky;
             top: 0;
             z-index: 50;
             vertical-align: bottom;
-            color: #D4BBFF; /* brand-muted */
+            color: #FFFFFF;
             width: 150px; /* Default for other columns */
         }
 
@@ -107,34 +90,36 @@
             position: sticky;
             left: 0;
             z-index: 60;
-            border-right: 1px solid rgba(255,255,255,0.1);
+            border-right: 4px solid #463884; /* brand-dark */
             width: var(--first-col-width);
             max-width: var(--first-col-width);
-            min-width: 100px;
+            min-width: 120px;
         }
 
         .rr-table th:first-child {
-            background: #432C7A;
+            background: #463884;
             cursor: pointer; /* Keeps sort pointer */
+            border-bottom: 4px solid #B9B2DE;
         }
 
         .rr-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-family: 'Kanit', sans-serif;
-            font-size: 14px;
+            padding: 14px 16px;
+            border-bottom: 2px solid rgba(70, 56, 132, 0.5); /* subtle brand-dark line */
+            border-right: 2px solid rgba(70, 56, 132, 0.5); /* Prevents right-edge blending */
+            font-size: 15px;
+            font-weight: 700;
             text-align: center;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            background: #6254A4; /* brand-main */
         }
 
         .rr-table td:first-child {
-            font-family: 'Kanit', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 800;
             color: white;
-            background: #2D1B4E; /* brand-bg */
+            background: #463884; /* brand-dark */
             z-index: 40;
         }
 
@@ -144,7 +129,7 @@
             right: 0;
             top: 0;
             height: 100%;
-            width: 5px;
+            width: 6px;
             cursor: col-resize;
             user-select: none;
             touch-action: none;
@@ -152,7 +137,7 @@
             transition: background 0.2s;
         }
         .resizer:hover, .resizer.resizing {
-            background: #5B3EA8; /* brand-hover */
+            background: #B9B2DE; /* brand-light */
         }
 
         /* Row hover effect */
@@ -160,194 +145,195 @@
             transition: background-color 0.2s;
         }
         .rr-table tbody tr:hover td {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.15);
         }
         /* Fix hover for sticky columns */
         .rr-table tbody tr:hover td:first-child {
-            background: #432C7A;
+            background: #52448F; /* slightly lighter brand-dark */
         }
 
         /* Highlight Cells */
-        .best-cell {
+        .best-cell, .runs-great {
             background: rgba(74, 222, 128, 0.2) !important;
             color: #4ade80 !important;
-            font-weight: bold;
-            box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.5);
-        }
-        .runs-great {
-            background: rgba(74, 222, 128, 0.2) !important;
-            color: #4ade80 !important;
-            font-weight: bold;
-            box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.5);
+            font-weight: 900 !important;
+            box-shadow: inset 0 0 0 3px #4ade80 !important;
         }
 
         /* Sortable */
         th.sortable { cursor: pointer; user-select: none; transition: color 0.2s; }
-        th.sortable:hover { color: white; }
+        th.sortable:hover { color: #B9B2DE; }
 
         /* Mini Mode */
-        .mini-mode .rr-table th, .mini-mode .rr-table td { padding: 8px; font-size: 12px; }
+        .mini-mode .rr-table th, .mini-mode .rr-table td { padding: 8px; font-size: 13px; }
         .mini-mode .chipset-label { display: none; }
 
-        /* Toggle Buttons */
+        /* Toggle Buttons - New Chunky Style */
         .toggle-btn {
             padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 700;
-            font-size: 0.75rem; /* text-xs */
-            background-color: #2D1B4E; /* brand-bg */
-            color: #D4BBFF; /* brand-muted */
+            border-radius: 0.75rem;
+            font-weight: 800;
+            font-size: 0.75rem;
+            background-color: #463884; /* brand-dark */
+            color: #B9B2DE; /* brand-light */
+            border: 2px solid #463884;
             transition: all 0.2s;
-            border: 1px solid transparent;
+            box-shadow: 2px 2px 0px rgba(70, 56, 132, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 auto;
+            min-width: 140px;
         }
         .toggle-btn:hover {
-            color: white;
-            background-color: #5B3EA8; /* brand-hover */
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 0px rgba(70, 56, 132, 0.8);
+            color: #FFFFFF;
         }
         .toggle-btn.active {
-            background-color: white;
-            color: #2D1B4E; /* brand-bg */
-            transform: scale(1.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: #FFFFFF;
+            color: #463884;
+            border-color: #463884;
+            box-shadow: 3px 3px 0px #463884;
+            transform: translateY(-2px);
         }
         .toggle-btn.off {
             opacity: 0.5;
+            box-shadow: none;
+            transform: none;
             text-decoration: line-through;
         }
 
         /* Specific Color overrides for Mode Buttons */
-        .mode-btn-switch.active { background-color: #ef4444; color: white; }
-        .mode-btn-windows.active { background-color: #3b82f6; color: white; }
-        .mode-btn-combined.active { background-color: #ffffff; color: #2D1B4E; }
-
-        /* Ensure modal uses Kanit */
-        #game-details-modal { font-family: 'Kanit', sans-serif; }
-
+        .mode-btn-switch.active { background-color: #ef4444; color: white; border-color: #463884; }
+        .mode-btn-windows.active { background-color: #3b82f6; color: white; border-color: #463884; }
+        .mode-btn-combined.active { background-color: #FFFFFF; color: #463884; }
     </style>
 </head>
-<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
+<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
 
-    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+    <header class="sticky top-0 z-50 bg-brand-main border-b-4 border-brand-dark shadow-md">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
-
-            <a href="/" class="flex items-center gap-3 group shrink-0">
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+            
+            <a href="/" class="flex items-center gap-4 group shrink-0">
+                <div class="w-12 h-12 rounded-xl overflow-hidden border-[3px] border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
+                <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">RYAN RETRO</span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
-                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
-                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
-                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
-                <a href="/store" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Shop</a>
+            <nav class="hidden lg:flex items-center gap-6">
+                <a href="/benchmarks" class="text-sm font-bold text-white hover:text-brand-light transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Shop</a>
             </nav>
 
             <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
-                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
-                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                <div class="hidden md:flex items-center gap-4 pr-4 border-r-2 border-brand-dark">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors">
+                        <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
-                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
                 </div>
-
-                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
-            <div class="grid grid-cols-2 gap-2">
-                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
-                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
-                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
-                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-4 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-3">
+                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Shop</a>
             </div>
 
-            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
-                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            <div class="flex justify-center flex-wrap gap-4 pt-6 border-t-2 border-brand-dark">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-light hover:text-white"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-light hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-light hover:text-white"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 lg:px-6 py-8 flex-grow">
+    <main class="container mx-auto px-4 lg:px-6 py-10 md:py-16 flex-grow">
 
-        <section class="mb-8" data-aos="fade-up">
-            <h1 class="font-extrabold text-3xl md:text-5xl text-white tracking-tight">
-                Handheld <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Benchmarks</span>
+        <section class="mb-10 text-center md:text-left" data-aos="fade-right">
+            <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none text-brand-dark drop-shadow-sm uppercase">
+                HANDHELD <br>
+                <span class="text-brand-main drop-shadow-none">BENCHMARKS</span>
             </h1>
         </section>
 
         <!-- Controls Panel -->
-        <div id="controlsPanel" class="bg-brand-card rounded-2xl border border-white/5 p-6 mb-8 shadow-xl" data-aos="fade-up">
+        <div id="controlsPanel" class="bg-brand-main border-2 border-brand-dark rounded-2xl p-6 mb-8 shadow-[4px_4px_0px_#463884]" data-aos="fade-up">
 
             <!-- Mode Selection -->
-            <div class="flex flex-col md:flex-row flex-wrap items-center justify-between gap-6 mb-6 pb-6 border-b border-white/5">
-                <div class="flex items-center gap-3">
-                    <span class="font-bold text-xs text-brand-muted uppercase tracking-widest">System:</span>
+            <div class="flex flex-col md:flex-row flex-wrap items-center justify-between gap-6 mb-6 pb-6 border-b-4 border-brand-dark/30">
+                <div class="flex items-center gap-3 w-full md:w-auto flex-wrap flex-1">
+                    <span class="font-black text-sm text-brand-light uppercase tracking-widest w-full sm:w-auto text-center sm:text-left">System:</span>
                     <button class="toggle-btn mode-toggle mode-btn-combined active" data-mode="combined">ALL</button>
                     <button class="toggle-btn mode-toggle mode-btn-switch" data-mode="switch">Switch</button>
                     <button class="toggle-btn mode-toggle mode-btn-windows" data-mode="windows">Windows</button>
                 </div>
 
-                <div class="flex items-center gap-3">
-                     <span class="font-bold text-xs text-brand-muted uppercase tracking-widest">View:</span>
-                     <button id="toggleMiniMode" class="toggle-btn feat-mini"><i data-lucide="smartphone" class="w-3 h-3 inline mr-1"></i> Compact</button>
+                <div class="flex items-center gap-3 w-full md:w-auto flex-wrap">
+                     <span class="font-black text-sm text-brand-light uppercase tracking-widest w-full sm:w-auto text-center sm:text-left">View:</span>
+                     <button id="toggleMiniMode" class="toggle-btn feat-mini"><i data-lucide="smartphone" class="w-4 h-4 inline mr-1 -mt-0.5"></i> Compact</button>
                 </div>
             </div>
 
             <!-- Devices Selection -->
-            <div class="flex flex-col md:flex-row flex-wrap items-center gap-4 mb-8">
-                <span class="font-bold text-xs text-brand-muted uppercase tracking-widest shrink-0">Devices:</span>
-                <div class="flex flex-wrap gap-2">
-                    <button class="toggle-btn active device-toggle" data-col-index="1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span> Retroid Pocket 5</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="2"><span class="w-2 h-2 rounded-full bg-yellow-400 inline-block mr-1"></span> Retroid Pocket G2</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="3"><span class="w-2 h-2 rounded-full bg-blue-400 inline-block mr-1"></span> AYN Odin 2 Portal</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="4"><span class="w-2 h-2 rounded-full bg-orange-400 inline-block mr-1"></span> Konkr Pocket Fit</button>
-                    <button class="toggle-btn off device-toggle" data-col-index="5"><span class="w-2 h-2 rounded-full bg-pink-400 inline-block mr-1"></span> Samsung Fold 7</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="6"><span class="w-2 h-2 rounded-full bg-purple-400 inline-block mr-1"></span> AYN Odin 3</button>
-                    <button class="toggle-btn active device-toggle" data-col-index="7"><span class="w-2 h-2 rounded-full bg-cyan-400 inline-block mr-1"></span> Steam Deck</button>
+            <div class="flex flex-col md:flex-row flex-wrap items-start md:items-center gap-4 mb-8">
+                <span class="font-black text-sm text-brand-light uppercase tracking-widest shrink-0 w-full md:w-auto text-center md:text-left">Devices:</span>
+                <div class="flex flex-wrap gap-2 w-full flex-1">
+                    <button class="toggle-btn active device-toggle" data-col-index="1"><span class="w-3 h-3 rounded-sm bg-green-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> Retroid Pocket 5</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="2"><span class="w-3 h-3 rounded-sm bg-yellow-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> Retroid Pocket G2</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="3"><span class="w-3 h-3 rounded-sm bg-blue-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> AYN Odin 2 Portal</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="4"><span class="w-3 h-3 rounded-sm bg-orange-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> Konkr Pocket Fit</button>
+                    <button class="toggle-btn off device-toggle" data-col-index="5"><span class="w-3 h-3 rounded-sm bg-pink-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> Samsung Fold 7</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="6"><span class="w-3 h-3 rounded-sm bg-purple-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> AYN Odin 3</button>
+                    <button class="toggle-btn active device-toggle" data-col-index="7"><span class="w-3 h-3 rounded-sm bg-cyan-400 border-2 border-brand-dark inline-block mr-1 align-middle"></span> Steam Deck</button>
                 </div>
             </div>
 
             <!-- Feature Toggles -->
-            <div class="bg-brand-bg/30 rounded-xl p-4 border border-white/5 flex flex-wrap items-center justify-center gap-3">
-                <button id="toggleHighlight" class="toggle-btn feat-highlight"><i data-lucide="zap" class="w-3 h-3 inline mr-1"></i> Highlight Best</button>
-                <button id="toggleColorMode" class="toggle-btn feat-ranking"><i data-lucide="bar-chart" class="w-3 h-3 inline mr-1"></i> Ranking Mode</button>
-                <button id="toggleValueMode" class="toggle-btn feat-value"><i data-lucide="dollar-sign" class="w-3 h-3 inline mr-1"></i> Value Mode</button>
-                <button id="toggleRunsGreat" class="toggle-btn feat-great"><i data-lucide="check-circle" class="w-3 h-3 inline mr-1"></i> Runs Great</button>
+            <div class="bg-brand-dark/30 rounded-xl p-4 border-2 border-brand-dark flex flex-wrap items-center justify-center gap-3 w-full">
+                <button id="toggleHighlight" class="toggle-btn feat-highlight"><i data-lucide="zap" class="w-4 h-4 inline mr-1 -mt-0.5"></i> Highlight Best</button>
+                <button id="toggleColorMode" class="toggle-btn feat-ranking"><i data-lucide="bar-chart" class="w-4 h-4 inline mr-1 -mt-0.5"></i> Ranking Mode</button>
+                <button id="toggleValueMode" class="toggle-btn feat-value"><i data-lucide="dollar-sign" class="w-4 h-4 inline mr-1 -mt-0.5"></i> Value Mode</button>
+                <button id="toggleRunsGreat" class="toggle-btn feat-great"><i data-lucide="check-circle" class="w-4 h-4 inline mr-1 -mt-0.5"></i> Runs Great</button>
             </div>
         </div>
 
         <!-- Benchmark Table Card -->
-        <div id="benchCard" class="bg-brand-bg rounded-2xl border border-white/5 shadow-xl overflow-hidden mb-8" data-aos="fade-up" data-aos-delay="100">
-            <!-- Added pr-1 to container to prevent overlap of vertical scrollbar -->
-            <div class="overflow-x-auto custom-scrollbar w-full max-h-[800px] pr-1">
+        <div id="benchCard" class="bg-brand-main border-2 border-brand-dark rounded-2xl shadow-[4px_4px_0px_#463884] overflow-hidden mb-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="overflow-x-auto custom-scrollbar w-full max-h-[800px] bg-brand-main relative pr-1">
 
                 <table class="rr-table" data-mode="combined">
                     <thead>
                         <tr>
                             <th class="sortable relative" data-col="0">Game <div class="resizer"></div></th>
-                            <th data-col-index="1"><span class="text-green-400">Retroid Pocket 5</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">SD 865</div></th>
-                            <th data-col-index="2"><span class="text-yellow-400">Retroid Pocket G2</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G2 Gen 2</div></th>
-                            <th data-col-index="3"><span class="text-blue-400">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Gen 2</div></th>
-                            <th data-col-index="4"><span class="text-orange-400">Konkr Pocket Fit</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G3 Gen 3</div></th>
-                            <th data-col-index="5"><span class="text-pink-400">Samsung Fold 7</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="6"><span class="text-purple-400">AYN Odin 3</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">AMD APU</div></th>
+                            <th data-col-index="1"><span class="text-green-400 font-black">Retroid Pocket 5</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400 font-black">Retroid Pocket G2</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400 font-black">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400 font-black">Konkr Pocket Fit</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400 font-black">Samsung Fold 7</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400 font-black">AYN Odin 3</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400 font-black">Steam Deck</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">AMD APU</div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -383,13 +369,13 @@
                     <thead>
                         <tr>
                             <th class="sortable relative" data-col="0">Game <div class="resizer"></div></th>
-                            <th data-col-index="1"><span class="text-green-400">Retroid Pocket 5</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">SD 865</div></th>
-                            <th data-col-index="2"><span class="text-yellow-400">Retroid Pocket G2</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G2 Gen 2</div></th>
-                            <th data-col-index="3"><span class="text-blue-400">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Gen 2</div></th>
-                            <th data-col-index="4"><span class="text-orange-400">Konkr Pocket Fit</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G3 Gen 3</div></th>
-                            <th data-col-index="5"><span class="text-pink-400">Samsung Fold 7</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="6"><span class="text-purple-400">AYN Odin 3</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">AMD APU</div></th>
+                            <th data-col-index="1"><span class="text-green-400 font-black">Retroid Pocket 5</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400 font-black">Retroid Pocket G2</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400 font-black">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400 font-black">Konkr Pocket Fit</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400 font-black">Samsung Fold 7</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400 font-black">AYN Odin 3</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400 font-black">Steam Deck</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">AMD APU</div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -413,13 +399,13 @@
                     <thead>
                         <tr>
                             <th class="sortable relative" data-col="0">Game <div class="resizer"></div></th>
-                            <th data-col-index="1"><span class="text-green-400">Retroid Pocket 5</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">SD 865</div></th>
-                            <th data-col-index="2"><span class="text-yellow-400">Retroid Pocket G2</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G2 Gen 2</div></th>
-                            <th data-col-index="3"><span class="text-blue-400">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Gen 2</div></th>
-                            <th data-col-index="4"><span class="text-orange-400">Konkr Pocket Fit</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">G3 Gen 3</div></th>
-                            <th data-col-index="5"><span class="text-pink-400">Samsung Fold 7</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="6"><span class="text-purple-400">AYN Odin 3</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">8 Elite</div></th>
-                            <th data-col-index="7"><span class="text-cyan-400">Steam Deck</span><div class="text-[10px] text-brand-muted font-normal mt-1 chipset-label">AMD APU</div></th>
+                            <th data-col-index="1"><span class="text-green-400 font-black">Retroid Pocket 5</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">SD 865</div></th>
+                            <th data-col-index="2"><span class="text-yellow-400 font-black">Retroid Pocket G2</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">G2 Gen 2</div></th>
+                            <th data-col-index="3"><span class="text-blue-400 font-black">AYN Odin 2 Portal</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Gen 2</div></th>
+                            <th data-col-index="4"><span class="text-orange-400 font-black">Konkr Pocket Fit</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">G3 Gen 3</div></th>
+                            <th data-col-index="5"><span class="text-pink-400 font-black">Samsung Fold 7</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="6"><span class="text-purple-400 font-black">AYN Odin 3</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">8 Elite</div></th>
+                            <th data-col-index="7"><span class="text-cyan-400 font-black">Steam Deck</span><div class="text-[10px] text-brand-light font-bold mt-1 chipset-label">AMD APU</div></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -440,12 +426,12 @@
             </div>
 
             <!-- Legend Footer -->
-            <div class="bg-black/20 p-4 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-brand-muted">
-                <div class="flex items-center gap-3">
+            <div class="bg-brand-dark p-4 border-t-4 border-brand-dark flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-brand-light tracking-wide uppercase">
+                <div class="flex items-center gap-4">
                     <span>RANKING:</span>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-500"></span> Low</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-yellow-400"></span> Mid</div>
-                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-green-400"></span> High</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-500 border-2 border-brand-dark"></span> Low</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-yellow-400 border-2 border-brand-dark"></span> Mid</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-green-400 border-2 border-brand-dark"></span> High</div>
                 </div>
                 <div>Values represent Average FPS estimates.</div>
             </div>
@@ -453,80 +439,80 @@
 
         <!-- Notes Section -->
         <div class="mt-8 text-center" data-aos="fade-up">
-            <button id="toggleNotes" class="bg-brand-card hover:bg-brand-hover border border-white/5 text-white px-6 py-3 rounded-xl font-bold text-xs transition-all">
-                <i data-lucide="info" class="inline w-4 h-4 mr-2"></i> SHOW NOTES
+            <button id="toggleNotes" class="bg-brand-dark hover:bg-[#52448F] border-4 border-brand-dark text-white px-6 py-3 rounded-xl font-black text-sm transition-all shadow-[4px_4px_0px_#463884] hover:shadow-[2px_2px_0px_#463884] hover:translate-y-[2px] tracking-widest uppercase">
+                <i data-lucide="info" class="inline w-5 h-5 mr-2 -mt-1"></i> SHOW NOTES
             </button>
 
-            <div id="notesContent" class="hidden mt-6 bg-brand-card border border-white/5 rounded-2xl p-8 text-left max-w-4xl mx-auto shadow-xl">
+            <div id="notesContent" class="hidden mt-6 bg-brand-main border-2 border-brand-dark rounded-2xl p-8 text-left max-w-4xl mx-auto shadow-[4px_4px_0px_#463884] text-white">
                  <div class="grid md:grid-cols-2 gap-8 mb-8">
                      <div>
-                         <h3 class="font-bold text-yellow-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="eye" class="w-4 h-4"></i> Performance Measurement</h3>
-                         <p class="text-brand-muted text-sm leading-relaxed">
+                         <h3 class="font-black text-yellow-400 text-lg mb-2 flex items-center gap-2 drop-shadow-sm"><i data-lucide="eye" class="w-5 h-5"></i> Performance Measurement</h3>
+                         <p class="text-brand-light text-sm leading-relaxed font-bold">
                            Please note that these tests utilize "eyeballed" FPS averages observed during active gameplay. They were not captured using scientific frame-time analysis tools.
                          </p>
                      </div>
                      <div>
-                        <h3 class="font-bold text-green-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Value Mode</h3>
-                        <p class="text-brand-muted text-sm leading-relaxed">
+                        <h3 class="font-black text-green-400 text-lg mb-2 flex items-center gap-2 drop-shadow-sm"><i data-lucide="dollar-sign" class="w-5 h-5"></i> Value Mode</h3>
+                        <p class="text-brand-light text-sm leading-relaxed font-bold">
                            Value Mode displays the "Price per Frame" for each device. This is calculated by taking the cost of the handheld at the time of filming and dividing it by the average FPS ($/FPS).
                         </p>
                      </div>
                      <div>
-                        <h3 class="font-bold text-blue-400 text-sm mb-2 flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i> Runs Great</h3>
-                        <p class="text-brand-muted text-sm leading-relaxed">
+                        <h3 class="font-black text-blue-400 text-lg mb-2 flex items-center gap-2 drop-shadow-sm"><i data-lucide="check-circle" class="w-5 h-5"></i> Runs Great</h3>
+                        <p class="text-brand-light text-sm leading-relaxed font-bold">
                            The "Runs Great" highlight indicates that the handheld achieved the expected playable target for that title (typically 30 FPS for AAA/3D, 60 FPS for 2D).
                         </p>
                      </div>
                  </div>
 
-                 <div class="mt-8 pt-8 border-t border-white/5">
-                     <h3 class="font-bold text-purple-400 text-sm mb-4">Device Specs & Pricing (Time of Filming)</h3>
+                 <div class="mt-8 pt-8 border-t-4 border-brand-dark/30">
+                     <h3 class="font-black text-white text-xl uppercase tracking-tight mb-6 drop-shadow-sm">Device Specs & Pricing (Time of Filming)</h3>
                      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 text-xs">
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-green-400 font-bold block mb-1 text-sm">Retroid Pocket 5 ($199)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-green-400 font-black block mb-2 text-sm tracking-wide">Retroid Pocket 5 ($199)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: Snapdragon 865</span>
                                 <span>RAM: 8GB</span>
                              </div>
                          </div>
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-yellow-400 font-bold block mb-1 text-sm">Retroid Pocket G2 ($219)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-yellow-400 font-black block mb-2 text-sm tracking-wide">Retroid Pocket G2 ($219)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: Snapdragon G2 Gen 2</span>
                                 <span>RAM: 8GB</span>
                              </div>
                          </div>
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-blue-400 font-bold block mb-1 text-sm">AYN Odin 2 Portal ($329)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-blue-400 font-black block mb-2 text-sm tracking-wide">AYN Odin 2 Portal ($329)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: Snapdragon 8 Gen 2</span>
                                 <span>RAM: 8GB</span>
                              </div>
                          </div>
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-orange-400 font-bold block mb-1 text-sm">Konkr Pocket Fit ($329)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-orange-400 font-black block mb-2 text-sm tracking-wide">Konkr Pocket Fit ($329)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: Snapdragon G3 Gen 3</span>
                                 <span>RAM: 12GB</span>
                              </div>
                          </div>
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-pink-400 font-bold block mb-1 text-sm">Samsung Fold 7 ($1719)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-pink-400 font-black block mb-2 text-sm tracking-wide">Samsung Fold 7 ($1719)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: Snapdragon 8 Elite</span>
                                 <span>RAM: 12GB</span>
                              </div>
                          </div>
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-purple-400 font-bold block mb-1 text-sm">AYN Odin 3 ($449)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-purple-400 font-black block mb-2 text-sm tracking-wide">AYN Odin 3 ($449)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: Snapdragon 8 Elite</span>
                                 <span>RAM: 16GB</span>
                              </div>
                          </div>
-                         <div class="bg-brand-bg/50 p-4 rounded-xl border border-white/5 hover:bg-white/5 transition-colors">
-                             <span class="text-cyan-400 font-bold block mb-1 text-sm">Steam Deck ($399)</span>
-                             <div class="text-brand-muted flex flex-col gap-1">
+                         <div class="bg-brand-main p-4 rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-transform">
+                             <span class="text-cyan-400 font-black block mb-2 text-sm tracking-wide">Steam Deck ($399)</span>
+                             <div class="text-brand-light flex flex-col gap-1 font-bold">
                                 <span>Chip: AMD Custom APU</span>
                                 <span>RAM: 16GB</span>
                              </div>
@@ -538,33 +524,33 @@
 
     </main>
 
-    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center">
+    <footer class="bg-brand-main py-10 text-center border-t-4 border-brand-dark mt-auto relative z-40">
         <div class="container mx-auto px-6">
             <div class="flex justify-center flex-wrap gap-6 mb-6">
-                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
-                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
-            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+            <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
         </div>
     </footer>
 
     <!-- Benchmark Detail Modal -->
     <div id="game-details-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-bg/90 backdrop-blur-sm" id="game-modal-bg"></div>
-        <div id="game-card-wrapper" class="relative bg-brand-card border-2 border-white/20 rounded-3xl w-full max-w-2xl shadow-2xl animate-pop-in flex flex-col max-h-[90vh] overflow-hidden">
-            <div class="flex justify-between items-center p-4 border-b border-white/10 bg-black/20 shrink-0">
-                <span class="font-bold text-brand-muted text-xs pl-2 tracking-widest uppercase">BENCHMARK DETAILS</span>
+        <div class="absolute inset-0 bg-brand-dark/90 backdrop-blur-sm" id="game-modal-bg"></div>
+        <div id="game-card-wrapper" class="relative bg-brand-main border-2 border-brand-dark rounded-3xl w-full max-w-4xl shadow-[4px_4px_0px_#463884] animate-pop-in flex flex-col max-h-[90vh] overflow-hidden">
+            <div class="flex justify-between items-center p-5 border-b-4 border-brand-dark bg-brand-dark shrink-0">
+                <span class="font-black text-brand-light text-sm pl-2 tracking-widest uppercase">BENCHMARK DETAILS</span>
                 <div class="flex gap-2">
-                    <button id="screenshot-game-modal" class="text-white/70 hover:text-white hover:bg-white/10 p-2 rounded-lg transition-colors flex items-center gap-2" title="Save Card">
+                    <button id="screenshot-game-modal" class="text-white hover:text-brand-dark hover:bg-white p-2 rounded-lg border-2 border-transparent hover:border-brand-dark transition-all flex items-center gap-2" title="Save Card">
                         <i data-lucide="camera" class="w-5 h-5"></i>
-                        <span class="font-bold text-xs hidden sm:inline">SAVE CARD</span>
+                        <span class="font-black text-xs hidden sm:inline uppercase">SAVE CARD</span>
                     </button>
-                    <button id="close-game-modal" class="text-white/70 hover:text-white hover:bg-red-500/20 p-2 rounded-lg transition-colors">
+                    <button id="close-game-modal" class="text-white hover:text-white bg-red-500/80 hover:bg-red-500 border-2 border-red-500 hover:border-white p-2 rounded-lg transition-all shadow-sm">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
@@ -732,7 +718,7 @@
                         cell.style.color = '#facc15'; // Yellow
                     } else {
                         cell.style.color = '#4ade80'; // Green
-                        cell.style.fontWeight = 'bold';
+                        cell.style.fontWeight = '900';
                     }
                 }
             });
@@ -775,10 +761,10 @@
                         const isBest = (Math.abs(cost - minCost) < 0.0001);
 
                         if (isBest) {
-                            cell.innerHTML = `<span class="text-green-400 font-bold">$${cost.toFixed(2)}</span>`;
+                            cell.innerHTML = `<span class="text-green-400 font-black">$${cost.toFixed(2)}</span>`;
                             cell.classList.add('best-cell');
                         } else {
-                            cell.innerHTML = `<span class="text-yellow-400">$${cost.toFixed(2)}</span>`;
+                            cell.innerHTML = `<span class="text-yellow-400 font-bold">$${cost.toFixed(2)}</span>`;
                         }
                     }
                 }
@@ -979,9 +965,6 @@
         function attachRowListeners() {
             document.querySelectorAll('.rr-table tbody tr').forEach(row => {
                 row.addEventListener('click', (e) => {
-                    // Prevent modal opening if clicking the first column (likely resizing intent/misclick)
-                    // or better, just if clicking resizer (handled in sortable logic)
-                    // But if user clicks text in 1st col, open modal.
                     openBenchmarkModal(row)
                 });
             });
@@ -1025,7 +1008,7 @@
             }
 
             const initials = gameName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-            const fallbackArt = `https://placehold.co/300x450/211136/FFF?text=${initials}`;
+            const fallbackArt = `https://placehold.co/300x450/463884/FFF?text=${initials}`; // Updated fallback color
 
             let resultsHtml = '';
             for(let i=1; i<=DEVICE_COUNT; i++) {
@@ -1040,9 +1023,9 @@
                 const colorClass = deviceColors[i];
 
                 resultsHtml += `
-                    <div class="flex justify-between items-center p-3 bg-brand-bg/50 rounded-lg border border-white/5">
+                    <div class="flex justify-between items-center p-3 bg-brand-main rounded-xl border-2 border-brand-dark shadow-[3px_3px_0px_#463884] mb-2">
                         <span class="font-bold text-sm ${colorClass}">${deviceName}</span>
-                        <span class="font-mono font-bold text-white text-lg">${val} <span class="text-xs text-brand-muted font-normal font-sans">FPS</span></span>
+                        <span class="font-black text-white text-xl">${val} <span class="text-xs text-brand-light font-bold">FPS</span></span>
                     </div>
                 `;
             }
@@ -1050,15 +1033,15 @@
             modalContent.innerHTML = `
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="w-full md:w-1/3">
-                        <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10 aspect-[2/3] bg-black/50 relative group">
+                        <div class="rounded-xl overflow-hidden shadow-[6px_6px_0px_#463884] border-4 border-brand-dark aspect-[2/3] bg-brand-dark relative group">
                             <img src="${boxArtUrl}" crossorigin="anonymous" class="w-full h-full object-cover" onerror="this.src='${fallbackArt}'">
                         </div>
                     </div>
                     <div class="w-full md:w-2/3 flex flex-col">
-                        <h2 class="font-extrabold text-3xl text-white mb-1 leading-tight">${gameName}</h2>
-                        <span class="text-brand-muted text-xs font-bold uppercase tracking-widest mb-6">Benchmark Results</span>
+                        <h2 class="font-black text-3xl md:text-4xl text-white mb-2 leading-tight uppercase drop-shadow-sm">${gameName}</h2>
+                        <span class="text-brand-light text-xs font-black uppercase tracking-widest mb-6 border-b-2 border-brand-light/30 pb-2">Benchmark Results</span>
 
-                        <div class="grid grid-cols-1 gap-2 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                        <div class="grid grid-cols-1 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
                             ${resultsHtml}
                         </div>
                     </div>
@@ -1083,25 +1066,25 @@
             const captureContainer = document.createElement('div');
             Object.assign(captureContainer.style, {
                 position: 'fixed', top: '-9999px', left: '-9999px', width: '800px',
-                backgroundColor: '#2D1B4E', padding: '40px', borderRadius: '20px', zIndex: '-1'
+                backgroundColor: '#B9B2DE', padding: '40px', borderRadius: '20px', zIndex: '-1'
             });
 
             const content = document.getElementById('game-modal-content').innerHTML;
             captureContainer.innerHTML = `
-                <div class="relative bg-[#432C7A] border-2 border-white/20 rounded-3xl p-8 shadow-2xl flex flex-col text-white font-sans">
+                <div class="relative bg-[#6254A4] border-4 border-[#463884] rounded-3xl p-8 shadow-[8px_8px_0px_#463884] flex flex-col text-white font-sans">
                     ${content}
-                    <div class="mt-8 pt-4 border-t border-white/10 flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-xl tracking-tight">Ryan Retro</span>
+                    <div class="mt-8 pt-4 border-t-4 border-[#463884] flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="font-black text-2xl tracking-tight uppercase text-white drop-shadow-sm">RYAN RETRO</span>
                         </div>
-                        <span class="font-mono text-white/50 text-xs">ryanretro.com</span>
+                        <span class="font-bold text-[#B9B2DE] text-sm tracking-wide uppercase">ryanretro.com</span>
                     </div>
                 </div>
             `;
             document.body.appendChild(captureContainer);
 
             html2canvas(captureContainer, {
-                backgroundColor: '#2D1B4E', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 800, windowWidth: 800
+                backgroundColor: '#B9B2DE', scale: 2, useCORS: true, allowTaint: true, logging: false, width: 800, windowWidth: 800
             }).then(canvas => {
                 document.body.removeChild(captureContainer);
                 const link = document.createElement('a');
