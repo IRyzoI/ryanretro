@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Ryan Retro | Official</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,7 +13,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -20,12 +21,10 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#2D1B4E',       // Deep Soft Purple
-                            card: '#432C7A',      // Lighter Grape
-                            hover: '#5B3EA8',     // Bright Purple
-                            accent: '#FFFFFF',    // Pure White
-                            muted: '#D4BBFF',     // Soft Lavender Text
-                            red: '#FF0000'        // YouTube Red
+                            light: '#B9B2DE',  // Logo Background / Main Page Background
+                            main: '#6254A4',   // Gameboy Body / Primary Purple
+                            dark: '#463884',   // Screen Bevel / Shadows / Text
+                            accent: '#FFFFFF', // Text & Highlights
                         }
                     },
                     fontFamily: {
@@ -37,29 +36,54 @@
     </script>
 
     <style>
-        /* Custom Horizontal Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; display: block; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; margin: 0 20px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; transition: background 0.3s; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+        /* Custom Scrollbar - Adapted for both horizontal and vertical */
+        .custom-scrollbar::-webkit-scrollbar { height: 10px; width: 10px; display: block; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #463884; border-radius: 6px; margin: 0 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #B9B2DE; border-radius: 6px; border: 2px solid #463884; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #FFFFFF; }
 
-        /* Fluid Filter Animation - Restored */
+        /* Form Elements - Flat & Chunky */
+        .brand-input {
+            background: #463884;
+            border: 3px solid #B9B2DE;
+            color: #FFFFFF;
+            border-radius: 12px;
+            transition: all 0.2s;
+            font-weight: 700;
+        }
+        .brand-input:focus {
+            outline: none;
+            border-color: #FFFFFF;
+            background: #6254A4;
+        }
+        .brand-input::placeholder {
+            color: #B9B2DE;
+            opacity: 0.7;
+        }
+
+        /* Fluid Filter Animation - Restored & Preserved */
         .device-card {
-            transition-property: width, margin, opacity, transform;
+            transition-property: width, margin, opacity, transform, box-shadow;
             transition-duration: 0.5s;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
             transform-origin: center left;
             opacity: 1;
             /* Responsive Widths */
             width: 85vw; /* Wide on mobile */
-            max-width: 280px; /* Desktop cap */
-            margin-right: 1rem;
+            max-width: 260px; /* Desktop cap */
+            margin-right: 1.25rem;
             transform: scale(1) translateZ(0);
             flex-shrink: 0;
             user-select: none;
             backface-visibility: hidden;
             will-change: width, margin, opacity, transform;
-            display: block; /* Ensure block by default */
+            display: block;
+        }
+
+        .device-card:hover {
+            transform: translateY(-5px) scale(1.02) translateZ(0);
+            /* Reduced hover shadow from 6px to 4px */
+            box-shadow: 4px 4px 0px rgba(70, 56, 132, 0.4);
         }
 
         .device-card.hidden-item {
@@ -70,190 +94,195 @@
             transform: scale(0.9) translateZ(0);
             overflow: hidden;
             pointer-events: none;
+            border: none;
         }
 
         /* Drag Cursors */
         .grab-cursor { cursor: grab; }
         .grab-cursor:active { cursor: grabbing; }
 
-        /* YouTube Play Button Pulse */
+        /* YouTube Play Button Pulse - Adjusted for new colors */
         @keyframes pulse-ring {
-            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); }
-            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
         .play-btn-pulse { animation: pulse-ring 2s infinite; }
     </style>
 </head>
-<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
+<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
 
-    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+    <header class="sticky top-0 z-50 bg-brand-main border-b-4 border-brand-dark shadow-md">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
-
-            <a href="/" class="flex items-center gap-3 group shrink-0">
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+            
+            <a href="/" class="flex items-center gap-4 group shrink-0">
+                <div class="w-12 h-12 rounded-xl overflow-hidden border-[3px] border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
+                <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">RYAN RETRO</span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
-                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
-                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
-                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
-                <a href="/store" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Shop</a>
+            <nav class="hidden lg:flex items-center gap-6">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Shop</a>
             </nav>
 
             <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
-                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
-                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                <div class="hidden md:flex items-center gap-4 pr-4 border-r-2 border-brand-dark">
+                    <!-- Fully preserved original social links -->
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors">
+                        <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
-                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
                 </div>
-
-                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
-            <div class="grid grid-cols-2 gap-2">
-                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
-                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
-                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
-                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-4 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-3">
+                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Shop</a>
             </div>
 
-            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
-                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            <div class="flex justify-center flex-wrap gap-4 pt-6 border-t-2 border-brand-dark">
+                <!-- Fully preserved original social links -->
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-light hover:text-white"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-light hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-light hover:text-white"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
         </div>
     </header>
 
     <main class="flex-grow">
 
-        <section class="container mx-auto px-4 lg:px-6 py-8 md:py-12 flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            <div class="flex-1 space-y-4 text-center md:text-left">
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight leading-none">
+        <section class="container mx-auto px-4 lg:px-6 py-10 md:py-16 flex flex-col md:flex-row items-center gap-8 md:gap-12 relative z-10">
+            <div class="flex-1 space-y-6 text-center md:text-left" data-aos="fade-right">
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none text-brand-dark drop-shadow-sm uppercase">
                     RETRO GAMING <br>
-                    <span class="text-brand-muted">HANDHELDS</span>
+                    <span class="text-brand-main drop-shadow-none">HANDHELDS</span>
                 </h1>
 
-                <p class="text-lg text-brand-muted/80 max-w-lg mx-auto md:mx-0 leading-relaxed">
+                <p class="text-lg font-bold text-brand-dark/80 max-w-lg mx-auto md:mx-0 leading-relaxed">
                     Unbiased reviews, deep-dive comparisons, and setup guides for the best handhelds on the market.
                 </p>
+                
+                <div class="inline-flex items-center gap-2 bg-brand-main px-4 py-2 rounded-xl border-4 border-brand-dark text-white shadow-[3px_3px_0px_#463884] mx-auto md:mx-0 font-bold">
+                    <span class="w-3 h-3 rounded-full bg-green-400 border-2 border-brand-dark animate-pulse"></span>
+                    <span class="text-sm tracking-wider uppercase">New Video Every Week</span>
+                </div>
             </div>
 
-            <div class="flex-1 w-full flex flex-col gap-3">
-                <div class="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full border border-white/10 w-fit mx-auto md:mx-0">
-                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-xs font-bold uppercase tracking-wider">New Video Every Week</span>
-                </div>
-
-                <div class="relative group w-full">
-                    <div class="absolute inset-0 bg-brand-hover blur-3xl opacity-20 group-hover:opacity-30 transition-opacity rounded-full"></div>
-                    <a href="https://www.youtube.com/watch?v=jNQXAC9IVRw" target="_blank" id="hero-video-link" class="block aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl relative border-4 border-brand-card group-hover:border-white/20 transition-all transform group-hover:scale-[1.02]">
-                        <img id="hero-video-thumb" src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+            <div class="flex-1 w-full flex flex-col gap-3" data-aos="fade-left">
+                <div class="relative w-full">
+                    <a href="https://www.youtube.com/watch?v=jNQXAC9IVRw" target="_blank" id="hero-video-link" class="block aspect-video bg-brand-dark rounded-2xl overflow-hidden shadow-[6px_6px_0px_#463884] relative border-4 border-brand-dark group transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0px_#463884]">
+                        <img id="hero-video-thumb" src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                        
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-20 h-20 bg-brand-red rounded-full flex items-center justify-center text-white shadow-lg play-btn-pulse cursor-pointer hover:bg-red-600 transition-colors">
+                            <div class="w-20 h-20 bg-brand-main border-4 border-white rounded-full flex items-center justify-center text-white shadow-lg play-btn-pulse cursor-pointer group-hover:bg-brand-dark transition-colors">
                                 <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
                             </div>
                         </div>
+                        
                         <div class="absolute bottom-4 left-4 right-4">
-                            <span class="bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">LATEST UPLOAD</span>
-                            <h3 id="hero-video-title" class="text-white font-bold text-lg mt-1 drop-shadow-md">AYN Odin 3 - The King Returns</h3>
+                            <span class="bg-brand-dark text-white border-2 border-white text-xs font-black px-2 py-1 rounded shadow-sm">LATEST UPLOAD</span>
+                            <h3 id="hero-video-title" class="text-white font-black text-xl mt-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">AYN Odin 3 - The King Returns</h3>
                         </div>
                     </a>
                 </div>
             </div>
         </section>
 
-        <section id="library" class="bg-black/10 py-8 border-t border-brand-card">
+        <section id="library" class="bg-brand-main border-y-4 border-brand-dark py-10">
             <div class="container mx-auto px-4 lg:px-6">
 
-                <div class="flex flex-col gap-4 mb-4">
+                <div class="flex flex-col gap-6 mb-6">
                     <div>
-                        <h2 class="text-3xl font-bold">Handhelds</h2>
+                        <h2 class="text-4xl font-black text-white uppercase tracking-tight drop-shadow-sm">Handhelds</h2>
                     </div>
 
                     <div class="w-full flex flex-col gap-4">
                         <div class="relative w-full">
-                            <input type="text" id="device-search" placeholder="Search devices..." class="w-full bg-brand-bg border border-brand-card rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-brand-muted focus:ring-1 focus:ring-brand-muted transition-all placeholder-brand-muted/50 text-white shadow-inner">
-                            <i data-lucide="search" class="absolute left-3 top-3.5 w-4 h-4 text-brand-muted"></i>
+                            <input type="text" id="device-search" placeholder="Search devices..." class="brand-input w-full pl-12 pr-4 py-4 text-sm shadow-inner">
+                            <i data-lucide="search" class="absolute left-4 top-4 w-5 h-5 text-brand-light"></i>
                         </div>
 
-                        <div class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar mask-gradient w-full">
-                            <button class="filter-btn active px-4 py-2 rounded-lg text-sm font-bold bg-white text-brand-bg whitespace-nowrap transition-colors" data-filter="all">All</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="Retroid">Retroid</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="AYN">AYN</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="Ayaneo">Ayaneo</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="Anbernic">Anbernic</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="MagicX">MagicX</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="TrimUI">TrimUI</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="GKD">GKD</button>
-                            <button class="filter-btn px-4 py-2 rounded-lg text-sm font-bold bg-brand-card text-brand-muted hover:bg-brand-hover hover:text-white whitespace-nowrap transition-colors" data-filter="Mangmi">Mangmi</button>
+                        <div class="flex gap-3 overflow-x-auto pb-4 pt-2 custom-scrollbar mask-gradient w-full" id="filter-container">
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-black whitespace-nowrap transition-all" data-filter="all">All</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="Retroid">Retroid</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="AYN">AYN</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="Ayaneo">Ayaneo</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="Anbernic">Anbernic</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="MagicX">MagicX</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="TrimUI">TrimUI</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="GKD">GKD</button>
+                            <button class="filter-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all" data-filter="Mangmi">Mangmi</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative -mx-4 px-4 lg:mx-0 lg:px-0">
-                    <div class="flex overflow-x-auto pb-8 pt-2 custom-scrollbar snap-x scroll-pl-6 grab-cursor" id="device-track">
-                        </div>
+                <div class="relative -mx-4 px-4 lg:mx-0 lg:px-0 mt-4">
+                    <div class="flex overflow-x-auto pb-8 pt-4 custom-scrollbar snap-x scroll-pl-6 grab-cursor" id="device-track">
+                        <!-- Devices loaded via JS -->
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- COMMENTED OUT GUIDES SECTION FOR FUTURE USE
-        <section id="guides" class="container mx-auto px-4 lg:px-6 py-8">
-            <h2 class="text-2xl font-bold mb-8">Essential Guides</h2>
+        <!-- PRESERVED AND FULLY THEMEND GUIDES SECTION (Commented Out for Future Use) -->
+        <!--
+        <section id="guides" class="container mx-auto px-4 lg:px-6 py-12 relative z-10">
+            <h2 class="text-4xl font-black text-brand-dark uppercase tracking-tight mb-8">Essential Guides</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                <a href="/guides/steam-android" class="group bg-brand-card rounded-2xl overflow-hidden block hover:shadow-2xl transition-all border border-white/5 hover:border-white/20">
-                    <div class="h-48 relative overflow-hidden">
+                <a href="/guides/steam-android" class="group bg-brand-main border-4 border-brand-dark rounded-2xl overflow-hidden block shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884] transition-all">
+                    <div class="h-48 relative overflow-hidden border-b-4 border-brand-dark">
                         <img src="https://cdn.akamai.steamstatic.com/store/home/store_home_share.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 bg-brand-dark group-hover:bg-[#52448F] transition-colors">
                         <div class="flex items-center gap-3 mb-2">
-                            <h3 class="text-xl font-bold text-white">Steam on Android</h3>
+                            <h3 class="text-xl font-black text-white uppercase tracking-tight">Steam on Android</h3>
                         </div>
-                        <p class="text-sm text-brand-muted group-hover:text-white transition-colors flex items-center gap-1">Read Guide <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        <p class="text-sm font-bold text-brand-light group-hover:text-white transition-colors flex items-center gap-1">Read Guide <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
                     </div>
                 </a>
 
-                <a href="/guides/switch-android" class="group bg-brand-card rounded-2xl overflow-hidden block hover:shadow-2xl transition-all border border-white/5 hover:border-white/20">
-                    <div class="h-48 relative overflow-hidden">
+                <a href="/guides/switch-android" class="group bg-brand-main border-4 border-brand-dark rounded-2xl overflow-hidden block shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884] transition-all">
+                    <div class="h-48 relative overflow-hidden border-b-4 border-brand-dark">
                         <img src="https://cdn.wallpapersafari.com/53/37/iD5mtT.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 bg-brand-dark group-hover:bg-[#52448F] transition-colors">
                         <div class="flex items-center gap-3 mb-2">
-                            <h3 class="text-xl font-bold text-white">Switch on Android</h3>
+                            <h3 class="text-xl font-black text-white uppercase tracking-tight">Switch on Android</h3>
                         </div>
-                        <p class="text-sm text-brand-muted group-hover:text-white transition-colors flex items-center gap-1">Read Guide <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        <p class="text-sm font-bold text-brand-light group-hover:text-white transition-colors flex items-center gap-1">Read Guide <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
                     </div>
                 </a>
 
-                <a href="/guides/ps3-android" class="group bg-brand-card rounded-2xl overflow-hidden block hover:shadow-2xl transition-all border border-white/5 hover:border-white/20">
-                    <div class="h-48 relative overflow-hidden">
+                <a href="/guides/ps3-android" class="group bg-brand-main border-4 border-brand-dark rounded-2xl overflow-hidden block shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884] transition-all">
+                    <div class="h-48 relative overflow-hidden border-b-4 border-brand-dark">
                         <img src="https://i.pinimg.com/736x/2f/1c/00/2f1c00462ef433f54781ca1a97c6697f.jpg" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 bg-brand-dark group-hover:bg-[#52448F] transition-colors">
                         <div class="flex items-center gap-3 mb-2">
-                            <h3 class="text-xl font-bold text-white">PS3 on Android</h3>
+                            <h3 class="text-xl font-black text-white uppercase tracking-tight">PS3 on Android</h3>
                         </div>
-                        <p class="text-sm text-brand-muted group-hover:text-white transition-colors flex items-center gap-1">Read Guide <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
+                        <p class="text-sm font-bold text-brand-light group-hover:text-white transition-colors flex items-center gap-1">Read Guide <i data-lucide="arrow-right" class="w-4 h-4"></i></p>
                     </div>
                 </a>
 
@@ -261,35 +290,36 @@
         </section>
         -->
 
-        <section id="videos" class="bg-black/20 py-8 border-t border-brand-card">
+        <section id="videos" class="py-12 relative z-10">
             <div class="container mx-auto px-4 lg:px-6">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-2xl font-bold">Recent Uploads</h2>
-                    <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="text-sm font-bold text-brand-muted hover:text-white flex items-center gap-1 transition-colors">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                    <h2 class="text-4xl font-black text-brand-dark uppercase tracking-tight">Recent Uploads</h2>
+                    <a href="https://www.youtube.com/@RyanRetro/videos" target="_blank" class="px-4 py-2 bg-brand-dark text-white font-bold rounded-xl border-2 border-brand-dark hover:bg-white hover:text-brand-dark shadow-[3px_3px_0px_#6254A4] flex items-center gap-2 transition-all hover:-translate-y-1">
                         View Channel <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </a>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="latest-videos-track">
-                    <div class="col-span-full text-center text-brand-muted py-10">Loading videos...</div>
+                    <div class="col-span-full text-center text-brand-dark font-bold py-10">Loading videos...</div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center">
+    <footer class="bg-brand-main py-10 text-center border-t-4 border-brand-dark mt-auto relative z-40">
         <div class="container mx-auto px-6">
             <div class="flex justify-center flex-wrap gap-6 mb-6">
-                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
-                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+                <!-- Fully preserved original social links -->
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
-            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+            <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
         </div>
     </footer>
 
@@ -329,28 +359,42 @@
         let currentFilter = 'all';
         let currentSearch = '';
 
+        // Class constants for chunky filter buttons
+        const classInactive = "filter-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-brand-dark text-brand-light hover:bg-[#52448F] border-4 border-transparent whitespace-nowrap transition-all";
+        const classActive = "filter-btn px-5 py-2.5 rounded-xl text-sm font-black bg-white text-brand-dark border-4 border-brand-dark shadow-[3px_3px_0px_#463884] whitespace-nowrap transition-all -translate-y-1";
+
+        function setInitialFilterStyles() {
+            filterBtns.forEach(btn => {
+                if(btn.dataset.filter === 'all') {
+                    btn.className = classActive;
+                } else {
+                    btn.className = classInactive;
+                }
+            });
+        }
+        setInitialFilterStyles();
+
         function initDevices() {
             track.innerHTML = '';
             devices.forEach(d => {
                 const card = document.createElement('a');
                 card.href = `/static/handheld.html?device=${encodeURIComponent(d.name)}`;
-                card.className = "snap-start bg-brand-card rounded-2xl overflow-hidden hover:bg-brand-hover device-card group block";
+                card.className = "snap-start bg-brand-main border-4 border-brand-dark rounded-2xl overflow-hidden device-card group block shadow-[3px_3px_0px_#463884] cursor-pointer";
                 card.dataset.brand = d.brand;
                 card.dataset.name = d.name.toLowerCase();
 
                 card.innerHTML = `
-                    <div class="aspect-[4/3] p-6 flex items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors pointer-events-none">
-                        <img src="${d.img}" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500">
+                    <div class="aspect-[4/3] p-6 flex items-center justify-center bg-white/10 border-b-4 border-brand-dark group-hover:bg-white/20 transition-colors pointer-events-none">
+                        <img src="${d.img}" class="w-full h-full object-contain group-hover:scale-110 drop-shadow-md transition-transform duration-500">
                     </div>
-                    <div class="p-5 text-center pointer-events-none">
-                        <h3 class="font-bold text-white text-lg">${d.name}</h3>
+                    <div class="p-5 text-center pointer-events-none bg-brand-dark group-hover:bg-[#52448F] transition-colors">
+                        <h3 class="font-black text-white text-lg tracking-tight">${d.name}</h3>
                     </div>
                 `;
                 track.appendChild(card);
             });
         }
 
-        // Apply filters via CSS class (Preserves Animation)
         function applyFilters() {
             const cards = document.querySelectorAll('.device-card');
             cards.forEach(card => {
@@ -368,21 +412,19 @@
             });
         }
 
-        // Search Listener
         searchInput.addEventListener('input', (e) => {
             currentSearch = e.target.value.toLowerCase().trim();
             applyFilters();
         });
 
-        // Filter Button Listener
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
+                // Reset all
                 filterBtns.forEach(b => {
-                    b.classList.remove('bg-white', 'text-brand-bg');
-                    b.classList.add('bg-brand-card', 'text-brand-muted');
+                    b.className = classInactive;
                 });
-                btn.classList.remove('bg-brand-card', 'text-brand-muted');
-                btn.classList.add('bg-white', 'text-brand-bg');
+                // Activate clicked
+                btn.className = classActive;
 
                 currentFilter = btn.dataset.filter;
                 applyFilters();
@@ -437,9 +479,8 @@
         // VIDEO FETCHING (Integrated w/ Visuals)
         // --------------------------------------------------------
         async function loadVideos() {
-            const track = document.getElementById('latest-videos-track');
+            const vidTrack = document.getElementById('latest-videos-track');
             
-            // Default Mocks (Updated to current content)
             const mockVideos = [
                 { title: "AYN Odin 3 - The King Returns", id: "jNQXAC9IVRw", thumb: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" },
                 { title: "Steam Deck 2 vs The World", id: "9bZkp7q19f0", thumb: "https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg" },
@@ -447,38 +488,32 @@
                 { title: "Top 10 Android Games for Handhelds", id: "fJ9rUzIMcZQ", thumb: "https://img.youtube.com/vi/fJ9rUzIMcZQ/maxresdefault.jpg" }
             ];
 
-            let videos = mockVideos; // Start with mocks
+            let videos = mockVideos; 
 
             try {
-                // Try fetching from API
                 const res = await fetch('/api/latest-videos?limit=10');
                 if (res.ok) {
                     const data = await res.json();
                     if (data && data.length) {
-                        videos = data; // Use API data if available
+                        videos = data; 
                     }
                 }
             } catch(e) {
                 console.log("Using mock data");
             }
 
-            // 1. RENDER VIDEOS GRID
-            track.innerHTML = videos.map(v => `
-                <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-card rounded-xl overflow-hidden hover:bg-brand-hover transition-colors block shadow-lg">
-                    <div class="aspect-video relative overflow-hidden">
+            // Chunky style Video Cards 
+            vidTrack.innerHTML = videos.map(v => `
+                <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden hover:bg-white transition-all block shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884]">
+                    <div class="aspect-video relative overflow-hidden border-b-4 border-brand-dark">
                         <img src="${v.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">WATCH</div>
+                        <div class="absolute bottom-2 right-2 bg-brand-dark border-2 border-white text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm">WATCH</div>
                     </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-white text-sm line-clamp-2 mb-2 group-hover:text-brand-muted transition-colors">${v.title}</h3>
-                        <div class="text-xs text-brand-muted flex items-center gap-2">
-                            <span>Recent</span>
-                        </div>
+                    <div class="p-4 bg-brand-main group-hover:bg-[#7262bc] transition-colors">
+                        <h3 class="font-black text-white text-sm line-clamp-2 leading-snug">${v.title}</h3>
                     </div>
                 </a>`).join('');
 
-            // 2. HERO UPDATE LOGIC (New Feature)
-            // This grabs the VERY FIRST video from the list (API or Mock) and puts it in the hero
             if(videos.length > 0) {
                 const latest = videos[0];
                 const heroLink = document.getElementById('hero-video-link');
