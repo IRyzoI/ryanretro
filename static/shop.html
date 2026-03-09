@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Ryan Retro | Shop</title>
     <meta name="description" content="Ryan Retro Shop - Best Deals on Handhelds, Accessories, and Retro Gear.">
 
@@ -13,7 +14,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -21,12 +22,11 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#2D1B4E',       // Deep Soft Purple
-                            card: '#432C7A',     // Lighter Grape
-                            hover: '#5B3EA8',    // Bright Purple
-                            accent: '#FFFFFF',   // Pure White
-                            muted: '#D4BBFF',    // Soft Lavender Text
-                            red: '#FF0000'       // YouTube Red
+                            light: '#B9B2DE',  // Main Page Background
+                            main: '#6254A4',   // Primary Purple
+                            dark: '#463884',   // Text / Borders / Shadows
+                            accent: '#FFFFFF', // Text & Highlights
+                            red: '#FF0000'     // YouTube Red
                         }
                     },
                     fontFamily: {
@@ -38,31 +38,59 @@
     </script>
 
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #2D1B4E; }
-        ::-webkit-scrollbar-thumb { background: #432C7A; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #5B3EA8; }
+        /* Custom Scrollbar - Themed */
+        ::-webkit-scrollbar { width: 10px; height: 10px; display: block; }
+        ::-webkit-scrollbar-track { background: #463884; border-radius: 6px; margin: 0 4px; }
+        ::-webkit-scrollbar-thumb { background: #B9B2DE; border-radius: 6px; border: 2px solid #463884; }
+        ::-webkit-scrollbar-thumb:hover { background: #6254A4; }
 
-        /* Range Slider Styling */
+        /* Form Elements - Flat & Chunky */
+        .brand-input {
+            background: #463884;
+            border: 3px solid #B9B2DE;
+            color: #FFFFFF;
+            border-radius: 12px;
+            transition: all 0.2s;
+            font-weight: 700;
+        }
+        .brand-input:focus {
+            outline: none;
+            border-color: #463884;
+            background: #6254A4;
+        }
+        .brand-input::placeholder {
+            color: #B9B2DE;
+            opacity: 0.7;
+        }
+
+        /* Themed Range Slider */
         input[type=range] {
             -webkit-appearance: none; 
             background: transparent; 
+            width: 100%;
+        }
+        input[type=range]:focus {
+            outline: none;
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 16px; width: 16px;
+            height: 20px; width: 20px;
             border-radius: 50%;
-            background: #FFFFFF;
+            background: #B9B2DE;
+            border: 4px solid #463884;
             cursor: pointer;
-            margin-top: -6px;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            margin-top: -8px;
+            box-shadow: 2px 2px 0px #463884;
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
         input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 4px;
+            width: 100%; height: 6px;
             cursor: pointer;
-            background: #432C7A;
-            border-radius: 2px;
+            background: #463884;
+            border-radius: 3px;
         }
 
         /* Animations */
@@ -72,84 +100,77 @@
             100% { transform: translateY(0px); }
         }
         .animate-float { animation: float 3s ease-in-out infinite; }
-        
-        .glass-panel {
-            background: rgba(67, 44, 122, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
     </style>
 </head>
-<body class="bg-brand-bg text-brand-accent font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-bg">
+<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
 
-    <!-- HEADER (Exact Match to Homepage) -->
-    <header class="sticky top-0 z-50 bg-brand-bg/95 backdrop-blur-sm border-b border-brand-card">
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-brand-main border-b-4 border-brand-dark shadow-md">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
-
-            <a href="/" class="flex items-center gap-3 group shrink-0">
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 group-hover:border-white transition-colors">
+            
+            <a href="/" class="flex items-center gap-4 group shrink-0">
+                <div class="w-12 h-12 rounded-xl overflow-hidden border-[3px] border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <span class="font-bold text-lg tracking-tight hidden sm:block">Ryan Retro</span>
+                <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">RYAN RETRO</span>
             </a>
 
-            <nav class="hidden lg:flex items-center gap-6 bg-brand-card/30 px-6 py-2 rounded-full border border-white/5">
-                <a href="/benchmarks" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Benchmarks</a>
-                <a href="/patrons" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Patrons</a>
-                <a href="/reviews" class="text-sm font-bold text-brand-muted hover:text-white transition-colors">Reviews</a>
-                <a href="/store" class="text-sm font-bold text-white transition-colors">Shop</a>
+            <nav class="hidden lg:flex items-center gap-6">
+                <a href="/benchmarks" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Benchmarks</a>
+                <a href="/patrons" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Patrons</a>
+                <a href="/reviews" class="text-sm font-bold text-brand-light hover:text-white transition-colors">Reviews</a>
+                <a href="/store" class="text-sm font-black text-white transition-colors border-b-2 border-white pb-0.5">Shop</a>
             </nav>
 
             <div class="flex items-center gap-4">
-                <div class="hidden md:flex items-center gap-2 pr-4 border-r border-brand-card/50">
-                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="youtube" class="w-4 h-4"></i></a>
-                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1">
-                        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                <div class="hidden md:flex items-center gap-4 pr-4 border-r-2 border-brand-dark">
+                    <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                    <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                    <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors">
+                        <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                     </a>
-                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors p-1"><i data-lucide="at-sign" class="w-4 h-4"></i></a>
+                    <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                    <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                    <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
                 </div>
-
-                 <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-card border-t border-brand-hover absolute w-full left-0 top-full p-4 flex flex-col gap-4 shadow-xl z-50">
-            <div class="grid grid-cols-2 gap-2">
-                <a href="/benchmarks" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Benchmarks</a>
-                <a href="/patrons" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Patrons</a>
-                <a href="/reviews" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Reviews</a>
-                <a href="/store" class="p-3 bg-brand-bg rounded-md text-center text-sm font-bold text-white hover:bg-white/5">Shop</a>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-4 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
+            <div class="grid grid-cols-2 gap-3">
+                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-light border-2 border-brand-dark rounded-xl text-center text-sm font-black text-brand-dark transition-colors shadow-[2px_2px_0px_#463884]">Shop</a>
             </div>
 
-            <div class="flex justify-center flex-wrap gap-4 pt-4 border-t border-white/10">
-                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-muted"><i data-lucide="youtube" class="w-5 h-5"></i></a>
-                <a href="https://x.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-muted"><i data-lucide="instagram" class="w-5 h-5"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-muted"><svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" class="text-brand-muted"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-muted"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-muted"><i data-lucide="at-sign" class="w-5 h-5"></i></a>
+            <div class="flex justify-center flex-wrap gap-4 pt-6 border-t-2 border-brand-dark">
+                <a href="https://www.youtube.com/@RyanRetro" class="text-brand-light hover:text-white"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" class="text-brand-light hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" class="text-brand-light hover:text-white"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" class="text-brand-light hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" class="text-brand-light hover:text-white"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
         </div>
     </header>
 
-    <main class="flex-grow relative">
+    <main class="flex-grow relative z-10">
         <!-- Support Banner -->
-        <div class="container mx-auto px-4 lg:px-6 pt-6">
-            <div class="bg-gradient-to-r from-brand-card to-brand-bg border border-white/10 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-4 text-center md:text-left shadow-lg relative overflow-hidden group">
-                <div class="absolute inset-0 bg-brand-hover/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="bg-white/10 p-3 rounded-full shrink-0 animate-float">
+        <div class="container mx-auto px-4 lg:px-6 pt-10">
+            <div class="bg-brand-main border-4 border-brand-dark rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center gap-6 text-center md:text-left shadow-[6px_6px_0px_#463884] relative overflow-hidden group">
+                <div class="bg-brand-light p-3 rounded-full shrink-0 border-4 border-brand-dark shadow-[3px_3px_0px_#463884] animate-float z-10">
                     <i data-lucide="heart" class="w-6 h-6 text-brand-red fill-brand-red"></i>
                 </div>
                 <div class="flex-1 relative z-10">
-                    <h3 class="font-bold text-white text-sm uppercase tracking-wide mb-1">Support The Channel</h3>
-                    <p class="text-brand-muted text-xs md:text-sm leading-relaxed max-w-2xl">
+                    <h3 class="font-black text-white text-lg uppercase tracking-wide mb-1 drop-shadow-sm">Support The Channel</h3>
+                    <p class="text-brand-light font-bold text-sm md:text-base leading-relaxed max-w-3xl">
                         These are affiliate links. Using them costs you nothing, but it helps me keep buying handhelds to review for you! Thank you for your support!
                     </p>
                 </div>
@@ -162,34 +183,34 @@
                 <!-- Search & Main Toggles -->
                 <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
                     <div class="relative w-full">
-                        <input type="text" id="searchInput" placeholder="Search for handhelds, accessories..." class="w-full bg-brand-bg border border-brand-card rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-brand-muted focus:ring-1 focus:ring-brand-muted transition-all placeholder-brand-muted/50 text-white shadow-inner">
-                        <i data-lucide="search" class="absolute left-3 top-3.5 w-4 h-4 text-brand-muted"></i>
+                        <input type="text" id="searchInput" placeholder="Search for handhelds, accessories..." class="brand-input w-full pl-12 pr-4 py-4 text-sm shadow-inner">
+                        <i data-lucide="search" class="absolute left-4 top-4 w-5 h-5 text-brand-light"></i>
                     </div>
 
                     <!-- Filter Toggle -->
-                    <button id="toggleFilterBtn" class="flex items-center gap-2 px-6 py-3 bg-brand-card hover:bg-brand-hover text-white rounded-xl text-sm font-bold transition-all border border-white/5 w-full md:w-auto justify-center whitespace-nowrap shadow-lg">
-                        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Filters & Sort
-                        <i data-lucide="chevron-down" class="w-3 h-3 transition-transform" id="filterChevron"></i>
+                    <button id="toggleFilterBtn" class="flex items-center gap-2 px-8 py-4 bg-brand-main hover:bg-brand-light hover:text-brand-dark text-white rounded-xl text-sm font-black transition-all border-4 border-brand-dark w-full md:w-auto justify-center whitespace-nowrap shadow-[4px_4px_0px_#463884] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#463884]">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5"></i> Filters & Sort
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform" id="filterChevron"></i>
                     </button>
                 </div>
 
-                <!-- Expanded Filters Panel -->
-                <div id="filterPanel" class="hidden bg-brand-card/50 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-xl">
+                <!-- Expanded Filters Panel (Chunky Style) -->
+                <div id="filterPanel" class="hidden bg-brand-main border-4 border-brand-dark rounded-2xl p-6 shadow-[6px_6px_0px_#463884] mt-2">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         
                         <!-- Col 1: Sort & Currency -->
                         <div class="space-y-6">
                             <div class="space-y-3">
-                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Sort By</h4>
-                                <select id="sortFilter" class="w-full bg-brand-bg border border-white/10 text-white text-sm rounded-lg p-2.5 focus:border-brand-muted focus:outline-none">
+                                <h4 class="text-sm font-black text-white uppercase tracking-wider">Sort By</h4>
+                                <select id="sortFilter" class="w-full bg-brand-dark border-2 border-brand-dark text-white font-bold text-sm rounded-xl p-3 focus:border-brand-light focus:outline-none shadow-sm cursor-pointer">
                                     <option value="default">Newest Arrivals</option>
                                     <option value="price-asc">Price: Low to High</option>
                                     <option value="price-desc">Price: High to Low</option>
                                 </select>
                             </div>
                             <div class="space-y-3">
-                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Currency</h4>
-                                <select id="currencyFilter" class="w-full bg-brand-bg border border-white/10 text-white text-sm rounded-lg p-2.5 focus:border-brand-muted focus:outline-none">
+                                <h4 class="text-sm font-black text-white uppercase tracking-wider">Currency</h4>
+                                <select id="currencyFilter" class="w-full bg-brand-dark border-2 border-brand-dark text-white font-bold text-sm rounded-xl p-3 focus:border-brand-light focus:outline-none shadow-sm cursor-pointer">
                                     <option value="USD">USD $</option>
                                     <option value="EUR">EUR €</option>
                                     <option value="GBP">GBP £</option>
@@ -202,59 +223,42 @@
 
                          <!-- Col 2: Categories -->
                         <div class="space-y-3">
-                            <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Category</h4>
+                            <h4 class="text-sm font-black text-white uppercase tracking-wider">Category</h4>
                             <div class="flex flex-col gap-2">
-                                <button class="cat-pill w-full text-left px-4 py-2 rounded-lg text-sm font-bold text-brand-muted hover:text-white transition-all data-[active=true]:bg-brand-hover data-[active=true]:text-white data-[active=true]:shadow-md border border-white/5 bg-brand-bg/50" data-cat="all" data-active="true">All Items</button>
-                                <button class="cat-pill w-full text-left px-4 py-2 rounded-lg text-sm font-bold text-brand-muted hover:text-white transition-all data-[active=true]:bg-brand-hover data-[active=true]:text-white data-[active=true]:shadow-md border border-white/5 bg-brand-bg/50" data-cat="Handhelds">Handhelds Only</button>
-                                <button class="cat-pill w-full text-left px-4 py-2 rounded-lg text-sm font-bold text-brand-muted hover:text-white transition-all data-[active=true]:bg-brand-hover data-[active=true]:text-white data-[active=true]:shadow-md border border-white/5 bg-brand-bg/50" data-cat="Accessories">Accessories Only</button>
+                                <button class="cat-pill" data-cat="all">All Items</button>
+                                <button class="cat-pill" data-cat="Handhelds">Handhelds Only</button>
+                                <button class="cat-pill" data-cat="Accessories">Accessories Only</button>
                             </div>
                         </div>
 
                         <!-- Col 3: Tier Slider -->
                         <div class="space-y-3">
                             <div class="flex justify-between items-center">
-                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Power Tier</h4>
-                                <span id="tierLabel" class="text-xs font-bold text-white bg-brand-hover px-2 py-0.5 rounded">ALL</span>
+                                <h4 class="text-sm font-black text-white uppercase tracking-wider">Power Tier</h4>
+                                <span id="tierLabel" class="text-xs font-black text-brand-dark bg-brand-light border-2 border-brand-dark shadow-sm px-2 py-1 rounded-lg">ALL</span>
                             </div>
-                            <input type="range" id="tierRange" min="0" max="4" value="0" step="1" class="w-full">
-                            <div class="flex justify-between text-[10px] text-brand-muted font-bold">
+                            <div class="pt-2">
+                                <input type="range" id="tierRange" min="0" max="4" value="0" step="1" class="w-full">
+                            </div>
+                            <div class="flex justify-between text-[11px] text-brand-light font-black mt-1">
                                 <span>ALL</span>
                                 <span>PS1</span>
                                 <span>GC</span>
                                 <span>SW</span>
                                 <span>PC</span>
                             </div>
-                            <p class="text-[10px] text-brand-muted/60 italic mt-2">Note: Selecting a specific tier will hide all accessories.</p>
+                            <p class="text-xs text-brand-light font-bold mt-2">Note: Tier select hides accessories.</p>
                         </div>
 
                         <!-- Col 4: Budget & Toggles -->
                         <div class="space-y-6">
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Max Budget</h4>
-                                    <span id="budgetLabel" class="text-xs font-bold text-white bg-brand-hover px-2 py-0.5 rounded">$500</span>
+                                    <h4 class="text-sm font-black text-white uppercase tracking-wider">Max Budget</h4>
+                                    <span id="budgetLabel" class="text-xs font-black text-brand-dark bg-brand-light border-2 border-brand-dark shadow-sm px-2 py-1 rounded-lg">$500</span>
                                 </div>
-                                <input type="range" id="budgetRange" min="0" max="500" value="500" step="10" class="w-full">
-                            </div>
-
-                            <!-- Toggles -->
-                            <div class="space-y-3">
-                                <h4 class="text-xs font-bold text-brand-muted uppercase tracking-wider">Availability</h4>
-                                <div class="flex flex-col gap-2">
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" id="availCheck" class="peer h-4 w-4 appearance-none rounded border border-white/20 bg-brand-bg checked:bg-brand-hover checked:border-white transition-all">
-                                            <i data-lucide="check" class="absolute left-0.5 top-0.5 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none"></i>
-                                        </div>
-                                        <span class="text-sm text-brand-muted group-hover:text-white transition-colors">Available Now Only</span>
-                                    </label>
-                                    <label class="flex items-center gap-2 cursor-pointer group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" id="officialStoreCheck" class="store-opt peer h-4 w-4 appearance-none rounded border border-white/20 bg-brand-bg checked:bg-brand-hover checked:border-white transition-all" value="official">
-                                            <i data-lucide="check" class="absolute left-0.5 top-0.5 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none"></i>
-                                        </div>
-                                        <span class="text-sm text-brand-muted group-hover:text-white transition-colors">Official Stores Only</span>
-                                    </label>
+                                <div class="pt-2">
+                                    <input type="range" id="budgetRange" min="0" max="500" value="500" step="10" class="w-full">
                                 </div>
                             </div>
                         </div>
@@ -270,42 +274,39 @@
             </div>
         </section>
 
-        <!-- (Modals have been removed as requested) -->
     </main>
 
-    <!-- FOOTER (Exact Match to Homepage) -->
-    <footer class="bg-brand-bg border-t border-brand-card py-12 text-center mt-auto">
+    <!-- FOOTER -->
+    <footer class="bg-brand-main py-10 text-center border-t-4 border-brand-dark mt-auto relative z-40">
         <div class="container mx-auto px-6">
             <div class="flex justify-center flex-wrap gap-6 mb-6">
-                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="youtube" class="w-6 h-6"></i></a>
-                <a href="https://x.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="twitter" class="w-6 h-6"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="facebook" class="w-6 h-6"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-muted hover:text-white transition-colors hover:scale-110"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
+                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+                <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
             </div>
-            <p class="text-xs text-brand-muted font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+            <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
         </div>
     </footer>
 
-    <!-- PRODUCT TEMPLATE (Hidden) -->
+    <!-- PRODUCT TEMPLATE -->
     <template id="productCardTemplate">
-        <div class="group bg-brand-card rounded-2xl overflow-hidden border border-white/5 hover:border-white/20 transition-all hover:-translate-y-1 hover:shadow-2xl flex flex-col h-full relative product-card">
-            <!-- Image Area (Now clickable to best link) -->
-            <div class="img-container aspect-[4/3] bg-black/20 p-6 flex items-center justify-center relative overflow-hidden">
-                <div class="absolute inset-0 bg-brand-hover/10 opacity-0 group-hover:opacity-100 transition-opacity z-0"></div>
-                <img src="" class="card-img w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-110">
-                <!-- Badges removed from card view -->
+        <div class="group bg-brand-main border-4 border-brand-dark rounded-2xl overflow-hidden shadow-[4px_4px_0px_#463884] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#463884] transition-all flex flex-col h-full relative product-card">
+            <!-- Image Area -->
+            <div class="img-container aspect-[4/3] bg-brand-dark border-b-4 border-brand-dark p-6 flex items-center justify-center relative overflow-hidden transition-colors group-hover:bg-[#3A2E70]">
+                <img src="" class="card-img w-full h-full object-contain relative z-10 transition-transform duration-500 group-hover:scale-110 drop-shadow-md">
             </div>
             
             <!-- Content Area -->
-            <div class="p-5 flex flex-col flex-grow">
-                <div class="flex justify-between items-start mb-2">
-                    <span class="card-cat text-[10px] font-bold text-brand-muted uppercase tracking-wider">Handheld</span>
-                    <span class="card-price text-sm font-bold text-white bg-white/10 px-2 py-0.5 rounded">$000</span>
+            <div class="p-5 flex flex-col flex-grow bg-brand-main">
+                <div class="flex justify-between items-start mb-3">
+                    <span class="card-cat text-[10px] font-black text-brand-dark bg-brand-light px-2 py-1 rounded shadow-sm uppercase tracking-wider">Handheld</span>
+                    <span class="card-price text-sm font-black text-white bg-brand-dark px-2 py-0.5 rounded border-2 border-brand-dark shadow-sm">$000</span>
                 </div>
-                <h3 class="card-title font-bold text-white text-lg mb-2 leading-tight group-hover:text-brand-muted transition-colors">Product Name</h3>
+                <h3 class="card-title font-black text-white text-xl mb-3 leading-tight group-hover:text-brand-light transition-colors">Product Name</h3>
                 
                 <!-- Direct Links Container -->
                 <div class="card-links mt-auto pt-3 flex flex-col gap-2">
@@ -334,7 +335,7 @@
               "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/rp6.png", 
               "description": "The new flagship. Snapdragon 8 Gen 2, 5.5\" 1080p 120Hz AMOLED. Available in Ryan Retro Purple!", 
               "links": [
-                { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 229.00, "currency": "$" }
+                { "store": "Official", "url": "https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT", "price": 244.00, "currency": "$" }
               ] 
             },
             { 
@@ -409,7 +410,7 @@
               "releaseDate": "2025-12-15", 
               "badge": "Upgrade 🚀", 
               "tier": 2, 
-              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", // Closest TrimUI match
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", 
               "description": "The 'S' stands for Speed. The sequel to the budget king with improved internals for better PSP emulation.", 
               "links": [
                 { "store": "AliExpress", "url": "https://s.click.aliexpress.com/e/_c3d4sfRf", "price": 91.85, "currency": "$" }
@@ -421,7 +422,7 @@
               "category": "Handhelds", 
               "releaseDate": "2023-11-01", 
               "tier": 1, 
-              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", // Closest TrimUI match
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", 
               "description": "The 16:9 budget favorite. Excellent screen and ergonomics for wide-screen retro gaming.", 
               "links": [
                 { "store": "Amazon", "url": "https://amzn.to/4piaw4j", "price": 89.99, "currency": "$" },
@@ -628,7 +629,7 @@
               "releaseDate": "2024-11-15",
               "badge": "Best Value 🎁",
               "tier": 1,
-              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", // Using Brick image
+              "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png", 
               "description": "The premium metal sensation. CNC aluminum shell with a stunning 3.2\" IPS screen.",
               "links": [
                 { "store": "Official", "url": "https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv", "price": 80.75, "currency": "$", "coupon": "TRIMUIMC15" },
@@ -665,9 +666,7 @@
             category: 'all',
             budget: 500,
             tier: 0,
-            sort: 'default',
-            availableOnly: false,
-            officialOnly: false
+            sort: 'default'
         };
 
         const tierMap = { 0: "ALL", 1: "PS1", 2: "GC", 3: "SW", 4: "PC" };
@@ -712,6 +711,23 @@
         }
 
         // ------------------------------------------------------------------
+        // THEMED PILL CLASSES
+        // ------------------------------------------------------------------
+        const classInactivePill = "cat-pill w-full text-left px-5 py-3 rounded-xl text-sm font-bold bg-brand-dark text-brand-light border-4 border-transparent hover:bg-[#52448F] transition-all";
+        const classActivePill = "cat-pill w-full text-left px-5 py-3 rounded-xl text-sm font-black bg-brand-main text-white border-4 border-brand-dark shadow-[4px_4px_0px_#463884] transition-all -translate-y-1";
+
+        function updatePillStyles() {
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                if (btn.dataset.cat === filters.category) {
+                    btn.className = classActivePill;
+                } else {
+                    btn.className = classInactivePill;
+                }
+            });
+        }
+        updatePillStyles(); // Initial set
+
+        // ------------------------------------------------------------------
         // RENDERING
         // ------------------------------------------------------------------
         const grid = document.getElementById('productGrid');
@@ -738,13 +754,6 @@
                     if ((p.tier || 0) < filters.tier) return false;
                 }
 
-                // Checkboxes
-                if (filters.availableOnly && p.badge && p.badge.toLowerCase().includes('pre-order')) return false;
-                if (filters.officialOnly) {
-                    const hasOfficial = p.links.some(l => l.store.toLowerCase().includes('official') || l.store.toLowerCase().includes('goretroid') || l.store.toLowerCase().includes('ayntec'));
-                    if (!hasOfficial) return false;
-                }
-
                 return true;
             });
 
@@ -760,11 +769,12 @@
             });
 
             if (filtered.length === 0) {
+                // Themed "No Items Found"
                 grid.innerHTML = `
                     <div class="col-span-full py-20 text-center flex flex-col items-center">
-                        <i data-lucide="ghost" class="w-12 h-12 text-brand-muted/50 mb-4"></i>
-                        <h3 class="text-white font-bold text-lg">No Items Found</h3>
-                        <p class="text-brand-muted text-sm">Try adjusting your filters or search.</p>
+                        <i data-lucide="ghost" class="w-16 h-16 text-brand-dark mb-4 opacity-50"></i>
+                        <h3 class="text-brand-dark font-black text-2xl uppercase">No Items Found</h3>
+                        <p class="text-brand-main font-bold mt-2">Try adjusting your filters or search.</p>
                     </div>
                 `;
                 lucide.createIcons();
@@ -783,7 +793,7 @@
                 clone.querySelector('.card-price').textContent = formatPrice(cheapest);
                 clone.querySelector('.card-title').textContent = p.name;
 
-                // CLICK LOGIC: Image & Title -> Best Link (No Modal)
+                // CLICK LOGIC: Image & Title -> Best Link
                 const bestUrl = getBestLink(p);
                 
                 // Image Click
@@ -801,37 +811,40 @@
                     title.onclick = () => window.open(bestUrl, '_blank');
                 }
                 
-                // INJECT INDIVIDUAL LINKS (Buttons)
+                // INJECT INDIVIDUAL LINKS (Themed Buttons)
                 const linksContainer = clone.querySelector('.card-links');
                 const sortedLinks = [...p.links].sort((a,b) => a.price - b.price);
 
                 sortedLinks.forEach(l => {
-                    let bgClass = "bg-brand-bg hover:bg-black text-white";
+                    let baseBtnClass = "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884]";
+                    let bgClass = "bg-brand-dark text-brand-light hover:bg-[#52448F]"; // default accessory/other
                     let icon = "shopping-bag";
                     const s = l.store.toLowerCase();
                     
-                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec')) {
-                        bgClass = "bg-blue-600 hover:bg-blue-700 text-white";
+                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi')) {
+                        bgClass = "bg-brand-light text-brand-dark hover:bg-white";
                         icon = "star";
+                    } else if (s.includes('powkiddy')) {
+                        bgClass = "bg-teal-500 text-white hover:bg-teal-400";
+                        icon = "shopping-bag";
                     } else if (s.includes('ali')) {
-                        bgClass = "bg-red-600 hover:bg-red-700 text-white";
+                        bgClass = "bg-red-600 text-white hover:bg-red-500";
                         icon = "shopping-cart";
                     } else if (s.includes('amazon')) {
-                        bgClass = "bg-yellow-500 hover:bg-yellow-600 text-black";
+                        bgClass = "bg-yellow-500 text-black hover:bg-yellow-400";
                         icon = "package";
                     }
 
                     const btn = document.createElement('a');
                     btn.href = l.url;
                     btn.target = "_blank";
-                    btn.className = `flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all ${bgClass} border border-white/5`;
-                    // STOP PROPAGATION (Just in case, though card wrapper has no click event now)
+                    btn.className = `${baseBtnClass} ${bgClass}`;
                     btn.onclick = (e) => e.stopPropagation(); 
                     
                     btn.innerHTML = `
                         <div class="flex items-center gap-2">
-                            <i data-lucide="${icon}" class="w-3 h-3"></i>
-                            <span>${l.store}</span>
+                            <i data-lucide="${icon}" class="w-4 h-4"></i>
+                            <span class="uppercase tracking-wide">${l.store}</span>
                         </div>
                         <span>${formatPrice(l.price)}</span>
                     `;
@@ -865,9 +878,8 @@
         // Category Pills
         document.querySelectorAll('.cat-pill').forEach(btn => {
             btn.onclick = () => {
-                document.querySelectorAll('.cat-pill').forEach(b => b.setAttribute('data-active', 'false'));
-                btn.setAttribute('data-active', 'true');
                 filters.category = btn.dataset.cat;
+                updatePillStyles();
                 renderProducts();
             };
         });
@@ -888,10 +900,6 @@
             budgetLabel.textContent = `$${filters.budget}`;
             renderProducts();
         };
-
-        // Checkboxes
-        document.getElementById('availCheck').onchange = (e) => { filters.availableOnly = e.target.checked; renderProducts(); };
-        document.getElementById('officialStoreCheck').onchange = (e) => { filters.officialOnly = e.target.checked; renderProducts(); };
 
         // Currency
         const updateCurrency = (val) => {
