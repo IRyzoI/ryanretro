@@ -82,14 +82,14 @@
         body.curve-only-mode #battery > *:not(#battery-curve-card) { display: none !important; }
     </style>
 </head>
-<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white transition-colors duration-300">
+<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
     <div id="toast">Code Copied!</div>
 
     <!-- HEADER -->
-    <header class="sticky top-0 z-50 bg-brand-main border-b-2 border-brand-dark shadow-md">
+    <header class="sticky top-0 z-50 bg-brand-main border-b-4 border-brand-dark shadow-md">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
             <a href="/" class="flex items-center gap-4 group shrink-0">
-                <div class="w-12 h-12 rounded-xl overflow-hidden border-2 border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
+                <div class="w-12 h-12 rounded-xl overflow-hidden border-[3px] border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light transition-transform group-hover:scale-105">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
                 <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">RYAN RETRO</span>
@@ -114,19 +114,18 @@
                     <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="facebook" class="w-6 h-6"></i></a>
                     <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="text-brand-light hover:text-white transition-colors"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
                 </div>
-                <button id="darkModeToggle" class="hidden lg:flex bg-brand-dark text-brand-light hover:text-white p-2 rounded-xl border-2 border-brand-dark shadow-[1px_1px_0px_#463884] hover:-translate-y-1 transition-all">
-                    <i data-lucide="sun" class="w-5 h-5" id="themeIcon"></i>
+                <button id="mobile-menu-btn" class="lg:hidden text-white p-2">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
-                <button id="mobile-menu-btn" class="lg:hidden text-white p-2"><i data-lucide="menu" class="w-7 h-7"></i></button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-2 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
+        <div id="mobile-menu" class="hidden lg:hidden bg-brand-main border-b-4 border-brand-dark absolute w-full left-0 top-full p-6 flex flex-col gap-4 shadow-xl z-50">
             <div class="grid grid-cols-2 gap-3">
-                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white shadow-sm">Benchmarks</a>
-                <a href="/patrons" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white shadow-sm">Patrons</a>
-                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white shadow-sm">Reviews</a>
-                <a href="/store" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white shadow-sm">Shop</a>
+                <a href="/benchmarks" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Benchmarks</a>
+                <a href="/patrons" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Patrons</a>
+                <a href="/reviews" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Reviews</a>
+                <a href="/store" class="p-3 bg-brand-dark border-2 border-brand-dark rounded-xl text-center text-sm font-bold text-white hover:bg-brand-light hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm">Shop</a>
             </div>
             <div class="flex justify-center flex-wrap gap-4 pt-6 border-t-2 border-brand-dark">
                 <a href="https://www.youtube.com/@RyanRetro" class="text-brand-light hover:text-white"><i data-lucide="youtube" class="w-6 h-6"></i></a>
@@ -159,38 +158,45 @@
         
         <!-- HERO -->
         <section class="hero-header mb-16" data-aos="fade-up">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                <div class="space-y-6 text-center lg:text-left">
-                    <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none text-brand-dark drop-shadow-sm uppercase">
-                        RETROID G2 <br>
-                        <span class="text-brand-main drop-shadow-none">FULL REVIEW</span>
-                    </h1>
-                    
-                    <!-- Combined Score/Verdict Pill -->
-                    <div class="inline-flex bg-brand-main border-2 border-brand-dark rounded-2xl p-4 shadow-[2px_2px_0px_#463884] items-center divide-x-2 divide-brand-dark">
-                        <div class="flex flex-col items-center px-6">
-                            <div class="flex items-center gap-2 text-brand-light">
+            <!-- Title -->
+            <div class="mb-8 text-center lg:text-left">
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none text-brand-dark drop-shadow-sm uppercase">
+                    RETROID G2 <br>
+                    <span class="text-brand-main drop-shadow-none">FULL REVIEW</span>
+                </h1>
+            </div>
+
+            <!-- Bento Box Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Product Image (Now Large Left) -->
+                <a href="https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT" target="_blank" class="lg:col-span-2 bg-brand-main border-2 border-brand-dark rounded-3xl p-4 sm:p-8 flex items-center justify-center group shadow-[4px_4px_0px_#463884] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#463884] transition-all min-h-[250px] lg:min-h-[400px] overflow-hidden">
+                    <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png" alt="Retroid Pocket G2" class="w-full max-w-[95%] lg:max-w-[85%] h-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_10px_15px_rgba(70,56,132,0.3)]">
+                </a>
+
+                <!-- Score & Video Section (Now Right) -->
+                <div class="flex flex-col gap-6 lg:col-span-1">
+                    <!-- Score/Verdict Pill -->
+                    <div class="bg-brand-main border-2 border-brand-dark rounded-3xl p-5 shadow-[4px_4px_0px_#463884] flex justify-evenly items-center divide-x-2 divide-brand-dark h-auto">
+                        <div class="flex flex-col items-center justify-center w-1/2 px-2">
+                            <div class="flex items-center gap-2 text-brand-light mb-1">
                                 <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
                                 <span class="text-[10px] font-black uppercase tracking-widest">Score</span>
                             </div>
-                            <span class="text-3xl font-black text-white mt-1">7/10</span>
+                            <span class="text-4xl font-black text-white">7/10</span>
                         </div>
-                        <div class="flex flex-col items-center px-6">
-                            <div class="flex items-center gap-2 text-brand-light">
+                        <div class="flex flex-col items-center justify-center w-1/2 px-2">
+                            <div class="flex items-center gap-2 text-brand-light mb-1">
                                 <i data-lucide="check-circle" class="w-4 h-4 text-green-400"></i>
                                 <span class="text-[10px] font-black uppercase tracking-widest">Verdict</span>
                             </div>
-                            <span class="text-xl font-black text-green-400 uppercase tracking-tight mt-1">Recommended</span>
+                            <span class="text-base sm:text-lg lg:text-base xl:text-lg font-black text-green-400 uppercase tracking-tight text-center">Recommended</span>
                         </div>
                     </div>
 
-                    <a href="https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT" target="_blank" class="block bg-brand-main border-2 border-brand-dark rounded-3xl p-6 group shadow-[2px_2px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884] transition-all">
-                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/device_retroid-pocket-g2-01.png" alt="Retroid Pocket G2" class="w-full max-w-sm h-auto object-contain transition-transform duration-300 group-hover:scale-105 mx-auto">
-                    </a>
-                </div>
-
-                <div class="relative w-full pb-[56.25%] rounded-3xl overflow-hidden shadow-[2px_2px_0px_#463884] border-2 border-brand-dark bg-brand-dark" data-aos="fade-left">
-                    <iframe src="https://www.youtube.com/embed/-LoKyElYr6E" title="Retroid Pocket G2 Review" class="absolute inset-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <!-- Video Section (Now Small Bottom Right) -->
+                    <div class="relative w-full pb-[56.25%] rounded-3xl overflow-hidden shadow-[4px_4px_0px_#463884] border-2 border-brand-dark bg-brand-dark flex-1 min-h-[200px]">
+                        <iframe src="https://www.youtube.com/embed/-LoKyElYr6E" title="Retroid Pocket G2 Review" class="absolute inset-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
                 </div>
             </div>
         </section>
@@ -306,7 +312,7 @@
 
             <!-- SECTION 3: BATTERY -->
             <section id="battery" class="bg-brand-main border-2 border-brand-dark rounded-3xl p-6 md:p-10 shadow-[2px_2px_0px_#463884] text-white space-y-8" data-aos="fade-up">
-                <div class="inline-block bg-yellow-400 text-brand-dark px-4 py-2 rounded-xl font-black text-sm tracking-widest uppercase border-2 border-brand-dark shadow-[4px_4px_0px_#463884]">
+                <div class="inline-block bg-yellow-400 text-black px-4 py-2 rounded-xl font-black text-sm tracking-widest uppercase border-2 border-brand-dark shadow-[4px_4px_0px_#463884]">
                     Section 3: Battery Life & Charging
                 </div>
 
@@ -325,7 +331,7 @@
                 <div id="battery-curve-card" class="bg-brand-dark rounded-3xl border-2 border-brand-dark p-6 shadow-[2px_2px_0px_#463884]">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="font-black text-white text-lg uppercase tracking-wide">Charging Curve</h3>
-                        <button id="toggleBatteryPoints" class="px-4 py-2 bg-brand-main text-white rounded-xl font-black text-xs uppercase border-2 border-brand-dark shadow-[2px_2px_0px_#463884]">Toggle Points</button>
+                        <button id="toggleBatteryPoints" class="px-4 py-2 bg-brand-main hover:bg-white hover:text-brand-dark text-white rounded-xl font-black text-xs uppercase border-2 border-brand-dark shadow-[2px_2px_0px_#463884] transition-colors">Show Points</button>
                     </div>
                     <div class="h-64 relative"><canvas id="batteryChart"></canvas></div>
                     <p class="mt-4 text-xs font-bold text-brand-light/70 uppercase tracking-widest">Measured with Power-Z KM003C power meter. 0-90% in 60m, 100% in 94m.</p>
@@ -356,7 +362,7 @@
 
             <!-- SECTION 4: ACCESSORIES -->
             <section id="accessories" class="bg-brand-main border-2 border-brand-dark rounded-3xl p-6 md:p-10 shadow-[2px_2px_0px_#463884] text-white space-y-8" data-aos="fade-up">
-                <div class="inline-block bg-purple-400 text-brand-dark px-4 py-2 rounded-xl font-black text-sm tracking-widest uppercase border-2 border-brand-dark shadow-[4px_4px_0px_#463884]">
+                <div class="inline-block bg-blue-500 text-white px-4 py-2 rounded-xl font-black text-sm tracking-widest uppercase border-2 border-brand-dark shadow-[4px_4px_0px_#463884]">
                     Section 4: Accessories
                 </div>
 
@@ -418,10 +424,34 @@
                     <p>For almost the same money (~$10 more expensive when both first launched), the RP6 doubles the screen refresh rate to 120hz, increases output to 4k, increases the battery to 6000mAh, and has a more mature chip (Snapdragon 8 Gen 2). What more could you ask for?!</p>
                 </div>
 
-                <!-- Specs Image -->
-                <div class="my-10 flex justify-center">
-                    <div class="bg-brand-dark p-2 rounded-2xl border-2 border-brand-dark shadow-[4px_4px_0px_#463884] cursor-pointer hover:scale-[1.02] transition-transform" onclick="openLightbox('https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5-rpg2-rp6-specs.png')">
-                        <img src="https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp5-rpg2-rp6-specs.png" alt="RP5 vs RPG2 vs RP6 Specs" class="rounded-xl max-w-full h-auto border-2 border-brand-dark" onerror="this.src='https://placehold.co/800x450/463884/FFF?text=Spec+Comparison+Image'">
+                <!-- Specs Table -->
+                <div class="my-10">
+                    <div class="bg-brand-dark rounded-3xl border-2 border-brand-dark shadow-[2px_2px_0px_#463884] p-6 overflow-hidden">
+                        <h3 class="font-black text-white text-lg uppercase tracking-wide mb-6 text-center">RP5 vs RPG2 vs RP6 Specs</h3>
+                        <div class="overflow-x-auto custom-scrollbar rounded-xl border-2 border-brand-dark">
+                            <table class="rr-table">
+                                <thead>
+                                    <tr>
+                                        <th>Feature</th>
+                                        <th>RP5</th>
+                                        <th>RPG2</th>
+                                        <th>RP6</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Chip</td><td>SD 865 7nm</td><td>G2 Gen 2 4nm</td><td class="text-green-400">8 Gen 2 4nm</td></tr>
+                                    <tr><td>GPU</td><td>Adreno 650</td><td>Adreno A22</td><td class="text-green-400">Adreno 740</td></tr>
+                                    <tr><td>RAM</td><td>8GB LPDDR4x</td><td class="text-green-400">8GB LPDDR5x</td><td class="text-green-400">8GB LPDDR5x</td></tr>
+                                    <tr><td>Screen Hz</td><td>60Hz</td><td>60Hz</td><td class="text-green-400">120Hz</td></tr>
+                                    <tr><td>Video Out</td><td>1080p 60Hz</td><td>1080p 60Hz</td><td class="text-green-400">4K 60Hz</td></tr>
+                                    <tr><td>Wi-Fi</td><td>Wi-Fi 6</td><td>Wi-Fi 6</td><td class="text-green-400">Wi-Fi 7</td></tr>
+                                    <tr><td>OS</td><td>Android 13</td><td class="text-green-400">Android 15</td><td>Android 13</td></tr>
+                                    <tr><td>Battery</td><td>5000mAh</td><td>5000mAh</td><td class="text-green-400">6000mAh</td></tr>
+                                    <tr><td>Weight</td><td class="text-green-400">280g</td><td class="text-green-400">280g</td><td>320g</td></tr>
+                                    <tr><td>Price</td><td class="text-green-400">$199</td><td>$219</td><td>$244</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -448,30 +478,30 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-6">
-                    <a href="https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT" target="_blank" class="flex-1 bg-yellow-400 text-brand-dark px-6 py-5 rounded-2xl font-black uppercase text-center border-2 border-brand-dark shadow-[2px_2px_0px_#463884] hover:-translate-y-1 transition-all">Buy RP G2</a>
-                    <a href="/handheld" class="flex-1 bg-brand-dark text-white px-6 py-5 rounded-2xl font-black uppercase text-center border-2 border-brand-dark shadow-[2px_2px_0px_#463884] hover:-translate-y-1 transition-all">Device Page</a>
-                </div>
-            </section>
+            <a href="https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT" target="_blank" class="flex-1 bg-yellow-400 text-black px-6 py-5 rounded-2xl font-black uppercase text-center border-2 border-brand-dark shadow-[2px_2px_0px_#463884] hover:-translate-y-1 transition-all">Buy RP G2</a>
+            <a href="/handheld" class="flex-1 bg-brand-dark text-white px-6 py-5 rounded-2xl font-black uppercase text-center border-2 border-brand-dark shadow-[2px_2px_0px_#463884] hover:-translate-y-1 transition-all">Device Page</a>
         </div>
-    </main>
+    </section>
+</div>
+</main>
 
-    <!-- FOOTER -->
-    <footer class="bg-brand-main py-10 text-center border-t-2 border-brand-dark mt-auto relative z-40">
-        <div class="container mx-auto px-6">
-            <div class="flex justify-center flex-wrap gap-6 mb-6">
-                <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
-                <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
-                <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-                <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
-                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
-                <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
-                <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
-            </div>
-            <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+<!-- FOOTER -->
+<footer class="bg-brand-main py-10 text-center border-t-4 border-brand-dark mt-auto relative z-40">
+    <div class="container mx-auto px-6">
+        <div class="flex justify-center flex-wrap gap-6 mb-6">
+            <a href="https://www.youtube.com/@RyanRetro" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="youtube" class="w-6 h-6"></i></a>
+            <a href="https://x.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+            <a href="https://www.instagram.com/ryanretroyoutube/" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+            <a href="https://www.tiktok.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+            <a href="https://discord.gg/RAenS43UV9" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="message-circle" class="w-6 h-6"></i></a>
+            <a href="https://www.facebook.com/RyanRetroYT" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+            <a href="https://www.threads.com/@ryanretroyoutube" target="_blank" class="p-2 bg-brand-dark border-2 border-brand-light rounded-lg text-white hover:bg-white hover:text-brand-dark hover:border-brand-dark transition-colors shadow-sm"><i data-lucide="at-sign" class="w-6 h-6"></i></a>
         </div>
-    </footer>
+        <p class="text-xs text-brand-light font-bold uppercase tracking-widest">© 2026 Ryan Retro</p>
+    </div>
+</footer>
 
-    <!-- LIGHTBOX -->
+<!-- LIGHTBOX -->
     <div id="lightboxOverlay" class="fixed inset-0 bg-brand-dark/95 z-[999] hidden items-center justify-center p-4 backdrop-blur-md cursor-pointer" onclick="closeLightbox()">
         <img id="lightboxImage" class="max-h-full max-w-full rounded-2xl shadow-[2px_2px_0px_#463884] border-2 border-brand-dark" />
     </div>
@@ -479,32 +509,24 @@
     <!-- OBS Overlay Tools -->
     <div id="overlayTools" class="fixed bottom-4 right-4 z-50 hidden flex-col items-end gap-3 opacity-50 hover:opacity-100 transition-opacity">
         <button id="toggleRuntimeOnly" type="button" class="px-4 py-2 rounded-xl bg-brand-dark text-white border-2 border-brand-dark font-black text-xs uppercase shadow-[2px_2px_0px_#463884]">Runtime Only</button>
+        <button id="replayRuntimeAnim" type="button" class="px-4 py-2 rounded-xl bg-brand-dark text-white border-2 border-brand-dark font-black text-xs uppercase shadow-[2px_2px_0px_#463884]">Replay Bars</button>
         <button id="toggleCurveOnly" type="button" class="px-4 py-2 rounded-xl bg-brand-dark text-white border-2 border-brand-dark font-black text-xs uppercase shadow-[2px_2px_0px_#463884]">Curve Only</button>
-    </div>
+    <button id="replayCurveAnim" type="button" class="px-4 py-2 rounded-xl bg-brand-dark text-white border-2 border-brand-dark font-black text-xs uppercase shadow-[2px_2px_0px_#463884]">Replay Curve</button>
+</div>
 
-    <script>
-        lucide.createIcons();
-        AOS.init({ once: true, duration: 800 });
+<script>
+    lucide.createIcons();
+    AOS.init({ once: true, duration: 800 });
 
-        // Theme
-        const body = document.body;
-        const themeIcon = document.getElementById('themeIcon');
-        const handleThemeToggle = () => {
-            body.classList.toggle('light-mode');
-            const isLight = body.classList.contains('light-mode');
-            themeIcon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            lucide.createIcons();
-        };
-        document.getElementById('darkModeToggle').addEventListener('click', handleThemeToggle);
+    const body = document.body;
 
-        // Menu
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
+    // Menu
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
 
-        // Lightbox
-        window.openLightbox = (src) => {
+    // Lightbox
+    window.openLightbox = (src) => {
             const overlay = document.getElementById('lightboxOverlay');
             const img = document.getElementById('lightboxImage');
             img.src = src;
@@ -518,34 +540,127 @@
             const ctxRuntime = document.getElementById("batteryRuntimeChart").getContext("2d");
             const ctxCurve = document.getElementById("batteryChart").getContext("2d");
 
-            new Chart(ctxRuntime, {
+            // --- Bar Chart (Runtime) ---
+            const rawData = [
+                { label: ["TOTK", "(Switch)"], fullName: "Tears of the Kingdom (Switch)", minutes: 127 },
+                { label: ["GTA V", "(PC)"], fullName: "GTA V (PC)", minutes: 124 },
+                { label: ["Monster Boy", "(PC)"], fullName: "Monster Boy and the Cursed Kingdom", minutes: 209 },
+                { label: ["Everafter", "(Switch)"], fullName: "Everafter Falls (Switch)", minutes: 374 },
+                { label: ["Poké Yellow", "(GB)"], fullName: "Pokémon Yellow (GameBoy)", minutes: 1117 }
+            ];
+
+            const sortedData = rawData.slice().sort((a, b) => a.minutes - b.minutes);
+            const labels = sortedData.map((d) => d.label);
+            const minutes = sortedData.map((d) => d.minutes);
+            const fullNames = sortedData.map((d) => d.fullName);
+
+            window.runtimeChart = new Chart(ctxRuntime, {
                 type: "bar",
                 data: {
-                    labels: [["TOTK", "(Switch)"], ["GTA V", "(PC)"], ["Monster Boy", "(PC)"], ["Everafter", "(Switch)"], ["Poké Yellow", "(GB)"]],
+                    labels: labels,
                     datasets: [{
-                        data: [127, 124, 209, 374, 1117],
+                        label: "Battery life",
+                        data: [...minutes],
                         backgroundColor: ["#f87171", "#60a5fa", "#4ade80", "#facc15", "#B9B2DE"],
                         borderColor: "#463884", borderWidth: 2, borderRadius: 6
                     }]
                 },
                 options: { 
                     indexAxis: "y", responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { ticks: { color: "#B9B2DE" } }, y: { ticks: { color: "#FFFFFF", font: { weight: 'bold' } } } }
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: "rgba(70,56,132,0.95)",
+                            borderColor: "#B9B2DE", borderWidth: 1,
+                            callbacks: {
+                                title: (ctx) => ctx[0].chart.$fullNames[ctx[0].dataIndex],
+                                label: (ctx) => {
+                                    const mins = ctx.parsed.x;
+                                    return `${Math.floor(mins / 60)}h ${mins % 60}m`;
+                                }
+                            }
+                        }
+                    },
+                    scales: { 
+                        x: { 
+                            ticks: { 
+                                color: "#B9B2DE",
+                                callback: (value) => `${Math.floor(value / 60)}h ${value % 60}m`
+                            } 
+                        }, 
+                        y: { ticks: { color: "#FFFFFF", font: { weight: 'bold' } } } 
+                    },
+                    onClick: (evt, elements, chart) => {
+                        const yScale = chart.scales.y;
+                        const val = yScale.getValueForPixel(evt.y);
+                        const index = Math.round(val);
+                        if (index < 0 || index >= chart.data.labels.length) return;
+
+                        const mask = chart.$activeMask;
+                        const data = chart.$rawData;
+                        const ds = chart.data.datasets[0];
+
+                        mask[index] = !mask[index];
+                        ds.data[index] = mask[index] ? data[index].minutes : null;
+                        chart.update();
+                    }
                 }
             });
 
+            window.runtimeChart.$rawData = sortedData;
+            window.runtimeChart.$fullNames = fullNames;
+            window.runtimeChart.$activeMask = new Array(labels.length).fill(true);
+
+            // --- Line Chart (Curve) ---
             window.curveChart = new Chart(ctxCurve, {
                 type: "line",
                 data: {
                     labels: ["0%","20%","40%","60%","80%","100%"],
                     datasets: [{
                         label: "Wattage", data: [25, 24, 21, 15, 12, 2],
-                        borderColor: "#facc15", borderWidth: 4, tension: 0.4, fill: true, backgroundColor: "rgba(250, 204, 21, 0.1)"
+                        borderColor: "#facc15", borderWidth: 4, tension: 0.4, fill: true, backgroundColor: "rgba(250, 204, 21, 0.1)",
+                        pointRadius: 0, pointHoverRadius: 6, pointHitRadius: 15
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                options: { 
+                    responsive: true, maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: "rgba(70,56,132,0.95)",
+                            borderColor: "#B9B2DE", borderWidth: 1,
+                            callbacks: {
+                                label: (ctx) => `${ctx.parsed.y.toFixed(1)} W`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: "#B9B2DE" } },
+                        y: { ticks: { color: "#B9B2DE", callback: (v) => v + " W" } }
+                    }
+                }
             });
+
+            // Toggle points button logic
+            const toggleBtn = document.getElementById("toggleBatteryPoints");
+            if (toggleBtn && window.curveChart) {
+                toggleBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const ds = window.curveChart.data.datasets[0];
+                    const showing = ds.pointRadius && ds.pointRadius > 0;
+                    
+                    if (showing) {
+                        ds.pointRadius = 0;
+                        ds.pointHoverRadius = 6;
+                        toggleBtn.textContent = "Show Points";
+                    } else {
+                        ds.pointRadius = 5;
+                        ds.pointHoverRadius = 8;
+                        toggleBtn.textContent = "Hide Points";
+                    }
+                    window.curveChart.update();
+                });
+            }
         }
 
         // Mobile Carousel
@@ -559,9 +674,32 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             initCharts();
-            if (new URLSearchParams(window.location.search).get("overlay") === "1") body.classList.add("overlay-mode");
-            document.getElementById("toggleRuntimeOnly").addEventListener("click", () => body.classList.toggle("runtime-only-mode"));
-            document.getElementById("toggleCurveOnly").addEventListener("click", () => body.classList.toggle("curve-only-mode"));
+
+            // Overlay Mode Setup
+            if (new URLSearchParams(window.location.search).get("overlay") === "1") {
+                body.classList.add("overlay-mode");
+                setTimeout(() => {
+                    document.getElementById("battery")?.scrollIntoView({ behavior: "auto", block: "center" });
+                }, 100);
+            }
+
+            // Overlay Mode Toggles
+            document.getElementById("toggleRuntimeOnly")?.addEventListener("click", () => {
+                body.classList.toggle("runtime-only-mode");
+                body.classList.remove("curve-only-mode");
+            });
+            document.getElementById("toggleCurveOnly")?.addEventListener("click", () => {
+                body.classList.toggle("curve-only-mode");
+                body.classList.remove("runtime-only-mode");
+            });
+
+            // Replay Animations
+            document.getElementById("replayRuntimeAnim")?.addEventListener("click", () => {
+                if (window.runtimeChart) { window.runtimeChart.reset(); window.runtimeChart.update(); }
+            });
+            document.getElementById("replayCurveAnim")?.addEventListener("click", () => {
+                if (window.curveChart) { window.curveChart.reset(); window.curveChart.update(); }
+            });
         });
     </script>
 </body>
