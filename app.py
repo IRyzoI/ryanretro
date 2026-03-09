@@ -534,6 +534,10 @@ def ranking_page():
 def ranking_page(): 
     return FileResponse(os.path.join(STATIC_DIR, "thumbnail.html"))
 
+@app.get("/reviews", response_class=FileResponse)
+def ranking_page(): 
+    return FileResponse(os.path.join(STATIC_DIR, "reviews.html"))
+
 # 3. Helper Routes (Guides)
 @app.get("/guides/{slug}", response_class=HTMLResponse)
 def serve_guide(slug: str):
