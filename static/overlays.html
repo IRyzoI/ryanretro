@@ -115,7 +115,7 @@
                 <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">OVERLAY GENERATOR</span>
             </div>
             <div class="flex items-center gap-4 text-white text-sm font-bold">
-                <div id="sync-status" class="flex items-center gap-1 opacity-70"><i data-lucide="cloud" class="w-4 h-4"></i> Connecting...</div>
+                <div id="sync-status" class="flex items-center gap-1 opacity-70"><i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Initializing...</div>
             </div>
         </div>
     </header>
@@ -173,15 +173,14 @@
 
                         <label class="brand-label">Box Art Image (Local File)</label>
                         <input type="file" id="input-image" accept="image/*" class="brand-input text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-brand-dark file:text-white hover:file:bg-white hover:file:text-brand-dark cursor-pointer">
-                        <p class="text-xs font-bold text-brand-main mt-1">Title auto-fills from filename! (Local files aren't saved to cloud)</p>
+                        <p class="text-xs font-bold text-brand-main mt-1">Title auto-fills from filename!</p>
                     </div>
 
                     <!-- Settings -->
                     <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark">
                         <h3 class="font-black text-brand-main uppercase mb-3"><i data-lucide="settings-2" class="inline w-5 h-5 -mt-1 mr-1"></i> Emulator Settings</h3>
                         <label class="brand-label">Settings (Key: Value)</label>
-                        <textarea id="input-settings" class="brand-input h-32" placeholder="Resolution: 1280 x 720&#10;Driver: Turnip 26.0.0 R8">Resolution: 1280 x 720
-Driver: Turnip 26.0.0 R8</textarea>
+                        <textarea id="input-settings" class="brand-input h-32" placeholder="Resolution: 1280 x 720&#10;Driver: Turnip 26.0.0 R8"></textarea>
                     </div>
 
                     <!-- Thermals & Performance -->
@@ -351,56 +350,74 @@ Driver: Turnip 26.0.0 R8</textarea>
         const rComboSettings = document.getElementById('render-combo-settings');
         const rComboArt = document.getElementById('render-combo-art');
 
-        // --- FIREBASE CLOUD SETUP ---
+        // --- HYBRID FIREBASE / LOCAL STORAGE SETUP ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'ryan-retro-overlays';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        let currentUser = null;
-        let isStateLoaded = false; // Prevents race conditions wiping cloud data
+        let isCloudEnabled = false;
+        let app, auth, db, currentUser = null;
+        let isStateLoaded = false;
 
         let globalTitleHistory = [];
         let globalUrlHistory = [];
 
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
+        // Try to hook into Cloud Sync if the environment variables exist
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                if (Object.keys(firebaseConfig).length > 0) {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+                    isCloudEnabled = true;
                 }
-            } catch (e) {
-                console.error("Auth error", e);
-                syncStatus.innerHTML = `<i data-lucide="cloud-off" class="w-4 h-4 text-red-400"></i> Offline Mode`;
-                lucide.createIcons();
-                isStateLoaded = true; // Unlock UI in offline mode
-                updatePreviews();
+            }
+        } catch (e) {
+            console.log("Firebase not configured. Preparing Local Mode fallback.");
+        }
+
+        const initSystem = async () => {
+            if (isCloudEnabled) {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            currentUser = user;
+                            syncStatus.innerHTML = `<i data-lucide="cloud-lightning" class="w-4 h-4 text-green-400"></i> Cloud Synced`;
+                            lucide.createIcons();
+                            loadState();
+                            listenToHistory();
+                        }
+                    });
+                } catch (e) {
+                    fallbackToLocal();
+                }
+            } else {
+                fallbackToLocal(); // Run this when hosted on Github Pages
             }
         };
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                syncStatus.innerHTML = `<i data-lucide="cloud-lightning" class="w-4 h-4 text-green-400"></i> Cloud Synced`;
-                lucide.createIcons();
-                loadCloudState();
-                listenToCloudHistory();
-            }
-        });
+        function fallbackToLocal() {
+            syncStatus.innerHTML = `<i data-lucide="hard-drive" class="w-4 h-4 text-[#B9B2DE]"></i> Local Save`;
+            lucide.createIcons();
+            loadState();
+            loadLocalHistory();
+        }
 
-        initAuth();
+        initSystem();
 
-        // --- STATE AUTOSAVE ---
+        // --- STATE AUTOSAVE (Hybrid) ---
         let saveTimeout;
         function debouncedSaveState() {
-            if (!isStateLoaded) return; // Critical guard to prevent overwriting cloud state with empty HTML values
+            if (!isStateLoaded) return;
             clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(saveCurrentState, 400); // Lowered to 400ms for snappier saves
+            saveTimeout = setTimeout(saveCurrentState, 400);
         }
 
         async function saveCurrentState() {
-            if (!currentUser || !isStateLoaded) return;
+            if (!isStateLoaded) return;
             const state = {
                 title: inTitle.value,
                 platform: inPlatform.value,
@@ -410,45 +427,57 @@ Driver: Turnip 26.0.0 R8</textarea>
                 temp: inTemp.value,
                 tdp: inTdp.value
             };
-            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'current_state');
-            try {
-                await setDoc(docRef, state);
-            } catch (e) { console.error("Auto-save failed", e); }
-        }
 
-        async function loadCloudState() {
-            if (!currentUser) return;
-            try {
+            if (isCloudEnabled && currentUser) {
                 const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'current_state');
-                const docSnap = await getDoc(docRef);
-                
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    inTitle.value = data.title !== undefined ? data.title : "God of War II";
-                    inPlatform.value = data.platform !== undefined ? data.platform : "NetherSX2 | PS2";
-                    inUrl.value = data.url !== undefined ? data.url : "";
-                    inSettings.value = data.settings !== undefined ? data.settings : "Resolution: 1280 x 720\nDriver: Turnip 26.0.0 R8";
-                    inFps.value = data.fps !== undefined ? data.fps : "60";
-                    inTemp.value = data.temp !== undefined ? data.temp : "42°C";
-                    inTdp.value = data.tdp !== undefined ? data.tdp : "12.5W";
-                }
-                
-                isStateLoaded = true; // Unlock saving
-                updatePreviews();
-
-                // If a URL was saved in the state, auto-fetch it silently!
-                if (inUrl.value) {
-                    fetchImageQuietly(inUrl.value);
-                }
-            } catch (e) { 
-                console.error("Failed to load state", e);
-                isStateLoaded = true;
-                updatePreviews();
+                try { await setDoc(docRef, state); } catch (e) { console.error("Cloud save failed", e); }
+            } else {
+                // Save to local browser storage
+                localStorage.setItem('rr_current_state', JSON.stringify(state));
             }
         }
 
-        // Silent fetch to prevent triggering loading states on page reload
+        async function loadState() {
+            let data = null;
+
+            if (isCloudEnabled && currentUser) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'current_state');
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) data = docSnap.data();
+                } catch (e) { console.error("Cloud load failed", e); }
+            } else {
+                const localState = localStorage.getItem('rr_current_state');
+                if (localState) data = JSON.parse(localState);
+            }
+
+            // Apply data or fall back to defaults
+            if (data) {
+                inTitle.value = data.title !== undefined ? data.title : "God of War II";
+                inPlatform.value = data.platform !== undefined ? data.platform : "NetherSX2 | PS2";
+                inUrl.value = data.url !== undefined ? data.url : "";
+                inSettings.value = data.settings !== undefined ? data.settings : "Resolution: 1280 x 720\nDriver: Turnip 26.0.0 R8";
+                inFps.value = data.fps !== undefined ? data.fps : "60";
+                inTemp.value = data.temp !== undefined ? data.temp : "42°C";
+                inTdp.value = data.tdp !== undefined ? data.tdp : "12.5W";
+            } else {
+                inTitle.value = "God of War II";
+                inPlatform.value = "NetherSX2 | PS2";
+                inSettings.value = "Resolution: 1280 x 720\nDriver: Turnip 26.0.0 R8";
+                inFps.value = "60";
+                inTemp.value = "42°C";
+                inTdp.value = "12.5W";
+            }
+            
+            isStateLoaded = true; // Unlock saving
+            updatePreviews();
+
+            // Auto-fetch URL quietly if one was saved
+            if (inUrl.value) {
+                fetchImageQuietly(inUrl.value);
+            }
+        }
+
         async function fetchImageQuietly(url) {
             try {
                 const base64data = await getBase64ImageFromUrl(url);
@@ -459,12 +488,9 @@ Driver: Turnip 26.0.0 R8</textarea>
             }
         }
 
-
-        // --- HISTORY CLOUD SYNC ---
-        function listenToCloudHistory() {
-            if (!currentUser) return;
+        // --- HISTORY SYNC (Hybrid) ---
+        function listenToHistory() {
             const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'history');
-            
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
@@ -479,12 +505,22 @@ Driver: Turnip 26.0.0 R8</textarea>
             }, (err) => console.error("History sync error:", err));
         }
 
-        async function updateCloudHistory() {
-            if (!currentUser || !isStateLoaded) return;
-            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'history');
-            try {
-                await setDoc(docRef, { titles: globalTitleHistory, urls: globalUrlHistory }, { merge: true });
-            } catch(e) { console.error("Failed to update history", e); }
+        function loadLocalHistory() {
+            try { globalTitleHistory = JSON.parse(localStorage.getItem('rr_game_titles') || '[]'); } catch(e) { globalTitleHistory = []; }
+            try { globalUrlHistory = JSON.parse(localStorage.getItem('rr_url_history') || '[]'); } catch(e) { globalUrlHistory = []; }
+            renderTitleHistory();
+            renderUrlHistory();
+        }
+
+        async function updateHistoryData() {
+            if (!isStateLoaded) return;
+            if (isCloudEnabled && currentUser) {
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'history');
+                try { await setDoc(docRef, { titles: globalTitleHistory, urls: globalUrlHistory }, { merge: true }); } catch(e) {}
+            } else {
+                localStorage.setItem('rr_game_titles', JSON.stringify(globalTitleHistory));
+                localStorage.setItem('rr_url_history', JSON.stringify(globalUrlHistory));
+            }
         }
 
         function renderTitleHistory() {
@@ -513,7 +549,8 @@ Driver: Turnip 26.0.0 R8</textarea>
             if (!globalTitleHistory.includes(title)) {
                 globalTitleHistory.unshift(title);
                 if (globalTitleHistory.length > 20) globalTitleHistory.pop();
-                updateCloudHistory();
+                updateHistoryData();
+                renderTitleHistory(); // Force local re-render immediately
             }
         }
 
@@ -521,7 +558,8 @@ Driver: Turnip 26.0.0 R8</textarea>
             const currentTitle = inTitle.value.trim();
             if (!currentTitle) return;
             globalTitleHistory = globalTitleHistory.filter(t => t !== currentTitle);
-            updateCloudHistory();
+            updateHistoryData();
+            renderTitleHistory();
             inTitle.value = '';
             updatePreviews();
         });
@@ -532,12 +570,12 @@ Driver: Turnip 26.0.0 R8</textarea>
             platform = platform ? platform.trim() : '';
             if (!url || !isStateLoaded) return;
             
-            // Remove exact duplicate URL to bring it to the top
             globalUrlHistory = globalUrlHistory.filter(item => item.url !== url);
             globalUrlHistory.unshift({ url, title, platform });
             
             if (globalUrlHistory.length > 30) globalUrlHistory.pop();
-            updateCloudHistory();
+            updateHistoryData();
+            renderUrlHistory();
             
             urlHistorySelect.value = url;
         }
@@ -546,25 +584,20 @@ Driver: Turnip 26.0.0 R8</textarea>
             const currentUrl = urlHistorySelect.value;
             if (!currentUrl) return;
             globalUrlHistory = globalUrlHistory.filter(item => item.url !== currentUrl);
-            updateCloudHistory();
+            updateHistoryData();
+            renderUrlHistory();
             inUrl.value = '';
         });
 
         urlHistorySelect.addEventListener('change', function() {
             if (this.value) {
                 inUrl.value = this.value;
-                
                 const selectedItem = globalUrlHistory.find(item => item.url === this.value);
                 if (selectedItem) {
-                    if (selectedItem.title && selectedItem.title !== 'Unknown Game') {
-                        inTitle.value = selectedItem.title;
-                    }
-                    if (selectedItem.platform) {
-                        inPlatform.value = selectedItem.platform;
-                    }
+                    if (selectedItem.title && selectedItem.title !== 'Unknown Game') inTitle.value = selectedItem.title;
+                    if (selectedItem.platform) inPlatform.value = selectedItem.platform;
                     updatePreviews();
                 }
-                
                 document.getElementById('load-url-btn').click();
             }
         });
@@ -614,7 +647,6 @@ Driver: Turnip 26.0.0 R8</textarea>
 
         // --- URL CORS BYPASS (Waterfall Method) ---
         async function getBase64ImageFromUrl(imageUrl) {
-            // A list of proxy methods to try sequentially
             const fetchMethods = [
                 { name: 'Direct', url: '', encode: false },
                 { name: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=', encode: true },
@@ -626,20 +658,11 @@ Driver: Turnip 26.0.0 R8</textarea>
                 console.log(`Attempting to fetch image using ${method.name}...`);
                 try {
                     const fetchUrl = method.encode ? method.url + encodeURIComponent(imageUrl) : imageUrl;
-                    
-                    // 8-second timeout so a hanging proxy doesn't freeze the app
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-                    const fetchOptions = {
-                        method: 'GET',
-                        signal: controller.signal
-                    };
-                    
-                    // Only enforce strict CORS mode on the direct fetch
-                    if (method.name === 'Direct') {
-                        fetchOptions.mode = 'cors';
-                    }
+                    const fetchOptions = { method: 'GET', signal: controller.signal };
+                    if (method.name === 'Direct') fetchOptions.mode = 'cors';
 
                     const res = await fetch(fetchUrl, fetchOptions);
                     clearTimeout(timeoutId);
@@ -647,11 +670,7 @@ Driver: Turnip 26.0.0 R8</textarea>
                     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
                     const blob = await res.blob();
-                    
-                    // Validate that we actually got an image back (proxies sometimes return HTML error pages)
-                    if (!blob.type.startsWith('image/')) {
-                         throw new Error(`Received non-image content type: ${blob.type}`);
-                    }
+                    if (!blob.type.startsWith('image/')) throw new Error(`Received non-image content type: ${blob.type}`);
 
                     return await new Promise((resolve, reject) => {
                         const reader = new FileReader();
@@ -662,11 +681,8 @@ Driver: Turnip 26.0.0 R8</textarea>
                     
                 } catch (err) {
                     console.warn(`${method.name} fetch failed:`, err.message);
-                    // Silently continue to the next method in the loop
                 }
             }
-            
-            // If the loop finishes and nothing worked, throw the final error
             throw new Error("Could not load image. The site may be strictly blocking external access.");
         }
 
