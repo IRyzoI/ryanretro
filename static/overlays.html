@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ryan Retro | Video Overlay Generator</title>
+    <title>Ryan Retro | Video Overlay Batch Generator</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -102,9 +102,40 @@
             padding: 40px;
             display: inline-block;
         }
+
+        /* --- DYNAMIC THEME CLASSES (Bound to CSS Vars on the wrapper) --- */
+        .th-bg-main { background-color: var(--t-main); }
+        .th-bg-dark { background-color: var(--t-dark); }
+        .th-bg-light { background-color: var(--t-light); }
+        .th-border-main { border-color: var(--t-main); }
+        .th-border-dark { border-color: var(--t-dark); }
+        .th-border-light { border-color: var(--t-light); }
+        .th-text-main { color: var(--t-main); }
+        .th-text-dark { color: var(--t-dark); }
+        .th-text-light { color: var(--t-light); }
+        .th-text-on-main { color: var(--t-text-main); }
+        .th-text-on-dark { color: var(--t-text-dark); }
+        .th-shadow { box-shadow: 4px 4px 0px var(--t-dark); }
+        .th-shadow-sm { box-shadow: 2px 2px 0px var(--t-dark); }
+        .th-shadow-md { box-shadow: 3px 3px 0px var(--t-dark); }
+        
+        .theme-btn.active {
+            border-color: #FFFFFF;
+            box-shadow: 0 0 0 3px #463884;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col relative">
+
+    <!-- DROP ZONE OVERLAY -->
+    <div id="drop-zone" class="fixed inset-0 bg-brand-main/95 z-[100] hidden flex-col items-center justify-center border-8 border-dashed border-white text-white pointer-events-none transition-all duration-300">
+        <div class="bg-white/20 p-8 rounded-full mb-6 shadow-2xl animate-bounce">
+            <i data-lucide="image-plus" class="w-24 h-24"></i>
+        </div>
+        <h2 class="text-4xl font-black uppercase tracking-tight text-center drop-shadow-md">Drop Box Arts Here</h2>
+        <p class="text-xl font-bold opacity-80 mt-4 text-center">Batch generates an overlay editor for each image</p>
+    </div>
 
     <header class="sticky top-0 z-50 bg-brand-main border-b-2 border-brand-dark shadow-md">
         <div class="container mx-auto px-4 lg:px-6 h-20 flex justify-between items-center">
@@ -112,207 +143,38 @@
                 <div class="w-12 h-12 rounded-xl overflow-hidden border-2 border-brand-dark shadow-[1px_1px_0px_#463884] bg-brand-light">
                     <img src="https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/ryanretrologo.jpg" class="w-full h-full object-cover">
                 </div>
-                <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">OVERLAY GENERATOR</span>
+                <span class="font-black text-2xl tracking-tight hidden sm:block text-white uppercase">BATCH OVERLAYS</span>
             </div>
             <div class="flex items-center gap-4 text-white text-sm font-bold">
-                <div id="sync-status" class="flex items-center gap-1 opacity-70"><i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Initializing...</div>
+                <div id="sync-status" class="flex items-center gap-1 opacity-70"><i data-lucide="cloud" class="w-4 h-4"></i> Connecting...</div>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-8">
-        
-        <!-- CONTROLS SIDEBAR -->
-        <aside class="w-full lg:w-1/3 space-y-8 h-fit lg:sticky lg:top-28">
-            
-            <div class="bg-white border-2 border-brand-dark rounded-2xl p-6 shadow-[6px_6px_0px_#463884]">
-                <h2 class="font-black text-2xl text-brand-dark uppercase tracking-tight mb-6 border-b-2 border-brand-light pb-2">Edit Content</h2>
-                
-                <!-- Game Info -->
-                <div class="space-y-4 mb-6">
-                    <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark">
-                        <h3 class="font-black text-brand-main uppercase mb-3"><i data-lucide="gamepad-2" class="inline w-5 h-5 -mt-1 mr-1"></i> Game Details</h3>
-                        
-                        <label class="brand-label">Game Title</label>
-                        <div class="flex gap-2 mb-3">
-                            <input type="text" id="input-title" list="title-history" class="brand-input mb-0" value="" autocomplete="off">
-                            <button id="delete-title-btn" class="bg-brand-dark hover:bg-[#f87171] text-white border border-brand-dark hover:border-[#f87171] rounded-xl px-3 transition-colors flex items-center justify-center shadow-[2px_2px_0px_#463884] hover:shadow-none hover:translate-y-[2px]" title="Remove current title from history">
-                                <i data-lucide="trash-2" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-                        <datalist id="title-history"></datalist>
-                        
-                        <label class="brand-label">Platform / Emulator</label>
-                        <input type="text" id="input-platform" list="platform-presets" class="brand-input mb-3" value="" autocomplete="off">
-                        <datalist id="platform-presets">
-                            <option value="GameNative | PC"></option>
-                            <option value="Eden | Switch"></option>
-                            <option value="Dolphin | Gamecube"></option>
-                            <option value="NetherSX2 | PS2"></option>
-                            <option value="Flycast | Dreamcast"></option>
-                        </datalist>
-                        
-                        <!-- Box Art URL Importer -->
-                        <label class="brand-label mt-4">Box Art Image (URL)</label>
-                        <div class="flex gap-2 mb-2">
-                            <input type="url" id="input-url" class="brand-input mb-0" placeholder="https://..." autocomplete="off">
-                            <button id="load-url-btn" class="bg-brand-dark hover:bg-white text-white hover:text-brand-dark border-2 border-brand-dark rounded-xl px-3 transition-colors flex items-center justify-center shadow-[2px_2px_0px_#463884] hover:translate-y-[2px] hover:shadow-none" title="Load Image & Save to History">
-                                <i data-lucide="download-cloud" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-                        <div class="flex gap-2 mb-1">
-                            <select id="url-history-select" class="brand-input mb-0 py-2 text-sm cursor-pointer pr-8 truncate">
-                                <option value="">-- Saved Box Arts --</option>
-                            </select>
-                            <button id="delete-url-btn" class="bg-brand-dark hover:bg-[#f87171] text-white border-2 border-brand-dark hover:border-[#f87171] rounded-xl px-3 transition-colors flex items-center justify-center shadow-[2px_2px_0px_#463884] hover:translate-y-[2px] hover:shadow-none" title="Delete Selected Box Art">
-                                <i data-lucide="trash-2" class="w-5 h-5"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="text-center font-black text-brand-dark my-3 opacity-50 text-xs uppercase tracking-widest">OR</div>
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col">
+        <!-- HIDDEN DATALISTS FOR HISTORY -->
+        <datalist id="title-history"></datalist>
+        <datalist id="platform-presets">
+            <option value="GameNative | PC"></option>
+            <option value="Eden | Switch"></option>
+            <option value="Dolphin | Gamecube"></option>
+            <option value="NetherSX2 | PS2"></option>
+            <option value="Flycast | Dreamcast"></option>
+        </datalist>
+        <div class="hidden">
+            <select id="url-history-select"></select>
+        </div>
 
-                        <label class="brand-label">Box Art Image (Local File)</label>
-                        <input type="file" id="input-image" accept="image/*" class="brand-input text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-brand-dark file:text-white hover:file:bg-white hover:file:text-brand-dark cursor-pointer">
-                        <p class="text-xs font-bold text-brand-main mt-1">Title auto-fills from filename!</p>
-                    </div>
+        <div id="instances-container" class="space-y-16">
+            <!-- Instances injected here via JS -->
+        </div>
 
-                    <!-- Settings -->
-                    <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark">
-                        <h3 class="font-black text-brand-main uppercase mb-3"><i data-lucide="settings-2" class="inline w-5 h-5 -mt-1 mr-1"></i> Emulator Settings</h3>
-                        <label class="brand-label">Settings (Key: Value)</label>
-                        <textarea id="input-settings" class="brand-input h-32" placeholder="Resolution: 1280 x 720&#10;Driver: Turnip 26.0.0 R8"></textarea>
-                    </div>
-
-                    <!-- Thermals & Performance -->
-                    <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark">
-                        <h3 class="font-black text-brand-main uppercase mb-3"><i data-lucide="flame" class="inline w-5 h-5 -mt-1 mr-1"></i> Thermals & Battery</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="brand-label">FPS</label>
-                                <input type="text" id="input-fps" class="brand-input" value="">
-                            </div>
-                            <div>
-                                <label class="brand-label">Temp</label>
-                                <input type="text" id="input-temp" class="brand-input" value="">
-                            </div>
-                            <div class="col-span-2">
-                                <label class="brand-label">Power Draw (TDP)</label>
-                                <input type="text" id="input-tdp" class="brand-input" value="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- PREVIEW & EXPORT AREA -->
-        <section class="w-full lg:w-2/3 space-y-8">
-            
-            <div class="bg-brand-main border-2 border-brand-dark rounded-2xl p-6 shadow-[6px_6px_0px_#463884]">
-                <h2 class="font-black text-2xl text-white uppercase tracking-tight mb-2">Live Previews</h2>
-                <p class="text-brand-light font-bold mb-6">These are rendered on a transparent checkerboard. When downloaded, the background will be 100% transparent for your video editor.</p>
-                
-                <!-- OVERLAY 1: Game Box Art & Title -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-end mb-2">
-                        <h3 class="font-black text-white text-lg">1. Now Playing Badge</h3>
-                        <button id="btn-dl-game" class="btn-chunky py-2 px-4 text-sm"><i data-lucide="download" class="w-4 h-4"></i> Download PNG</button>
-                    </div>
-                    <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center">
-                        
-                        <div id="export-game" class="export-wrapper">
-                            <div class="bg-[#6254A4] border border-[#463884] rounded-2xl p-4 shadow-[4px_4px_0px_#463884] flex items-center gap-5 w-max">
-                                <!-- Dynamic aspect ratio container for Box Art -->
-                                <div class="h-36 min-w-[96px] max-w-[240px] flex justify-center items-center bg-[#FFFFFF] rounded-xl overflow-hidden border border-[#FFFFFF] shrink-0 shadow-inner relative flex-shrink-0">
-                                    <img id="render-art" src="https://placehold.co/200x300/463884/FFF?text=IMG" class="h-full w-auto max-w-none block transform scale-105 origin-center">
-                                </div>
-                                <div class="flex flex-col justify-center pr-4">
-                                    <span class="bg-[#FFFFFF] text-[#463884] font-black uppercase tracking-widest text-xl px-4 py-1.5 rounded-lg w-max mb-2 border border-[#463884] shadow-[2px_2px_0px_#463884]" id="render-platform">System</span>
-                                    <h1 class="font-black text-white text-3xl uppercase tracking-tight leading-tight max-w-sm" id="render-title">Game Title</h1>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- OVERLAY 2: Settings Panel -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-end mb-2">
-                        <h3 class="font-black text-white text-lg">2. Settings Panel</h3>
-                        <button id="btn-dl-settings" class="btn-chunky py-2 px-4 text-sm"><i data-lucide="download" class="w-4 h-4"></i> Download PNG</button>
-                    </div>
-                    <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center">
-                        
-                        <div id="export-settings" class="export-wrapper">
-                            <div class="bg-[#463884] border border-[#FFFFFF] rounded-2xl p-6 shadow-[4px_4px_0px_rgba(0,0,0,0.3)] w-max min-w-[300px]">
-                                <h3 class="font-black text-[#B9B2DE] uppercase tracking-widest text-sm mb-4 border-b border-[#B9B2DE]/30 pb-2 flex items-center"><i data-lucide="settings" class="inline w-4 h-4 mr-1"></i> Applied Settings</h3>
-                                <div id="render-settings" class="flex flex-col gap-2"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- OVERLAY 3: Thermals & Battery -->
-                <div class="mb-8">
-                    <div class="flex justify-between items-end mb-2">
-                        <h3 class="font-black text-white text-lg">3. Thermals & Power Badge</h3>
-                        <button id="btn-dl-thermals" class="btn-chunky py-2 px-4 text-sm"><i data-lucide="download" class="w-4 h-4"></i> Download PNG</button>
-                    </div>
-                    <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center">
-                        
-                        <div id="export-thermals" class="export-wrapper">
-                            <div class="bg-[#FFFFFF] border border-[#463884] rounded-2xl p-2 shadow-[3px_3px_0px_#463884] w-max flex gap-2">
-                                <div class="bg-[#6254A4] border border-[#463884] rounded-xl px-4 py-2 flex flex-col items-center justify-center">
-                                    <span class="text-[#B9B2DE] text-[10px] font-black uppercase tracking-widest mb-0.5">Performance</span>
-                                    <span class="text-white font-black text-xl leading-none flex items-baseline gap-1"><span id="render-fps">0</span> <span class="text-xs">FPS</span></span>
-                                </div>
-                                <div class="bg-[#463884] border border-[#463884] rounded-xl px-4 py-2 flex flex-col items-center justify-center">
-                                    <span class="text-[#B9B2DE] text-[10px] font-black uppercase tracking-widest mb-0.5">Thermals</span>
-                                    <span class="text-white font-black text-xl leading-none" id="render-temp">0°C</span>
-                                </div>
-                                <div class="bg-[#B9B2DE] border border-[#463884] rounded-xl px-4 py-2 flex flex-col items-center justify-center">
-                                    <span class="text-[#463884] text-[10px] font-black uppercase tracking-widest mb-0.5">Sys Power</span>
-                                    <span class="text-[#463884] font-black text-xl leading-none" id="render-tdp">0W</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- OVERLAY 4: Combined Horizontal Bar -->
-                <div>
-                    <div class="flex justify-between items-end mb-2">
-                        <h3 class="font-black text-white text-lg">4. Combined Horizontal Bar</h3>
-                        <button id="btn-dl-combo" class="btn-chunky py-2 px-4 text-sm"><i data-lucide="download" class="w-4 h-4"></i> Download PNG</button>
-                    </div>
-                    <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center p-4">
-                        
-                        <div id="export-combo" class="export-wrapper">
-                            <div class="bg-[#6254A4] border border-[#463884] rounded-2xl p-3 shadow-[4px_4px_0px_#463884] flex items-center gap-4 w-max">
-                                <div class="flex items-center gap-4 pr-4 border-r border-[#463884]/30">
-                                    <!-- Dynamic aspect ratio container for Combo Box Art -->
-                                    <div class="h-24 min-w-[64px] max-w-[160px] flex justify-center items-center bg-[#FFFFFF] rounded-lg overflow-hidden border border-[#FFFFFF] shrink-0 shadow-inner relative flex-shrink-0">
-                                        <img id="render-combo-art" src="https://placehold.co/200x300/463884/FFF?text=IMG" class="w-full h-full object-cover block transform scale-105 origin-center">
-                                    </div>
-                                    <div class="flex flex-col justify-center">
-                                        <span class="bg-[#FFFFFF] text-[#463884] font-black uppercase tracking-widest text-xs px-2.5 py-1 rounded w-max mb-1.5 border border-[#463884] shadow-[2px_2px_0px_#463884]" id="render-combo-platform">System</span>
-                                        <h1 class="font-black text-white text-2xl uppercase tracking-tight leading-tight max-w-[400px] line-clamp-2" id="render-combo-title">Game Title</h1>
-                                    </div>
-                                </div>
-                                <div class="flex items-center">
-                                    <div id="render-combo-settings" class="grid grid-flow-col grid-rows-2 gap-2"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </section>
+        <div class="mt-12 text-center pb-20">
+            <button id="add-instance-btn" class="btn-chunky py-4 px-8 text-lg bg-white text-brand-dark shadow-[4px_4px_0px_rgba(70,56,132,0.2)] border-2 border-brand-dark hover:bg-brand-main hover:text-white">
+                <i data-lucide="plus-circle" class="w-6 h-6"></i> Add Blank Game
+            </button>
+            <p class="mt-4 text-brand-dark/60 font-bold text-sm uppercase">Or Drag & Drop multiple images anywhere on the screen</p>
+        </div>
     </main>
 
     <script type="module">
@@ -322,355 +184,694 @@
 
         lucide.createIcons();
 
-        // Input Elements
-        const inTitle = document.getElementById('input-title');
-        const inPlatform = document.getElementById('input-platform');
-        const inSettings = document.getElementById('input-settings');
-        const inImage = document.getElementById('input-image');
-        const inUrl = document.getElementById('input-url');
-        const inFps = document.getElementById('input-fps');
-        const inTemp = document.getElementById('input-temp');
-        const inTdp = document.getElementById('input-tdp');
+        // --- THEMES ---
+        const THEMES = {
+            purple: { main: '#6254A4', dark: '#463884', light: '#B9B2DE' },
+            red:    { main: '#E60012', dark: '#A6000D', light: '#FFB3B8' },
+            green:  { main: '#107C10', dark: '#0B5A0B', light: '#9BF09B' },
+            blue:   { main: '#00A4EF', dark: '#005A9E', light: '#C7E0F4' },
+            yellow: { main: '#FDD759', dark: '#C6A220', light: '#FEF0BB' },
+            black:  { main: '#2A2A2A', dark: '#111111', light: '#AAAAAA' }
+        };
 
-        const titleHistoryList = document.getElementById('title-history');
-        const urlHistorySelect = document.getElementById('url-history-select');
-        const syncStatus = document.getElementById('sync-status');
-
-        // Render Elements
-        const rTitle = document.getElementById('render-title');
-        const rPlatform = document.getElementById('render-platform');
-        const rSettings = document.getElementById('render-settings');
-        const rArt = document.getElementById('render-art');
-        const rFps = document.getElementById('render-fps');
-        const rTemp = document.getElementById('render-temp');
-        const rTdp = document.getElementById('render-tdp');
-
-        const rComboTitle = document.getElementById('render-combo-title');
-        const rComboPlatform = document.getElementById('render-combo-platform');
-        const rComboSettings = document.getElementById('render-combo-settings');
-        const rComboArt = document.getElementById('render-combo-art');
-
-        // --- HYBRID FIREBASE / LOCAL STORAGE SETUP ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ryan-retro-overlays';
-        let isCloudEnabled = false;
-        let app, auth, db, currentUser = null;
-        let isStateLoaded = false;
-
-        let globalTitleHistory = [];
-        let globalUrlHistory = [];
-
-        // Try to hook into Cloud Sync if the environment variables exist
-        try {
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                if (Object.keys(firebaseConfig).length > 0) {
-                    app = initializeApp(firebaseConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-                    isCloudEnabled = true;
-                }
-            }
-        } catch (e) {
-            console.log("Firebase not configured. Preparing Local Mode fallback.");
+        function adjustColor(color, amount) {
+            return '#' + color.replace(/^#/, '').match(/.{2}/g).map(c => 
+                Math.max(0, Math.min(255, parseInt(c, 16) + amount)).toString(16).padStart(2, '0')
+            ).join('');
         }
 
-        const initSystem = async () => {
-            if (isCloudEnabled) {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    onAuthStateChanged(auth, (user) => {
-                        if (user) {
-                            currentUser = user;
-                            syncStatus.innerHTML = `<i data-lucide="cloud-lightning" class="w-4 h-4 text-green-400"></i> Cloud Synced`;
-                            lucide.createIcons();
-                            loadState();
-                            listenToHistory();
-                        }
-                    });
-                } catch (e) {
-                    fallbackToLocal();
+        function getTheme(key) {
+            if (THEMES[key]) return THEMES[key];
+            if (key && key.startsWith('#')) {
+                return {
+                    main: key,
+                    dark: adjustColor(key, -40),
+                    light: adjustColor(key, 80)
+                };
+            }
+            return THEMES.purple;
+        }
+
+        function getContrastColor(hex) {
+            if (!hex) return '#FFFFFF';
+            const rgb = hex.replace(/^#/, '').match(/.{2}/g);
+            if(!rgb || rgb.length !== 3) return '#FFFFFF';
+            const r = parseInt(rgb[0], 16), g = parseInt(rgb[1], 16), b = parseInt(rgb[2], 16);
+            const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            return luminance > 0.55 ? '#111111' : '#FFFFFF';
+        }
+
+        // --- APP STATE ---
+        let instances = [];
+        let globalTitleHistory = [];
+        let globalUrlHistory = [];
+        let isStateLoaded = false;
+        
+        const container = document.getElementById('instances-container');
+        const syncStatus = document.getElementById('sync-status');
+
+        function createDefaultInstance() {
+            return {
+                id: crypto.randomUUID(),
+                title: "God of War II",
+                platform: "NetherSX2 | PS2",
+                settings: "Resolution: 1280 x 720\nDriver: Turnip 26.0.0 R8",
+                fps: "60", temp: "42°C", tdp: "12.5W",
+                url: "", localImage: null, theme: "purple"
+            };
+        }
+
+        // --- FIREBASE SETUP ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ryan-retro-overlays-batch';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
                 }
-            } else {
-                fallbackToLocal(); // Run this when hosted on Github Pages
+            } catch (e) {
+                syncStatus.innerHTML = `<i data-lucide="cloud-off" class="w-4 h-4 text-red-400"></i> Offline`;
+                lucide.createIcons();
+                isStateLoaded = true;
+                if(instances.length === 0) { instances.push(createDefaultInstance()); }
+                renderInstances();
             }
         };
 
-        function fallbackToLocal() {
-            syncStatus.innerHTML = `<i data-lucide="hard-drive" class="w-4 h-4 text-[#B9B2DE]"></i> Local Save`;
-            lucide.createIcons();
-            loadState();
-            loadLocalHistory();
-        }
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                syncStatus.innerHTML = `<i data-lucide="cloud-lightning" class="w-4 h-4 text-green-400"></i> Cloud Synced`;
+                lucide.createIcons();
+                loadCloudState();
+                listenToCloudHistory();
+            }
+        });
 
-        initSystem();
+        initAuth();
 
-        // --- STATE AUTOSAVE (Hybrid) ---
+        // --- STATE AUTOSAVE ---
         let saveTimeout;
-        function debouncedSaveState() {
+        window.debouncedSaveState = function() {
             if (!isStateLoaded) return;
             clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(saveCurrentState, 400);
+            saveTimeout = setTimeout(saveCurrentState, 500);
         }
 
         async function saveCurrentState() {
-            if (!isStateLoaded) return;
-            const state = {
-                title: inTitle.value,
-                platform: inPlatform.value,
-                url: inUrl.value,
-                settings: inSettings.value,
-                fps: inFps.value,
-                temp: inTemp.value,
-                tdp: inTdp.value
-            };
+            if (!currentUser || !isStateLoaded) return;
+            // Strip out localImage (Base64) to prevent huge Firestore documents
+            const stateToSave = instances.map(({ localImage, ...rest }) => rest);
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'batch_state');
+            try {
+                await setDoc(docRef, { instances: stateToSave });
+            } catch (e) { console.error("Auto-save failed", e); }
+        }
 
-            if (isCloudEnabled && currentUser) {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'current_state');
-                try { await setDoc(docRef, state); } catch (e) { console.error("Cloud save failed", e); }
-            } else {
-                // Save to local browser storage
-                localStorage.setItem('rr_current_state', JSON.stringify(state));
+        async function loadCloudState() {
+            if (!currentUser) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'batch_state');
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists() && docSnap.data().instances) {
+                    instances = docSnap.data().instances;
+                } else {
+                    // Try to migrate old v1 state
+                    const oldRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'current_state');
+                    const oldSnap = await getDoc(oldRef);
+                    if(oldSnap.exists()) {
+                        instances = [{ id: crypto.randomUUID(), ...oldSnap.data(), theme: 'purple' }];
+                    } else {
+                        instances = [createDefaultInstance()];
+                    }
+                }
+
+                // If any instance has a URL but no local image, we fetch it silently
+                instances.forEach((inst, index) => {
+                    if (inst.url && !inst.localImage) {
+                        fetchImageQuietly(inst.url, inst.id);
+                    }
+                });
+
+            } catch (e) { 
+                console.error("Failed to load state", e);
+                if(instances.length === 0) instances = [createDefaultInstance()];
+            } finally {
+                isStateLoaded = true;
+                renderInstances();
             }
         }
 
-        async function loadState() {
-            let data = null;
-
-            if (isCloudEnabled && currentUser) {
-                try {
-                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'current_state');
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) data = docSnap.data();
-                } catch (e) { console.error("Cloud load failed", e); }
-            } else {
-                const localState = localStorage.getItem('rr_current_state');
-                if (localState) data = JSON.parse(localState);
-            }
-
-            // Apply data or fall back to defaults
-            if (data) {
-                inTitle.value = data.title !== undefined ? data.title : "God of War II";
-                inPlatform.value = data.platform !== undefined ? data.platform : "NetherSX2 | PS2";
-                inUrl.value = data.url !== undefined ? data.url : "";
-                inSettings.value = data.settings !== undefined ? data.settings : "Resolution: 1280 x 720\nDriver: Turnip 26.0.0 R8";
-                inFps.value = data.fps !== undefined ? data.fps : "60";
-                inTemp.value = data.temp !== undefined ? data.temp : "42°C";
-                inTdp.value = data.tdp !== undefined ? data.tdp : "12.5W";
-            } else {
-                inTitle.value = "God of War II";
-                inPlatform.value = "NetherSX2 | PS2";
-                inSettings.value = "Resolution: 1280 x 720\nDriver: Turnip 26.0.0 R8";
-                inFps.value = "60";
-                inTemp.value = "42°C";
-                inTdp.value = "12.5W";
-            }
-            
-            isStateLoaded = true; // Unlock saving
-            updatePreviews();
-
-            // Auto-fetch URL quietly if one was saved
-            if (inUrl.value) {
-                fetchImageQuietly(inUrl.value);
-            }
-        }
-
-        async function fetchImageQuietly(url) {
+        async function fetchImageQuietly(url, instanceId) {
             try {
                 const base64data = await getBase64ImageFromUrl(url);
-                rArt.src = base64data;
-                if(rComboArt) rComboArt.src = base64data;
-            } catch (e) {
-                console.warn("Silent fetch failed on load", e);
-            }
+                const inst = instances.find(i => i.id === instanceId);
+                if (inst) {
+                    inst.localImage = base64data;
+                    updateInstancePreviews(document.querySelector(`[data-id="${instanceId}"]`), inst);
+                }
+            } catch (e) { console.warn("Silent fetch failed for", url); }
         }
 
-        // --- HISTORY SYNC (Hybrid) ---
-        function listenToHistory() {
+        // --- HISTORY ---
+        function listenToCloudHistory() {
+            if (!currentUser) return;
             const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'history');
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    globalTitleHistory = data.titles || [];
-                    globalUrlHistory = data.urls || [];
-                } else {
-                    globalTitleHistory = [];
-                    globalUrlHistory = [];
+                    globalTitleHistory = docSnap.data().titles || [];
+                    globalUrlHistory = docSnap.data().urls || [];
                 }
                 renderTitleHistory();
-                renderUrlHistory();
             }, (err) => console.error("History sync error:", err));
         }
 
-        function loadLocalHistory() {
-            try { globalTitleHistory = JSON.parse(localStorage.getItem('rr_game_titles') || '[]'); } catch(e) { globalTitleHistory = []; }
-            try { globalUrlHistory = JSON.parse(localStorage.getItem('rr_url_history') || '[]'); } catch(e) { globalUrlHistory = []; }
-            renderTitleHistory();
-            renderUrlHistory();
-        }
-
-        async function updateHistoryData() {
-            if (!isStateLoaded) return;
-            if (isCloudEnabled && currentUser) {
-                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'history');
-                try { await setDoc(docRef, { titles: globalTitleHistory, urls: globalUrlHistory }, { merge: true }); } catch(e) {}
-            } else {
-                localStorage.setItem('rr_game_titles', JSON.stringify(globalTitleHistory));
-                localStorage.setItem('rr_url_history', JSON.stringify(globalUrlHistory));
-            }
+        async function updateCloudHistory() {
+            if (!currentUser || !isStateLoaded) return;
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'history');
+            try { await setDoc(docRef, { titles: globalTitleHistory, urls: globalUrlHistory }, { merge: true }); } 
+            catch(e) { console.error("History error", e); }
         }
 
         function renderTitleHistory() {
-            titleHistoryList.innerHTML = '';
+            const list = document.getElementById('title-history');
+            list.innerHTML = '';
             globalTitleHistory.forEach(title => {
                 const option = document.createElement('option');
                 option.value = title;
-                titleHistoryList.appendChild(option);
+                list.appendChild(option);
             });
         }
 
-        function renderUrlHistory() {
-            urlHistorySelect.innerHTML = '<option value="">-- Saved Box Arts --</option>';
-            globalUrlHistory.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.url;
-                option.textContent = item.title;
-                urlHistorySelect.appendChild(option);
-            });
-        }
-
-        // --- HISTORY INTERACTIONS ---
-        function saveTitleToHistory(title) {
+        window.saveTitleToHistory = function(title) {
             title = title.trim();
             if (!title || !isStateLoaded) return;
             if (!globalTitleHistory.includes(title)) {
                 globalTitleHistory.unshift(title);
                 if (globalTitleHistory.length > 20) globalTitleHistory.pop();
-                updateHistoryData();
-                renderTitleHistory(); // Force local re-render immediately
+                updateCloudHistory();
             }
         }
 
-        document.getElementById('delete-title-btn').addEventListener('click', () => {
-            const currentTitle = inTitle.value.trim();
-            if (!currentTitle) return;
-            globalTitleHistory = globalTitleHistory.filter(t => t !== currentTitle);
-            updateHistoryData();
-            renderTitleHistory();
-            inTitle.value = '';
-            updatePreviews();
-        });
-
-        function saveUrlToHistory(url, title, platform) {
-            url = url.trim();
-            title = title.trim() || 'Unknown Game';
-            platform = platform ? platform.trim() : '';
-            if (!url || !isStateLoaded) return;
-            
-            globalUrlHistory = globalUrlHistory.filter(item => item.url !== url);
-            globalUrlHistory.unshift({ url, title, platform });
-            
-            if (globalUrlHistory.length > 30) globalUrlHistory.pop();
-            updateHistoryData();
-            renderUrlHistory();
-            
-            urlHistorySelect.value = url;
+        // --- UI RENDERING (BATCH MODE) ---
+        function renderInstances() {
+            container.innerHTML = '';
+            if(instances.length === 0) return;
+            instances.forEach((inst, index) => {
+                container.insertAdjacentHTML('beforeend', createInstanceHTML(inst, index));
+                updateInstancePreviews(container.lastElementChild, inst);
+            });
+            lucide.createIcons();
         }
 
-        document.getElementById('delete-url-btn').addEventListener('click', () => {
-            const currentUrl = urlHistorySelect.value;
-            if (!currentUrl) return;
-            globalUrlHistory = globalUrlHistory.filter(item => item.url !== currentUrl);
-            updateHistoryData();
-            renderUrlHistory();
-            inUrl.value = '';
-        });
+        function createInstanceHTML(inst, index) {
+            const imgSrc = inst.localImage || "https://placehold.co/200x300/463884/FFF?text=IMG";
+            const theme = getTheme(inst.theme);
 
-        urlHistorySelect.addEventListener('change', function() {
-            if (this.value) {
-                inUrl.value = this.value;
-                const selectedItem = globalUrlHistory.find(item => item.url === this.value);
-                if (selectedItem) {
-                    if (selectedItem.title && selectedItem.title !== 'Unknown Game') inTitle.value = selectedItem.title;
-                    if (selectedItem.platform) inPlatform.value = selectedItem.platform;
-                    updatePreviews();
-                }
-                document.getElementById('load-url-btn').click();
-            }
-        });
+            return `
+            <div class="instance-wrapper flex flex-col lg:flex-row gap-8 bg-brand-light/10 border-4 border-brand-dark/20 rounded-3xl p-6 relative" data-id="${inst.id}">
+                
+                <!-- Remove Button -->
+                <button class="action-delete absolute -top-4 -right-4 bg-brand-dark hover:bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-[4px_4px_0px_#463884] hover:shadow-none hover:translate-y-[4px] hover:translate-x-[4px] transition-all z-10" title="Remove Game">
+                    <i data-lucide="x" class="w-5 h-5 pointer-events-none"></i>
+                </button>
 
+                <!-- CONTROLS SIDEBAR -->
+                <aside class="w-full lg:w-1/3 space-y-6">
+                    <div class="bg-white border-2 border-brand-dark rounded-2xl p-6 shadow-[4px_4px_0px_#463884]">
+                        
+                        <div class="flex flex-wrap justify-between items-center gap-4 mb-6 border-b-2 border-brand-light pb-3">
+                            <h2 class="font-black text-xl text-brand-dark uppercase tracking-tight whitespace-nowrap">Game #${index + 1}</h2>
+                            <div class="flex flex-wrap gap-2 theme-selector items-center">
+                                ${Object.keys(THEMES).map(tKey => `
+                                    <button class="theme-btn w-6 h-6 rounded-full border-2 border-brand-dark cursor-pointer transition-transform shrink-0 ${inst.theme === tKey ? 'active' : 'hover:scale-110'}" data-theme="${tKey}" style="background: ${THEMES[tKey].main};" title="Theme: ${tKey}"></button>
+                                `).join('')}
+                                <div class="w-px h-6 bg-brand-dark/20 mx-1 shrink-0"></div>
+                                <label class="relative w-6 h-6 rounded-full border-2 border-brand-dark cursor-pointer transition-transform flex items-center justify-center overflow-hidden shrink-0 ${(inst.theme && inst.theme.startsWith('#')) ? 'active scale-110' : 'hover:scale-110'}" title="Custom Color" style="${(inst.theme && inst.theme.startsWith('#')) ? `background: ${inst.theme};` : 'background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);'}">
+                                    <input type="color" class="custom-color-input opacity-0 absolute inset-0 w-full h-full cursor-pointer" value="${(inst.theme && inst.theme.startsWith('#')) ? inst.theme : '#ffffff'}">
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Game Info -->
+                        <div class="space-y-4 mb-6">
+                            <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark">
+                                <label class="brand-label">Game Title</label>
+                                <input type="text" list="title-history" class="brand-input mb-3 input-title" value="${escapeHtml(inst.title)}" autocomplete="off">
+                                
+                                <label class="brand-label">Platform / Emulator</label>
+                                <input type="text" list="platform-presets" class="brand-input mb-3 input-platform" value="${escapeHtml(inst.platform)}" autocomplete="off">
+                                
+                                <label class="brand-label mt-4">Box Art (Drag onto screen or browse)</label>
+                                <input type="file" accept="image/*" class="brand-input text-sm input-image file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-brand-dark file:text-white hover:file:bg-white hover:file:text-brand-dark cursor-pointer p-2">
+                                
+                                <label class="brand-label mt-4">Box Art (URL)</label>
+                                <div class="flex gap-2">
+                                    <input type="url" class="brand-input mb-0 input-url" placeholder="https://..." value="${escapeHtml(inst.url)}" autocomplete="off">
+                                    <button class="action-load-url bg-brand-dark hover:bg-white text-white hover:text-brand-dark border-2 border-brand-dark rounded-xl px-3 transition-colors shadow-[2px_2px_0px_#463884] hover:translate-y-[2px] hover:shadow-none">
+                                        <i data-lucide="download-cloud" class="w-5 h-5 pointer-events-none"></i>
+                                    </button>
+                                </div>
+                            </div>
 
-        // --- PREVIEW LOGIC ---
-        function updatePreviews() {
-            rTitle.textContent = inTitle.value || "Game Title";
-            rPlatform.textContent = inPlatform.value || "System";
-            rFps.textContent = inFps.value || "0";
-            rTemp.textContent = inTemp.value || "0°C";
-            rTdp.textContent = inTdp.value || "0W";
+                            <!-- Settings -->
+                            <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark">
+                                <label class="brand-label">Settings (Key: Value)</label>
+                                <textarea class="brand-input h-24 input-settings">${escapeHtml(inst.settings)}</textarea>
+                            </div>
 
-            if(rComboTitle) rComboTitle.textContent = inTitle.value || "Game Title";
-            if(rComboPlatform) rComboPlatform.textContent = inPlatform.value || "System";
+                            <!-- Thermals -->
+                            <div class="bg-brand-light/30 p-4 rounded-xl border border-brand-dark grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="brand-label">FPS</label>
+                                    <input type="text" class="brand-input input-fps" value="${escapeHtml(inst.fps)}">
+                                </div>
+                                <div>
+                                    <label class="brand-label">Temp</label>
+                                    <input type="text" class="brand-input input-temp" value="${escapeHtml(inst.temp)}">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="brand-label">Power (TDP)</label>
+                                    <input type="text" class="brand-input input-tdp" value="${escapeHtml(inst.tdp)}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
 
-            const lines = inSettings.value.split('\n').filter(line => line.trim() !== '');
-            rSettings.innerHTML = '';
-            if(rComboSettings) rComboSettings.innerHTML = '';
+                <!-- PREVIEW AREA -->
+                <section class="w-full lg:w-2/3 grid grid-cols-1 xl:grid-cols-2 gap-4">
+                    
+                    <!-- 1. Game Badge -->
+                    <div class="bg-brand-main border-2 border-brand-dark rounded-2xl p-4 shadow-[4px_4px_0px_#463884] flex flex-col">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-white text-sm">1. Game Badge</h3>
+                            <button class="action-dl btn-chunky py-1.5 px-3 text-xs" data-target="export-game-${inst.id}"><i data-lucide="download" class="w-3 h-3 pointer-events-none"></i> PNG</button>
+                        </div>
+                        <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center flex-grow p-4 min-h-[160px]">
+                            
+                            <!-- EXPORT TARGET -->
+                            <div id="export-game-${inst.id}" class="export-wrapper" style="--t-main: ${theme.main}; --t-dark: ${theme.dark}; --t-light: ${theme.light}; --t-text-main: ${getContrastColor(theme.main)}; --t-text-dark: ${getContrastColor(theme.dark)};">
+                                <div class="th-bg-main th-border-dark border rounded-2xl p-4 th-shadow flex items-center gap-5 w-max">
+                                    <div class="h-32 min-w-[85px] max-w-[200px] flex justify-center items-center bg-[#FFFFFF] rounded-xl overflow-hidden border border-[#FFFFFF] shrink-0 shadow-inner flex-shrink-0">
+                                        <img src="${imgSrc}" class="render-art h-full w-auto max-w-none block transform scale-105 origin-center object-cover">
+                                    </div>
+                                    <div class="flex flex-col justify-center pr-4">
+                                        <span class="bg-[#FFFFFF] th-text-dark font-black uppercase tracking-widest text-lg px-3 py-1 rounded-lg w-max mb-2 th-border-dark border th-shadow-sm render-platform whitespace-nowrap">System</span>
+                                        <h1 class="font-black th-text-on-main text-2xl uppercase tracking-tight leading-tight max-w-sm render-title line-clamp-2">Game Title</h1>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 2. Settings Panel -->
+                    <div class="bg-brand-main border-2 border-brand-dark rounded-2xl p-4 shadow-[4px_4px_0px_#463884] flex flex-col">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-white text-sm">2. Settings Panel</h3>
+                            <button class="action-dl btn-chunky py-1.5 px-3 text-xs" data-target="export-settings-${inst.id}"><i data-lucide="download" class="w-3 h-3 pointer-events-none"></i> PNG</button>
+                        </div>
+                        <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center flex-grow p-4 min-h-[160px]">
+                            
+                            <!-- EXPORT TARGET -->
+                            <div id="export-settings-${inst.id}" class="export-wrapper" style="--t-main: ${theme.main}; --t-dark: ${theme.dark}; --t-light: ${theme.light}; --t-text-main: ${getContrastColor(theme.main)}; --t-text-dark: ${getContrastColor(theme.dark)};">
+                                <div class="th-bg-dark border border-[#FFFFFF] rounded-2xl p-5 shadow-[4px_4px_0px_rgba(0,0,0,0.3)] w-max min-w-[280px]">
+                                    <h3 class="font-black th-text-light uppercase tracking-widest text-xs mb-3 border-b pb-2 flex items-center" style="border-color: var(--t-light);"><i data-lucide="settings" class="inline w-3 h-3 mr-1"></i> Applied Settings</h3>
+                                    <div class="render-settings flex flex-col gap-2"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 3. Thermals & Power -->
+                    <div class="bg-brand-main border-2 border-brand-dark rounded-2xl p-4 shadow-[4px_4px_0px_#463884] flex flex-col">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-white text-sm">3. Thermals & Power</h3>
+                            <button class="action-dl btn-chunky py-1.5 px-3 text-xs" data-target="export-thermals-${inst.id}"><i data-lucide="download" class="w-3 h-3 pointer-events-none"></i> PNG</button>
+                        </div>
+                        <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center flex-grow p-4 min-h-[160px]">
+                            
+                            <!-- EXPORT TARGET -->
+                            <div id="export-thermals-${inst.id}" class="export-wrapper" style="--t-main: ${theme.main}; --t-dark: ${theme.dark}; --t-light: ${theme.light}; --t-text-main: ${getContrastColor(theme.main)}; --t-text-dark: ${getContrastColor(theme.dark)};">
+                                <div class="bg-[#FFFFFF] th-border-dark border rounded-2xl p-2 th-shadow-md w-max flex gap-2">
+                                    <div class="th-bg-main th-border-dark border rounded-xl px-4 py-2 flex flex-col items-center justify-center">
+                                        <span class="th-text-light text-[10px] font-black uppercase tracking-widest mb-0.5 drop-shadow-sm">Performance</span>
+                                        <span class="th-text-on-main font-black text-xl leading-none flex items-baseline gap-1"><span class="render-fps">0</span> <span class="text-xs">FPS</span></span>
+                                    </div>
+                                    <div class="th-bg-dark th-border-dark border rounded-xl px-4 py-2 flex flex-col items-center justify-center">
+                                        <span class="th-text-light text-[10px] font-black uppercase tracking-widest mb-0.5 drop-shadow-sm">Thermals</span>
+                                        <span class="th-text-on-dark font-black text-xl leading-none render-temp">0°C</span>
+                                    </div>
+                                    <div class="th-bg-light th-border-dark border rounded-xl px-4 py-2 flex flex-col items-center justify-center">
+                                        <span class="th-text-dark text-[10px] font-black uppercase tracking-widest mb-0.5">Sys Power</span>
+                                        <span class="th-text-dark font-black text-xl leading-none render-tdp">0W</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- 4. Combo Bar -->
+                    <div class="bg-brand-main border-2 border-brand-dark rounded-2xl p-4 shadow-[4px_4px_0px_#463884] flex flex-col">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-black text-white text-sm">4. Combo Bar</h3>
+                            <button class="action-dl btn-chunky py-1.5 px-3 text-xs" data-target="export-combo-${inst.id}"><i data-lucide="download" class="w-3 h-3 pointer-events-none"></i> PNG</button>
+                        </div>
+                        <div class="bg-checkerboard rounded-xl border-2 border-brand-dark overflow-auto custom-scrollbar flex items-center justify-center flex-grow p-4 min-h-[160px]">
+                            
+                            <!-- EXPORT TARGET -->
+                            <div id="export-combo-${inst.id}" class="export-wrapper" style="--t-main: ${theme.main}; --t-dark: ${theme.dark}; --t-light: ${theme.light}; --t-text-main: ${getContrastColor(theme.main)}; --t-text-dark: ${getContrastColor(theme.dark)};">
+                                <div class="th-bg-main th-border-dark border rounded-2xl p-3 th-shadow flex items-center gap-4 w-max">
+                                    <div class="flex items-center gap-4 pr-4 border-r" style="border-color: color-mix(in srgb, var(--t-light) 30%, transparent);">
+                                        <div class="h-20 w-16 flex justify-center items-center bg-[#FFFFFF] rounded-lg overflow-hidden border border-[#FFFFFF] shrink-0 shadow-inner flex-shrink-0">
+                                            <img src="${imgSrc}" class="render-combo-art w-full h-full object-cover block transform scale-105 origin-center">
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <span class="bg-[#FFFFFF] th-text-dark font-black uppercase tracking-widest text-[10px] px-2 py-0.5 rounded w-max mb-1.5 th-border-dark border th-shadow-sm render-platform whitespace-nowrap">System</span>
+                                            <h1 class="font-black th-text-on-main text-xl uppercase tracking-tight leading-tight max-w-[500px] line-clamp-2 render-title">Game Title</h1>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="render-combo-settings grid grid-flow-col grid-rows-2 gap-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+            `;
+        }
+
+        // Fast targeted DOM update (no re-rendering)
+        function updateInstancePreviews(wrapper, inst) {
+            if(!wrapper) return;
+            const theme = getTheme(inst.theme);
             
+            // Text updates
+            wrapper.querySelectorAll('.render-title').forEach(el => el.textContent = inst.title || "Game Title");
+            wrapper.querySelectorAll('.render-platform').forEach(el => el.textContent = inst.platform || "System");
+            wrapper.querySelector('.render-fps').textContent = inst.fps || "0";
+            wrapper.querySelector('.render-temp').textContent = inst.temp || "0°C";
+            wrapper.querySelector('.render-tdp').textContent = inst.tdp || "0W";
+
+            // Theme Vars updates
+            wrapper.querySelectorAll('.export-wrapper').forEach(el => {
+                el.style.setProperty('--t-main', theme.main);
+                el.style.setProperty('--t-dark', theme.dark);
+                el.style.setProperty('--t-light', theme.light);
+                el.style.setProperty('--t-text-main', getContrastColor(theme.main));
+                el.style.setProperty('--t-text-dark', getContrastColor(theme.dark));
+            });
+
+            // Settings list updates
+            const lines = (inst.settings || "").split('\n').filter(l => l.trim() !== '');
+            const rSet = wrapper.querySelector('.render-settings');
+            const rComboSet = wrapper.querySelector('.render-combo-settings');
+            
+            rSet.innerHTML = '';
+            rComboSet.innerHTML = '';
+
             if (lines.length === 0) {
-                rSettings.innerHTML = `<div class="text-[#FFFFFF] font-bold text-sm italic opacity-50 uppercase">No settings applied.</div>`;
-                if(rComboSettings) rComboSettings.innerHTML = `<div class="text-[#FFFFFF] font-bold text-sm italic opacity-50 uppercase">No settings applied.</div>`;
+                const emptyMsg = `<div class="text-[#FFFFFF] font-bold text-sm italic opacity-50 uppercase">No settings</div>`;
+                rSet.innerHTML = emptyMsg;
+                rComboSet.innerHTML = emptyMsg;
             } else {
                 lines.forEach(line => {
-                    const colonIdx = line.indexOf(':');
                     let key = line, val = "";
-                    if (colonIdx > -1) {
-                        key = line.substring(0, colonIdx).trim();
-                        val = line.substring(colonIdx + 1).trim();
+                    const colIdx = line.indexOf(':');
+                    if (colIdx > -1) {
+                        key = line.substring(0, colIdx).trim();
+                        val = line.substring(colIdx + 1).trim();
                     }
-
-                    const item = document.createElement('div');
-                    item.className = "flex justify-between items-center bg-[#6254A4] border border-[#463884] rounded-lg p-2 px-3 gap-6 shadow-[1px_1px_0px_#2a2253]";
-                    item.innerHTML = `<span class="text-[#B9B2DE] font-bold text-sm uppercase tracking-wide">${key}</span><span class="text-[#FFFFFF] font-black text-md uppercase">${val}</span>`;
-                    rSettings.appendChild(item);
-
-                    const comboItem = document.createElement('div');
-                    comboItem.className = "bg-[#463884] border border-[#B9B2DE] rounded-lg px-3 py-1 flex flex-col justify-center shadow-[2px_2px_0px_#2a2253] min-w-[100px]";
-                    comboItem.innerHTML = `<span class="text-[#B9B2DE] text-[9px] font-black uppercase tracking-widest leading-none mb-1.5">${key}</span><span class="text-white font-black text-sm leading-none uppercase">${val}</span>`;
-                    if(rComboSettings) rComboSettings.appendChild(comboItem);
+                    rSet.insertAdjacentHTML('beforeend', `
+                        <div class="flex justify-between items-center th-bg-main th-border-dark border rounded-lg p-2 px-3 gap-6 shadow-[1px_1px_0px_var(--t-dark)]">
+                            <span class="th-text-light font-bold text-sm uppercase tracking-wide drop-shadow-sm">${key}</span>
+                            <span class="th-text-on-main font-black text-md uppercase">${val}</span>
+                        </div>
+                    `);
+                    rComboSet.insertAdjacentHTML('beforeend', `
+                        <div class="th-bg-dark th-border-light border rounded-lg px-2.5 py-1 flex flex-col justify-center shadow-[2px_2px_0px_var(--t-dark)] min-w-[90px]">
+                            <span class="th-text-light text-[8px] font-black uppercase tracking-widest leading-none mb-1 drop-shadow-sm">${key}</span>
+                            <span class="th-text-on-dark font-black text-xs leading-none uppercase">${val}</span>
+                        </div>
+                    `);
                 });
             }
-
-            debouncedSaveState();
         }
 
-        // --- URL CORS BYPASS (Waterfall Method) ---
+        function escapeHtml(text) {
+            if(!text) return "";
+            return text.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // --- EVENT DELEGATION (Inputs & Buttons) ---
+        container.addEventListener('input', (e) => {
+            const wrapper = e.target.closest('.instance-wrapper');
+            if (!wrapper) return;
+            const inst = instances.find(i => i.id === wrapper.dataset.id);
+            if(!inst) return;
+
+            if (e.target.classList.contains('input-title')) inst.title = e.target.value;
+            if (e.target.classList.contains('input-platform')) inst.platform = e.target.value;
+            if (e.target.classList.contains('input-settings')) inst.settings = e.target.value;
+            if (e.target.classList.contains('input-fps')) inst.fps = e.target.value;
+            if (e.target.classList.contains('input-temp')) inst.temp = e.target.value;
+            if (e.target.classList.contains('input-tdp')) inst.tdp = e.target.value;
+            if (e.target.classList.contains('input-url')) inst.url = e.target.value;
+            
+            if (e.target.classList.contains('custom-color-input')) {
+                inst.theme = e.target.value;
+                wrapper.querySelectorAll('.theme-btn').forEach(b => b.classList.replace('active', 'hover:scale-110'));
+                const label = e.target.closest('label');
+                label.style.background = inst.theme;
+                label.classList.add('active', 'scale-110');
+                label.classList.remove('hover:scale-110');
+            }
+
+            updateInstancePreviews(wrapper, inst);
+            debouncedSaveState();
+        });
+
+        // Theme Clicks, Deletes, Downloads, URL loading, Image loading
+        container.addEventListener('click', async (e) => {
+            const wrapper = e.target.closest('.instance-wrapper');
+            if (!wrapper) return;
+            const inst = instances.find(i => i.id === wrapper.dataset.id);
+
+            // Theme Select
+            if (e.target.classList.contains('theme-btn')) {
+                const themeKey = e.target.dataset.theme;
+                inst.theme = themeKey;
+                wrapper.querySelectorAll('.theme-btn').forEach(b => b.classList.replace('active', 'hover:scale-110'));
+                e.target.classList.replace('hover:scale-110', 'active');
+                
+                const customLabel = wrapper.querySelector('.custom-color-input').closest('label');
+                if (customLabel) {
+                    customLabel.classList.remove('active', 'scale-110');
+                    customLabel.classList.add('hover:scale-110');
+                    customLabel.style.background = 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)';
+                }
+
+                updateInstancePreviews(wrapper, inst);
+                debouncedSaveState();
+            }
+
+            // Delete
+            if (e.target.classList.contains('action-delete')) {
+                instances = instances.filter(i => i.id !== inst.id);
+                wrapper.remove();
+                debouncedSaveState();
+            }
+
+            // URL Load
+            if (e.target.classList.contains('action-load-url')) {
+                if(!inst.url) return;
+                const btn = e.target;
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 pointer-events-none animate-spin"></i>`;
+                lucide.createIcons();
+                try {
+                    const b64 = await getBase64ImageFromUrl(inst.url);
+                    inst.localImage = b64;
+                    wrapper.querySelectorAll('.render-art, .render-combo-art').forEach(el => el.src = b64);
+                    debouncedSaveState();
+                } catch(err) {
+                    alert("CORS Error: The host blocks fetching. Please download the image and use the local file option.");
+                } finally {
+                    btn.innerHTML = orig;
+                    lucide.createIcons();
+                }
+            }
+
+            // Download
+            if (e.target.classList.contains('action-dl')) {
+                const targetId = e.target.dataset.target;
+                const btn = e.target;
+                const orig = btn.innerHTML;
+                btn.innerHTML = `<i data-lucide="loader" class="w-3 h-3 pointer-events-none animate-spin"></i> ...`;
+                lucide.createIcons();
+
+                const node = document.getElementById(targetId);
+                await document.fonts.ready;
+                try {
+                    const dataUrl = await htmlToImage.toPng(node, { pixelRatio: 3, backgroundColor: 'rgba(0,0,0,0)', style: { margin: '0' }});
+                    const link = document.createElement('a');
+                    let fName = inst.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                    if(!fName) fName = "overlay";
+                    link.download = `RR_${fName}_${targetId.split('-')[1]}.png`;
+                    link.href = dataUrl;
+                    link.click();
+                } catch(err) { console.error("Export error", err); } 
+                finally {
+                    btn.innerHTML = orig;
+                    lucide.createIcons();
+                }
+            }
+        });
+
+        // Local Image Selection
+        container.addEventListener('change', (e) => {
+            if(e.target.classList.contains('input-image')) {
+                const wrapper = e.target.closest('.instance-wrapper');
+                const inst = instances.find(i => i.id === wrapper.dataset.id);
+                const file = e.target.files[0];
+                if (file) {
+                    let fn = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+                    fn = fn.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase());
+                    
+                    if(!inst.title || inst.title === 'God of War II') {
+                        inst.title = fn;
+                        wrapper.querySelector('.input-title').value = fn;
+                    }
+                    saveTitleToHistory(fn);
+
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        inst.localImage = ev.target.result;
+                        wrapper.querySelectorAll('.render-art, .render-combo-art').forEach(el => el.src = ev.target.result);
+                        updateInstancePreviews(wrapper, inst);
+                        debouncedSaveState();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // Focus Out (Save History)
+        container.addEventListener('focusout', (e) => {
+            if(e.target.classList.contains('input-title')) saveTitleToHistory(e.target.value);
+        });
+
+        // --- GLOBAL BUTTONS ---
+        document.getElementById('add-instance-btn').addEventListener('click', () => {
+            const newInst = createDefaultInstance();
+            // Inherit from last instance if available to speed up workflow
+            if (instances.length > 0) {
+                const last = instances[instances.length - 1];
+                newInst.platform = last.platform;
+                newInst.settings = last.settings;
+                newInst.theme = last.theme;
+                newInst.title = "";
+            }
+            instances.push(newInst);
+            renderInstances();
+            debouncedSaveState();
+            // Scroll to bottom
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+
+        // --- DRAG AND DROP BATCH SYSTEM ---
+        let dragCounter = 0;
+        const dropZone = document.getElementById('drop-zone');
+
+        window.addEventListener('dragenter', (e) => {
+            e.preventDefault();
+            dragCounter++;
+            dropZone.classList.remove('hidden');
+            dropZone.classList.add('flex');
+        });
+        window.addEventListener('dragleave', (e) => {
+            dragCounter--;
+            if (dragCounter === 0) {
+                dropZone.classList.add('hidden');
+                dropZone.classList.remove('flex');
+            }
+        });
+        window.addEventListener('dragover', (e) => e.preventDefault());
+        window.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dragCounter = 0;
+            dropZone.classList.add('hidden');
+            dropZone.classList.remove('flex');
+
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+            if (!files.length) return;
+
+            // Inherit config from last instance
+            let basePlatform = "System", baseSettings = "Resolution: 1x\nDriver: Default", baseTheme = "purple";
+            if (instances.length > 0) {
+                const last = instances[instances.length - 1];
+                basePlatform = last.platform; baseSettings = last.settings; baseTheme = last.theme || "purple";
+            }
+
+            for (const file of files) {
+                let fn = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+                fn = fn.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.substr(1).toLowerCase());
+
+                const base64 = await new Promise((res) => {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => res(ev.target.result);
+                    reader.readAsDataURL(file);
+                });
+
+                instances.push({
+                    id: crypto.randomUUID(),
+                    title: fn, platform: basePlatform, settings: baseSettings,
+                    fps: "60", temp: "45°C", tdp: "15W",
+                    url: "", localImage: base64, theme: baseTheme
+                });
+                saveTitleToHistory(fn);
+            }
+            renderInstances();
+            debouncedSaveState();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+
+        // --- FETCH PROXY LOGIC ---
         async function getBase64ImageFromUrl(imageUrl) {
             const fetchMethods = [
                 { name: 'Direct', url: '', encode: false },
                 { name: 'AllOrigins', url: 'https://api.allorigins.win/raw?url=', encode: true },
-                { name: 'CodeTabs', url: 'https://api.codetabs.com/v1/proxy?quest=', encode: true },
                 { name: 'CorsProxy', url: 'https://corsproxy.io/?url=', encode: true }
             ];
-
             for (const method of fetchMethods) {
-                console.log(`Attempting to fetch image using ${method.name}...`);
                 try {
                     const fetchUrl = method.encode ? method.url + encodeURIComponent(imageUrl) : imageUrl;
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-                    const fetchOptions = { method: 'GET', signal: controller.signal };
-                    if (method.name === 'Direct') fetchOptions.mode = 'cors';
-
-                    const res = await fetch(fetchUrl, fetchOptions);
+                    const opts = { method: 'GET', signal: controller.signal };
+                    if (method.name === 'Direct') opts.mode = 'cors';
+                    
+                    const res = await fetch(fetchUrl, opts);
                     clearTimeout(timeoutId);
-
-                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
+                    if (!res.ok) continue;
+                    
                     const blob = await res.blob();
-                    if (!blob.type.startsWith('image/')) throw new Error(`Received non-image content type: ${blob.type}`);
+                    if (!blob.type.startsWith('image/')) continue;
 
                     return await new Promise((resolve, reject) => {
                         const reader = new FileReader();
@@ -678,96 +879,10 @@
                         reader.onerror = reject;
                         reader.readAsDataURL(blob);
                     });
-                    
-                } catch (err) {
-                    console.warn(`${method.name} fetch failed:`, err.message);
-                }
+                } catch (err) { /* silent fail, try next */ }
             }
-            throw new Error("Could not load image. The site may be strictly blocking external access.");
+            throw new Error("Proxy exhausted.");
         }
-
-        document.getElementById('load-url-btn').addEventListener('click', async () => {
-            const url = inUrl.value.trim();
-            if (!url) return;
-
-            const btn = document.getElementById('load-url-btn');
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader" class="w-5 h-5 animate-spin"></i>`;
-            lucide.createIcons();
-
-            try {
-                const base64data = await getBase64ImageFromUrl(url);
-                rArt.src = base64data;
-                if(rComboArt) rComboArt.src = base64data;
-                saveUrlToHistory(url, inTitle.value, inPlatform.value);
-                debouncedSaveState();
-            } catch (e) {
-                alert("Failed to load image from URL. The host site is blocking all access. Please download the image manually and use the Local File upload option instead.");
-                console.error(e);
-            } finally {
-                btn.innerHTML = originalHtml;
-                lucide.createIcons();
-            }
-        });
-
-        // --- LOCAL IMAGE (Will not save to cloud) ---
-        inImage.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                let fileName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-                fileName = fileName.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-                
-                inTitle.value = fileName;
-                saveTitleToHistory(fileName);
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    rArt.src = event.target.result;
-                    if(rComboArt) rComboArt.src = event.target.result;
-                    updatePreviews();
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Event Listeners
-        inTitle.addEventListener('blur', (e) => saveTitleToHistory(e.target.value));
-        [inTitle, inPlatform, inSettings, inFps, inTemp, inTdp, inUrl].forEach(input => {
-            input.addEventListener('input', updatePreviews);
-        });
-
-        // --- EXPORT LOGIC ---
-        async function downloadOverlay(event, elementId, filename) {
-            const btn = event.currentTarget;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Exporting...`;
-            lucide.createIcons();
-            const element = document.getElementById(elementId);
-            await document.fonts.ready;
-
-            try {
-                const dataUrl = await htmlToImage.toPng(element, {
-                    pixelRatio: 3, 
-                    backgroundColor: 'rgba(0,0,0,0)', 
-                    style: { margin: '0' }
-                });
-                const link = document.createElement('a');
-                link.download = filename + '.png';
-                link.href = dataUrl;
-                link.click();
-            } catch (err) {
-                console.error("Capture failed:", err);
-                alert("Export failed. Check the console for errors.");
-            } finally {
-                btn.innerHTML = originalHTML;
-                lucide.createIcons();
-            }
-        }
-
-        document.getElementById('btn-dl-game').addEventListener('click', (e) => downloadOverlay(e, 'export-game', 'RR_Game_Overlay'));
-        document.getElementById('btn-dl-settings').addEventListener('click', (e) => downloadOverlay(e, 'export-settings', 'RR_Settings_Overlay'));
-        document.getElementById('btn-dl-thermals').addEventListener('click', (e) => downloadOverlay(e, 'export-thermals', 'RR_Thermals_Overlay'));
-        document.getElementById('btn-dl-combo').addEventListener('click', (e) => downloadOverlay(e, 'export-combo', 'RR_Combo_Overlay'));
 
     </script>
 </body>
