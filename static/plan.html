@@ -691,7 +691,7 @@ input[type="file"]{display:none}
       <textarea class="dump-textarea" id="dump-input" placeholder="e.g. &quot;video about the Retroid Pocket 6 vs RG556, who wins for emulation, spec it out&quot;&#10;or just &quot;cheapest handhelds that can run PS2&quot;&#10;or &quot;how to set up EmuDeck on a Mac&quot;"></textarea>
       <div class="dump-actions">
         <button class="dump-btn" id="flesh-btn" onclick="runFleshOut()">✨ Flesh It Out</button>
-        <div class="dump-status" id="dump-status"></div>
+        <div class="dump-status" id="flesh-status"></div>
       </div>
     </div>
 
@@ -921,7 +921,7 @@ function persist(){
 }
 
 // ── GitHub Gist Sync ──────────────────────────────────────────
-var _gistToken = localStorage.getItem('rr_gist_token') || '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';
+var _gistToken = localStorage.getItem('rr_gist_token') || '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';
 var _gistId    = localStorage.getItem('rr_gist_id')    || '';
 var _syncTimer = null;
 var _syncing   = false;
@@ -1022,7 +1022,7 @@ async function gistPush(forceCreate){
 
 // Debounced push — fires 3s after last change
 function gistSchedule(){
-  if(!_gistToken) return;
+  if(!_gistToken||location.protocol==='file:') return;
   clearTimeout(_syncTimer);
   _syncTimer = setTimeout(gistPush, 3000);
 }
@@ -1063,10 +1063,15 @@ async function gistPull(){
 
 // Init: pull on load if token exists
 (function gistInit(){
-  if(_gistToken && _gistId){
+  if(location.protocol==='file:'){
+    setSyncStatus('\u26a0 Host this file to enable sync','#ff8070');
+    return;
+  }
+  if(_gistToken&&_gistId){
     gistPull();
   } else if(_gistToken){
-    setSyncStatus('\u26a0 Needs setup', '#ff8070');
+    setSyncStatus('\u23f3 Setting up sync\u2026');
+    setTimeout(function(){gistPush(true);},1500);
   }
 })();
 
@@ -3204,7 +3209,7 @@ async function runFleshOut() {
   var input = (document.getElementById('dump-input').value || '').trim();
   if (!input) { alert('Type a rough idea first!'); return; }
   var btn = document.getElementById('flesh-btn');
-  var status = document.getElementById('dump-status');
+  var status = document.getElementById('flesh-status');
   btn.disabled = true; btn.textContent = '\u23f3 Thinking\u2026';
   status.textContent = '';
   document.getElementById('dump-result').classList.add('hidden');
@@ -3271,7 +3276,7 @@ async function runFleshOut() {
     status.textContent = '\u26a0 Error: ' + e.message.slice(0, 80);
     console.error(e);
   }
-  btn.disabled = false; btn.textContent = '\u2728 Flesh It Out';
+  if(btn){btn.disabled = false; btn.textContent = '\u2728 Flesh It Out';}
 }
 
 function addDumpToDatabase() {
@@ -3299,9 +3304,9 @@ function addDumpToDatabase() {
   renderDB();
   document.getElementById('dump-result').classList.add('hidden');
   document.getElementById('dump-input').value = '';
-  document.getElementById('dump-status').textContent = '\u2713 Added to database!';
+  document.getElementById('flesh-status').textContent = '\u2713 Added to database!';
   _fleshData = null;
-  setTimeout(function() { document.getElementById('dump-status').textContent = ''; }, 3000);
+  setTimeout(function() { document.getElementById('flesh-status').textContent = ''; }, 3000);
 }
 
 function discardDump() {
