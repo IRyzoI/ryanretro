@@ -10,6 +10,9 @@ import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
 from datetime import datetime
 
+from planner_api import router as planner_router
+app.include_router(planner_router, prefix="/api/planner")
+
 import httpx
 import markdown
 from fastapi import FastAPI, HTTPException, Response, Request
@@ -18,6 +21,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
+
+
 
 load_dotenv()
 
@@ -529,6 +534,10 @@ async def store_page():
 @app.get("/ranking", response_class=FileResponse)
 def ranking_page(): 
     return FileResponse(os.path.join(STATIC_DIR, "ranking.html"))
+
+@app.get("/planner", response_class=HTMLResponse)
+async def planner_page():
+    return FileResponse(os.path.join(STATIC_DIR, "planner.html"))
 
 @app.get("/thumbnail", response_class=FileResponse)
 def ranking_page(): 
