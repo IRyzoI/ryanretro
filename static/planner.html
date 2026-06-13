@@ -880,22 +880,29 @@ async function setupSync(){
     return;
   }
   localStorage.setItem('planner_sync_token', tok.trim());
-  /* decide direction: does the server already have a copy? */
+
   let serverRaw = null;
   try {
     const res = await remoteFetch('GET', '');
     if (res.ok){ const data = await res.json(); serverRaw = data.value; }
-  } catch(e){ return; }   // bad token already toasted
+  } catch(e){ return; }
+
   if (serverRaw){
-    if (confirm('The server already has planner data. Load it onto this device?\n\nOK = use the server copy here\nCancel = push THIS device\'s data to the server (overwrites it)')){
+    // Fix: Re-worded prompt. Hitting cancel now safely aborts without wiping the database.
+    const doLoad = confirm('The server already has planner data.\n\nClick OK to pull the SERVER data onto this device.\nClick Cancel to abort sync (keeps your local data safe).');
+    if (doLoad){
       state = Object.assign({}, state, JSON.parse(serverRaw));
       dumpText.value = state.dump || ''; autoGrow(dumpText);
       applyTheme(); renderInspo(); renderHistory(); renderVideos(); renderFilm();
       toast('Synced — this device now mirrors the server');
       return;
+    } else {
+      localStorage.removeItem('planner_sync_token');
+      toast('Sync cancelled. Your local data was NOT overwritten.');
+      return;
     }
   }
-  /* push local copy up (state + all referenced images) */
+
   toast('Uploading this device\'s planner to the server…');
   for (const id of referencedImageIds()){
     const val = await getImage(id);
