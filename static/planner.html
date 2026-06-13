@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryan Retro — Creator Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#dfe9fb; --sheet:#f3f8ff; --card:#FFFFFF; --ink:#1a1a1a; --title:#3b3a8d;
+  --bord:#3b3c89; --line:#3b3c89; --rule:#d4e4ff; --sep:#d4e4ff; --soft:#9fb0d4;
+  --brand:#3b3a8d; --dark:#2d2c6e; --light:#d3e4ff;
+  --teal:#208ab0; --teal-bg:#e5f9ff;
+  --green:#107a47; --green-bg:#e6faf3;
+  --blue:#3a69b9; --blue-bg:#d3e4ff;
+  --purple:#6b46c1; --purple-bg:#efe9fb;
+  --amber:#b5701a; --amber-bg:#fdf3df;
+  --rose:#d6336c; --rose-bg:#fdeaf2;
+  --pop:#b5701a; --red:#c0392b; --orange:#b5701a; --pink:#d6336c; --cyan:#208ab0;
+  --band:var(--blue-bg); --bandText:var(--blue);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0; padding:0;}
+body{
+  background:var(--page); color:var(--ink);
+  font-family:'Poppins',Arial,sans-serif;
+  min-height:100vh; padding-bottom:70px;
+  font-size:13.5px; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.bebas{font-family:'Poppins',Arial,sans-serif; font-weight:700; letter-spacing:0; margin:0;}
+button{font-family:inherit; cursor:pointer;}
+textarea,input,select{font-family:inherit; color:var(--ink);}
+::placeholder{color:#9fb0d4;}
+
+/* ---------- header ---------- */
+.topbar{
+  position:sticky; top:0; z-index:50; background:var(--sheet);
+  border-bottom:2px solid var(--title); padding:10px 20px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.logo{display:flex; align-items:center; gap:12px;}
+.logo .play{width:42px; height:31px; background:var(--title); border-radius:8px; display:flex; align-items:center; justify-content:center; flex:none;}
+.logo .play::after{content:""; border-left:13px solid #fff; border-top:8px solid transparent; border-bottom:8px solid transparent; margin-left:4px;}
+.logo h1{font-size:23px; line-height:1.05; color:var(--title); letter-spacing:-0.8px;}
+.logo h1 span{color:var(--teal);}
+.savedot{margin-left:auto; font-size:11.5px; font-weight:600; color:var(--soft); display:flex; align-items:center; gap:6px;}
+.savedot i{width:9px;height:9px;border-radius:50%;background:var(--green);display:inline-block;}
+
+/* ---------- tabs ---------- */
+.tabs{
+  display:flex; gap:6px; padding:14px 20px 0; max-width:1240px; margin:0 auto;
+  overflow-x:auto; scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  border:1px solid var(--bord); border-radius:8px; background:#fff; color:var(--title);
+  font-weight:600; font-size:12.5px; padding:6px 13px;
+  white-space:nowrap; transition:background .12s;
+}
+.tab:hover{background:var(--teal-bg);}
+.tab.active{background:var(--title); border-color:var(--title); color:#fff;}
+.tab .em{margin-right:6px;}
+
+.wrap{max-width:1240px; margin:14px auto 0; padding:20px 24px 34px; background:var(--sheet); border:2px solid var(--title); border-radius:4px;}
+@media(max-width:1280px){.wrap{margin:14px 16px 0;}}
+.view{display:none; animation:pop .15s ease;}
+.view.show{display:block;}
+@keyframes pop{from{opacity:0;} to{opacity:1;}}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important; transition:none!important;} }
+
+/* ---------- panels ---------- */
+.card{background:var(--card); border:1px solid var(--bord); border-radius:3px; padding:12px;}
+.card+.card{margin-top:20px;}
+.card h2{
+  font-size:13px; font-weight:600; letter-spacing:.3px; color:var(--bandText); background:var(--band);
+  margin:-12px -12px 12px; padding:8px 12px; position:relative;
+  display:flex; align-items:center; justify-content:center; gap:9px; text-align:center;
+}
+.card h2 .h2-btn{position:absolute; right:7px; top:50%; transform:translateY(-50%); padding:3px 10px; font-size:11px; border-radius:5px;}
+.titlecard{padding:18px 16px 12px; text-align:center;}
+.bigtitle{width:100%; border:none; background:transparent; font-family:'Poppins',Arial,sans-serif; font-weight:700;
+  font-size:clamp(26px,3.6vw,46px); line-height:1.12; color:var(--title); text-align:center; letter-spacing:-1.5px; padding:2px 6px;
+  resize:none; overflow:hidden; display:block;}
+.bigtitle:focus{outline:none; background:#eef5ff; border-radius:4px;}
+body.dark .bigtitle{color:var(--title);}
+body.dark .bigtitle:focus{background:#222837;}
+.bigtitle-static{width:auto; cursor:default; user-select:text;}
+#filmPickCard{position:relative; cursor:pointer;}
+#filmPickCard .bigtitle-static{cursor:pointer; user-select:none;}
+#filmPickCard:hover{background:#fafcff;}
+body.dark #filmPickCard:hover{background:#262C3A;}
+.bigtitle-select{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; appearance:none; border:none;}
+.title-caret{font-size:.42em; color:var(--soft); margin-left:12px; vertical-align:middle; letter-spacing:0;}
+.card h2 .chip{font-size:9.5px; font-weight:600; letter-spacing:.05em;
+  background:#fff; border:1px solid var(--sep); border-radius:20px; padding:2px 8px; color:var(--soft);}
+.hint{font-size:12px; color:var(--soft); margin:0 0 12px; text-align:center;}
+.bar{height:6px; border:1px solid var(--bord); border-radius:20px; background:#fff; overflow:hidden;}
+.bar i{display:block; height:100%; background:var(--green); transition:width .25s;}
+
+/* colored header bands per panel */
+.edge{--band:var(--blue-bg); --bandText:var(--blue);}
+.edge.yellow{--band:var(--purple-bg); --bandText:var(--purple);}
+.edge.green{--band:var(--green-bg); --bandText:var(--green);}
+.edge.blue{--band:var(--teal-bg); --bandText:var(--teal);}
+.edge.pink{--band:var(--rose-bg); --bandText:var(--rose);}
+.edge.orange{--band:var(--amber-bg); --bandText:var(--amber);}
+
+/* ---------- buttons ---------- */
+.btn{
+  border:1px solid var(--bord); border-radius:5px; background:#fff; font-weight:600; font-size:12px;
+  padding:6px 12px; transition:background .12s; color:var(--title);
+  display:inline-flex; align-items:center; justify-content:center; gap:7px; line-height:1.35;
+}
+.btn:hover{background:var(--teal-bg);}
+.btn.brand{background:var(--title); border-color:var(--title); color:#fff;}
+.btn.brand:hover{background:var(--dark);}
+.btn.pop{background:var(--amber-bg); border-color:#e3c890; color:var(--amber);}
+.btn.pop:hover{background:#f8e9c8;}
+.btn.green{background:var(--green); border-color:var(--green); color:#fff;}
+.btn.red{background:#fff; border-color:#d8a8a2; color:var(--red);}
+.btn.red:hover{background:#fdeeec;}
+.btn.ghost{padding:5px 10px; font-size:12px; color:var(--title);}
+.btn:disabled{opacity:.55; cursor:default;}
+.btn.big{font-size:13.5px; padding:9px 18px; border-radius:6px; font-weight:600;}
+
+/* ---------- inputs ---------- */
+.ta{
+  width:100%; border:1px solid var(--bord); border-radius:3px; padding:10px 12px; font-size:13px;
+  line-height:26px; background-color:#fff; resize:vertical; min-height:120px;
+}
+.ta.flat{
+  border:none; border-radius:0; padding:0 2px 10px;
+  /* ruled rows start exactly at the first text line: first rule sits UNDER row 1, nothing above it */
+  background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 25px,var(--sep) 25px,var(--sep) 26px);
+  background-attachment:local; background-position:0 0; background-origin:content-box;
+}
+.ta.flat:focus{box-shadow:none; background-color:transparent;}
+.ta:focus,.in:focus,select:focus{outline:none; box-shadow:inset 0 0 0 2px var(--teal); background-color:#eef5ff;}
+.tab:focus-visible,.btn:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+.in{width:100%; border:1px solid var(--bord); border-radius:5px; padding:8px 11px; font-size:13px; background:#fff;}
+select.in{appearance:none; font-weight:600; color:var(--title);}
+.row{display:flex; gap:9px; flex-wrap:wrap; align-items:center;}
+.grow{flex:1; min-width:160px;}
+label.lbl{font-size:10.5px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--teal); display:block; margin:12px 0 5px;}
+
+/* checkboxes — sheet style */
+input[type=checkbox]{appearance:none; width:17px; height:17px; border:2px solid var(--title); border-radius:4px; cursor:pointer; position:relative; background:#fff; flex:0 0 auto;}
+input[type=checkbox]:checked{background:var(--green); border-color:var(--green);}
+input[type=checkbox]:checked::after{content:""; position:absolute; left:4px; top:0; width:4px; height:9px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg);}
+
+/* ---------- brain dump ---------- */
+#dumpText{min-height:260px;}
+.inspo-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:12px;}
+.inspo{position:relative; border:1px solid var(--bord); border-radius:6px; overflow:hidden; background:#fff;}
+.inspo img{width:100%; aspect-ratio:16/10; object-fit:cover; display:block;}
+.inspo input{width:100%; border:none; border-top:1px solid var(--sep); padding:6px 9px; font-size:12px; background:#fff;}
+.inspo .x{position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; border:none;
+  background:rgba(0,0,0,.55); color:#fff; font-size:14px; line-height:1; padding:0;}
+.dropzone{
+  border:1.5px dashed var(--bord); border-radius:6px; padding:16px; text-align:center; color:var(--soft);
+  font-weight:500; font-size:12.5px; background:#f7faff; margin-top:4px; cursor:pointer;
+}
+.dropzone.drag{background:var(--purple-bg); border-color:var(--purple); color:var(--purple);}
+
+/* ---------- video cards ---------- */
+.vid-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px;}
+.vcard{
+  background:#fff; border:1px solid var(--bord); border-radius:8px; overflow:hidden;
+  cursor:pointer; transition:.15s; text-align:left; padding:0; display:flex; flex-direction:column;
+}
+.vcard:hover{box-shadow:0 8px 22px rgba(59,58,141,.20); transform:translateY(-2px);}
+.vcard .thumb{aspect-ratio:16/9; background:repeating-linear-gradient(45deg,#eef3fc,#eef3fc 11px,#e4ecfa 11px,#e4ecfa 22px);
+  border-bottom:1px solid var(--bord); display:flex; align-items:center; justify-content:center; font-size:28px; position:relative; color:var(--soft);}
+.vcard .thumb img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
+.vcard .body{padding:10px 12px;}
+.vcard h3{font-size:14px; line-height:1.3; font-weight:600; color:var(--ink);}
+.vcard .meta{display:flex; gap:7px; margin-top:7px; flex-wrap:wrap; align-items:center;}
+.status{font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; border-radius:20px; padding:2px 9px;}
+.status.Idea{background:#edf1fa; color:#6a74a8;} .status.Planning{background:var(--purple-bg); color:var(--purple);} .status.Filming{background:var(--amber-bg); color:var(--amber);}
+.status.Editing{background:var(--teal-bg); color:var(--teal);} .status.Published{background:var(--green-bg); color:var(--green);}
+.mini{font-size:11px; font-weight:500; color:var(--soft);}
+
+/* ---------- video detail ---------- */
+.crumb{display:flex; align-items:center; gap:9px; margin-bottom:14px; flex-wrap:wrap;}
+.crumb select.in{padding:5px 26px 5px 10px; font-size:12px; border-radius:5px; line-height:1.35;
+  background-image:linear-gradient(45deg,transparent 50%,var(--title) 50%),linear-gradient(135deg,var(--title) 50%,transparent 50%);
+  background-position:calc(100% - 14px) 55%,calc(100% - 10px) 55%; background-size:4px 4px,4px 4px; background-repeat:no-repeat;}
+body.dark .crumb select.in{background-color:#2A3040;}
+.title-row{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;}
+.title-row .in{font-size:16px; font-weight:600;}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;}
+.two-col > .card{margin-top:0;}
+@media(max-width:860px){.two-col{grid-template-columns:1fr;}}
+
+.idea-li{display:flex; gap:8px; align-items:center; border-bottom:1px solid var(--sep); padding:7px 2px; background:#fff;}
+.idea-li:last-child{border-bottom:none;}
+.idea-li.star{background:#fdf8ec;}
+.idea-li .t{flex:1; font-weight:500; font-size:13px; border:none; background:transparent; padding:2px;}
+.icon-btn{width:28px; height:28px; border:1px solid var(--bord); border-radius:5px; background:#fff; font-size:13px; line-height:1; flex:none; color:var(--title);}
+.icon-btn:hover{background:var(--teal-bg);}
+.icon-btn.on{background:var(--amber-bg); border-color:#e3c890;}
+
+.thumb-comp{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:4px;}
+@media(max-width:640px){.thumb-comp{grid-template-columns:1fr;}}
+.tslot{border:1px solid var(--bord); border-radius:5px; overflow:hidden; background:#fff; position:relative; transition:.15s;}
+.tslot .label{position:absolute; top:7px; left:7px; z-index:2; background:#fff; color:var(--title); font-weight:600; font-size:11px; padding:2px 10px; border-radius:20px; border:1px solid var(--bord);}
+.tslot .ph{aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:5px; color:var(--soft); font-weight:500; font-size:12px; cursor:pointer; width:100%; border:none;
+  background:repeating-linear-gradient(45deg,#eef3fc,#eef3fc 11px,#e4ecfa 11px,#e4ecfa 22px);}
+.tslot img{width:100%; aspect-ratio:16/9; object-fit:cover; display:block; cursor:pointer;}
+.tslot .foot{display:flex; border-top:1px solid var(--sep); background:#fafcff;}
+.tslot .foot button{flex:1; border:none; background:transparent; font-weight:600; font-size:11px; padding:7px 4px; color:var(--title);}
+.tslot .foot button:hover{background:var(--teal-bg);}
+.tslot .foot button+button{border-left:1px solid var(--sep);}
+.tslot.win{border:2px solid var(--green); box-shadow:0 0 0 3px var(--green-bg);}
+.tslot.win .label{background:var(--green); border-color:var(--green); color:#fff;}
+
+.todo-li{display:flex; gap:9px; align-items:center; border-bottom:1px solid var(--sep); padding:7px 2px; background:#fff;}
+.todo-li:last-child{border-bottom:none;}
+.todo-li input[type=checkbox]{margin-top:0;}
+.todo-li .t{flex:1; font-weight:500; font-size:13px; border:none; background:transparent;}
+.todo-li.done .t{text-decoration:line-through; color:var(--soft);}
+textarea.t{resize:none; overflow:hidden; line-height:1.5; padding:0; margin:0; display:block; width:100%; min-height:20px;}
+textarea.ta{resize:none; overflow:hidden;}
+
+/* ---------- filming mode ---------- */
+.film-check{display:flex; flex-direction:column; margin-top:6px; background:#fff; border:1px solid var(--bord); border-radius:3px;}
+.fitem{display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--sep); background:#fff;
+  padding:11px 12px; font-size:14px; font-weight:500; cursor:grab; user-select:none;}
+.fitem.dragging{opacity:.45; cursor:grabbing;}
+.fitem textarea{cursor:text;}
+.fitem input[type=checkbox], .fitem .icon-btn{cursor:pointer;}
+.fitem:last-child{border-bottom:none;}
+.fitem input[type=checkbox]{width:19px; height:19px; margin-top:0;}
+.fitem input[type=checkbox]:checked::after{left:5px; top:1px;}
+.fitem.done{color:var(--soft);}
+.fitem textarea{flex:1; border:none; background:transparent; font-weight:500; font-size:14px; line-height:1.5; resize:none; overflow:hidden; padding:0; margin:0; min-height:21px;}
+.fitem.done textarea{text-decoration:line-through; color:var(--soft);}
+.fsec{margin-top:20px;}
+.fsec h3{font-size:14px; font-weight:600; color:var(--title); display:flex; align-items:center; gap:8px; margin-bottom:6px;}
+.fsec h3 .cnt{font-size:10.5px; font-weight:600; background:#edf1fa; border-radius:20px; padding:2px 9px; color:var(--soft);}
+.fdiv{background:var(--cbg); border-bottom:1px solid var(--sep); padding:4px 12px; gap:9px; min-height:0;}
+.fdiv .secname{flex:1; text-align:center; font-weight:600; font-size:13px; letter-spacing:.3px;
+  color:var(--c); line-height:1.4; background:transparent; min-height:18px;}
+.fdiv .icon-btn{background:transparent; border-color:transparent; color:var(--c); opacity:.6; width:24px; height:24px;}
+.fdiv .icon-btn:hover{opacity:1; background:rgba(255,255,255,.35);}
+body.dark .fdiv .icon-btn:hover{background:rgba(0,0,0,.25);}
+.secc-teal{--c:var(--teal); --cbg:var(--teal-bg);} .secc-blue{--c:var(--blue); --cbg:var(--blue-bg);}
+.secc-green{--c:var(--green); --cbg:var(--green-bg);} .secc-purple{--c:var(--purple); --cbg:var(--purple-bg);}
+.secc-amber{--c:var(--amber); --cbg:var(--amber-bg);} .secc-rose{--c:var(--rose); --cbg:var(--rose-bg);}
+.fadd{display:flex; gap:8px; margin-top:10px;}
+.fadd input{flex:1; border:1px solid var(--bord); border-radius:5px; padding:8px 11px; font-size:13px; background:#fff;}
+.fadd input:focus{outline:none; box-shadow:inset 0 0 0 2px var(--teal); background:#eef5ff;}
+.sticky-prog{position:sticky; top:56px; z-index:30; background:var(--amber-bg); border:1px solid var(--bord); border-radius:5px;
+  padding:9px 13px; display:flex; align-items:center; gap:12px; font-weight:600; font-size:13px; color:var(--amber);}
+.sticky-prog .btn{background:#fff;}
+body.dark .sticky-prog .btn{background:#2A3040; color:#C9CEE4; border-color:var(--bord);}
+.sponsor-flag{background:var(--rose-bg); border:1px solid var(--bord); border-radius:5px; padding:11px 13px; margin-top:14px; font-size:13px; color:var(--rose);}
+
+/* ---------- thumbnail lab ---------- */
+.yt{display:grid; gap:18px 14px; margin-top:14px;}
+.yt.desktop{grid-template-columns:repeat(auto-fill,minmax(225px,1fr));}
+.yt.mobile{grid-template-columns:1fr; max-width:420px; margin-left:auto; margin-right:auto;}
+.yt.tiny{grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px;}
+.ytc{cursor:default;}
+.ytc .tn{aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:#e4ecfa; position:relative; border:1px solid var(--bord);}
+.ytc .tn img{width:100%; height:100%; object-fit:cover; display:block;}
+.ytc .tn .dur{position:absolute; right:6px; bottom:6px; background:rgba(0,0,0,.8); color:#fff; font-size:10.5px; font-weight:600; padding:1px 5px; border-radius:4px;}
+.ytc .info{display:flex; gap:9px; margin-top:7px;}
+.ytc .av{width:30px; height:30px; border-radius:50%; background:var(--blue-bg); color:var(--title); flex:none; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:12px;}
+.ytc .tt{font-size:13px; font-weight:600; line-height:1.3; max-height:2.6em; overflow:hidden;}
+.ytc .ch{font-size:11.5px; color:var(--soft); margin-top:2px;}
+.ytc.mine .tn{outline:3px solid var(--amber); outline-offset:2px;}
+.yt.hidemine .ytc.mine .tn{outline:none;}
+.ytc .rm{position:absolute; top:5px; left:5px; width:22px; height:22px; border-radius:50%; border:none; background:rgba(0,0,0,.55); color:#fff; font-size:13px; line-height:1; z-index:3; padding:0;}
+.lab-ctrl{display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-top:2px; justify-content:center;}
+.lab-ctrl+.lab-ctrl{margin-top:10px;}
+.seg{display:inline-flex; border:1px solid var(--bord); border-radius:5px; overflow:hidden; background:#fff;}
+.seg button{border:none; background:#fff; font-weight:600; font-size:12px; padding:7px 13px; color:var(--title);}
+.seg button+button{border-left:1px solid var(--sep);}
+.seg button.on{background:var(--title); color:#fff;}
+.seg button:not(.on):hover{background:var(--teal-bg);}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed; inset:0; background:rgba(20,22,45,.7); z-index:100; display:none; align-items:flex-start; justify-content:center; padding:24px 14px; overflow:auto;}
+.overlay.show{display:flex;}
+.modal{background:var(--sheet); border:2px solid var(--title); border-radius:6px; box-shadow:0 12px 50px rgba(0,0,0,.35); max-width:760px; width:100%; padding:20px;}
+.modal h2{font-size:20px; color:var(--title); letter-spacing:-0.4px;}
+.file-card{border:1px solid var(--bord); border-radius:5px; background:#fff; padding:11px 14px; margin-top:12px;}
+.file-card .dest{font-weight:600; font-size:13px; color:var(--title); display:flex; align-items:center; gap:8px;}
+.file-card ul{margin:7px 0 0; padding-left:20px; font-size:12.5px;}
+.file-card li{margin-top:5px;}
+.dest-dot{width:10px; height:10px; border-radius:50%; display:inline-block;}
+
+.toast{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:var(--title); color:#fff;
+  font-weight:500; font-size:12.5px; padding:10px 18px; border-radius:6px; box-shadow:0 6px 22px rgba(20,22,45,.3);
+  z-index:200; display:none; max-width:90vw;}
+.toast.show{display:block; animation:pop .2s;}
+.spinner{width:15px;height:15px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;display:inline-block;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{padding:26px; text-align:center; color:var(--soft); font-weight:500; font-size:12.5px;}
+.empty .big-em{font-size:36px; display:block; margin-bottom:8px;}
+hr.div{border:none; border-top:1px solid var(--sep); margin:16px 0;}
+
+@media (max-width:600px){
+  body{font-size:13px;}
+  .wrap{margin:10px 8px 0; padding:12px 10px 22px; border-width:1px;}
+  .logo h1{font-size:18px;}
+}
+
+/* ================= DARK MODE — night sheet ================= */
+body.dark{
+  --page:#14171E; --sheet:#1C202A; --card:#232936; --ink:#DDE1EE; --title:#A9A8F4;
+  --bord:#3D4358; --line:#3D4358; --rule:#2F3547; --sep:#2F3547; --soft:#8E95B5;
+  --brand:#6E68DC; --dark:#5A53C8; --light:#3A4156; --cyan:#5BC8DE;
+  --teal:#5BC8DE; --teal-bg:rgba(91,200,222,.12);
+  --green:#4CC388; --green-bg:rgba(76,195,136,.13);
+  --blue:#8FA9F0; --blue-bg:rgba(143,169,240,.13);
+  --purple:#B49CEF; --purple-bg:rgba(180,156,239,.13);
+  --amber:#E3B964; --amber-bg:rgba(227,185,100,.12);
+  --rose:#E68DB8; --rose-bg:rgba(230,141,184,.13);
+  --band:var(--blue-bg); --bandText:var(--blue);
+}
+body.dark .edge{--band:var(--blue-bg); --bandText:var(--blue);}
+body.dark .edge.yellow{--band:var(--purple-bg); --bandText:var(--purple);}
+body.dark .edge.green{--band:var(--green-bg); --bandText:var(--green);}
+body.dark .edge.blue{--band:var(--teal-bg); --bandText:var(--teal);}
+body.dark .edge.pink{--band:var(--rose-bg); --bandText:var(--rose);}
+body.dark .edge.orange{--band:var(--amber-bg); --bandText:var(--amber);}
+
+/* frame & chrome */
+body.dark .wrap{background:var(--sheet); border-color:#4A4F7A;}
+body.dark .topbar{background:var(--sheet); border-color:#4A4F7A;}
+body.dark .logo .play{background:var(--brand);}
+body.dark .logo h1{color:var(--title);}
+body.dark .logo h1 span{color:var(--teal);}
+
+/* panels */
+body.dark .card{background:var(--card); border-color:var(--bord);}
+body.dark .card h2{border-bottom:1px solid var(--rule);}
+body.dark .card h2 .chip{background:rgba(0,0,0,.25); color:var(--soft); border-color:var(--rule);}
+body.dark .bar{background:#1B202B; border-color:var(--bord);}
+
+/* tabs & buttons */
+body.dark .tab{background:#272D3B; border-color:var(--bord); color:#C9CEE4;}
+body.dark .tab:hover{background:#303749;}
+body.dark .tab.active{background:var(--brand); border-color:var(--brand); color:#fff;}
+body.dark .btn{background:#2A3040; border-color:var(--bord); color:#C9CEE4;}
+body.dark .btn:hover{background:#333A4E; border-color:#4E5570;}
+body.dark .btn.brand{background:var(--brand); border-color:var(--brand); color:#fff;}
+body.dark .btn.brand:hover{background:var(--dark);}
+body.dark .btn.pop{background:var(--amber-bg); border-color:rgba(227,185,100,.35); color:var(--amber);}
+body.dark .btn.pop:hover{background:rgba(227,185,100,.2);}
+body.dark .btn.green{background:#2C9C68; border-color:#2C9C68; color:#fff;}
+body.dark .btn.red{background:#2A3040; border-color:rgba(220,110,110,.4); color:#E58A8A;}
+body.dark .icon-btn{background:#2A3040; border-color:var(--bord); color:var(--soft);}
+body.dark .icon-btn:hover{background:#333A4E; color:#C9CEE4;}
+body.dark .icon-btn.on{background:var(--amber-bg); border-color:rgba(227,185,100,.4); color:var(--amber);}
+body.dark .seg{background:#2A3040; border-color:var(--bord);}
+body.dark .seg button{background:transparent; color:var(--soft);}
+body.dark .seg button+button{border-color:var(--rule);}
+body.dark .seg button.on{background:var(--brand); color:#fff;}
+body.dark .seg button:not(.on):hover{background:#333A4E;}
+
+/* inputs */
+body.dark .ta, body.dark .in, body.dark .fadd input{background-color:#1C212D; border-color:var(--bord); color:var(--ink);}
+body.dark .ta:focus, body.dark .in:focus, body.dark select:focus, body.dark .fadd input:focus{background-color:#222837; box-shadow:inset 0 0 0 2px var(--teal);}
+body.dark .ta.flat, body.dark .ta.flat:focus{background-color:transparent; box-shadow:none;}
+body.dark ::placeholder{color:#646C8C;}
+body.dark select.in{color:#C9CEE4;}
+body.dark label.lbl{color:var(--teal);}
+body.dark .hint{color:#7B82A3;}
+body.dark input[type=checkbox]{background:transparent; border-color:#8C87E8;}
+body.dark input[type=checkbox]:checked{background:#2FA873; border-color:#2FA873;}
+
+/* lists */
+body.dark .idea-li, body.dark .todo-li{background:transparent; border-color:var(--rule);}
+body.dark .idea-li.star{background:rgba(227,185,100,.07);}
+body.dark .todo-li.done .t{color:#5F6680;}
+body.dark .film-check{background:var(--card); border-color:var(--bord);}
+body.dark .fitem{background:transparent; border-color:var(--rule);}
+body.dark .fitem.done, body.dark .fitem.done textarea{color:#5F6680;}
+body.dark .fsec h3{color:var(--title);}
+body.dark .fsec h3 .cnt{background:#2A3040; color:var(--soft);}
+body.dark .sticky-prog{background:#2B2A22; border-color:rgba(227,185,100,.35); color:var(--amber);}
+body.dark .sponsor-flag{background:#2B222A; border-color:rgba(230,141,184,.3); color:var(--rose);}
+
+/* media cards */
+body.dark .vcard, body.dark .tslot, body.dark .inspo{background:var(--card); border-color:var(--bord);}
+body.dark .vcard:hover{box-shadow:0 8px 22px rgba(0,0,0,.45); border-color:#4E5570;}
+body.dark .vcard h3{color:var(--ink);}
+body.dark .vcard .thumb, body.dark .tslot .ph{background:repeating-linear-gradient(45deg,#262C3A,#262C3A 11px,#2B3243 11px,#2B3243 22px); color:var(--soft); border-color:var(--bord);}
+body.dark .tslot .label{background:rgba(20,23,30,.9); color:var(--title); border-color:var(--bord);}
+body.dark .tslot .foot{background:#1E2330; border-color:var(--rule);}
+body.dark .tslot .foot button{color:#A9AFCB;}
+body.dark .tslot .foot button:hover{background:#2A3040; color:#DDE1EE;}
+body.dark .tslot.win{border-color:#3DB57E; box-shadow:0 0 0 3px rgba(76,195,136,.15);}
+body.dark .tslot.win .label{background:#2FA873; border-color:#2FA873; color:#fff;}
+body.dark .inspo input{background:var(--card); color:var(--ink); border-color:var(--rule);}
+body.dark .dropzone{background:#1E2330; border-color:var(--bord); color:var(--soft);}
+body.dark .dropzone.drag{background:rgba(180,156,239,.1); border-color:var(--purple); color:var(--purple);}
+
+/* status pills */
+body.dark .status.Idea{background:#2A3040; color:#9AA1C0;}
+body.dark .status.Planning{background:var(--purple-bg); color:var(--purple);}
+body.dark .status.Filming{background:var(--amber-bg); color:var(--amber);}
+body.dark .status.Editing{background:var(--teal-bg); color:var(--teal);}
+body.dark .status.Published{background:var(--green-bg); color:var(--green);}
+
+/* thumbnail lab */
+body.dark .ytc .tn{background:#262C3A; border-color:var(--bord);}
+body.dark .ytc .av{background:#2E3548; color:var(--title);}
+body.dark .ytc .tt{color:var(--ink);}
+body.dark .ytc.mine .tn{outline-color:var(--amber);}
+
+/* modal & toast */
+body.dark .overlay{background:rgba(8,10,16,.7);}
+body.dark .modal{background:var(--sheet); border-color:#4A4F7A; box-shadow:0 16px 50px rgba(0,0,0,.6);}
+body.dark .file-card{background:var(--card); border-color:var(--bord);}
+body.dark .toast{background:#2E3447; border:1px solid #454C66;}
+body.dark .empty{color:#7B82A3;}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">
+    <div class="play" aria-hidden="true"></div>
+    <h1>RYAN RETRO <span>CREATOR PLANNER</span></h1>
+  </div>
+  <div class="savedot" id="saveDot"><i></i><span id="saveText">Saved</span></div>
+  <button class="btn ghost" id="syncBtn" title="Sync this device with ryanretro.com" style="display:none;">Sync</button>
+  <button class="btn ghost" id="backupBtn" title="Download a backup of everything">Backup</button>
+  <button class="btn ghost" id="restoreBtn" title="Restore from a backup file">Restore</button>
+  <input type="file" id="restoreFile" accept="application/json,.json" hidden>
+  <button class="btn ghost" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode">Dark mode</button>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="videos">Videos</button>
+  <button class="tab" data-tab="film">Filming Mode</button>
+  <button class="tab" data-tab="lab">Thumbnail Lab</button>
+  <button class="tab" data-tab="dump">Brain Dump</button>
+</nav>
+
+<main class="wrap">
+
+  <!-- ================= BRAIN DUMP ================= -->
+  <section class="view" id="view-dump">
+    <div class="card edge yellow">
+      <h2>Brain Dump</h2>
+      <textarea class="ta flat" id="dumpText" placeholder="Write anything…"></textarea>
+      <div class="row" style="margin-top:12px;">
+        <button class="btn brand big" id="autoSortBtn">Auto-Sort My Notes</button>
+        <button class="btn ghost" id="clearDumpBtn">Clear</button>
+        <span class="mini" id="dumpCount"></span>
+      </div>
+    </div>
+
+    <div class="card edge pink">
+      <h2>Inspiration Board</h2>
+      <div class="dropzone" id="inspoDrop">Drop images here or tap to upload</div>
+      <input type="file" id="inspoFile" accept="image/*" multiple hidden>
+      <div class="inspo-grid" id="inspoGrid"></div>
+    </div>
+
+    <div class="card edge blue" id="historyCard" style="display:none;">
+      <h2>Sorted Dumps</h2>
+      <div id="dumpHistory"></div>
+    </div>
+  </section>
+
+  <!-- ================= VIDEOS ================= -->
+  <section class="view show" id="view-videos">
+    <div id="videoList">
+      <div class="card">
+        <h2>Video Planners<button class="btn h2-btn" id="newVideoBtn">+ New Video</button></h2>
+        <div class="vid-grid" id="vidGrid"></div>
+      </div>
+    </div>
+    <div id="videoDetail" style="display:none;"></div>
+  </section>
+
+  <!-- ================= FILMING MODE ================= -->
+  <section class="view" id="view-film">
+    <div class="card titlecard" id="filmPickCard">
+      <div class="bigtitle bigtitle-static" id="filmTitleDisplay">Choose a video<span class="title-caret">▾</span></div>
+      <select id="filmSelect" class="bigtitle-select" aria-label="Choose a video"></select>
+    </div>
+    <div id="filmBody"></div>
+  </section>
+
+  <!-- ================= THUMBNAIL LAB ================= -->
+  <section class="view" id="view-lab">
+    <div class="card edge green">
+      <h2>Thumbnail Lab</h2>
+      <div class="lab-ctrl">
+        <select class="in grow" id="labPick" style="max-width:340px;"></select>
+        <button class="btn ghost" id="labUploadBtn">Or upload one</button>
+        <input type="file" id="labFile" accept="image/*" hidden>
+      </div>
+      <div class="lab-ctrl">
+        <div class="seg" id="sizeSeg">
+          <button data-size="desktop" class="on">Desktop</button>
+          <button data-size="mobile">Mobile</button>
+          <button data-size="tiny">Tiny</button>
+        </div>
+        <button class="btn ghost" id="shuffleBtn">Shuffle</button>
+        <button class="btn ghost" id="revealBtn">Highlight mine: ON</button>
+        <button class="btn ghost" id="compUploadBtn">Add competitor thumbs</button>
+        <input type="file" id="compFile" accept="image/*" multiple hidden>
+        <span class="mini" id="labStatus" aria-live="polite"></span>
+      </div>
+      <div class="yt desktop" id="ytGrid"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= AUTO-SORT MODAL ================= -->
+<div class="overlay" id="sortOverlay">
+  <div class="modal">
+    <h2 id="sortTitle">Here's where everything goes</h2>
+    <div id="sortResults"></div>
+    <div class="row" style="margin-top:16px;">
+      <button class="btn green big" id="applySortBtn">File it all</button>
+      <button class="btn ghost" id="cancelSortBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =================================================================
+   STATE & STORAGE
+   ================================================================= */
+const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-3);
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+let state = {
+  dump: '',
+  history: [],            // [{date, text}]
+  inspo: [],              // [{id, imgId, caption}]
+  videos: [],             // see newVideo()
+  competitors: [],        // [{id, imgId}]
+  lab: { source:'', size:'desktop', highlight:true, order:null }
+};
+const imgCache = {};      // imgId -> dataURL
+
+function newVideo(title){
+  return {
+    id: uid(), title: title || 'Untitled video', status: 'Idea',
+    notes: '', titleIdeas: [], todos: [],            // todo: {id,text,done,phase}
+    sponsor: { name:'', deal:'', points:'', ctas:'' },
+    desc: null,
+    say: [],                                          // talking points: [{id,text,done}]
+    thumbs: { A:null, B:null, C:null }, winner: null,
+    created: Date.now()
+  };
+}
+
+/* ---- persistence: ALL writes go through one queue, one at a time ----
+   The storage backend errors when writes overlap or come too fast, so we
+   serialize every set/delete with spacing, retries, and key coalescing. */
+const SEED_IDEAS_V1 = [{"t": "Playing Switch Games on Mac (Astris Emulator)","n": "Need to test across different Apple Silicon chips if possible (M1 vs M3). Compare battery drain playing native Mac games vs emulating Switch via Astris."},{"t": "Xbox 360 Emulation on Android is FINALLY Here! (x360)","n": "Test this on a high-end Snapdragon device (Odin 2, Retroid Pocket 5, or a flagship phone). This is going to be demanding."},{"t": "The Most Beautiful Game Launcher for Mac (Nostalgi)","n": "Link: https://www.nostalgi.app/\nFocus on the aesthetics. This needs to look clean, minimalist, and very 'Apple'. Compare it briefly to OpenEmu and ES-DE."},{"t": "The Lenovo Retro Handheld. What ACTUALLY Is it?!","n": "Make sure to get a screenshot of the RetroDodo email chain confirming the Lenovo connection. Need to pick up a precision screwdriver set for the teardown before filming."},{"t": "Is Google Spying On You? (The Microphone Experiment)","n": "Tone: Drew Gooden-esque comedy.\nKey concept to explain: Baader-Meinhof phenomenon (frequency illusion).\nMake sure to pick a topic I'd NEVER normally see ads for (e.g., cat food when I don't own a cat, or an industrial farm tractor)."},{"t": "This Full PC Costs Less Than an SSD ($100)","n": "AliExpress Link: https://ko.aliexpress.com/item/1005006530105259.html\nPrice Archive (show on screen): https://www.pricearchive.org/aliexpress.com/item/1005006530105259"},{"t": "Korea's #1 Food Market is a Tourist Trap (Go Here Instead)","n": "Find a good nearby alternative market to compare (like Namdaemun, Mangwon, or a smaller local market). Compare exact same dishes for price and quality."},{"t": "Buying Lunch with Ancient Coins at Tongin Market","n": "Arrive early to beat the lunch rush. Make sure to get a good variety of foods to make the lunchbox look colorful and appetizing for the thumbnail."},{"t": "I Tried EVERY Street Food in Myeongdong","n": "Need on-screen graphics for each item: Name, Price, and Rating out of 5. Bring friends to share the food so I don't get full after 5 stalls."},{"t": "I Waited 8 Months for the Odin 3 to Get Good (Review & Giveaway)","n": "Giveaway rules: Just comment, drawn in 2 weeks.\nMake sure to mention the ongoing bugs that STILL haven't been fixed after 8 months.\nLink to Korean channel in the description and pinned comment.\nRelevant Reddit thread: https://www.reddit.com/r/OdinHandheld/s/azrc2TLZ1P\nRelevant YT Post: http://youtube.com/post/UgkxTY3tcoioZY_0MbMHvzKUGlup8AgKE_KS?si=njrry8pdeSsU_LsK"},{"t": "Anbernic FIXED the RG DS! (Official Linux Update)","n": "Key features to highlight from the official video:\n• Seamless dual-boot (removing the TF card reboots back to Android).\n• 3 new UI themes (Dark, Light, Classic).\n• Independent brightness controls for top and bottom screens.\n• Secondary screen displays platform logos during single-screen emulation (no more dead black screen)."},{"t": "Escaping Seoul: A Quiet Korean Countryside Vlog","n": "Pacing is crucial here! Do not linger on boring, long scenes. Keep the edit tight. Ensure all Korean speaking interactions have clean, easy-to-read subtitles."},{"t": "I Tried Wireless HDMI For My Handhelds (Llano S850)","n": "Testing to-do checklist:\n• Compare latency: Android native cast to TV VS Android cast to Llano Receiver VS Llano Transmitter to Llano Receiver.\n• Test AirPlay replacement for the living room (since Mac Mini is gone).\n• Thermal camera test on the receiver (packaging says hot is normal, let's see HOW hot)."},{"t": "Can I Get My Girlfriend to Approve of the AYN Thor?","n": "Need to find a pastel skin/case, cute thumb grips (paw prints/flowers), and maybe a charm. Set up Daijisho/Beacon or standard Android with a custom girly theme and widgets. Load up 'cozy' games: Animal Crossing, Nintendogs, Stardew Valley. Add Netflix and Spotify."},{"t": "The Best 3D Printed Accessories for the AYN Thor","n": "Featured grips to print:\n• Thor Grip V5\n• Thor Xbox Style Grip\n• Thor Slim Grip - Switch 2 Joycon Style\n• Thor Slim Grip\n• Thor Grip Medium Version\n• Unofficial Official Ryan Retro Channel Thor Grip\n\nResearch needed: Find the best cases, docks, and weird accessories. Make sure to buy black paper/card for the desk snap transition."},{"t": "Why the AYN Thor is THE BEST Handheld","n": "Cover: EQ fix, using bottom screen as a launcher, adding a grip, controlling bottom screen volume independently, app switching between screens."},{"t": "Turning My Apple Watch Into a Game Boy","n": "Research needed: Check MakerWorld or Thingiverse for the best Apple Watch Game Boy case. Need to figure out the best current watchOS emulator (e.g., Arcadia or a web-based workaround)."},{"t": "The Best Handheld Under $100","n": "Contenders to cover: Ayaneo Pocket Air Mini, Mangmi Air X, TrimUI Brick."},{"t": "The Ultimate Docked Handheld Setup (Auto Controller Mapping)","n": "Testing checklist for standalone apps: Eden, GameNative, Flycast, Redream, Dolphin. I need to figure out which of these handle controller hot-swapping or auto-profiles well before filming."},{"t": "GameNative: PC Games on Android","n": "Title: The Best Way To Play ALL Your PC Games On Android.\nThumbnail: Steam, GOG, Epic icons. Huge recognisable game titles.\nGitHub: https://github.com/utkarshdalal/GameNative\nPerformance fork (SD 8 Gen 2+): https://github.com/maxjivi05/GameNative-Performance\nDifferentiator: simplest setup guide on YouTube plus Thor 2nd screen as touchpad plus performance fork demo."},{"t": "Dock Style Comparison","n": "Titles:\n• The Best Handheld Dock\n• What Handheld Dock Do You Need?\n• One Dock To Rule Them All\n\nThumbnail: Holding the Jumpgate dock in the middle, glowing edge, all kinds of handhelds around it (Steam Deck, Switch 2, MacBook).\n\nTarget audience: Handheld gamers (Switch, Steam Deck, Retroid) and laptop users wanting a portable desk setup."},{"t": "Real DS vs Clone vs Thor","n": "Target: Retro gaming enthusiasts, handheld collectors, DS fans.\nThe Twist: The best overall choice is probably neither - it is the AYN Thor.\nRG DS closer in size to DS XL.\nGammaOS: lighter Android, snappier. Rocknix: simpler Linux alternative.\nR4 card: 4,300 games pre-loaded. No affiliate links for R4 cards.\nRG DS exclusives: Light Dreamcast, PortMaster, Android apps, web browser, YouTube."},{"t": "EVERY Pokemon Game EVER on the AYN Thor","n": "Thumbnail concepts:\n1. AYN Thor center with Pokeball joystick caps, flat-lay of iconic Pokemon game boxes and holographic cards, pixel-art grass texture background.\n2. Dual-screen: Z-A on top (modern 3D) vs Pokemon Red on bottom (8-bit). Pokeball caps on sticks.\n3. Huge pile of loose Pokemon carts on the floor. You standing next to it for scale.\nGet Pokeball stick caps for the shoot."},{"t": "Gaming on a Credit Card Sized PC","n": "Titles:\n1. This $30 credit card is a Gaming Computer\n2. Gaming on a Credit Card sized PC\n3. This $30 credit card is a Gaming PC\n\nThumbnail: Mario gameplay visible. Device shown coming out of wallet or pack of cards. $30 price tag overlay. Gaming PC text overlay. Chandler from Friends reading specs.\nReddit: https://www.reddit.com/r/CardPuter/\n3D printed case: https://makerworld.com/models/2417770\nCardputer Fight: https://www.reddit.com/r/CardPuter/comments/1t4gnrn/cardputer_fight/"},{"t": "Tiny iPhone Video Project","n": "Thumbnail: Tiny iPhone in the middle surrounded by handheld controllers for each system tested (NES, SNES, PS1, Dreamcast, arcade stick). Include a real-sized iPhone next to it for scale.\nOS: runs Android.\nDisclaimer: not a mainstream recommendation."},{"t": "Broken Phone to PC","n": "Title: I Turned My Old Broken Phone Into A PC.\nThumbnail: Smashed phone transitioning to a PC setup.\nTarget audience: tech, environment, renewing/restoring, cheap PCs.\nResearch needed: which Android phones support desktop mode and how. DeX for Samsung, other options for other phones."},{"t": "Cannoli MinUI for Android","n": ""},{"t": "Playing Wii Games on my Phone","n": ""},{"t": "Play Retro Games With Friends Online — Foxol","n": "https://play.foxol.app/"}];
+
+let saveTimer = null, dirty = false;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* Where am I running? Claude artifact has window.storage; self-hosted (e.g. ryanretro.com) doesn't. */
+const isArtifact = typeof window.storage !== 'undefined' && window.storage && typeof window.storage.set === 'function';
+
+/* Self-host backend: localStorage for state, IndexedDB for images (localStorage is too small for them) */
+const idb = {
+  db: null,
+  open(){ return new Promise((res, rej) => {
+    if (this.db) return res(this.db);
+    const r = indexedDB.open('rr-planner-img', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('img');
+    r.onsuccess = () => { this.db = r.result; res(this.db); };
+    r.onerror = () => rej(r.error);
+  });},
+  async set(k, v){ const db = await this.open(); return new Promise((res, rej) => {
+    const tx = db.transaction('img', 'readwrite'); tx.objectStore('img').put(v, k);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error); });},
+  async get(k){ const db = await this.open(); return new Promise((res, rej) => {
+    const rq = db.transaction('img').objectStore('img').get(k);
+    rq.onsuccess = () => res(rq.result == null ? null : rq.result); rq.onerror = () => rej(rq.error); });},
+  async del(k){ const db = await this.open(); return new Promise((res, rej) => {
+    const tx = db.transaction('img', 'readwrite'); tx.objectStore('img').delete(k);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error); });}
+};
+
+/* Remote sync (self-hosted only): set a token via the Sync button and every
+   device pointing at ryanretro.com shares one live copy through /api/planner. */
+const SYNC_PATH = '/api/planner';
+const syncToken = () => { try { return localStorage.getItem('planner_sync_token') || ''; } catch(e){ return ''; } };
+const storageMode = () => isArtifact ? 'artifact' : (syncToken() ? 'remote' : 'local');
+
+async function remoteFetch(method, sub, value){
+  const res = await fetch(SYNC_PATH + sub, {
+    method,
+    headers: Object.assign({ 'Authorization': 'Bearer ' + syncToken() },
+      value != null ? { 'Content-Type': 'application/json' } : {}),
+    body: value != null ? JSON.stringify({ value }) : undefined
+  });
+  if (res.status === 401){
+    toast('Sync token rejected — tap Sync in the top bar to fix it');
+    throw new Error('unauthorized');
+  }
+  return res;
+}
+
+async function rawSet(key, value){
+  const mode = storageMode();
+  if (mode === 'artifact') return window.storage.set(key, value);
+  if (mode === 'remote'){
+    if (key === 'ping') return;                          // health check is meaningless remotely
+    const sub = key.startsWith('img:') ? '/img/' + key.slice(4) : '';
+    const res = await remoteFetch('PUT', sub, value);
+    if (!res.ok) throw new Error('sync write failed: ' + res.status);
+    return;
+  }
+  if (key.startsWith('img:')) return idb.set(key, value);
+  localStorage.setItem(key, value);
+}
+async function rawGet(key){
+  try {
+    const mode = storageMode();
+    if (mode === 'artifact'){ const r = await window.storage.get(key); return r ? r.value : null; }
+    if (mode === 'remote'){
+      const sub = key.startsWith('img:') ? '/img/' + key.slice(4) : '';
+      const res = await remoteFetch('GET', sub);
+      if (res.status === 404) return null;
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.value == null ? null : data.value;
+    }
+    if (key.startsWith('img:')) return await idb.get(key);
+    return localStorage.getItem(key);
+  } catch(e){ return null; }
+}
+async function rawDelete(key){
+  const mode = storageMode();
+  if (mode === 'artifact') return window.storage.delete(key);
+  if (mode === 'remote'){
+    if (!key.startsWith('img:')) return;
+    const res = await remoteFetch('DELETE', '/img/' + key.slice(4));
+    if (!res.ok && res.status !== 404) throw new Error('sync delete failed');
+    return;
+  }
+  if (key.startsWith('img:')) return idb.del(key);
+  localStorage.removeItem(key);
+}
+
+const writeQueue = [];
+let queueRunning = false;
+
+function queueWrite(op, key, value){
+  return new Promise(resolve => {
+    if (op === 'set'){
+      const existing = writeQueue.find(j => j.op === 'set' && j.key === key);
+      if (existing){ existing.value = value; existing.resolvers.push(resolve); return runQueue(); }
+    }
+    writeQueue.push({ op, key, value, resolvers: [resolve] });
+    runQueue();
+  });
+}
+async function runQueue(){
+  if (queueRunning) return;
+  queueRunning = true;
+  while (writeQueue.length){
+    const job = writeQueue.shift();
+    let ok = false, delay = 800;
+    for (let i = 0; i < 5 && !ok; i++){
+      try {
+        if (job.op === 'set') await rawSet(job.key, job.value);
+        else await rawDelete(job.key);
+        ok = true;
+      } catch(e){
+        if (job.op === 'delete'){
+          /* a delete "failing" on a key that's already gone is a success */
+          const still = await rawGet(job.key);
+          if (still === null || still === undefined){ ok = true; break; }
+        }
+        if (i === 4){
+          if (job.op === 'delete') console.warn('storage delete could not confirm for', job.key, '- harmless orphan, ignoring');
+          else console.error('storage set gave up for', job.key, e);
+        }
+        await sleep(delay); delay = Math.min(delay * 2, 8000);
+      }
+    }
+    job.resolvers.forEach(r => r(ok));
+    await sleep(500);                     // breathing room between writes
+  }
+  queueRunning = false;
+}
+const setWithRetry = (key, value) => queueWrite('set', key, value);
+
+function setSaveUI(status){
+  const dot = $('#saveDot i'), txt = $('#saveText');
+  if (status === 'saving'){ dot.style.background = 'var(--pop)'; txt.textContent = 'Saving…'; }
+  else if (status === 'saved'){ dot.style.background = 'var(--green)'; txt.textContent = 'Saved'; }
+  else { dot.style.background = 'var(--red)'; txt.textContent = 'Not saved — tap to retry'; }
+}
+
+function save(){
+  dirty = true;
+  setSaveUI('saving');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSave, 1200);
+}
+
+async function flushSave(){
+  dirty = false;
+  const ok = await setWithRetry('planner_state_v1', JSON.stringify(state));
+  if (dirty) return;                      // newer changes already queued another pass
+  if (ok) setSaveUI('saved');
+  else { setSaveUI('failed'); toast('Couldn\'t save — your work is safe in this tab. Tap the dot up top to retry.'); }
+}
+
+/* tap the save indicator to force a retry */
+document.addEventListener('DOMContentLoaded', () => {
+  $('#saveDot').style.cursor = 'pointer';
+  $('#saveDot').addEventListener('click', () => { setSaveUI('saving'); flushSave(); });
+});
+
+/* warn before leaving if unsaved or writes still flushing */
+window.addEventListener('beforeunload', e => {
+  if (dirty || queueRunning || writeQueue.length || $('#saveText').textContent.includes('Not saved')){
+    e.preventDefault(); e.returnValue = '';
+  }
+});
+
+async function loadState(){
+  try {
+    const raw = await rawGet('planner_state_v1');
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+    state.videos.forEach(v => {
+      if (!v.say) v.say = [];
+      else if (!Array.isArray(v.say)){           // flatten old sectioned format
+        const flat = [];
+        Object.values(v.say).forEach(arr => (arr||[]).forEach(p => flat.push(p)));
+        v.say = flat;
+      }
+    });
+    state.competitors = state.competitors.filter(c => c.imgId);  // drop URL tiles (sandbox blocks external images)
+    ensureDescGlobals();
+    /* one-time import of the idea backlog (June 2026) — appends after existing videos */
+    if (!state.seededIdeasV1){
+      SEED_IDEAS_V1.forEach(o => {
+        const nv = newVideo(o.t);
+        nv.notes = o.n || '';
+        state.videos.push(nv);
+      });
+      state.seededIdeasV1 = true;
+      save();
+    }
+  } catch(e){ /* first run — no saved state yet */ }
+}
+
+/* ---- image store: each image its own key ---- */
+async function storeImage(file){
+  const dataURL = await compress(file);
+  const id = uid();
+  const ok = await setWithRetry('img:' + id, dataURL);
+  if (!ok) throw new Error('storage rejected the image (tap save dot & retry, or try again shortly)');
+  imgCache[id] = dataURL;
+  return id;
+}
+async function getImage(id){
+  if (!id) return null;
+  if (imgCache[id]) return imgCache[id];
+  const v = await rawGet('img:' + id);
+  if (v){ imgCache[id] = v; return v; }
+  return null;
+}
+async function deleteImage(id){
+  delete imgCache[id];
+  queueWrite('delete', 'img:' + id);
+}
+function compress(file){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onerror = () => rej(new Error('could not read the file'));
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const max = 900;
+          const scale = Math.min(1, max / img.width);
+          const c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(img.width * scale));
+          c.height = Math.max(1, Math.round(img.height * scale));
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          res(c.toDataURL('image/jpeg', 0.82));
+        } catch(e){ rej(new Error('could not process the image')); }
+      };
+      img.onerror = () => rej(new Error('not a readable image file'));
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+/* ---- hydrate <img data-img-id> tags after render ---- */
+async function hydrateImages(root){
+  const imgs = (root || document).querySelectorAll('[data-img-id]');
+  for (const el of imgs){
+    const src = await getImage(el.dataset.imgId);
+    if (src) el.src = src;
+  }
+}
+
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ---- auto-growing textareas: boxes expand to fit, never scroll ---- */
+function autoGrow(el){
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+function growAll(root){
+  (root || document).querySelectorAll('textarea').forEach(autoGrow);
+}
+document.addEventListener('input', e => {
+  if (e.target.tagName !== 'TEXTAREA') return;
+  autoGrow(e.target);
+  if (e.target.id === 'vNotes') syncNotesHeight();
+});
+/* clicking into the big title reveals the title-ideas panel beneath it */
+document.addEventListener('focusin', e => {
+  if (e.target.id === 'vTitle'){
+    const p = document.getElementById('ideaPanel');
+    if (p && p.style.display === 'none'){ p.style.display = ''; growAll(p); }
+  }
+});
+document.addEventListener('pointerdown', e => {
+  const p = document.getElementById('ideaPanel');
+  if (p && p.style.display !== 'none' && !e.target.closest('.titlecard')) p.style.display = 'none';
+});
+
+/* Detailed Notes fills its card to match the To-Do column, lines edge to edge */
+function syncNotesHeight(){
+  const ta = $('#vNotes'); if (!ta || !ta.offsetParent) return;
+  ta.style.height = 'auto';
+  const content = ta.scrollHeight;
+  let fill = 0;
+  const notesCard = document.getElementById('notesCard');
+  const todoCard = $('#todoList') ? $('#todoList').closest('.card') : null;
+  if (notesCard && todoCard){
+    const chrome = notesCard.offsetHeight - ta.offsetHeight;   // header + padding around the textarea
+    fill = todoCard.offsetHeight - chrome;
+  }
+  ta.style.height = Math.max(content, fill, 220) + 'px';
+}
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { growAll(); syncNotesHeight(); });
+window.addEventListener('resize', () => { growAll(); syncNotesHeight(); });
+
+/* ---- sync setup (self-hosted): one token, every device shares the server copy ---- */
+async function setupSync(){
+  const current = syncToken();
+  const tok = window.prompt(
+    current ? 'Sync token (leave empty to turn sync OFF on this device):' : 'Paste your sync token (PLANNER_TOKEN from the server):',
+    current
+  );
+  if (tok === null) return;
+  if (!tok.trim()){
+    localStorage.removeItem('planner_sync_token');
+    toast('Sync off — this device now saves locally');
+    return;
+  }
+  localStorage.setItem('planner_sync_token', tok.trim());
+  /* decide direction: does the server already have a copy? */
+  let serverRaw = null;
+  try {
+    const res = await remoteFetch('GET', '');
+    if (res.ok){ const data = await res.json(); serverRaw = data.value; }
+  } catch(e){ return; }   // bad token already toasted
+  if (serverRaw){
+    if (confirm('The server already has planner data. Load it onto this device?\n\nOK = use the server copy here\nCancel = push THIS device\'s data to the server (overwrites it)')){
+      state = Object.assign({}, state, JSON.parse(serverRaw));
+      dumpText.value = state.dump || ''; autoGrow(dumpText);
+      applyTheme(); renderInspo(); renderHistory(); renderVideos(); renderFilm();
+      toast('Synced — this device now mirrors the server');
+      return;
+    }
+  }
+  /* push local copy up (state + all referenced images) */
+  toast('Uploading this device\'s planner to the server…');
+  for (const id of referencedImageIds()){
+    const val = await getImage(id);
+    if (val) queueWrite('set', 'img:' + id, val);
+  }
+  queueWrite('set', 'planner_state_v1', JSON.stringify(state));
+  toast('Sync on — server now mirrors this device');
+}
+
+/* ---- backup & restore (works in Claude and self-hosted; moves data between devices) ---- */
+function referencedImageIds(){
+  const ids = new Set();
+  state.inspo.forEach(i => i.imgId && ids.add(i.imgId));
+  state.competitors.forEach(c => c.imgId && ids.add(c.imgId));
+  state.videos.forEach(v => ['A','B','C'].forEach(k => v.thumbs[k] && ids.add(v.thumbs[k])));
+  if (state.lab.source && state.lab.source.startsWith('up:')) ids.add(state.lab.source.slice(3));
+  return [...ids];
+}
+$('#backupBtn').addEventListener('click', async () => {
+  const btn = $('#backupBtn'); btn.disabled = true; btn.textContent = 'Packing…';
+  const imgs = {};
+  for (const id of referencedImageIds()){
+    const v = await getImage(id);
+    if (v) imgs[id] = v;
+  }
+  const blob = new Blob([JSON.stringify({ kind: 'rr-planner-backup', version: 1, state, imgs })], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ryan-retro-planner-backup.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  btn.disabled = false; btn.textContent = 'Backup';
+});
+$('#restoreBtn').addEventListener('click', () => $('#restoreFile').click());
+$('#restoreFile').addEventListener('change', () => {
+  const f = $('#restoreFile').files[0]; $('#restoreFile').value = '';
+  if (!f) return;
+  const fr = new FileReader();
+  fr.onload = async () => {
+    let d;
+    try { d = JSON.parse(fr.result); } catch(e){ toast('That file could not be read.'); return; }
+    if (!d || d.kind !== 'rr-planner-backup' || !d.state){ toast("That doesn't look like a planner backup."); return; }
+    if (!confirm('Restore will replace everything in this planner with the backup. Continue?')) return;
+    state = d.state;
+    for (const [id, val] of Object.entries(d.imgs || {})){
+      imgCache[id] = val;
+      queueWrite('set', 'img:' + id, val);
+    }
+    save();
+    dumpText.value = state.dump || ''; autoGrow(dumpText);
+    applyTheme(); renderInspo(); renderHistory(); renderVideos(); renderFilm();
+    toast('Backup restored.');
+  };
+  fr.readAsText(f);
+});
+
+/* ---- theme (light / dark) ---- */
+function applyTheme(){
+  document.body.classList.toggle('dark', state.theme === 'dark');
+  const b = $('#themeBtn');
+  if (b) b.textContent = state.theme === 'dark' ? 'Light mode' : 'Dark mode';
+}
+$('#themeBtn').addEventListener('click', () => {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  save(); applyTheme();
+});
+
+/* =================================================================
+   TABS
+   ================================================================= */
+function gotoTab(name){
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  $$('.view').forEach(v => v.classList.remove('show'));
+  $('#view-' + name).classList.add('show');
+}
+
+$('#tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if (!b) return;
+  $$('.tab').forEach(t => t.classList.toggle('active', t === b));
+  $$('.view').forEach(v => v.classList.remove('show'));
+  $('#view-' + b.dataset.tab).classList.add('show');
+  if (b.dataset.tab === 'videos') renderVideos();
+  if (b.dataset.tab === 'film') renderFilm();
+  if (b.dataset.tab === 'lab') renderLab();
+});
+
+/* =================================================================
+   BRAIN DUMP
+   ================================================================= */
+const dumpText = $('#dumpText');
+dumpText.addEventListener('input', () => {
+  state.dump = dumpText.value;
+  $('#dumpCount').textContent = state.dump.trim() ? state.dump.trim().split(/\s+/).length + ' words' : '';
+  save();
+});
+$('#clearDumpBtn').addEventListener('click', () => {
+  dumpText.value = ''; state.dump = ''; $('#dumpCount').textContent=''; save();
+});
+
+/* ---- inspiration board ---- */
+const inspoDrop = $('#inspoDrop'), inspoFile = $('#inspoFile');
+inspoDrop.addEventListener('click', () => inspoFile.click());
+inspoDrop.addEventListener('dragover', e => { e.preventDefault(); inspoDrop.classList.add('drag'); });
+inspoDrop.addEventListener('dragleave', () => inspoDrop.classList.remove('drag'));
+inspoDrop.addEventListener('drop', e => {
+  e.preventDefault(); inspoDrop.classList.remove('drag');
+  addInspo([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
+});
+inspoFile.addEventListener('change', () => { addInspo([...inspoFile.files]); inspoFile.value=''; });
+
+async function addInspo(files){
+  for (const f of files){
+    try {
+      const imgId = await storeImage(f);
+      state.inspo.push({ id: uid(), imgId, caption: '' });
+    } catch(e){}
+  }
+  save(); renderInspo();
+}
+function renderInspo(){
+  const g = $('#inspoGrid');
+  g.innerHTML = state.inspo.map(it => `
+    <div class="inspo" data-id="${it.id}">
+      <img data-img-id="${it.imgId}" alt="inspiration image">
+      <button class="x" title="Remove">×</button>
+      <input value="${esc(it.caption)}" placeholder="Note">
+    </div>`).join('');
+  hydrateImages(g);
+}
+$('#inspoGrid').addEventListener('click', e => {
+  if (!e.target.classList.contains('x')) return;
+  const card = e.target.closest('.inspo');
+  const it = state.inspo.find(i => i.id === card.dataset.id);
+  if (it) deleteImage(it.imgId);
+  state.inspo = state.inspo.filter(i => i.id !== card.dataset.id);
+  save(); renderInspo();
+});
+$('#inspoGrid').addEventListener('input', e => {
+  if (e.target.tagName !== 'INPUT') return;
+  const it = state.inspo.find(i => i.id === e.target.closest('.inspo').dataset.id);
+  if (it){ it.caption = e.target.value; save(); }
+});
+
+/* ---- dump history ---- */
+function renderHistory(){
+  /* Sorted-dump history is kept in storage as a safety net but never shown. */
+  $('#historyCard').style.display = 'none';
+}
+
+/* =================================================================
+   AUTO-SORT (Claude-powered filing)
+   ================================================================= */
+let pendingSort = null;
+
+$('#autoSortBtn').addEventListener('click', async () => {
+  const text = state.dump.trim();
+  if (!text){ toast('Brain dump is empty — type some notes first!'); return; }
+  const btn = $('#autoSortBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sorting your notes…';
+  try {
+    const plan = await callSorter(text);
+    pendingSort = plan;
+    showSortPreview(plan);
+  } catch(e){
+    console.error(e);
+    toast('Auto-sort hit a snag — try again in a moment');
+  }
+  btn.disabled = false;
+  btn.innerHTML = 'Auto-Sort My Notes';
+});
+
+async function callSorter(text){
+  const existing = state.videos.map(v => ({ id: v.id, title: v.title, status: v.status }));
+  const prompt = `You are the filing assistant inside a YouTube planner app for "Ryan Retro", a retro handheld gaming channel. The creator has written a messy brain dump. File every piece of it into the right place.
+
+EXISTING VIDEO PLANNERS (match to these when the note clearly refers to one):
+${JSON.stringify(existing)}
+
+BRAIN DUMP:
+"""${text}"""
+
+Rules:
+- If a note refers to an existing video (by device name, topic or title), file it under that video's id.
+- If a note describes a NEW video idea, create a new video entry (videoId: null) with a clear working title.
+- Sequential steps to perform, demonstrate, or say ON CAMERA (setup walkthroughs, demo sequences, guide steps, talking points) become filmingPoints, kept in their original order.
+- Off-camera tasks (ordering, emailing, scripting, editing, uploading, research) become todos (short, actionable).
+- Catchy title suggestions go into titleIdeas.
+- Sponsor/collab/CTA mentions go into sponsorNotes for the relevant video.
+- Free-floating thoughts that belong to a video go into notes (keep the creator's wording, lightly tidied).
+- Anything that fits no video goes into general.
+- Keep every note/todo/title under 18 words. Be terse.
+
+Respond with ONLY minified single-line JSON (no markdown fences, no line breaks, no extra spaces), exactly this shape:
+{"videos":[{"videoId":"existing-id-or-null","newTitle":"only if videoId is null","notes":["..."],"titleIdeas":["..."],"todos":["..."],"filmingPoints":["..."],"sponsorNotes":["..."]}],"general":{"notes":["..."],"todos":["..."]}}`;
+
+  /* call, and auto-continue if the response got cut off mid-JSON */
+  let raw = '';
+  for (let i = 0; i < 4; i++){
+    const messages = raw
+      ? [{ role: 'user', content: prompt }, { role: 'assistant', content: raw }]
+      : [{ role: 'user', content: prompt }];
+    const headers = { 'Content-Type': 'application/json' };
+    if (!isArtifact){
+      let key = localStorage.getItem('anthropic_api_key');
+      if (!key){
+        key = window.prompt('Auto-Sort uses Claude. Paste your Anthropic API key (kept only in this browser, sent only to api.anthropic.com):');
+        if (!key) throw new Error('Auto-Sort needs an API key when self-hosted');
+        localStorage.setItem('anthropic_api_key', key.trim());
+      }
+      headers['x-api-key'] = key.trim();
+      headers['anthropic-version'] = '2023-06-01';
+      headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    }
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers,
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages })
+    });
+    if (!isArtifact && (res.status === 401 || res.status === 403)){
+      localStorage.removeItem('anthropic_api_key');
+      throw new Error('API key rejected — it has been cleared, try again');
+    }
+    const data = await res.json();
+    raw += (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    if (data.stop_reason !== 'max_tokens') break;   // complete — otherwise loop continues the JSON
+  }
+  raw = raw.replace(/```json|```/g, '').trim();
+  try { return JSON.parse(raw); }
+  catch(e){ return repairJSON(raw); }               // best-effort fix for any remaining truncation
+}
+
+/* Close any unterminated strings/brackets so a truncated response still parses */
+function repairJSON(s){
+  let stack = [], inStr = false, escp = false;
+  for (const ch of s){
+    if (escp){ escp = false; continue; }
+    if (inStr){
+      if (ch === '\\') escp = true;
+      else if (ch === '"') inStr = false;
+      continue;
+    }
+    if (ch === '"') inStr = true;
+    else if (ch === '{') stack.push('}');
+    else if (ch === '[') stack.push(']');
+    else if (ch === '}' || ch === ']') stack.pop();
+  }
+  let fixed = s;
+  if (inStr) fixed += '"';
+  fixed = fixed.replace(/,\s*$/, '');
+  if (/:\s*$/.test(fixed)) fixed += 'null';
+  if (/"\s*$/.test(fixed) && !/[:,[{]\s*"[^"]*"\s*$/.test(fixed)) { /* dangling key is rare; let close-out handle it */ }
+  while (stack.length) fixed += stack.pop();
+  return JSON.parse(fixed);
+}
+
+const todoText = t => typeof t === 'string' ? t : (t && t.text) || '';
+
+function showSortPreview(plan){
+  const dots = { notes:'var(--blue)', titles:'var(--pop)', todos:'var(--green)', film:'var(--orange)', sponsor:'var(--pink)' };
+  let html = '';
+  (plan.videos || []).forEach(v => {
+    const target = v.videoId ? state.videos.find(x => x.id === v.videoId) : null;
+    const name = target ? target.title : (v.newTitle || 'New video');
+    const isNew = !target;
+    let items = '';
+    (v.notes||[]).forEach(n => items += `<li><span class="dest-dot" style="background:${dots.notes}"></span> Note: ${esc(n)}</li>`);
+    (v.titleIdeas||[]).forEach(n => items += `<li><span class="dest-dot" style="background:${dots.titles}"></span> Title idea: ${esc(n)}</li>`);
+    (v.todos||[]).forEach(t => items += `<li><span class="dest-dot" style="background:${dots.todos}"></span> To-do: ${esc(todoText(t))}</li>`);
+    (v.filmingPoints||[]).forEach(t => items += `<li><span class="dest-dot" style="background:${dots.film}"></span> Filming Mode: ${esc(todoText(t))}</li>`);
+    (v.sponsorNotes||[]).forEach(n => items += `<li><span class="dest-dot" style="background:${dots.sponsor}"></span> Sponsor/CTA: ${esc(n)}</li>`);
+    if (items) html += `<div class="file-card"><div class="dest">${esc(name)} ${isNew ? '<span style="background:#E4F5EB;color:#1E8E4E;border-radius:999px;font-size:10px;padding:3px 9px;font-weight:700;letter-spacing:.04em;">NEW PLANNER</span>' : ''}</div><ul>${items}</ul></div>`;
+  });
+  const g = plan.general || {};
+  let gItems = '';
+  (g.notes||[]).forEach(n => gItems += `<li><span class="dest-dot" style="background:${dots.notes}"></span> ${esc(n)}</li>`);
+  (g.todos||[]).forEach(t => gItems += `<li><span class="dest-dot" style="background:${dots.todos}"></span> To-do: ${esc(todoText(t))}</li>`);
+  if (gItems) html += `<div class="file-card"><div class="dest">General (stays in Brain Dump as a tidy list)</div><ul>${gItems}</ul></div>`;
+  if (!html) html = '<div class="empty">Couldn\'t find anything to file — try adding a bit more detail.</div>';
+  $('#sortResults').innerHTML = html;
+  $('#sortOverlay').classList.add('show');
+}
+
+$('#cancelSortBtn').addEventListener('click', () => $('#sortOverlay').classList.remove('show'));
+$('#applySortBtn').addEventListener('click', () => {
+  if (!pendingSort) return;
+  let filed = 0;
+  (pendingSort.videos || []).forEach(v => {
+    let target = v.videoId ? state.videos.find(x => x.id === v.videoId) : null;
+    if (!target){
+      target = newVideo(v.newTitle || 'New video idea');
+      target.status = 'Planning';
+      state.videos.unshift(target);
+    }
+    (v.notes||[]).forEach(n => { target.notes = (target.notes ? target.notes + '\n\n' : '') + '• ' + n; filed++; });
+    (v.titleIdeas||[]).forEach(t => { target.titleIdeas.push({ id: uid(), text: t, starred: false }); filed++; });
+    (v.todos||[]).forEach(t => { target.todos.push({ id: uid(), text: todoText(t), done: false }); filed++; });
+    (v.filmingPoints||[]).forEach(t => {
+      if (!Array.isArray(target.say)) target.say = [];
+      target.say.push({ id: uid(), text: todoText(t), done: false }); filed++;
+    });
+    (v.sponsorNotes||[]).forEach(n => { target.sponsor.points = (target.sponsor.points ? target.sponsor.points + '\n' : '') + '• ' + n; filed++; });
+  });
+  const g = pendingSort.general || {};
+  const leftover = [];
+  (g.notes||[]).forEach(n => leftover.push('• ' + n));
+  (g.todos||[]).forEach(t => leftover.push('- ' + todoText(t)));
+  state.history.unshift({ date: new Date().toLocaleString(), text: state.dump });
+  state.history = state.history.slice(0, 8);
+  state.dump = leftover.join('\n');
+  dumpText.value = state.dump;
+  $('#sortOverlay').classList.remove('show');
+  pendingSort = null;
+  save(); renderHistory(); renderVideos();
+  toast('Filed ' + filed + ' item' + (filed === 1 ? '' : 's') + ' into your planners');
+});
+
+/* =================================================================
+   VIDEOS — LIST
+   ================================================================= */
+$('#newVideoBtn').addEventListener('click', () => {
+  const v = newVideo('');
+  state.videos.unshift(v);
+  save(); openVideo(v.id);
+});
+
+function videoProgress(v){
+  if (!v.todos.length) return 0;
+  return Math.round(v.todos.filter(t => t.done).length / v.todos.length * 100);
+}
+
+function renderVideos(){
+  $('#videoDetail').style.display = 'none';
+  $('#videoList').style.display = '';
+  const g = $('#vidGrid');
+  if (!state.videos.length){
+    g.innerHTML = '<div class="empty" style="grid-column:1/-1;">No videos yet. Hit <b>+ New Video</b> or Auto-Sort a brain dump to create one.</div>';
+    return;
+  }
+  const PHASE_RANK = { Editing:0, Filming:1, Planning:2, Idea:3, Published:4 };
+  const ordered = [...state.videos].sort((a,b) => (PHASE_RANK[a.status] ?? 3) - (PHASE_RANK[b.status] ?? 3));
+  g.innerHTML = ordered.map(v => {
+    const heroThumb = v.winner ? v.thumbs[v.winner] : (v.thumbs.A || v.thumbs.B || v.thumbs.C);
+    const p = videoProgress(v);
+    return `<button class="vcard" data-id="${v.id}">
+      <div class="thumb">${heroThumb ? `<img data-img-id="${heroThumb}" alt="">` : ''}</div>
+      <div class="body">
+        <h3>${esc(v.title || 'Untitled video')}</h3>
+        <div class="meta">
+          <span class="status ${v.status}">${v.status}</span>
+          <span class="mini">${v.todos.filter(t=>t.done).length}/${v.todos.length} tasks</span>
+        </div>
+        <div class="bar" style="margin-top:8px;"><i style="width:${p}%"></i></div>
+      </div></button>`;
+  }).join('');
+  hydrateImages(g);
+}
+$('#vidGrid').addEventListener('click', e => {
+  const c = e.target.closest('.vcard');
+  if (c) openVideo(c.dataset.id);
+});
+
+/* =================================================================
+   VIDEOS — DETAIL
+   ================================================================= */
+const STATUSES = ['Idea','Planning','Filming','Editing','Published'];
+
+function openVideo(id){
+  const v = state.videos.find(x => x.id === id);
+  if (!v) return;
+  $('#videoList').style.display = 'none';
+  const d = $('#videoDetail');
+  d.style.display = '';
+  d.dataset.id = id;
+
+  d.innerHTML = `
+  <div class="crumb">
+    <button class="btn ghost" id="backBtn">← All videos</button>
+    <select class="in" id="vStatus" style="width:auto;">${STATUSES.map(s => `<option ${s===v.status?'selected':''}>${s}</option>`).join('')}</select>
+    <button class="btn ghost" id="toFilm">Filming Mode →</button>
+    <button class="btn ghost red" id="vDelete" style="margin-left:auto;">Delete</button>
+  </div>
+
+  <div class="card titlecard">
+    <textarea class="bigtitle" id="vTitle" rows="1" placeholder="Video title">${esc(v.title)}</textarea>
+    <div id="ideaPanel" style="display:none; margin-top:12px; border-top:1px solid var(--sep); padding-top:12px;">
+      <div class="row">
+        <input class="in grow" id="newIdea" placeholder="Add a title idea">
+        <button class="btn" id="addIdea">Add</button>
+      </div>
+      <div id="ideaList"></div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card edge blue" id="notesCard">
+      <h2>Detailed Notes</h2>
+      <textarea class="ta flat" id="vNotes" placeholder="">${esc(v.notes)}</textarea>
+    </div>
+
+    <div class="card edge orange">
+      <h2>To-Do</h2>
+      <div class="row">
+        <input class="in grow" id="newTodo" placeholder="Add a task">
+        <button class="btn pop" id="addTodo">Add</button>
+      </div>
+      <div id="todoList"></div>
+    </div>
+  </div>
+
+  <div class="card edge green" style="margin-top:16px;">
+    <h2>Thumbnail Showdown</h2>
+    <div class="thumb-comp" id="thumbComp"></div>
+  </div>
+
+  <div class="card edge pink" style="margin-top:16px;">
+    <h2>Sponsor, Collabs &amp; CTAs</h2>
+    <div class="two-col" style="margin-top:0;">
+      <div>
+        <label class="lbl">Sponsor / collab</label>
+        <textarea class="in" id="spName" rows="1" style="resize:none; overflow:hidden; line-height:1.5;" placeholder="">${esc(v.sponsor.name)}</textarea>
+        <label class="lbl">Deal type & deliverables</label>
+        <textarea class="in" id="spDeal" rows="1" style="resize:none; overflow:hidden; line-height:1.5;" placeholder="">${esc(v.sponsor.deal)}</textarea>
+      </div>
+      <div>
+        <label class="lbl">Talking points (one per line)</label>
+        <textarea class="ta" id="spPoints" style="min-height:90px;" placeholder="">${esc(v.sponsor.points)}</textarea>
+      </div>
+    </div>
+    <label class="lbl">CTAs to hit in this video</label>
+    <textarea class="ta" id="spCtas" style="min-height:70px;" placeholder="">${esc(v.sponsor.ctas)}</textarea>
+  </div>
+
+  <div class="card edge" id="descCard" style="margin-top:16px;"></div>`;
+
+  /* wire it up */
+  $('#backBtn').onclick = () => renderVideos();
+  $('#vDelete').onclick = () => {
+    if (!confirm('Delete this video planner? This can\'t be undone.')) return;
+    ['A','B','C'].forEach(k => v.thumbs[k] && deleteImage(v.thumbs[k]));
+    state.videos = state.videos.filter(x => x.id !== id);
+    save(); renderVideos();
+  };
+  $('#vStatus').onchange = e => { v.status = e.target.value; save(); };
+  $('#toFilm').onclick = () => {
+    state.filmSel = v.id; save();
+    gotoTab('film'); renderFilm();
+  };
+  $('#vTitle').oninput = e => { v.title = e.target.value.replace(/\n/g, ' '); save(); };
+  $('#vTitle').onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); e.target.blur(); } };
+  /* title ideas reveal when the title is clicked/focused; hide on click elsewhere */
+  $('#vNotes').oninput = e => { v.notes = e.target.value; save(); };
+  $('#spName').oninput = e => { v.sponsor.name = e.target.value; save(); };
+  $('#spDeal').oninput = e => { v.sponsor.deal = e.target.value; save(); };
+  $('#spPoints').oninput = e => { v.sponsor.points = e.target.value; save(); };
+  $('#spCtas').oninput = e => { v.sponsor.ctas = e.target.value; save(); };
+
+  const addIdeaFn = () => {
+    const t = $('#newIdea').value.trim(); if (!t) return;
+    v.titleIdeas.push({ id: uid(), text: t, starred: false });
+    $('#newIdea').value = ''; save(); renderIdeas(v);
+  };
+  $('#addIdea').onclick = addIdeaFn;
+  $('#newIdea').onkeydown = e => { if (e.key === 'Enter') addIdeaFn(); };
+
+  const addTodoFn = () => {
+    const t = $('#newTodo').value.trim(); if (!t) return;
+    v.todos.push({ id: uid(), text: t, done: false });
+    $('#newTodo').value = ''; save(); renderTodos(v);
+  };
+  $('#addTodo').onclick = addTodoFn;
+  $('#newTodo').onkeydown = e => { if (e.key === 'Enter') addTodoFn(); };
+
+  renderIdeas(v); renderTodos(v); renderThumbs(v); renderDescBuilder(v);
+  growAll(d);
+  requestAnimationFrame(syncNotesHeight);
+}
+
+function renderIdeas(v){
+  const sorted = [...v.titleIdeas].sort((a,b) => (b.starred?1:0) - (a.starred?1:0));
+  $('#ideaList').innerHTML = sorted.length ? sorted.map(i => `
+    <div class="idea-li ${i.starred?'star':''}" data-id="${i.id}">
+      <button class="icon-btn ${i.starred?'on':''}" data-act="star" title="Star to make this the title">${i.starred?'★':'☆'}</button>
+      <textarea class="t" rows="1">${esc(i.text)}</textarea>
+      <button class="icon-btn" data-act="del" title="Delete">✕</button>
+    </div>`).join('')
+    : '<div class="empty">No title ideas yet.</div>';
+  growAll($('#ideaList'));
+
+  $('#ideaList').onclick = e => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const row = e.target.closest('.idea-li');
+    const idea = v.titleIdeas.find(x => x.id === row.dataset.id);
+    if (b.dataset.act === 'star'){
+      const was = idea.starred;
+      v.titleIdeas.forEach(x => x.starred = false);
+      idea.starred = !was;
+      if (idea.starred){
+        v.title = idea.text;
+        const t = $('#vTitle');
+        if (t){ t.value = idea.text; autoGrow(t); }
+      }
+      save(); renderIdeas(v);
+    }
+    if (b.dataset.act === 'del'){ v.titleIdeas = v.titleIdeas.filter(x => x.id !== idea.id); save(); renderIdeas(v); }
+  };
+  $('#ideaList').oninput = e => {
+    if (!e.target.classList.contains('t')) return;
+    const idea = v.titleIdeas.find(x => x.id === e.target.closest('.idea-li').dataset.id);
+    if (idea){ idea.text = e.target.value; save(); }
+  };
+}
+
+function renderTodos(v){
+  const sorted = [...v.todos].sort((a,b) => (a.done?1:0)-(b.done?1:0));
+  $('#todoList').innerHTML = sorted.map(t => `
+    <div class="todo-li ${t.done?'done':''}" data-id="${t.id}">
+      <input type="checkbox" ${t.done?'checked':''}>
+      <textarea class="t" rows="1">${esc(t.text)}</textarea>
+      <button class="icon-btn" data-act="del" title="Delete">✕</button>
+    </div>`).join('') || '<div class="empty">No tasks yet. Auto-Sort a brain dump or add one above.</div>';
+  growAll($('#todoList'));
+  requestAnimationFrame(syncNotesHeight);
+
+  $('#todoList').onclick = e => {
+    const row = e.target.closest('.todo-li'); if (!row) return;
+    const t = v.todos.find(x => x.id === row.dataset.id);
+    if (e.target.type === 'checkbox'){ t.done = e.target.checked; save(); renderTodos(v); }
+    if (e.target.dataset.act === 'del'){ v.todos = v.todos.filter(x => x.id !== t.id); save(); renderTodos(v); }
+  };
+  $('#todoList').oninput = e => {
+    if (!e.target.classList.contains('t')) return;
+    const t = v.todos.find(x => x.id === e.target.closest('.todo-li').dataset.id);
+    if (t){ t.text = e.target.value; save(); }
+  };
+}
+
+function renderThumbs(v){
+  const comp = $('#thumbComp');
+  comp.innerHTML = ['A','B','C'].map(k => {
+    const imgId = v.thumbs[k];
+    return `<div class="tslot ${v.winner===k && imgId ? 'win':''}" data-slot="${k}">
+      <span class="label">${k}${v.winner===k && imgId ? ' · WINNER':''}</span>
+      ${imgId
+        ? `<img data-img-id="${imgId}" alt="Thumbnail ${k}" title="Click to replace">
+           <div class="foot">
+             <button data-act="win">${v.winner===k?'Winner':'Set winner'}</button>
+             <button data-act="lab">Lab</button>
+             <button data-act="del">Remove</button>
+           </div>`
+        : `<button class="ph" data-act="up"><span>Upload option ${k}</span></button>`}
+    </div>`;
+  }).join('');
+  hydrateImages(comp);
+
+  comp.onclick = async e => {
+    const slot = e.target.closest('.tslot'); if (!slot) return;
+    const k = slot.dataset.slot;
+    const act = e.target.closest('[data-act]')?.dataset.act;
+    if (act === 'up' || e.target.tagName === 'IMG'){
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.onchange = async () => {
+        if (!inp.files[0]) return;
+        if (v.thumbs[k]) deleteImage(v.thumbs[k]);
+        v.thumbs[k] = await storeImage(inp.files[0]);
+        if (!v.winner) v.winner = k;
+        save(); renderThumbs(v);
+      };
+      inp.click();
+    }
+    if (act === 'win'){ v.winner = k; save(); renderThumbs(v); }
+    if (act === 'del'){
+      deleteImage(v.thumbs[k]); v.thumbs[k] = null;
+      if (v.winner === k) v.winner = ['A','B','C'].find(x => v.thumbs[x]) || null;
+      save(); renderThumbs(v);
+    }
+    if (act === 'lab'){
+      state.lab.source = v.id + ':' + k; save();
+      gotoTab('lab'); renderLab();
+    }
+  };
+}
+
+/* =================================================================
+   DESCRIPTION BUILDER
+   ================================================================= */
+const DESC_SOCIALS_V2 = [
+  '🌐 Website: https://www.ryanretro.com',
+  '📸 Instagram: https://www.instagram.com/ryanretroyoutube',
+  '🎵 TikTok: https://www.tiktok.com/@ryanretroyoutube',
+  '👥 Facebook: https://www.facebook.com/RyanRetroYT',
+  '🧵 Threads: https://www.threads.com/@ryanretroyoutube',
+  '🐦 Twitter/X: https://x.com/RyanRetroYT',
+  '🦋 Bluesky: https://bsky.app/profile/ryanretro.bsky.social',
+  '📧 Email: ryanretro.contact@gmail.com',
+  '❤️ Support me on Patreon: https://www.patreon.com/c/RyanRetro',
+  '🇰🇷 My Korea Travel channel: https://www.youtube.com/channel/UC5G1QQybFSC5P8X6O5airIg',
+  '💬 Join the Discord community: https://discord.gg/RAenS43UV9'
+].join('\n');
+
+function DESC_DEVICES_V2(){
+  const D = (name, link) => ({ id: uid(), name, link });
+  return [
+    D('Retroid Pocket 6', 'Official: https://www.goretroid.com/collections/retro-game-system/products/retroid-pocket-6-handheld?sca_ref=7339476.fIz7oKv7uT'),
+    D('Steam Deck', 'Amazon: https://amzn.to/3XSu5Fe'),
+    D('Retroid Pocket 5', 'Official: https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT\nAliExpress: https://s.click.aliexpress.com/e/_c4PGUhcl'),
+    D('Mangmi Air X', 'Official: https://mangmi.com/products/mangmi-air-x?sca_ref=9852375.YfyNu8ytC8akr'),
+    D('Retroid Pocket Mini V2', 'Official: https://www.goretroid.com/products/retroid-pocket-mini-v2-handheld?sca_ref=7339476.fIz7oKv7uT\nAliExpress: https://s.click.aliexpress.com/e/_c2viGFHB\nAmazon: https://amzn.to/4iXk4jH'),
+    D('Ayaneo Pocket Air Mini', 'AliExpress: https://s.click.aliexpress.com/e/_c34ldFrn'),
+    D('TrimUI Smart Pro S', 'AliExpress: https://s.click.aliexpress.com/e/_c3d4sfRf'),
+    D('TrimUI Smart Pro', 'Amazon: https://amzn.to/4piaw4j\nAliExpress: https://s.click.aliexpress.com/e/_c3po77XX'),
+    D('Retroid Pocket Classic', 'Official: https://www.goretroid.com/products/retroid-pocket-classic?sca_ref=7339476.fIz7oKv7uT\nAliExpress: https://s.click.aliexpress.com/e/_c3BX5yfb'),
+    D('Retroid Pocket Flip 2', 'Official: https://www.goretroid.com/products/retroid-pocket-flip-2?sca_ref=7339476.fIz7oKv7uT'),
+    D('Retroid Pocket G2', 'Official: https://www.goretroid.com/products/retroid-pocket-g2-handheld?sca_ref=7339476.fIz7oKv7uT\nAliExpress: https://s.click.aliexpress.com/e/_c3a6yCjb'),
+    D('Anbernic RG34XX', 'Amazon: https://amzn.to/49kYAZJ\nAliExpress: https://s.click.aliexpress.com/e/_c3cp23I9'),
+    D('Miyoo Mini v4', 'AliExpress: https://s.click.aliexpress.com/e/_c3b0uLQt'),
+    D('Miyoo Mini Plus', 'AliExpress: https://s.click.aliexpress.com/e/_c4n4CCil'),
+    D('AYN Odin 3', 'Official: https://www.ayntec.com/products/ayn-odin-3?sca_ref=8254425.fM33Fgl5td'),
+    D('AYN Odin2 Portal', 'Official: https://www.ayntec.com/products/odin2-portal?sca_ref=8254425.fM33Fgl5td'),
+    D('AYN Thor', 'Official: https://www.ayntec.com/products/ayn-thor?sca_ref=8254425.fM33Fgl5td'),
+    D('Anbernic RG477V', 'AliExpress: https://s.click.aliexpress.com/e/_c3nmWU5X'),
+    D('TrimUI Brick Hammer', 'Official: https://www.trimuistore.com/products/trimui-brick-hammer-handheld-game-console?sca_ref=9846443.gwM5071BNJJv\nAmazon: https://amzn.to/3MBZ1qY\nPowKiddy: https://powkiddy.com/products/new-trimui-brick-hammer-handheld-console?ref=ryanretro'),
+    D('TrimUI Brick', 'Official: https://www.trimuistore.com/products/trimui-brick-retro-handheld-game-console?sca_ref=9846443.gwM5071BNJJv\nAmazon: https://amzn.to/4j3t2Mw\nPowKiddy: https://powkiddy.com/products/trimui-brick-handheld-game-console?ref=ryanretro')
+  ];
+}
+
+const DESC_OUTROS = [
+  'Thank you so much for watching! ❤️',
+  'I really appreciate you spending your time here with me — see you in the next one! ❤️',
+  'Thanks for watching! If you enjoyed this one, a like or a comment genuinely makes my day ❤️',
+  'Thank you for being here — this channel exists because of viewers like you ❤️'
+];
+
+function ensureDescGlobals(){
+  if (!state.descGlobals){
+    state.descGlobals = { v: 2, store: 'https://www.ryanretro.com/store', editor: 'KeidenEdits',
+      socials: DESC_SOCIALS_V2, devices: DESC_DEVICES_V2() };
+    return;
+  }
+  const G = state.descGlobals;
+  if (!G.v || G.v < 2){
+    G.devices = DESC_DEVICES_V2();
+    G.socials = DESC_SOCIALS_V2;
+    G.v = 2;
+    state.videos.forEach(x => { if (x.desc) x.desc.devices = []; });  // old ids no longer exist
+  }
+}
+function ensureDesc(v){
+  if (!v.desc) v.desc = { intro:'Hello everyone, in this video we ', devices:[], extras:[], sponsorOn:false, sponsorText:'', sponsorTouched:false, editorOn:false, timestampsOn:true, timestamps:'', outro:0 };
+  if (v.desc.outro == null) v.desc.outro = 0;
+  if (v.desc.timestamps == null) v.desc.timestamps = '';
+  if (!v.desc.intro) v.desc.intro = 'Hello everyone, in this video we ';
+  /* auto-set the sponsor section from the Sponsor card, until the user touches the toggle */
+  if (v.sponsor && v.sponsor.name && !v.desc.sponsorTouched && !v.desc.sponsorOn && !v.desc.sponsorText.trim()){
+    v.desc.sponsorOn = true;
+    v.desc.sponsorText = descSponsorTemplate(v);
+  }
+}
+function descSponsorTemplate(v){
+  const name = (v.sponsor && v.sponsor.name) || 'SPONSOR';
+  return 'This video is sponsored by ' + name + '! Check them out here: LINK';
+}
+
+const DESC_DIV = '━'.repeat(25);
+
+function buildDescription(v){
+  ensureDescGlobals(); ensureDesc(v);
+  const G = state.descGlobals, d = v.desc;
+  const parts = [];
+  if (d.intro.trim()) parts.push(d.intro.trim());
+
+  const devs = d.devices.map(id => G.devices.find(x => x.id === id)).filter(Boolean);
+  const linkLines = dv => (dv.link || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const shop = [];
+  if (devs.length){
+    const names = devs.map(x => x.name);
+    const joined = names.length === 1 ? names[0]
+      : names.length === 2 ? `${names[0]} or ${names[1]}`
+      : `${names.slice(0, -1).join(', ')}, or ${names[names.length - 1]}`;
+    const many = devs.length > 1 || linkLines(devs[0]).length > 1;
+    shop.push(`🎮 If you’d like to buy your own ${joined}, you can use my affiliate link${many ? 's' : ''} below — it supports the channel at no extra cost to you:`);
+    if (devs.length === 1){
+      linkLines(devs[0]).forEach(l => shop.push(l));
+    } else {
+      devs.forEach(dv => {
+        const lines = linkLines(dv);
+        if (lines.length <= 1) shop.push(`🕹️ ${dv.name} — ${lines[0] || ''}`);
+        else { shop.push(`🕹️ ${dv.name}`); lines.forEach(l => shop.push('    ' + l)); }
+      });
+    }
+    shop.push('');
+  }
+  shop.push(`🛒 All my affiliate links: ${G.store}`);
+  parts.push(shop.join('\n'));
+
+  if (d.sponsorOn && d.sponsorText.trim()) parts.push('🤝 ' + d.sponsorText.trim());
+
+  const extras = (d.extras || []).filter(x => (x.label || '').trim() || (x.url || '').trim());
+  if (extras.length) parts.push(extras.map(x => `${(x.label || '').trim()}: ${(x.url || '').trim()}`).join('\n'));
+
+  parts.push('🔗 Let’s stay connected — come say hi:\n' + G.socials);
+  if (d.editorOn) parts.push(`🎨 Edited by ${G.editor}`);
+  if (d.timestampsOn) parts.push('⏰ Timestamps:\n' + (d.timestamps.trim() || '0:00 Intro'));
+  if (d.outro >= 0 && DESC_OUTROS[d.outro]) parts.push(DESC_OUTROS[d.outro]);
+
+  return parts.join('\n' + DESC_DIV + '\n');
+}
+
+function renderDescBuilder(v){
+  ensureDescGlobals(); ensureDesc(v);
+  const G = state.descGlobals, d = v.desc;
+  const card = $('#descCard'); if (!card) return;
+
+  card.innerHTML = `
+    <h2>Description Builder</h2>
+    <div class="two-col" style="margin-top:0;">
+      <div>
+        <label class="lbl">Intro paragraph</label>
+        <textarea class="ta" id="descIntro" style="min-height:90px;">${esc(d.intro)}</textarea>
+
+        <label class="lbl">Handhelds featured</label>
+        <button class="btn" id="descDevBtn" style="width:100%; justify-content:space-between;"><span id="descDevLabel">${
+          d.devices.length ? esc(d.devices.map(id => (G.devices.find(x=>x.id===id)||{}).name).filter(Boolean).join(', ')) : 'Choose handhelds'
+        }</span><span>▾</span></button>
+        <div id="descDevPanel" style="display:none; max-height:230px; overflow-y:auto; border:1px solid var(--sep); border-radius:5px; padding:0 8px; margin-top:6px;">${G.devices.map(dv => `
+          <label class="todo-li" style="cursor:pointer;">
+            <input type="checkbox" data-dev="${dv.id}" ${d.devices.includes(dv.id)?'checked':''}>
+            <span class="t">${esc(dv.name)}</span>
+          </label>`).join('')}</div>
+
+        <label class="lbl">Extra links (guides, related videos)</label>
+        <div id="descExtras">${(d.extras||[]).map(x => `
+          <div class="row" data-ex="${x.id}" style="margin-top:6px;">
+            <input class="in" data-f="label" value="${esc(x.label)}" placeholder="Label" style="flex:1; min-width:90px;">
+            <input class="in" data-f="url" value="${esc(x.url)}" placeholder="https://…" style="flex:2; min-width:120px;">
+            <button class="icon-btn" data-act="exdel">✕</button>
+          </div>`).join('')}</div>
+        <button class="btn ghost" id="descAddExtra" style="margin-top:8px;">+ Link</button>
+
+        <label class="lbl">Sections</label>
+        <label class="todo-li" style="cursor:pointer;"><input type="checkbox" id="descSponsorOn" ${d.sponsorOn?'checked':''}><span class="t">Sponsor</span></label>
+        <textarea class="ta" id="descSponsorText" style="min-height:56px; ${d.sponsorOn?'':'display:none;'}">${esc(d.sponsorText)}</textarea>
+        <label class="todo-li" style="cursor:pointer;"><input type="checkbox" id="descEditorOn" ${d.editorOn?'checked':''}><span class="t">Editor credit</span>
+          <input class="in" id="descEditorName" value="${esc(G.editor)}" style="width:150px; padding:5px 9px; font-size:12px;"></label>
+        <label class="todo-li" style="cursor:pointer;"><input type="checkbox" id="descTimeOn" ${d.timestampsOn?'checked':''}><span class="t">Timestamps</span>
+          <button class="btn ghost" id="descPasteTimes" style="${d.timestampsOn?'':'display:none;'}">Paste</button></label>
+        <textarea class="ta" id="descTimes" style="min-height:56px; font-size:12px; line-height:1.5; ${d.timestampsOn?'':'display:none;'}" placeholder="Paste your timestamps here for safekeeping">${esc(d.timestamps)}</textarea>
+
+        <label class="lbl">Outro message</label>
+        <select class="in" id="descOutro">
+          ${DESC_OUTROS.map((o,i) => `<option value="${i}" ${d.outro===i?'selected':''}>${esc(o)}</option>`).join('')}
+          <option value="-1" ${d.outro===-1?'selected':''}>None</option>
+        </select>
+
+        <button class="btn ghost" id="descGlobalsBtn" style="margin-top:12px;">Edit devices, links &amp; socials ▾</button>
+        <div id="descGlobals" style="display:none; margin-top:10px; border-top:1px solid var(--sep); padding-top:10px;">
+          <label class="lbl">Devices &amp; affiliate links</label>
+          <div id="descDevEdit">${G.devices.map(dv => `
+            <div class="row" data-dv="${dv.id}" style="margin-top:6px; align-items:flex-start;">
+              <input class="in" data-f="name" value="${esc(dv.name)}" placeholder="Device name" style="flex:1; min-width:90px;">
+              <textarea class="in" data-f="link" rows="1" placeholder="Label: link (one per line)" style="flex:2; min-width:120px; resize:none; overflow:hidden;">${esc(dv.link)}</textarea>
+              <button class="icon-btn" data-act="dvdel">✕</button>
+            </div>`).join('')}</div>
+          <button class="btn ghost" id="descAddDev" style="margin-top:8px;">+ Device</button>
+          <label class="lbl">Store link</label>
+          <input class="in" id="descStore" value="${esc(G.store)}">
+          <label class="lbl">Socials block</label>
+          <textarea class="ta" id="descSocials" style="min-height:140px;">${esc(G.socials)}</textarea>
+        </div>
+      </div>
+      <div>
+        <label class="lbl">Preview</label>
+        <textarea class="ta" id="descPreview" readonly style="font-size:12px; line-height:1.6;"></textarea>
+        <button class="btn brand" id="descCopy" style="margin-top:10px;">Copy description</button>
+      </div>
+    </div>`;
+
+  const updatePreview = () => {
+    const ta = $('#descPreview');
+    ta.value = buildDescription(v);
+    autoGrow(ta);
+  };
+
+  /* text fields update data + preview without re-rendering (keeps focus) */
+  card.oninput = e => {
+    const t = e.target;
+    if (t.id === 'descIntro'){ d.intro = t.value; }
+    else if (t.id === 'descSponsorText'){ d.sponsorText = t.value; }
+    else if (t.id === 'descTimes'){ d.timestamps = t.value; }
+    else if (t.id === 'descEditorName'){ G.editor = t.value; }
+    else if (t.id === 'descStore'){ G.store = t.value; }
+    else if (t.id === 'descSocials'){ G.socials = t.value; }
+    else if (t.closest('[data-ex]')){
+      const x = d.extras.find(z => z.id === t.closest('[data-ex]').dataset.ex);
+      if (x) x[t.dataset.f] = t.value;
+    }
+    else if (t.closest('[data-dv]')){
+      const dv = G.devices.find(z => z.id === t.closest('[data-dv]').dataset.dv);
+      if (dv) dv[t.dataset.f] = t.value;
+    }
+    else return;
+    save(); updatePreview();
+  };
+
+  card.onclick = e => {
+    if (e.target.id === 'descCopy'){
+      const text = buildDescription(v);
+      const done = () => toast('Description copied — paste it into YouTube');
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(() => {
+          const ta = $('#descPreview'); ta.select(); document.execCommand('copy'); done();
+        });
+      } else { const ta = $('#descPreview'); ta.select(); document.execCommand('copy'); done(); }
+      return;
+    }
+    if (e.target.id === 'descPasteTimes'){
+      const ta = $('#descTimes');
+      if (navigator.clipboard && navigator.clipboard.readText){
+        navigator.clipboard.readText().then(text => {
+          if (!text){ toast('Clipboard is empty — paste into the box instead'); ta.focus(); return; }
+          d.timestamps = text.trim();
+          ta.value = d.timestamps; autoGrow(ta);
+          save(); updatePreview();
+          toast('Timestamps pasted');
+        }).catch(() => { toast('Clipboard blocked — click the box and press Ctrl/Cmd+V'); ta.focus(); });
+      } else { toast('Click the box and press Ctrl/Cmd+V'); ta.focus(); }
+      return;
+    }
+    if (e.target.id === 'descAddExtra'){ d.extras.push({ id: uid(), label:'', url:'' }); save(); renderDescBuilder(v); return; }
+    if (e.target.id === 'descAddDev'){ G.devices.push({ id: uid(), name:'', link:'' }); save(); renderDescBuilder(v); return; }
+    if (e.target.dataset.act === 'exdel'){
+      d.extras = d.extras.filter(z => z.id !== e.target.closest('[data-ex]').dataset.ex);
+      save(); renderDescBuilder(v); return;
+    }
+    if (e.target.dataset.act === 'dvdel'){
+      const id = e.target.closest('[data-dv]').dataset.dv;
+      G.devices = G.devices.filter(z => z.id !== id);
+      state.videos.forEach(x => { if (x.desc) x.desc.devices = x.desc.devices.filter(i => i !== id); });
+      save(); renderDescBuilder(v); return;
+    }
+    if (e.target.closest('#descDevBtn')){
+      const p = $('#descDevPanel');
+      p.style.display = p.style.display === 'none' ? '' : 'none';
+      return;
+    }
+    if (e.target.id === 'descGlobalsBtn'){
+      const p = $('#descGlobals');
+      const open = p.style.display === 'none';
+      p.style.display = open ? '' : 'none';
+      e.target.textContent = 'Edit devices, links & socials ' + (open ? '▴' : '▾');
+      if (open) growAll(p);
+      return;
+    }
+  };
+
+  card.onchange = e => {
+    const t = e.target;
+    if (t.dataset.dev){
+      if (t.checked){ if (!d.devices.includes(t.dataset.dev)) d.devices.push(t.dataset.dev); }
+      else d.devices = d.devices.filter(i => i !== t.dataset.dev);
+      const lbl = $('#descDevLabel');
+      if (lbl) lbl.textContent = d.devices.length
+        ? d.devices.map(id => (state.descGlobals.devices.find(x=>x.id===id)||{}).name).filter(Boolean).join(', ')
+        : 'Choose handhelds';
+      save(); updatePreview(); return;
+    }
+    if (t.id === 'descSponsorOn'){
+      d.sponsorOn = t.checked;
+      d.sponsorTouched = true;
+      if (t.checked && !d.sponsorText.trim()) d.sponsorText = descSponsorTemplate(v);
+      save(); renderDescBuilder(v); return;
+    }
+    if (t.id === 'descEditorOn'){ d.editorOn = t.checked; save(); updatePreview(); return; }
+    if (t.id === 'descTimeOn'){ d.timestampsOn = t.checked; save(); renderDescBuilder(v); return; }
+    if (t.id === 'descOutro'){ d.outro = parseInt(t.value, 10); save(); updatePreview(); return; }
+  };
+
+  updatePreview();
+  growAll(card);
+}
+
+/* =================================================================
+   FILMING MODE — blank "what I'm gonna say" list, fully yours
+   ================================================================= */
+function renderFilm(){
+  const sel = $('#filmSelect');
+  const active = state.videos.filter(v => v.status !== 'Published');
+  sel.innerHTML = '<option value="">Choose a video</option>' +
+    active.map(v => `<option value="${v.id}" ${state.filmSel===v.id?'selected':''}>${esc(v.title || 'Untitled')}</option>`).join('');
+  sel.onchange = () => { state.filmSel = sel.value; save(); renderFilm(); };
+  const cur = state.videos.find(x => x.id === state.filmSel);
+  $('#filmTitleDisplay').innerHTML = (cur ? esc(cur.title || 'Untitled video') : 'Choose a video') + '<span class="title-caret">▾</span>';
+  renderFilmBody();
+}
+
+function renderFilmBody(){
+  const body = $('#filmBody');
+  const v = state.videos.find(x => x.id === state.filmSel);
+  if (!v){ body.innerHTML = '<div class="empty">Pick a video above and your talking points appear here.</div>'; return; }
+
+  if (!Array.isArray(v.say)) v.say = [];
+  const pts = v.say.filter(p => p.type !== 'sec');
+  const total = pts.length;
+  const done = pts.filter(p => p.done).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  const sponsorBits = [v.sponsor.name && ('Sponsor: ' + v.sponsor.name), v.sponsor.points, v.sponsor.ctas].filter(Boolean).join('\n');
+
+  body.innerHTML = `
+    <div class="sticky-prog" style="margin-top:14px;">
+      <span>${done}/${total} done</span>
+      <div class="bar" style="flex:1; background:#fff;"><i style="width:${pct}%"></i></div>
+      <button class="btn ghost" id="toNote">← Video note</button>
+      <button class="btn ghost" id="resetSay">Reset</button>
+    </div>
+    ${sponsorBits ? `<div class="sponsor-flag"><b>Don't forget on camera:</b><br><span style="white-space:pre-wrap;">${esc(sponsorBits)}</span></div>` : ''}
+    <div class="film-check" style="margin-top:16px;">
+      ${v.say.map(p => p.type === 'sec' ? `
+        <div class="fitem fdiv secc-${p.color || 'teal'}" data-say="${p.id}">
+          <textarea rows="1" class="secname" placeholder="Section" title="Double-click the band to change colour">${esc(p.text)}</textarea>
+          <button class="icon-btn" data-act="del" title="Delete">✕</button>
+        </div>` : `
+        <div class="fitem ${p.done?'done':''}" data-say="${p.id}">
+          <input type="checkbox" ${p.done?'checked':''}>
+          <textarea rows="1" placeholder="">${esc(p.text)}</textarea>
+          <button class="icon-btn" data-act="del" title="Delete">✕</button>
+        </div>`).join('')}
+      ${v.say.length ? '' : '<div class="empty">Add the points you want to say, in the order your video flows.</div>'}
+    </div>
+    <div class="fadd" style="margin-top:12px;">
+      <input id="sayAddInput" placeholder='Add a point' enterkeyhint="done">
+      <button class="btn pop" data-act="add">+ Add</button>
+      <button class="btn" data-act="addsec" title="Add a section divider">+ Section</button>
+    </div>`;
+
+  growAll(body);
+  wireSayReorder(body, v);
+
+  const addPoint = () => {
+    const inp = $('#sayAddInput');
+    const t = inp.value.trim(); if (!t) return;
+    v.say.push({ id: uid(), text: t, done: false });
+    save(); renderFilmBody();
+    const ni = $('#sayAddInput');
+    if (ni) ni.focus();
+  };
+
+  const SECC = ['teal','blue','green','purple','amber','rose'];
+  body.onclick = e => {
+    if (e.target.closest('[data-act="add"]')){ addPoint(); return; }
+    if (e.target.closest('[data-act="addsec"]')){
+      const inp = $('#sayAddInput');
+      const name = inp.value.trim();
+      const used = v.say.filter(p => p.type === 'sec').length;
+      v.say.push({ id: uid(), type: 'sec', text: name || 'Section', color: SECC[used % SECC.length] });
+      if (name) inp.value = '';
+      save(); renderFilmBody();
+      const rows = body.querySelectorAll('.fdiv .secname');
+      const last = rows[rows.length - 1];
+      if (last && !name){ last.focus(); last.select(); }
+      return;
+    }
+
+    const del = e.target.closest('[data-act="del"]');
+    if (del){
+      const id = del.closest('.fitem').dataset.say;
+      v.say = v.say.filter(p => p.id !== id);
+      save(); renderFilmBody(); return;
+    }
+    if (e.target.type === 'checkbox'){
+      const row = e.target.closest('.fitem');
+      if (row && row.dataset.say){
+        const p = v.say.find(x => x.id === row.dataset.say);
+        if (p){ p.done = e.target.checked; save(); renderFilmBody(); }
+      }
+    }
+  };
+  body.oninput = e => {
+    if (e.target.tagName !== 'TEXTAREA') return;
+    const row = e.target.closest('.fitem');
+    if (row && row.dataset.say){
+      const p = v.say.find(x => x.id === row.dataset.say);
+      if (p){ p.text = e.target.value; save(); }
+    }
+  };
+  body.onkeydown = e => {
+    if (e.key === 'Enter' && e.target.id === 'sayAddInput'){ e.preventDefault(); addPoint(); }
+  };
+  body.ondblclick = e => {
+    const div = e.target.closest('.fdiv');
+    if (!div) return;
+    const p = v.say.find(x => x.id === div.dataset.say);
+    if (p){ p.color = SECC[(SECC.indexOf(p.color || 'teal') + 1) % SECC.length]; save(); renderFilmBody(); }
+  };
+  $('#toNote').onclick = () => { gotoTab('videos'); openVideo(v.id); };
+  $('#resetSay').onclick = () => { v.say.forEach(p => { if (p.type !== 'sec') p.done = false; }); save(); renderFilmBody(); };
+}
+
+/* Drag rows to reorder talking points — grab anywhere on a row that isn't
+   the checkbox, the text, or a button. No handles, just a grab cursor. */
+function wireSayReorder(body, v){
+  const list = body.querySelector('.film-check');
+  if (!list) return;
+  list.querySelectorAll('.fitem[data-say]').forEach(row => {
+    row.addEventListener('mousedown', e => {
+      if (e.target.closest('input, textarea, button')) return;
+      row.draggable = true;
+    });
+    row.addEventListener('dragstart', e => {
+      if (!row.draggable){ e.preventDefault(); return; }
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', '');
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      row.draggable = false;
+      const order = [...list.querySelectorAll('.fitem[data-say]')].map(el => el.dataset.say);
+      v.say.sort((a,b) => order.indexOf(a.id) - order.indexOf(b.id));
+      save();
+    });
+  });
+  if (!list._dnd){
+    list._dnd = true;
+    list.addEventListener('dragover', e => {
+      const dragging = list.querySelector('.fitem.dragging');
+      if (!dragging) return;
+      e.preventDefault();
+      const rows = [...list.querySelectorAll('.fitem[data-say]:not(.dragging)')];
+      const after = rows.find(r => e.clientY < r.getBoundingClientRect().top + r.offsetHeight / 2);
+      if (after) list.insertBefore(dragging, after);
+      else list.appendChild(dragging);
+    });
+  }
+  document.addEventListener('mouseup', () => {
+    list.querySelectorAll('.fitem').forEach(r => { if (!r.classList.contains('dragging')) r.draggable = false; });
+  }, { once: true });
+}
+
+/* =================================================================
+   THUMBNAIL LAB
+   ================================================================= */
+const FAKE_META = [
+  ['Retro Game Corps','1.2M views · 3 days ago','18:42'],
+  ['Wicked Gamer','487K views · 1 week ago','12:05'],
+  ['Taki Udon','390K views · 5 days ago','15:31'],
+  ['Joey\'s Retro Handhelds','210K views · 2 weeks ago','21:09'],
+  ['Retro Dodo','98K views · 4 days ago','9:58'],
+  ['The Retro Future','305K views · 6 days ago','14:22'],
+  ['Mr. Sujano','156K views · 1 day ago','11:47'],
+  ['ETA Prime','602K views · 1 week ago','13:14']
+];
+
+function renderLab(){
+  /* picker options: every uploaded thumb across videos */
+  const pick = $('#labPick');
+  const opts = [];
+  state.videos.forEach(v => ['A','B','C'].forEach(k => {
+    if (v.thumbs[k]) opts.push({ val: v.id + ':' + k, label: `${v.title || 'Untitled'} — Option ${k}${v.winner===k?' (winner)':''}` });
+  }));
+  pick.innerHTML = '<option value="">— Pick one of your thumbnails —</option>' +
+    opts.map(o => `<option value="${o.val}" ${state.lab.source===o.val?'selected':''}>${esc(o.label)}</option>`).join('');
+  pick.onchange = () => { state.lab.source = pick.value; state.lab.order = null; save(); renderLab(); };
+
+  /* resolve my thumbnail image id */
+  let myImgId = null;
+  if (state.lab.source){
+    if (state.lab.source.startsWith('up:')) myImgId = state.lab.source.slice(3);
+    else {
+      const [vid, k] = state.lab.source.split(':');
+      const v = state.videos.find(x => x.id === vid);
+      myImgId = v && v.thumbs[k];
+    }
+  }
+
+  const grid = $('#ytGrid');
+  grid.className = 'yt ' + state.lab.size + (state.lab.highlight ? '' : ' hidemine');
+  $('#revealBtn').textContent = state.lab.highlight ? 'Highlight mine: ON' : 'Highlight mine: OFF';
+  $$('#sizeSeg button').forEach(b => b.classList.toggle('on', b.dataset.size === state.lab.size));
+
+  if (!state.competitors.length && !myImgId){
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;">Drag your competitor thumbnail images here (or use Add) — they save permanently. Then pick one of yours and see if it wins the scroll.</div>';
+    return;
+  }
+
+  /* build cards: competitors + mine, with stable shuffle order */
+  const cards = state.competitors.map((c,i) => ({ key:'c'+c.id, imgId:c.imgId, mine:false, comp:c.id, meta: FAKE_META[i % FAKE_META.length] }));
+  if (myImgId){
+    const myV = state.lab.source.startsWith('up:') ? null : state.videos.find(x => x.id === state.lab.source.split(':')[0]);
+    cards.push({ key:'me', imgId: myImgId, mine:true, meta:[ 'Ryan Retro', 'Just now', '16:20' ], title: myV ? myV.title : 'Your thumbnail' });
+  }
+  if (!state.lab.order || state.lab.order.length !== cards.length){
+    state.lab.order = cards.map(c => c.key).sort(() => Math.random() - .5);
+  }
+  cards.sort((a,b) => state.lab.order.indexOf(a.key) - state.lab.order.indexOf(b.key));
+
+  grid.innerHTML = cards.map(c => `
+    <div class="ytc ${c.mine?'mine':''}">
+      <div class="tn">
+        ${c.comp ? `<button class="rm" data-comp="${c.comp}" title="Remove">×</button>` : ''}
+        <img data-img-id="${c.imgId}" alt="">
+        <span class="dur">${c.meta[2]}</span>
+      </div>
+      <div class="info">
+        <div class="av">${c.mine ? 'R' : esc(c.meta[0][0])}</div>
+        <div>
+          <div class="tt">${esc(c.mine ? (c.title || 'Your video') : 'Competitor upload — does yours beat this?')}</div>
+          <div class="ch">${esc(c.meta[0])} · ${esc(c.meta[1])}</div>
+        </div>
+      </div>
+    </div>`).join('');
+  hydrateImages(grid);
+
+  grid.onclick = e => {
+    const rm = e.target.closest('.rm'); if (!rm) return;
+    const comp = state.competitors.find(c => c.id === rm.dataset.comp);
+    if (comp && comp.imgId) deleteImage(comp.imgId);
+    state.competitors = state.competitors.filter(c => c.id !== rm.dataset.comp);
+    state.lab.order = null; save(); renderLab();
+  };
+}
+
+$('#sizeSeg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  state.lab.size = b.dataset.size; save(); renderLab();
+});
+$('#shuffleBtn').addEventListener('click', () => { state.lab.order = null; save(); renderLab(); });
+$('#revealBtn').addEventListener('click', () => { state.lab.highlight = !state.lab.highlight; save(); renderLab(); });
+$('#compUploadBtn').addEventListener('click', () => $('#compFile').click());
+$('#compFile').addEventListener('change', () => {
+  uploadCompetitors([...$('#compFile').files]);
+  $('#compFile').value = '';
+});
+
+async function uploadCompetitors(files){
+  files = files.filter(f => f.type.startsWith('image/') || /\.(jpe?g|png|webp|gif)$/i.test(f.name));
+  const status = $('#labStatus');
+  if (!files.length){ status.textContent = 'No image files detected in that selection.'; return; }
+  let ok = 0; const errors = [];
+  for (let i = 0; i < files.length; i++){
+    status.textContent = `Uploading ${i+1}/${files.length}…`;
+    try {
+      const imgId = await storeImage(files[i]);
+      state.competitors.push({ id: uid(), imgId });
+      ok++;
+      state.lab.order = null;
+      save(); renderLab();           // show progress live, keep partial progress safe
+    } catch(e){
+      console.error('Upload failed for', files[i].name, e);
+      errors.push(files[i].name + ': ' + e.message);
+    }
+  }
+  status.textContent = errors.length
+    ? `Added ${ok} of ${files.length} — failed: ${errors[0]}${errors.length > 1 ? ` (+${errors.length-1} more)` : ''}`
+    : `Added ${ok} thumbnail${ok===1?'':'s'} ✔`;
+  if (errors.length) toast(errors.length + ' upload' + (errors.length>1?'s':'') + ' failed — details next to the Add button');
+}
+$('#labUploadBtn').addEventListener('click', () => $('#labFile').click());
+$('#labFile').addEventListener('change', async () => {
+  const f = $('#labFile').files[0]; if (!f) return;
+  const imgId = await storeImage(f);
+  state.lab.source = 'up:' + imgId; state.lab.order = null;
+  $('#labFile').value = ''; save(); renderLab();
+});
+
+/* drag & drop competitor thumbs anywhere on the lab grid */
+const labView = $('#view-lab');
+labView.addEventListener('dragover', e => { e.preventDefault(); $('#ytGrid').style.outline = '2px dashed var(--brand)'; });
+labView.addEventListener('dragleave', () => { $('#ytGrid').style.outline = ''; });
+labView.addEventListener('drop', e => {
+  e.preventDefault(); $('#ytGrid').style.outline = '';
+  uploadCompetitors([...e.dataTransfer.files]);
+});
+
+/* =================================================================
+   INIT
+   ================================================================= */
+(async function init(){
+  await loadState();
+  /* storage health check — uses the retry queue, warns only if it truly can't save */
+  setWithRetry('ping', '1').then(ok => {
+    if (!ok) toast('Storage is unreachable right now — changes won\'t persist. Try reloading in a minute.');
+  });
+  if (!state.theme) state.theme = (matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  applyTheme();
+  if (!isArtifact){
+    const sb = $('#syncBtn');
+    sb.style.display = '';
+    sb.textContent = syncToken() ? 'Sync ✓' : 'Sync';
+    sb.onclick = async () => { await setupSync(); sb.textContent = syncToken() ? 'Sync ✓' : 'Sync'; };
+  }
+  dumpText.value = state.dump || '';
+  autoGrow(dumpText);
+  $('#dumpCount').textContent = state.dump && state.dump.trim() ? state.dump.trim().split(/\s+/).length + ' words' : '';
+  renderInspo(); renderHistory(); renderVideos(); renderFilm();
+})();
+</script>
+</body>
+</html>
