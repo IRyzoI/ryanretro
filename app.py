@@ -10,9 +10,6 @@ import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
 from datetime import datetime
 
-from planner_api import router as planner_router
-app.include_router(planner_router, prefix="/api/planner")
-
 import httpx
 import markdown
 from fastapi import FastAPI, HTTPException, Response, Request
@@ -37,6 +34,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Creator Planner sync API (stores data in Postgres)
+from planner_api import router as planner_router
+app.include_router(planner_router, prefix="/api/planner")
 
 # --------------------------------------------------------------------------------------
 # Config
