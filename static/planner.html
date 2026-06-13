@@ -45,6 +45,12 @@ textarea,input,select{font-family:inherit; color:var(--ink);}
 .logo h1{font-size:23px; line-height:1.05; color:var(--title); letter-spacing:-0.8px;}
 .logo h1 span{color:var(--teal);}
 .savedot{margin-left:auto; font-size:11.5px; font-weight:600; color:var(--soft); display:flex; align-items:center; gap:6px;}
+.topbar-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+@media (max-width:560px){
+  .topbar{padding:10px 14px; gap:8px;}
+  .topbar-actions{gap:6px; width:100%;}
+  .topbar-actions .btn{padding:6px 11px; font-size:11.5px; flex:1 1 auto;}
+}
 .savedot i{width:9px;height:9px;border-radius:50%;background:var(--green);display:inline-block;}
 
 /* ---------- tabs ---------- */
@@ -430,11 +436,13 @@ body.dark .empty{color:#7B82A3;}
     <h1>RYAN RETRO <span>CREATOR PLANNER</span></h1>
   </div>
   <div class="savedot" id="saveDot"><i></i><span id="saveText">Saved</span></div>
-  <button class="btn ghost" id="syncBtn" title="Sync this device with ryanretro.com" style="display:none;">Sync</button>
-  <button class="btn ghost" id="backupBtn" title="Download a backup of everything">Backup</button>
-  <button class="btn ghost" id="restoreBtn" title="Restore from a backup file">Restore</button>
-  <input type="file" id="restoreFile" accept="application/json,.json" hidden>
-  <button class="btn ghost" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode">Dark mode</button>
+  <div class="topbar-actions">
+    <button class="btn ghost" id="syncBtn" title="Sync this device with ryanretro.com" style="display:none;">Sync</button>
+    <button class="btn ghost" id="backupBtn" title="Download a backup of everything">Backup</button>
+    <button class="btn ghost" id="restoreBtn" title="Restore from a backup file">Restore</button>
+    <input type="file" id="restoreFile" accept="application/json,.json" hidden>
+    <button class="btn ghost" id="themeBtn" title="Toggle dark mode" aria-label="Toggle dark mode">Dark mode</button>
+  </div>
 </header>
 
 <nav class="tabs" id="tabs">
@@ -1347,7 +1355,7 @@ function openVideo(id){
   <div class="crumb">
     <button class="btn ghost" id="backBtn">← All videos</button>
     <select class="in" id="vStatus" style="width:auto;">${STATUSES.map(s => `<option ${s===v.status?'selected':''}>${s}</option>`).join('')}</select>
-    <button class="btn ghost" id="toFilm">Filming Mode →</button>
+    <button class="btn ghost" id="toFilm">Filming Mode</button>
     <button class="btn ghost red" id="vDelete" style="margin-left:auto;">Delete</button>
   </div>
 
@@ -1880,7 +1888,8 @@ function renderFilmBody(){
     <div class="sticky-prog" style="margin-top:14px;">
       <span>${done}/${total} done</span>
       <div class="bar" style="flex:1; background:#fff;"><i style="width:${pct}%"></i></div>
-      <button class="btn ghost" id="toNote">← Video note</button>
+      <button class="btn ghost" id="toNote">Video note</button>
+      <button class="btn ghost" id="lockX">${state.filmLockX ? 'Show ✕' : 'Hide ✕'}</button>
       <button class="btn ghost" id="resetSay">Reset</button>
     </div>
     ${sponsorBits ? `<div class="sponsor-flag"><b>Don't forget on camera:</b><br><span style="white-space:pre-wrap;">${esc(sponsorBits)}</span></div>` : ''}
@@ -1888,12 +1897,12 @@ function renderFilmBody(){
       ${v.say.map(p => p.type === 'sec' ? `
         <div class="fitem fdiv secc-${p.color || 'teal'}" data-say="${p.id}">
           <textarea rows="1" class="secname" placeholder="Section" title="Double-click the band to change colour">${esc(p.text)}</textarea>
-          <button class="icon-btn" data-act="del" title="Delete">✕</button>
+          ${state.filmLockX ? '' : '<button class="icon-btn" data-act="del" title="Delete">✕</button>'}
         </div>` : `
         <div class="fitem ${p.done?'done':''}" data-say="${p.id}">
           <input type="checkbox" ${p.done?'checked':''}>
           <textarea rows="1" placeholder="">${esc(p.text)}</textarea>
-          <button class="icon-btn" data-act="del" title="Delete">✕</button>
+          ${state.filmLockX ? '' : '<button class="icon-btn" data-act="del" title="Delete">✕</button>'}
         </div>`).join('')}
       ${v.say.length ? '' : '<div class="empty">Add the points you want to say, in the order your video flows.</div>'}
     </div>
@@ -1963,6 +1972,7 @@ function renderFilmBody(){
     if (p){ p.color = SECC[(SECC.indexOf(p.color || 'teal') + 1) % SECC.length]; save(); renderFilmBody(); }
   };
   $('#toNote').onclick = () => { gotoTab('videos'); openVideo(v.id); };
+  $('#lockX').onclick = () => { state.filmLockX = !state.filmLockX; save(); renderFilmBody(); };
   $('#resetSay').onclick = () => { v.say.forEach(p => { if (p.type !== 'sec') p.done = false; }); save(); renderFilmBody(); };
 }
 
@@ -2151,12 +2161,6 @@ labView.addEventListener('drop', e => {
   setWithRetry('ping', '1').then(ok => {
     if (!ok) toast('Storage is unreachable right now — changes won\'t persist. Try reloading in a minute.');
   });
-  /* in sync mode, verify the server actually answers — Sync ✓ alone only means a token is stored */
-  if (storageMode() === 'remote'){
-    remoteFetch('GET', '').then(res => {
-      if (res.ok) toast('Sync connected — server is answering');
-    }).catch(() => {});
-  }
   if (!state.theme) state.theme = (matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
   applyTheme();
   if (!isArtifact){
