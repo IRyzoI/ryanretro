@@ -601,17 +601,32 @@ const SYNC_PATH = '/api/planner';
 const syncToken = () => { try { return localStorage.getItem('planner_sync_token') || ''; } catch(e){ return ''; } };
 const storageMode = () => isArtifact ? 'artifact' : (syncToken() ? 'remote' : 'local');
 
+let syncErrAt = 0;
+function noteSyncError(status){
+  if (Date.now() - syncErrAt < 8000) return;      // don't spam during retries
+  syncErrAt = Date.now();
+  const why = status === 401 ? 'token rejected — tap Sync and re-paste it'
+    : status === 404 ? 'API route not found — is planner_api deployed?'
+    : status === 422 ? 'server rejected the data format'
+    : status >= 500 ? 'server/database problem — check Railway logs'
+    : 'unexpected response';
+  toast('Sync error ' + status + ': ' + why);
+}
 async function remoteFetch(method, sub, value){
-  const res = await fetch(SYNC_PATH + sub, {
-    method,
-    headers: Object.assign({ 'Authorization': 'Bearer ' + syncToken() },
-      value != null ? { 'Content-Type': 'application/json' } : {}),
-    body: value != null ? JSON.stringify({ value }) : undefined
-  });
-  if (res.status === 401){
-    toast('Sync token rejected — tap Sync in the top bar to fix it');
-    throw new Error('unauthorized');
+  let res;
+  try {
+    res = await fetch(SYNC_PATH + sub, {
+      method,
+      headers: Object.assign({ 'Authorization': 'Bearer ' + syncToken() },
+        value != null ? { 'Content-Type': 'application/json' } : {}),
+      body: value != null ? JSON.stringify({ value }) : undefined
+    });
+  } catch(e){
+    noteSyncError(0);                              // network-level failure
+    throw e;
   }
+  if (!res.ok && res.status !== 404) noteSyncError(res.status);
+  if (res.status === 401) throw new Error('unauthorized');
   return res;
 }
 
@@ -880,29 +895,36 @@ async function setupSync(){
     return;
   }
   localStorage.setItem('planner_sync_token', tok.trim());
-
+  /* decide direction: does the server already have a copy? */
   let serverRaw = null;
   try {
     const res = await remoteFetch('GET', '');
     if (res.ok){ const data = await res.json(); serverRaw = data.value; }
-  } catch(e){ return; }
-
+  } catch(e){ return; }   // bad token already toasted
+  const localEmpty = state.videos.length === 0 && !(state.dump || '').trim() && state.inspo.length === 0;
+  const pullServer = () => {
+    state = Object.assign({}, state, JSON.parse(serverRaw));
+    dumpText.value = state.dump || ''; autoGrow(dumpText);
+    applyTheme(); renderInspo(); renderHistory(); renderVideos(); renderFilm();
+    toast('Synced — this device now mirrors the server');
+  };
+  if (serverRaw && localEmpty){
+    /* empty device + server has data: only one sane outcome — never offer the overwrite */
+    pullServer();
+    return;
+  }
   if (serverRaw){
-    // Fix: Re-worded prompt. Hitting cancel now safely aborts without wiping the database.
-    const doLoad = confirm('The server already has planner data.\n\nClick OK to pull the SERVER data onto this device.\nClick Cancel to abort sync (keeps your local data safe).');
-    if (doLoad){
-      state = Object.assign({}, state, JSON.parse(serverRaw));
-      dumpText.value = state.dump || ''; autoGrow(dumpText);
-      applyTheme(); renderInspo(); renderHistory(); renderVideos(); renderFilm();
-      toast('Synced — this device now mirrors the server');
+    if (confirm('The server already has planner data.\n\nOK = load the server copy onto this device (recommended)\nCancel = decide what to do next')){
+      pullServer();
       return;
-    } else {
-      localStorage.removeItem('planner_sync_token');
-      toast('Sync cancelled. Your local data was NOT overwritten.');
+    }
+    /* explicit, double-confirmed push — overwriting the server must be deliberate */
+    if (!confirm('OVERWRITE the server with THIS device\'s data instead?\n\nThe server copy will be replaced (one previous version is kept server-side as a safety net).\n\nOK = overwrite the server\nCancel = do nothing')){
+      toast('Nothing changed — sync is on, no data was moved');
       return;
     }
   }
-
+  /* push local copy up (state + all referenced images) */
   toast('Uploading this device\'s planner to the server…');
   for (const id of referencedImageIds()){
     const val = await getImage(id);
@@ -2085,6 +2107,12 @@ labView.addEventListener('drop', e => {
   setWithRetry('ping', '1').then(ok => {
     if (!ok) toast('Storage is unreachable right now — changes won\'t persist. Try reloading in a minute.');
   });
+  /* in sync mode, verify the server actually answers — Sync ✓ alone only means a token is stored */
+  if (storageMode() === 'remote'){
+    remoteFetch('GET', '').then(res => {
+      if (res.ok) toast('Sync connected — server is answering');
+    }).catch(() => {});
+  }
   if (!state.theme) state.theme = (matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
   applyTheme();
   if (!isArtifact){
