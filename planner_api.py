@@ -2,32 +2,21 @@
 # Ryan Retro Creator Planner — sync API (FastAPI + Postgres via psycopg2)
 #
 # Storage: your Railway Postgres (private; survives deploys).
-# NOT the volume — app.py serves the volume publicly at /data,
-# so planner data there would be world-readable.
+# NOT the volume — app.py serves the volume publicly at /data.
 #
-# Setup:
-# 1. Save this file next to app.py as: planner_api.py
-#    (uses psycopg2-binary, which is already in requirements.txt)
-# 2. app.py: add near your other routes:
-#
-#      from planner_api import router as planner_router
-#      app.include_router(planner_router, prefix="/api/planner")
-#
-#    and a page route ABOVE the /{product_id} catch-all:
-#
-#      @app.get("/planner", response_class=HTMLResponse)
-#      async def planner_page():
-#          return FileResponse(os.path.join(STATIC_DIR, "planner.html"))
-#
-# 3. Railway (ryanretro service -> Variables):
-#      PLANNER_TOKEN = long random string (your devices' password)
-#      DATABASE_URL  = add as a *reference* to Postgres.DATABASE_URL
-#                      (New Variable -> Add Reference -> Postgres -> DATABASE_URL)
+# Setup recap:
+#   app.py (after `app = FastAPI()` / CORS):
+#       from planner_api import router as planner_router
+#       app.include_router(planner_router, prefix="/api/planner")
+#   Railway vars on ryanretro service:
+#       PLANNER_TOKEN = long random string
+#       DATABASE_URL  = reference to Postgres.DATABASE_URL
 # =====================================================================
 
 import os
 import re
 import threading
+import traceback
 
 import psycopg2
 from fastapi import APIRouter, Header, HTTPException
@@ -43,27 +32,44 @@ _table_ready = False
 _table_lock = threading.Lock()
 
 
+def _connect():
+    """Open a connection. Railway's external proxy host needs SSL; the
+    internal host does not. Try plain first, fall back to sslmode=require."""
+    last = None
+    for kwargs in ({}, {"sslmode": "require"}):
+        try:
+            conn = psycopg2.connect(DB_URL, connect_timeout=8, **kwargs)
+            conn.autocommit = True
+            return conn
+        except Exception as e:  # noqa
+            last = e
+    raise last
+
+
 def _conn():
     if not DB_URL:
         raise HTTPException(status_code=500, detail="DATABASE_URL is not configured")
     try:
-        conn = psycopg2.connect(DB_URL, connect_timeout=8)
-        conn.autocommit = True
-    except Exception:
-        raise HTTPException(status_code=500, detail="could not reach the database")
+        conn = _connect()
+    except Exception as e:  # surface the real reason instead of a blank 500
+        raise HTTPException(status_code=500, detail="db connect failed: " + str(e))
+
     global _table_ready
     if not _table_ready:
         with _table_lock:
             if not _table_ready:
-                with conn.cursor() as cur:
-                    cur.execute(
-                        "CREATE TABLE IF NOT EXISTS planner_kv ("
-                        "  key TEXT PRIMARY KEY,"
-                        "  value TEXT NOT NULL,"
-                        "  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()"
-                        ")"
-                    )
-                _table_ready = True
+                try:
+                    with conn.cursor() as cur:
+                        cur.execute(
+                            "CREATE TABLE IF NOT EXISTS planner_kv ("
+                            "  key TEXT PRIMARY KEY,"
+                            "  value TEXT NOT NULL,"
+                            "  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()"
+                            ")"
+                        )
+                    _table_ready = True
+                except Exception as e:
+                    raise HTTPException(status_code=500, detail="create table failed: " + str(e))
     return conn
 
 
@@ -81,6 +87,8 @@ def _get(key):
             cur.execute("SELECT value FROM planner_kv WHERE key = %s", (key,))
             row = cur.fetchone()
             return row[0] if row else None
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="db read failed: " + str(e))
     finally:
         conn.close()
 
@@ -94,6 +102,8 @@ def _put(key, value):
                 "ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()",
                 (key, value),
             )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="db write failed: " + str(e))
     finally:
         conn.close()
 
@@ -103,12 +113,44 @@ def _delete(key):
     try:
         with conn.cursor() as cur:
             cur.execute("DELETE FROM planner_kv WHERE key = %s", (key,))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="db delete failed: " + str(e))
     finally:
         conn.close()
 
 
 class Payload(BaseModel):
     value: str
+
+
+# ---- diagnostics: open this in a browser to see the real status ----
+@router.get("/health")
+def health():
+    info = {
+        "token_set": bool(TOKEN),
+        "database_url_set": bool(DB_URL),
+        "db_host": "",
+        "connect_ok": False,
+        "table_ok": False,
+        "error": "",
+    }
+    if DB_URL:
+        m = re.search(r"@([^:/]+)", DB_URL)
+        info["db_host"] = m.group(1) if m else "?"
+    try:
+        conn = _connect()
+        info["connect_ok"] = True
+        with conn.cursor() as cur:
+            cur.execute(
+                "CREATE TABLE IF NOT EXISTS planner_kv ("
+                "  key TEXT PRIMARY KEY, value TEXT NOT NULL,"
+                "  updated_at TIMESTAMPTZ NOT NULL DEFAULT now())"
+            )
+        info["table_ok"] = True
+        conn.close()
+    except Exception:
+        info["error"] = traceback.format_exc().splitlines()[-1]
+    return info
 
 
 # ---------------- state ----------------
@@ -122,7 +164,6 @@ def get_state(authorization: str | None = Header(default=None)):
 @router.put("")
 def put_state(body: Payload, authorization: str | None = Header(default=None)):
     _auth(authorization)
-    # safety net: keep the previous version so a bad overwrite is recoverable
     current = _get("state")
     if current is not None and current != body.value:
         _put("state_prev", current)
@@ -132,7 +173,6 @@ def put_state(body: Payload, authorization: str | None = Header(default=None)):
 
 @router.get("/prev")
 def get_prev_state(authorization: str | None = Header(default=None)):
-    """The state as it was before the most recent change — emergency undo."""
     _auth(authorization)
     return {"value": _get("state_prev")}
 
@@ -164,5 +204,5 @@ def delete_img(img_id: str, authorization: str | None = Header(default=None)):
     _auth(authorization)
     if not SAFE_ID.match(img_id):
         raise HTTPException(status_code=400, detail="bad id")
-    _delete("img:" + img_id)  # deleting a missing key is fine
+    _delete("img:" + img_id)
     return {"ok": True}
