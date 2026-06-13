@@ -122,8 +122,19 @@ def get_state(authorization: str | None = Header(default=None)):
 @router.put("")
 def put_state(body: Payload, authorization: str | None = Header(default=None)):
     _auth(authorization)
+    # safety net: keep the previous version so a bad overwrite is recoverable
+    current = _get("state")
+    if current is not None and current != body.value:
+        _put("state_prev", current)
     _put("state", body.value)
     return {"ok": True}
+
+
+@router.get("/prev")
+def get_prev_state(authorization: str | None = Header(default=None)):
+    """The state as it was before the most recent change — emergency undo."""
+    _auth(authorization)
+    return {"value": _get("state_prev")}
 
 
 # ---------------- images ----------------
