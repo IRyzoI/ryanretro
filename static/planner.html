@@ -44,6 +44,13 @@ textarea,input,select{font-family:inherit; color:var(--ink);}
 .logo .play::after{content:""; border-left:13px solid #fff; border-top:8px solid transparent; border-bottom:8px solid transparent; margin-left:4px;}
 .logo h1{font-size:23px; line-height:1.05; color:var(--title); letter-spacing:-0.8px;}
 .logo h1 span{color:var(--teal);}
+.feebadge{display:inline-flex; align-items:center; gap:5px; background:#1f9d57; color:#fff;
+  font-weight:800; font-size:13px; padding:5px 12px; border-radius:999px; letter-spacing:.2px;
+  border:1.5px solid #0f5e34; box-shadow:0 1px 0 rgba(0,0,0,.08); white-space:nowrap;}
+.feebadge small{font-weight:700; font-size:9.5px; opacity:.85; text-transform:uppercase; letter-spacing:.6px;}
+.vcard .feebadge{font-size:11px; padding:3px 9px;}
+.vcard .feebadge small{display:none;}
+body.dark .feebadge{background:#1f9d57; border-color:#0f5e34;}
 .savedot{margin-left:auto; font-size:11.5px; font-weight:600; color:var(--soft); display:flex; align-items:center; gap:6px;}
 .topbar-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
 @media (max-width:560px){
@@ -97,6 +104,13 @@ body.dark .bigtitle:focus{background:#222837;}
 #filmPickCard:hover{background:#fafcff;}
 body.dark #filmPickCard:hover{background:#262C3A;}
 .bigtitle-select{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; appearance:none; border:none;}
+.modeseg{display:inline-flex; border:1.5px solid var(--title); border-radius:8px; overflow:hidden; flex:none;}
+.modeseg button{border:0; background:transparent; color:var(--title); font-weight:700; font-size:12.5px; padding:7px 18px; cursor:pointer; line-height:1.35; transition:background .12s;}
+.modeseg button + button{border-left:1.5px solid var(--title);}
+.modeseg button.active{background:var(--title); color:#fff;}
+body.dark .modeseg button.active{color:#14171E;}
+.detail-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px;}
+.film-head{display:flex; justify-content:center; margin-bottom:4px;}
 .title-caret{font-size:.42em; color:var(--soft); margin-left:12px; vertical-align:middle; letter-spacing:0;}
 .card h2 .chip{font-size:9.5px; font-weight:600; letter-spacing:.05em;
   background:#fff; border:1px solid var(--sep); border-radius:20px; padding:2px 8px; color:var(--soft);}
@@ -563,7 +577,7 @@ function newVideo(title){
   return {
     id: uid(), title: title || 'Untitled video', status: 'Idea',
     notes: '', titleIdeas: [], todos: [],            // todo: {id,text,done,phase}
-    sponsor: { name:'', deal:'', points:'', ctas:'' },
+    sponsor: { name:'', deal:'', points:'', ctas:'', fee:'' },
     desc: null,
     say: [],                                          // talking points: [{id,text,done}]
     thumbs: { A:null, B:null, C:null }, winner: null,
@@ -774,6 +788,7 @@ async function loadState(){
         v.say = flat;
       }
     });
+    state.videos.forEach(v => { if (v.sponsor && v.sponsor.fee == null) v.sponsor.fee = ''; });
     state.competitors = state.competitors.filter(c => c.imgId);  // drop URL tiles (sandbox blocks external images)
     ensureDescGlobals();
     /* one-time import of the idea backlog (June 2026) — appends after existing videos */
@@ -1055,12 +1070,39 @@ function gotoTab(name){
 
 $('#tabs').addEventListener('click', e => {
   const b = e.target.closest('.tab'); if (!b) return;
-  $$('.tab').forEach(t => t.classList.toggle('active', t === b));
-  $$('.view').forEach(v => v.classList.remove('show'));
-  $('#view-' + b.dataset.tab).classList.add('show');
-  if (b.dataset.tab === 'videos') renderVideos();
-  if (b.dataset.tab === 'film') renderFilm();
-  if (b.dataset.tab === 'lab') renderLab();
+  const tab = b.dataset.tab;
+
+  /* which video, if any, am I currently focused on? */
+  const detail = $('#videoDetail');
+  const noteOpen = $('#view-videos').classList.contains('show') && detail && detail.style.display !== 'none' && detail.dataset.id;
+  const inFilm = $('#view-film').classList.contains('show');
+
+  const activate = name => {
+    $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    $$('.view').forEach(v => v.classList.remove('show'));
+    $('#view-' + name).classList.add('show');
+  };
+
+  if (tab === 'film'){
+    /* Filming Mode = the current video's filming. Carry the open note's video across. */
+    if (noteOpen) state.filmSel = detail.dataset.id;
+    save();
+    activate('film'); renderFilm();
+    return;
+  }
+
+  if (tab === 'videos'){
+    /* From filming → that video's note. From a note → the full list. */
+    if (inFilm && state.filmSel && state.videos.find(x => x.id === state.filmSel)){
+      activate('videos'); openVideo(state.filmSel);
+    } else {
+      activate('videos'); renderVideos();   // renderVideos() shows the grid (hides any open detail)
+    }
+    return;
+  }
+
+  activate(tab);
+  if (tab === 'lab') renderLab();
 });
 
 /* =================================================================
@@ -1302,6 +1344,12 @@ $('#newVideoBtn').addEventListener('click', () => {
   save(); openVideo(v.id);
 });
 
+function feeText(v){ return (v.sponsor && v.sponsor.fee || '').trim(); }
+function feeBadge(v, withLabel){
+  const f = feeText(v); if (!f) return '';
+  return `<span class="feebadge">${withLabel ? '<small>deal</small>' : ''}${esc(f)}</span>`;
+}
+
 function videoProgress(v){
   if (!v.todos.length) return 0;
   return Math.round(v.todos.filter(t => t.done).length / v.todos.length * 100);
@@ -1325,7 +1373,8 @@ function renderVideos(){
       <div class="body">
         <h3>${esc(v.title || 'Untitled video')}</h3>
         <div class="meta">
-          <span class="status ${v.status}">${v.status}</span>
+          <span class="status ${v.status}" data-cyc="1" title="Tap to change phase">${v.status}</span>
+          ${feeBadge(v, false)}
           <span class="mini">${v.todos.filter(t=>t.done).length}/${v.todos.length} tasks</span>
         </div>
         <div class="bar" style="margin-top:8px;"><i style="width:${p}%"></i></div>
@@ -1334,8 +1383,17 @@ function renderVideos(){
   hydrateImages(g);
 }
 $('#vidGrid').addEventListener('click', e => {
-  const c = e.target.closest('.vcard');
-  if (c) openVideo(c.dataset.id);
+  const c = e.target.closest('.vcard'); if (!c) return;
+  const pill = e.target.closest('[data-cyc]');
+  if (pill){
+    e.stopPropagation();
+    const v = state.videos.find(x => x.id === c.dataset.id); if (!v) return;
+    const i = STATUSES.indexOf(v.status);
+    v.status = STATUSES[(i + 1) % STATUSES.length];
+    save(); renderVideos();
+    return;
+  }
+  openVideo(c.dataset.id);
 });
 
 /* =================================================================
@@ -1352,10 +1410,9 @@ function openVideo(id){
   d.dataset.id = id;
 
   d.innerHTML = `
-  <div class="crumb">
+  <div class="detail-head">
     <button class="btn ghost" id="backBtn">← All videos</button>
-    <select class="in" id="vStatus" style="width:auto;">${STATUSES.map(s => `<option ${s===v.status?'selected':''}>${s}</option>`).join('')}</select>
-    <button class="btn ghost" id="toFilm">Filming Mode</button>
+    ${feeBadge(v, false)}
     <button class="btn ghost red" id="vDelete" style="margin-left:auto;">Delete</button>
   </div>
 
@@ -1397,6 +1454,8 @@ function openVideo(id){
       <div>
         <label class="lbl">Sponsor / collab</label>
         <textarea class="in" id="spName" rows="1" style="resize:none; overflow:hidden; line-height:1.5;" placeholder="">${esc(v.sponsor.name)}</textarea>
+        <label class="lbl">Agreed fee <span style="font-weight:500; color:var(--soft);">(shows as a badge)</span></label>
+        <input class="in" id="spFee" value="${esc(v.sponsor.fee)}" placeholder="e.g. $400">
         <label class="lbl">Deal type & deliverables</label>
         <textarea class="in" id="spDeal" rows="1" style="resize:none; overflow:hidden; line-height:1.5;" placeholder="">${esc(v.sponsor.deal)}</textarea>
       </div>
@@ -1419,16 +1478,19 @@ function openVideo(id){
     state.videos = state.videos.filter(x => x.id !== id);
     save(); renderVideos();
   };
-  $('#vStatus').onchange = e => { v.status = e.target.value; save(); };
-  $('#toFilm').onclick = () => {
-    state.filmSel = v.id; save();
-    gotoTab('film'); renderFilm();
-  };
   $('#vTitle').oninput = e => { v.title = e.target.value.replace(/\n/g, ' '); save(); };
   $('#vTitle').onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); e.target.blur(); } };
   /* title ideas reveal when the title is clicked/focused; hide on click elsewhere */
   $('#vNotes').oninput = e => { v.notes = e.target.value; save(); };
   $('#spName').oninput = e => { v.sponsor.name = e.target.value; save(); };
+  $('#spFee').oninput = e => {
+    v.sponsor.fee = e.target.value; save();
+    const crumb = $('#videoDetail .crumb');
+    let b = crumb.querySelector('.feebadge');
+    const html = feeBadge(v, false);
+    if (b) b.outerHTML = html || '';
+    else if (html) $('#vStatus').insertAdjacentHTML('afterend', html);
+  };
   $('#spDeal').oninput = e => { v.sponsor.deal = e.target.value; save(); };
   $('#spPoints').oninput = e => { v.sponsor.points = e.target.value; save(); };
   $('#spCtas').oninput = e => { v.sponsor.ctas = e.target.value; save(); };
@@ -1888,7 +1950,6 @@ function renderFilmBody(){
     <div class="sticky-prog" style="margin-top:14px;">
       <span>${done}/${total} done</span>
       <div class="bar" style="flex:1; background:#fff;"><i style="width:${pct}%"></i></div>
-      <button class="btn ghost" id="toNote">Video note</button>
       <button class="btn ghost" id="lockX">${state.filmLockX ? 'Show ✕' : 'Hide ✕'}</button>
       <button class="btn ghost" id="resetSay">Reset</button>
     </div>
@@ -1971,7 +2032,6 @@ function renderFilmBody(){
     const p = v.say.find(x => x.id === div.dataset.say);
     if (p){ p.color = SECC[(SECC.indexOf(p.color || 'teal') + 1) % SECC.length]; save(); renderFilmBody(); }
   };
-  $('#toNote').onclick = () => { gotoTab('videos'); openVideo(v.id); };
   $('#lockX').onclick = () => { state.filmLockX = !state.filmLockX; save(); renderFilmBody(); };
   $('#resetSay').onclick = () => { v.say.forEach(p => { if (p.type !== 'sec') p.done = false; }); save(); renderFilmBody(); };
 }
