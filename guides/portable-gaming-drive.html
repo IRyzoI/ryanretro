@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryan Retro — Portable Drive Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<!-- Shared Ryan Retro site header/footer dependencies -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  // Preflight OFF so Tailwind's CSS reset never touches this guide's own
+  // styling — only the header/footer utility classes are needed.
+  tailwind.config = {
+    corePlugins: { preflight: false },
+    theme: { extend: { colors: { brand: { light: '#B9B2DE', main: '#6254A4', dark: '#463884', accent: '#FFFFFF' } } } }
+  };
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script defer src="/static/partials/include.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* Core Variables */
+:root{
+  --page:#EBE8F8; --sheet:#FCFBFF; --card:#FFFFFF; --ink:#1a1a1a; --title:#6C5DD3;
+  --bord:#B3A8E8; --line:#B3A8E8; --rule:#EBE8F8; --sep:#EBE8F8; --soft:#8e95b5;
+  --brand:#6C5DD3; --dark:#5144A6; --light:#e5e1f9;
+  --teal:#208ab0; --teal-bg:#e5f9ff;
+  --green:#107a47; --green-bg:#e6faf3;
+  --blue:#3a69b9; --blue-bg:#d3e4ff;
+  --purple:#6b46c1; --purple-bg:#efe9fb;
+  --amber:#b5701a; --amber-bg:#fdf3df;
+  --rose:#d6336c; --rose-bg:#fdeaf2;
+  --pop:#b5701a; --red:#c0392b; --orange:#b5701a; --pink:#d6336c; --cyan:#208ab0;
+  --band:var(--blue-bg); --bandText:var(--blue);
+}
+
+/* Dark Mode Variables */
+body.dark{
+  --page:#14131A; --sheet:#1C1A24; --card:#242131; --ink:#DDE1EE; --title:#A092F6;
+  --bord:#3D3858; --line:#3D3858; --rule:#2F2B47; --sep:#2F2B47; --soft:#8E95B5;
+  --brand:#8174DE; --dark:#6255B8; --light:#322D4D; --cyan:#5BC8DE;
+  --teal:#5BC8DE; --teal-bg:rgba(91,200,222,.12);
+  --green:#4CC388; --green-bg:rgba(76,195,136,.13);
+  --blue:#8FA9F0; --blue-bg:rgba(143,169,240,.13);
+  --purple:#B49CEF; --purple-bg:rgba(180,156,239,.13);
+  --amber:#E3B964; --amber-bg:rgba(227,185,100,.12);
+  --rose:#E68DB8; --rose-bg:rgba(230,141,184,.13);
+  --band:var(--blue-bg); --bandText:var(--blue);
+}
+body.dark .edge{--band:var(--blue-bg); --bandText:var(--blue);}
+body.dark .edge.yellow{--band:var(--purple-bg); --bandText:var(--purple);}
+body.dark .edge.green{--band:var(--green-bg); --bandText:var(--green);}
+body.dark .edge.blue{--band:var(--teal-bg); --bandText:var(--teal);}
+body.dark .edge.pink{--band:var(--rose-bg); --bandText:var(--rose);}
+body.dark .edge.orange{--band:var(--amber-bg); --bandText:var(--amber);}
+
+/* Base Styles */
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0; padding:0;}
+body{
+  background:var(--page); color:var(--ink);
+  font-family:'Poppins',Arial,sans-serif;
+  min-height:100vh; padding-bottom:70px;
+  font-size:14px; line-height: 1.6; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.bebas{font-family:'Poppins',Arial,sans-serif; font-weight:700; letter-spacing:0; margin:0;}
+p { margin-top: 0; margin-bottom: 16px; }
+ul, ol { margin-top: 0; padding-left: 20px; margin-bottom: 16px; }
+li { margin-bottom: 8px; }
+button{font-family:inherit; cursor:pointer;}
+
+/* Header */
+.topbar{
+  position:sticky; top:0; z-index:50; background:var(--sheet);
+  border-bottom:2px solid var(--title); padding:10px 20px;
+  display:flex; align-items:center; justify-content: space-between; gap:12px; flex-wrap:wrap;
+}
+body.dark .topbar{background:var(--sheet); border-color:var(--bord);}
+.logo{display:flex; align-items:center; gap:12px;}
+.header-logo {width:38px; height:38px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(108, 93, 211, 0.25);}
+body.dark .header-logo {box-shadow:0 2px 6px rgba(0, 0, 0, 0.5);}
+.logo h1{font-size:23px; line-height:1.05; color:#3b3a8d; letter-spacing:-0.8px;}
+body.dark .logo h1{color:#A9A8F4;}
+.logo h1 span{color:var(--teal);}
+body.dark .logo h1 span{color:var(--teal);}
+
+/* Buttons */
+.btn{
+  border:1px solid var(--bord); border-radius:5px; background:#fff; font-weight:600; font-size:12px;
+  padding:6px 12px; transition:background .12s; color:var(--title);
+  display:inline-flex; align-items:center; justify-content:center; gap:7px; line-height:1.35; text-decoration: none;
+}
+.btn:hover{background:var(--teal-bg);}
+.btn.brand{background:var(--title); border-color:var(--title); color:#fff;}
+.btn.brand:hover{background:var(--dark);}
+.btn.ghost{padding:5px 10px; font-size:12px; color:var(--title);}
+body.dark .btn{background:#2A3040; border-color:var(--bord); color:#C9CEE4;}
+body.dark .btn:hover{background:#333A4E; border-color:#4E5570;}
+
+/* Layout & Cards */
+.wrap{max-width:960px; margin:30px auto 0; padding:30px 40px 40px; background:var(--sheet); border:2px solid var(--title); border-radius:4px;}
+body.dark .wrap{background:var(--sheet); border-color:var(--bord);}
+@media(max-width:768px){.wrap{margin:14px 16px 0; padding:20px 24px 34px;}}
+@media(max-width:600px){.wrap{margin:10px 8px 0; padding:12px 10px 22px; border-width:1px;} .logo h1{font-size:18px;}}
+
+.card{background:var(--card); border:1px solid var(--bord); border-radius:3px; padding:20px; min-width:0; overflow-wrap:break-word;}
+.card+.card{margin-top:24px;}
+body.dark .card{background:var(--card); border-color:var(--bord);}
+
+/* Card Headers with Colored Bands */
+.card h2{
+  font-size:14px; font-weight:600; letter-spacing:.3px; color:var(--bandText); background:var(--band);
+  margin:-20px -20px 20px; padding:10px 20px; position:relative;
+  display:flex; align-items:center; justify-content:flex-start; gap:9px; text-align:left;
+}
+body.dark .card h2{border-bottom:1px solid var(--rule);}
+
+/* Colored Edge Classes */
+.edge{--band:var(--blue-bg); --bandText:var(--blue);}
+.edge.yellow{--band:var(--purple-bg); --bandText:var(--purple);}
+.edge.green{--band:var(--green-bg); --bandText:var(--green);}
+.edge.blue{--band:var(--teal-bg); --bandText:var(--teal);}
+.edge.pink{--band:var(--rose-bg); --bandText:var(--rose);}
+.edge.orange{--band:var(--amber-bg); --bandText:var(--amber);}
+
+/* Title Block */
+.titlecard{padding:30px 20px 24px; text-align:center; margin-bottom: 24px;}
+.bigtitle{font-size:clamp(28px,4vw,50px); line-height:1.12; color:#3b3a8d; text-align:center; letter-spacing:-1.5px; margin-bottom: 10px;}
+body.dark .bigtitle{color:#A9A8F4;}
+.subtitle { font-size: 15px; color: var(--soft); font-weight: 500; }
+
+/* Grid Layouts for Content */
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+.two-col > .card{margin-top:0;}
+@media(max-width:860px){.two-col{grid-template-columns:1fr;}}
+
+/* Guide Specific Content Formatting */
+.guide-image { max-width: 100%; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; border: 1px solid var(--bord); margin-bottom: 16px; display: block; background: var(--teal-bg); }
+.guide-callout { background: var(--band); border-left: 4px solid var(--bandText); padding: 14px 18px; margin-bottom: 16px; border-radius: 0 4px 4px 0; color: var(--ink); font-size: 13.5px;}
+body.dark .guide-callout { color: var(--ink); }
+
+/* File Tree formatting */
+.file-tree { background: #eef2fa; padding: 18px 20px; border-radius: 8px; border: 2px solid #d4e4ff; font-family: monospace; font-size: 13.5px; margin-bottom: 16px; overflow-x: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04); }
+body.dark .file-tree { background: #1e2235; border-color: #3a4156; box-shadow: inset 0 2px 6px rgba(0,0,0,0.2); }
+.file-tree ul { list-style: none; padding-left: 20px; margin: 0; }
+.file-tree > ul { padding-left: 0; }
+.file-tree li { margin-bottom: 4px; position: relative; }
+.file-tree li::before { content: "├─"; color: var(--soft); position: absolute; left: -16px; }
+.file-tree li:last-child::before { content: "└─"; }
+.file-tree > ul > li::before { content: ""; }
+.file-tree .folder { font-weight: 700; color: var(--blue); }
+.file-tree .file { color: var(--ink); }
+.file-tree .note { color: var(--soft); font-style: italic; font-size: 11.5px; margin-left: 8px;}
+
+/* Code Window Styles */
+.rr-code-window { border-radius: 8px; overflow: hidden; background: #fafbfc; border: 1px solid var(--bord); margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 100%; }
+body.dark .rr-code-window { background: #24292e; border-color: var(--rule); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+.rr-code-chrome { display: flex; align-items: center; padding: 10px 14px; background: #f0f3f6; border-bottom: 1px solid var(--bord); cursor: pointer; user-select: none; list-style: none; font-family: 'Poppins', sans-serif;}
+body.dark .rr-code-chrome { background: #1e2235; border-bottom-color: #141722; }
+.rr-code-chrome::-webkit-details-marker { display: none; }
+
+.rr-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; display: inline-block; }
+.rr-dot-r { background: #ff5f56; }
+.rr-dot-y { background: #ffbd2e; }
+.rr-dot-g { background: #27c93f; }
+
+.rr-code-lang { color: var(--title); font-size: 12px; margin-left: 10px; font-weight: 600; }
+body.dark .rr-code-lang { color: #8e95b5; font-weight: 500; }
+
+.rr-code-toggle { margin-left: auto; font-size: 11px; color: var(--title); font-weight: 600; padding: 4px 8px; border-radius: 4px; background: rgba(0,0,0,0.05); }
+body.dark .rr-code-toggle { color: #8e95b5; background: rgba(255,255,255,0.05); }
+
+details[open] .rr-toggle-closed { display: none; }
+details:not([open]) .rr-toggle-open { display: none; }
+
+.rr-copy-btn { background: transparent; border: 1px solid rgba(0,0,0,0.1); color: var(--title); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 11px; font-family: 'Poppins', sans-serif; font-weight: 500; margin-left: 10px; padding: 4px 10px; border-radius: 4px; transition: background 0.2s, color 0.2s; }
+.rr-copy-btn:hover { background: rgba(0,0,0,0.05); color: var(--title); }
+body.dark .rr-copy-btn { border-color: rgba(255,255,255,0.1); color: #8e95b5; }
+body.dark .rr-copy-btn:hover { background: rgba(255,255,255,0.1); color: #dde1ee; }
+
+.astro-code { margin: 0; padding: 16px; font-size: 13.5px; line-height: 1.5; font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; background: transparent !important; }
+
+/* Auto-adapting syntax highlight colors (Light Mode overrides) */
+.astro-code span[style*="#E1E4E8"] { color: #24292e !important; }
+.astro-code span[style*="#F97583"] { color: #d73a49 !important; }
+.astro-code span[style*="#9ECBFF"] { color: #032f62 !important; }
+.astro-code span[style*="#79B8FF"] { color: #005cc5 !important; }
+.astro-code span[style*="#FFAB70"] { color: #e36209 !important; }
+.astro-code span[style*="#6A737D"] { color: #6a737d !important; }
+
+/* Dark Mode retains original syntax colors */
+body.dark .astro-code span[style*="#E1E4E8"] { color: #e1e4e8 !important; }
+body.dark .astro-code span[style*="#F97583"] { color: #F97583 !important; }
+body.dark .astro-code span[style*="#9ECBFF"] { color: #9ECBFF !important; }
+body.dark .astro-code span[style*="#79B8FF"] { color: #79B8FF !important; }
+body.dark .astro-code span[style*="#FFAB70"] { color: #FFAB70 !important; }
+body.dark .astro-code span[style*="#6A737D"] { color: #6A737D !important; }
+
+/* ===== Shared site header/footer (Tailwind) ===== */
+/* Scoped resets so disabling Tailwind Preflight doesn't leave the header/footer
+   links, button and icons with default browser styling. */
+header, footer { font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
+header a, footer a { text-decoration: none; }
+header button { background: transparent; border: 0; padding: 0; cursor: pointer; }
+header svg, footer svg { display: block; }
+footer p { margin: 0; }
+
+/* ===== Floating dark-mode toggle (scoped to this guide) ===== */
+.theme-fab {
+  position: fixed; right: 18px; bottom: 18px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px;
+  background: var(--card); color: var(--title);
+  border: 1px solid var(--bord); font-weight: 600; font-size: 13px;
+  font-family: 'Poppins', Arial, sans-serif;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18); cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.theme-fab:hover { background: var(--teal-bg); border-color: var(--title); }
+
+</style>
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<main class="wrap">
+  
+  <div class="card titlecard">
+    <h1 class="bigtitle">Build a Portable PC & Emulation Drive</h1>
+    <div class="subtitle">A complete guide to a standalone, zero-hassle gaming setup.</div>
+  </div>
+
+  <div class="card edge blue">
+    <h2>Introduction & Why Build Your Own?</h2>
+    <p>This tutorial will show you how to safely and easily build your own fully portable, standalone emulation and modern PC gaming drive. By the end of this setup, you’ll have an external SSD or USB stick that you can plug into any Windows computer, instantly boot a beautiful retro gaming frontend, and jump straight into your games with auto-mapped controllers.</p>
+    
+    <p><strong>Note:</strong> This guide is intended for Windows users. Everything we do here is done in a specific order. If you skip around and get lost, just scroll up a bit to find the initial instructions.</p>
+    
+    <img src="https://placehold.co/800x450/eef5ff/3b3a8d?text=Clean+Custom+Drive+vs+Messy+Pre-built" alt="Custom vs Pre-built comparison" class="guide-image">
+
+    <p>There are many pre-built drives sold by companies like Kinhank and Peaprit, but I highly recommend building your own instead. Those commercial drives often rely on malicious background scripts and pre-cracked files that actually require you to dangerously disable your PC’s antivirus just to play a game.</p>
+    
+    <p>Our build is 100% transparent. We are using purely legal, open-source structures and standard Windows commands. It makes the whole system incredibly safe, lightweight, and completely customizable to your exact preferences.</p>
+  </div>
+
+  <div class="card edge pink">
+    <h2>Understanding Your Drive Layout</h2>
+    <p>The golden rule to building a high-end emulation drive is preventing interface clutter. If you place raw PC installation files inside the emulator scanning folders, your frontend (RetroBat) will become cluttered with duplicate executables, unins000 files, and messy layout components.</p>
+    <p>To solve this, we use a separated directory architecture. Your massive PC game installations will live in a custom root folder, completely hidden from the emulation system’s eyes. Meanwhile, only tiny launcher scripts will sit in your scanning path.</p>
+    
+    <p>Here is what your drive structure will look like:</p>
+    
+    <div class="file-tree">
+      <ul>
+        <li><span class="folder">💾 D:\ (Root of your drive)</span>
+          <ul>
+            <li><span class="folder">📁 PC-Games</span> <span class="note">(All massive GOG/DRM-free folders live safely here)</span>
+              <ul>
+                <li><span class="folder">📁 Snapshot</span></li>
+                <li><span class="folder">📁 MinaTheHollower</span></li>
+              </ul>
+            </li>
+            <li><span class="folder">📁 RetroBat</span> <span class="note">(Your emulation frontend core files)</span>
+              <ul>
+                <li><span class="folder">📁 roms</span>
+                  <ul>
+                    <li><span class="folder">📁 windows</span> <span class="note">(Contains ONLY your clean, generated .bat launchers)</span></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><span class="file">📄 Update_My_Games.bat</span> <span class="note">(The master game scanning automation script)</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card edge green">
+    <h2>1. Format and Initial Setup</h2>
+    <p>Formatting and placing folders correctly on your drive right now prevents common read/write crashes and path-finding faults later on.</p>
+      
+      <ol>
+        <li><strong>Format the Drive as exFAT:</strong> Plug your external SSD into your PC. Back up any vital files, then format it. Select exFAT as the File System. This is mandatory — exFAT allows the SSD to easily share data across different versions of Windows, bypassing local system administrative blockades and 4GB single-file limits.</li>
+        <li><strong>Install RetroBat to the Root:</strong> Download the latest installer from the RetroBat website. When running the installer, change the path to point directly to the root directory of your portable drive (e.g., <code>D:\RetroBat</code>). Do not let it install to your local internal <code>C:</code> drive.</li>
+        <li><strong>Construct the "PC-Games" Vault:</strong> Go to the root of your external drive in File Explorer, right-click, and create a brand-new folder named exactly <code>PC-Games</code>. This is your safe zone where you will deposit all heavy, standalone PC games.</li>
+      </ol>
+      
+      <img src="https://placehold.co/800x450/e6faf3/107a47?text=exFAT+Format+Screen" alt="Windows exFAT Formatting Screen" class="guide-image">
+    </div>
+
+    <div class="card edge orange">
+      <h2>2. The Master Automation Script</h2>
+      <p>When you move an external SSD from PC to PC, Windows dynamically shifts the drive letter depending on what else is plugged in. For instance, the drive might load as <code>D:</code> on your desktop, but turn into <code>G:</code> on your laptop. If you write static folders, your game links will break immediately.</p>
+      
+      <p>We solve this drive letter problem permanently with a master orchestration script. In addition to handling dynamic drive letters, this script includes a Smart Steamworks API Injector. It automatically detects if you are copying a Steam game, resolves the official Steam AppID, and auto-creates the required <code>steam_appid.txt</code> file to prevent licensing errors on startup.</p>
+
+      <div class="guide-callout">
+        <strong>Action Item:</strong> Create a new text file directly on the root of your external drive, name it exactly <code>Update_My_Games.bat</code>, copy the exact code block you have for your script inside it, and save the file.
+      </div>
+
+      <details class="rr-code-window"><summary class="rr-code-chrome"><span class="rr-dot rr-dot-r"></span><span class="rr-dot rr-dot-y"></span><span class="rr-dot rr-dot-g"></span><span class="rr-code-lang">Batch Script</span><span class="rr-code-toggle rr-toggle-closed">▶  Show Code</span><span class="rr-code-toggle rr-toggle-open">▼  Hide</span><button class="rr-copy-btn" aria-label="Copy code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span class="rr-copy-label">Copy</span></button></summary><pre class="astro-code github-dark" style="overflow-x: auto;" tabindex="0" data-language="batch"><code><span class="line"><span style="color:#F97583">@echo</span><span style="color:#F97583"> off</span></span>
+<span class="line"><span style="color:#F97583">setlocal</span><span style="color:#F97583"> enabledelayedexpansion</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> ===================================================</span></span>
+<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> RyanRetro Master Drive Sync </span><span style="color:#79B8FF">^</span><span style="color:#E1E4E8">&amp; Steam Orchestrator</span></span>
+<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> ===================================================</span></span>
+<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8">.</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">pcGamesDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%~dp0</span><span style="color:#9ECBFF">PC-Games\"</span></span>
+<span class="line"><span style="color:#F97583">set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">retroBatWindowsDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%~dp0</span><span style="color:#9ECBFF">RetroBat\roms\windows\"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Error: Could not find the \PC-Games folder on the root of the drive.</span></span>
+<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Creating it for you now...</span></span>
+<span class="line"><span style="color:#F97583">    mkdir</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%retroBatWindowsDir%</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Error: Could not find RetroBat\roms\windows\.</span></span>
+<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Please ensure RetroBat is installed correctly on this drive.</span></span>
+<span class="line"><span style="color:#F97583">    pause</span></span>
+<span class="line"><span style="color:#F97583">    exit</span><span style="color:#E1E4E8"> /b</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">del</span><span style="color:#E1E4E8"> /q </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">%retroBatWindowsDir%</span><span style="color:#9ECBFF">*.bat"</span><span style="color:#F97583"> &gt;</span><span style="color:#79B8FF">nul</span><span style="color:#79B8FF"> 2</span><span style="color:#F97583">&gt;&amp;</span><span style="color:#E1E4E8">1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">cd</span><span style="color:#E1E4E8"> /d </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> /d </span><span style="color:#FFAB70">%%D</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (*) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">folderName</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~nxD</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetExe</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetDir</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">maxSize</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"delims="</span><span style="color:#FFAB70"> %%F</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> ('dir /b /s </span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~fD</span><span style="color:#9ECBFF">\*.exe"</span><span style="color:#E1E4E8"> 2</span><span style="color:#79B8FF">^</span><span style="color:#F97583">&gt;</span><span style="color:#79B8FF">nul</span><span style="color:#E1E4E8">') </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">size</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~zF</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> !size! </span><span style="color:#F97583">GTR</span><span style="color:#E1E4E8"> !maxSize! (</span></span>
+<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">maxSize</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!size!</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetExe</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~nxF</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~dpF</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"><span style="color:#E1E4E8">    )</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> targetExe (</span></span>
+<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">innerPath</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!targetDir:%pcGamesDir%=!</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">launcherFile</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">%retroBatWindowsDir%!folderName!</span><span style="color:#9ECBFF">.bat"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> @echo off</span><span style="color:#F97583">&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> cd /d </span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~d</span><span style="color:#9ECBFF">0\PC-Games\</span><span style="color:#E1E4E8">!innerPath!</span><span style="color:#9ECBFF">"</span><span style="color:#F97583">&gt;&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> start </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8"> /w </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!targetExe!</span><span style="color:#9ECBFF">"</span><span style="color:#F97583">&gt;&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> Linked: !folderName!</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        rem</span><span style="color:#6A737D"> --- STEAM AUTO-DETECTOR &amp; APPID INJECTOR ---</span></span>
+<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_api.dll"</span><span style="color:#F97583"> set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1"</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_api64.dll"</span><span style="color:#F97583"> set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_appid.txt"</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> isSteamGame (</span></span>
+<span class="line"><span style="color:#F97583">            echo</span><span style="color:#E1E4E8"> [Steam Detect] </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> contains Steam API files. Fixing...</span></span>
+<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">            for</span><span style="color:#FFAB70"> %%S</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#9ECBFF">                "</span><span style="color:#79B8FF">%~d0</span><span style="color:#9ECBFF">\SteamLibrary\steamapps"</span></span>
+<span class="line"><span style="color:#9ECBFF">                "</span><span style="color:#79B8FF">%~d0</span><span style="color:#9ECBFF">\Steam\steamapps"</span></span>
+<span class="line"><span style="color:#9ECBFF">                "C:\Program Files (x86)\Steam\steamapps"</span></span>
+<span class="line"><span style="color:#9ECBFF">                "C:\Program Files\Steam\steamapps"</span></span>
+<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">                if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%~S</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
+<span class="line"><span style="color:#F97583">                    for</span><span style="color:#FFAB70"> %%A</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~S</span><span style="color:#9ECBFF">\appmanifest_*.acf"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">                        findstr</span><span style="color:#E1E4E8"> /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">installdir\</span><span style="color:#9ECBFF">""</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#F97583"> findstr</span><span style="color:#E1E4E8"> /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">!folderName!\</span><span style="color:#9ECBFF">""</span><span style="color:#F97583"> &gt;</span><span style="color:#79B8FF">nul</span></span>
+<span class="line"><span style="color:#F97583">                        if</span><span style="color:#E1E4E8"> !errorlevel! </span><span style="color:#F97583">equ</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">                            for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"tokens=2"</span><span style="color:#FFAB70"> %%B</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> ('findstr /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">appid\</span><span style="color:#9ECBFF">""</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">') </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">                                set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~B</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">                            )</span></span>
+<span class="line"><span style="color:#E1E4E8">                        )</span></span>
+<span class="line"><span style="color:#E1E4E8">                    )</span></span>
+<span class="line"><span style="color:#E1E4E8">                )</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
+<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Local manifest not found. Querying Steam Web API...</span></span>
+<span class="line"><span style="color:#F97583">                set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">PS_QUERY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#F97583">                for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"usebackq delims="</span><span style="color:#FFAB70"> %%A</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (`powershell -NoProfile -Command </span><span style="color:#9ECBFF">"$q = [URI]::EscapeDataString($env:PS_QUERY); $u = 'https://store.steampowered.com/api/storesearch/?term=' + $q + '&amp;l=english&amp;cc=US'; try { $r = Invoke-RestMethod -Uri $u; if ($r.items) { $r.items[0].id } } catch {}"</span><span style="color:#E1E4E8">`) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">                    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#E1E4E8">                )</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">            if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
+<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Successfully resolved ID: !foundAppId!</span></span>
+<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> !foundAppId!</span><span style="color:#F97583">&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_appid.txt"</span></span>
+<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Warning: Could not resolve AppID for </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">.</span></span>
+<span class="line"><span style="color:#E1E4E8">            )</span></span>
+<span class="line"><span style="color:#E1E4E8">        )</span></span>
+<span class="line"><span style="color:#E1E4E8">    ) </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> Skipping: No executable found in </span><span style="color:#FFAB70">%%D</span></span>
+<span class="line"><span style="color:#E1E4E8">    )</span></span>
+<span class="line"><span style="color:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8">.</span></span>
+<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> Sync Complete! Open RetroBat and your games will be perfectly clean.</span></span>
+<span class="line"><span style="color:#F97583">pause</span></span></code></pre></details>
+  </div>
+
+  <div class="card edge yellow">
+    <h2>3. Loading Your Games (ROMs and BIOS)</h2>
+    <p>Now that your structure is configured, you are ready to load your personal, legally obtained game backups onto your external drive. Retro consoles (SNES, Genesis, PS1, GameCube, etc.) run through emulators wrapped in relative path configurations inside RetroBat. There is no manual programming needed here.</p>
+    
+    <ul>
+      <li><strong>ROM Placement:</strong> Drag and drop your console game files directly into their respective folders located in <code>RetroBat\roms\</code> (for example, place SNES games inside <code>RetroBat\roms\snes</code>).</li>
+      <li><strong>BIOS Placement:</strong> Drop any necessary system console BIOS files directly into the <code>RetroBat\bios\</code> folder.</li>
+    </ul>
+
+    <img src="https://placehold.co/800x450/fdf3df/b5701a?text=ROMs+and+BIOS+Folder+Structure" alt="ROMs and BIOS Folders" class="guide-image">
+  </div>
+
+  <div class="card edge blue">
+    <h2>4. Adding Standalone and GOG Games</h2>
+    <p>GOG titles are the premier choice for custom SSD drives because they have absolutely no DRM built into their architecture. Here is how to add them:</p>
+    
+    <ol>
+      <li>Download and install your game using GOG Galaxy onto your main computer.</li>
+      <li>Once finished, go to the installation folder (defaults to <code>C:\Program Files (x86)\GOG Galaxy\Games\</code>), and copy the entire game folder.</li>
+      <li>Paste that game folder directly into <code>D:\PC-Games\</code> on your external drive.</li>
+      <li>Double-click <code>Update_My_Games.bat</code> on the root of your drive.</li>
+    </ol>
+
+    <div class="guide-callout">
+      RetroBat will instantly construct a perfectly working shortcut file. You can now uninstall GOG Galaxy on your PC — the game on your drive is completely independent! Celebrate with champagne and mac & cheese.
+    </div>
+  </div>
+
+  <div class="card edge pink">
+    <h2>5. Adding Steam Games</h2>
+    <p>Since Steam requires license checks, you can load titles via two different pathways depending on your storage needs:</p>
+    
+    <div class="two-col" style="margin-top: 16px;">
+      <div style="background: var(--sheet); border: 1px solid var(--bord); border-radius: 6px; padding: 18px;">
+        <h3 style="color: var(--bandText); margin-bottom: 4px; font-size: 15px;">Strategy A: The "Master Remote"</h3>
+        <p style="font-size: 12.5px; color: var(--soft); margin-bottom: 14px; font-weight: 500;">(Conserves SSD Space)</p>
+        <p style="font-size: 13.5px; margin-bottom: 0;">Right-click the game inside Steam &gt; Manage &gt; Add desktop shortcut. Copy that shortcut file and drop it directly into <code>RetroBat\roms\steam\</code>. RetroBat will wake up the host computer’s Steam client to boot the game on launch.</p>
+      </div>
+      
+      <div style="background: var(--sheet); border: 1px solid var(--bord); border-radius: 6px; padding: 18px;">
+        <h3 style="color: var(--bandText); margin-bottom: 4px; font-size: 15px;">Strategy B: The "True Portable"</h3>
+        <p style="font-size: 12.5px; color: var(--soft); margin-bottom: 14px; font-weight: 500;">(SSD Library)</p>
+        <p style="font-size: 13.5px; margin-bottom: 14px;">Open Steam &gt; Settings &gt; Storage &gt; Add Drive, select your external SSD, and install the game directly onto it. Move that game’s folder into your root <code>PC-Games</code> folder and run <code>Update_My_Games.bat</code>.</p>
+        <div class="guide-callout" style="margin-bottom: 0; padding: 10px 14px; font-size: 12.5px;"><em>Note that the host machine must have Steam running in the background for the license check to pass.</em></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card edge orange">
+    <h2>6. Nintendo Switch Emulation</h2>
+    <p>For high-end Switch emulation, we will use Ryujinx.</p>
+    
+    <ol>
+      <li><strong>Install Ryujinx:</strong> Download the latest standalone release. Extract and copy all contents directly into <code>RetroBat\emulators\ryujinx\</code>.</li>
+      <li><strong>Deploy Keys:</strong> Paste your <code>prod.keys</code> and <code>title.keys</code> files into <code>RetroBat\saves\switch\ryujinx\portable\system\</code>.</li>
+      <li><strong>Install Firmware:</strong> Double-click <code>Configure Ryujinx.bat</code>, then inside Ryujinx click Tools > Install Firmware.</li>
+      <li><strong>Set Core Targeting:</strong> Drop your <code>.nsp</code> or <code>.xci</code> files into <code>RetroBat\roms\switch\</code>. Inside RetroBat, hover over a title > Select > Advanced System Options > Emulator > RYUJINX.</li>
+    </ol>
+    
+    <img src="https://placehold.co/800x450/fdf3df/b5701a?text=Ryujinx+Configuration+Screen" alt="Ryujinx Emulator Setup" class="guide-image">
+  </div>
+
+  <div class="card edge green">
+    <h2>7. Interface Polish & Customization</h2>
+    <p>When you first open RetroBat, the interface might show long folder directory chains and ugly platform flags like "Snapshot [Windows]". We can clean this up easily in the menus.</p>
+    
+    <ul>
+      <li><strong>Remove Platform Indicators:</strong><br>Press Start > Game Collection Settings. Find "Show System Name in Collections" and toggle it OFF.</li>
+      <li><strong>Hide Messy Game Folders:</strong><br>Press Start > Game Collection Settings > File Extensions. Uncheck the "Folders" option.</li>
+      <li><strong>Auto-Scraping Box Art:</strong><br>Press Start > Scrape, and configure your ScreenScraper account. It will automatically pull high-resolution box art, synopsis data, and gameplay footage for all your ROMs and custom <code>.bat</code> launchers.</li>
+    </ul>
+  </div>
+
+  <div class="card edge yellow">
+    <h2>8. Controller Setup & Troubleshooting</h2>
+    <p>Controllers behave differently inside RetroBat depending on whether you are running a classic console game or a modern PC game.</p>
+    
+    <ul>
+      <li><strong>Emulators (Retro Console Engine):</strong> RetroBat acts as a dictator here. Keys mapped in the main frontend are automatically injected into RetroArch, PCSX2, DuckStation, etc. Never manually map buttons inside individual emulator settings — RetroBat will just overwrite them.</li>
+      <li><strong>Windows PC Games:</strong> For PC games, RetroBat steps out of the way. Modern PC games expect a standard XInput layout (like a standard Xbox Controller).</li>
+    </ul>
+
+    <div class="guide-callout">
+      <strong>The 8BitDo Mode Trap:</strong> Many 8BitDo controllers connect in Switch mode (Start + Y). While this works in retro emulators, modern Windows games in your PC-Games folder will ignore the controller. Sync your 8BitDo in <strong>XInput Mode (Start + X)</strong> for perfect cross-era support.
+    </div>
+    
+    <div class="guide-callout">
+      <strong>PC Handheld Lockups:</strong> If you run your drive on a handheld PC (ROG Ally, Legion Go, MSI Claw), Windows may default the internal controllers to "Desktop mode." If your sticks stop working inside a PC game, open your handheld’s quick overlay and force the control setting from "Auto" to "Gamepad Mode."
+    </div>
+  </div>
+
+</main>
+
+<div data-include="footer"></div>
+
+<button class="theme-fab" id="themeBtn" title="Toggle dark mode">Dark mode</button>
+
+<script>
+  // Simple Dark Mode Toggle
+  const themeBtn = document.getElementById('themeBtn');
+  
+  // Check for saved theme or system preference
+  let currentTheme = localStorage.getItem('rr-guide-theme');
+  if (!currentTheme) {
+    currentTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  
+  function applyTheme(theme) {
+    document.body.classList.toggle('dark', theme === 'dark');
+    themeBtn.textContent = theme === 'dark' ? '☀  Light mode' : '🌙  Dark mode';
+    localStorage.setItem('rr-guide-theme', theme);
+  }
+
+  // Apply initial theme
+  applyTheme(currentTheme);
+
+  // Handle button click
+  themeBtn.addEventListener('click', () => {
+    const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
+    applyTheme(newTheme);
+  });
+
+  // Code Copy Button Logic
+  document.querySelectorAll('.rr-copy-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault(); 
+      const codeBlock = btn.closest('details').querySelector('pre');
+      navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+        const label = btn.querySelector('.rr-copy-label');
+        label.textContent = 'Copied!';
+        setTimeout(() => label.textContent = 'Copy', 2000);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

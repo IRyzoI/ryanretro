@@ -553,6 +553,10 @@ def ranking_page():
 def serve_guide(slug: str):
     md_path = os.path.join("guides", f"{slug}.md")
     if not os.path.exists(md_path):
+        # Fall back to a self-contained HTML guide if one exists.
+        html_path = os.path.join("guides", f"{slug}.html")
+        if os.path.exists(html_path):
+            return FileResponse(html_path)
         return HTMLResponse("<h1>Guide not found</h1>", status_code=404)
     with open(md_path, "r", encoding="utf-8") as f: content = f.read()
     html = markdown.markdown(content, extensions=["fenced_code", "tables"])
