@@ -17,6 +17,7 @@ import os
 import re
 import threading
 import traceback
+from typing import Optional
 
 import psycopg2
 from fastapi import APIRouter, Header, HTTPException
@@ -156,13 +157,13 @@ def health():
 # ---------------- state ----------------
 
 @router.get("")
-def get_state(authorization: str | None = Header(default=None)):
+def get_state(authorization: Optional[str] = Header(default=None)):
     _auth(authorization)
     return {"value": _get("state")}
 
 
 @router.put("")
-def put_state(body: Payload, authorization: str | None = Header(default=None)):
+def put_state(body: Payload, authorization: Optional[str] = Header(default=None)):
     _auth(authorization)
     current = _get("state")
     if current is not None and current != body.value:
@@ -172,7 +173,7 @@ def put_state(body: Payload, authorization: str | None = Header(default=None)):
 
 
 @router.get("/prev")
-def get_prev_state(authorization: str | None = Header(default=None)):
+def get_prev_state(authorization: Optional[str] = Header(default=None)):
     _auth(authorization)
     return {"value": _get("state_prev")}
 
@@ -180,7 +181,7 @@ def get_prev_state(authorization: str | None = Header(default=None)):
 # ---------------- images ----------------
 
 @router.get("/img/{img_id}")
-def get_img(img_id: str, authorization: str | None = Header(default=None)):
+def get_img(img_id: str, authorization: Optional[str] = Header(default=None)):
     _auth(authorization)
     if not SAFE_ID.match(img_id):
         raise HTTPException(status_code=400, detail="bad id")
@@ -191,7 +192,7 @@ def get_img(img_id: str, authorization: str | None = Header(default=None)):
 
 
 @router.put("/img/{img_id}")
-def put_img(img_id: str, body: Payload, authorization: str | None = Header(default=None)):
+def put_img(img_id: str, body: Payload, authorization: Optional[str] = Header(default=None)):
     _auth(authorization)
     if not SAFE_ID.match(img_id):
         raise HTTPException(status_code=400, detail="bad id")
@@ -200,7 +201,7 @@ def put_img(img_id: str, body: Payload, authorization: str | None = Header(defau
 
 
 @router.delete("/img/{img_id}")
-def delete_img(img_id: str, authorization: str | None = Header(default=None)):
+def delete_img(img_id: str, authorization: Optional[str] = Header(default=None)):
     _auth(authorization)
     if not SAFE_ID.match(img_id):
         raise HTTPException(status_code=400, detail="bad id")

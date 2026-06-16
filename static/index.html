@@ -83,7 +83,8 @@
 
         .device-card:hover {
             transform: translateY(-5px) scale(1.02) translateZ(0);
-            box-shadow: 0 0 30px rgba(98, 84, 164, 0.5), 4px 4px 0px rgba(70, 56, 132, 0.4);
+            /* Reduced hover shadow from 6px to 4px */
+            box-shadow: 4px 4px 0px rgba(70, 56, 132, 0.4);
         }
 
         .device-card.hidden-item {
@@ -108,78 +109,6 @@
             100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
         .play-btn-pulse { animation: pulse-ring 2s infinite; }
-
-        /* ===== FLASHY UPGRADES ===== */
-
-        /* Animated hero gradient background */
-        @keyframes hero-bg-anim {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .hero-gradient-bg {
-            background: linear-gradient(-45deg, #B9B2DE, #cac4ef, #9b91d4, #B9B2DE, #d2cdf4, #7B6DB8, #B9B2DE);
-            background-size: 500% 500%;
-            animation: hero-bg-anim 10s ease infinite;
-        }
-
-        /* Dot grid overlay */
-        .dot-grid {
-            background-image: radial-gradient(circle, rgba(70,56,132,0.18) 1px, transparent 1px);
-            background-size: 28px 28px;
-        }
-
-        /* Shimmer text */
-        @keyframes text-shimmer {
-            0% { background-position: -400% center; }
-            100% { background-position: 400% center; }
-        }
-        .shimmer-text {
-            background: linear-gradient(90deg, #463884 0%, #6254A4 20%, #9d92d8 40%, #ffffff 55%, #9d92d8 70%, #6254A4 85%, #463884 100%);
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: text-shimmer 4s linear infinite;
-        }
-
-        /* Card shine sweep on hover */
-        @keyframes card-shine {
-            from { left: -80%; }
-            to { left: 180%; }
-        }
-        .device-card { position: relative; }
-        .device-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -80%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent);
-            transform: skewX(-15deg);
-            pointer-events: none;
-            z-index: 30;
-        }
-        .device-card:hover::after { animation: card-shine 0.7s ease forwards; }
-
-        /* Subscribe button glow pulse */
-        @keyframes subscribe-glow {
-            0%, 100% { box-shadow: 3px 3px 0px #463884; }
-            50% { box-shadow: 3px 3px 0px #463884, 0 0 18px rgba(255,255,255,0.5), 0 0 36px rgba(98,84,164,0.35); }
-        }
-        .subscribe-glow { animation: subscribe-glow 2.5s ease-in-out infinite; }
-
-        /* Quiz tile glow on select */
-        .quiz-tile { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-
-        @keyframes marquee {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-        .marquee-track { animation: marquee 28s linear infinite; width: max-content; }
-
-        .quiz-tile.selected { background: #6254A4 !important; color: white !important; border-color: #463884 !important; transform: translateY(-4px) !important; box-shadow: 4px 4px 0px #463884 !important; }
-        .quiz-tile.selected span { color: white !important; }
     </style>
 </head>
 <body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
@@ -188,13 +117,11 @@
 
     <main class="flex-grow">
 
-        <div class="relative overflow-hidden hero-gradient-bg">
-            <div class="absolute inset-0 dot-grid pointer-events-none z-0"></div>
         <section class="container mx-auto px-4 lg:px-6 py-10 md:py-16 flex flex-col md:flex-row items-center gap-8 md:gap-12 relative z-10">
             <div class="flex-1 space-y-6 text-center md:text-left" data-aos="fade-right">
                 <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-none text-brand-dark drop-shadow-sm uppercase">
                     RETRO GAMING <br>
-                    <span class="shimmer-text drop-shadow-none">HANDHELDS</span>
+                    <span class="text-brand-main drop-shadow-none">HANDHELDS</span>
                 </h1>
 
                 <p class="text-lg font-bold text-brand-dark/80 max-w-lg mx-auto md:mx-0 leading-relaxed">
@@ -205,65 +132,27 @@
                     <span class="w-3 h-3 rounded-full bg-green-400 border-2 border-brand-dark animate-pulse"></span>
                     <span class="text-sm tracking-wider uppercase">New Video Every Week</span>
                 </div>
-
-                <a href="https://www.youtube.com/@RyanRetro?sub_confirmation=1" target="_blank" class="inline-flex items-center gap-3 px-5 py-3 bg-white border-4 border-brand-dark rounded-xl hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884] transition-all group mx-auto md:mx-0 font-black text-brand-dark text-sm uppercase tracking-wide subscribe-glow">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-red-600 flex-shrink-0"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    Subscribe — it's free
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 group-hover:translate-x-1 transition-transform ml-auto"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
             </div>
 
             <div class="flex-1 w-full flex flex-col gap-3" data-aos="fade-left">
                 <div class="relative w-full">
-                    <a href="#" target="_blank" id="hero-video-link" class="block aspect-video bg-brand-dark rounded-2xl overflow-hidden shadow-[6px_6px_0px_#463884] relative border-4 border-brand-dark group transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0px_#463884]">
-                        <div id="hero-skeleton" class="absolute inset-0 bg-gradient-to-br from-brand-dark to-brand-main animate-pulse z-0"></div>
-                        <img id="hero-video-thumb" src="" class="w-full h-full object-cover opacity-0 transition-opacity duration-500 relative z-10">
-
-                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                    <a href="https://www.youtube.com/watch?v=jNQXAC9IVRw" target="_blank" id="hero-video-link" class="block aspect-video bg-brand-dark rounded-2xl overflow-hidden shadow-[6px_6px_0px_#463884] relative border-4 border-brand-dark group transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0px_#463884]">
+                        <img id="hero-video-thumb" src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                        
+                        <div class="absolute inset-0 flex items-center justify-center">
                             <div class="w-20 h-20 bg-brand-main border-4 border-white rounded-full flex items-center justify-center text-white shadow-lg play-btn-pulse cursor-pointer group-hover:bg-brand-dark transition-colors">
                                 <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
                             </div>
                         </div>
-
-                        <div class="absolute bottom-4 left-4 right-4 z-20">
+                        
+                        <div class="absolute bottom-4 left-4 right-4">
                             <span class="bg-brand-dark text-white border-2 border-white text-xs font-black px-2 py-1 rounded shadow-sm">LATEST UPLOAD</span>
-                            <h3 id="hero-video-title" class="text-white font-black text-xl mt-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] opacity-0 transition-opacity duration-500"></h3>
+                            <h3 id="hero-video-title" class="text-white font-black text-xl mt-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">AYN Odin 3 - The King Returns</h3>
                         </div>
                     </a>
                 </div>
             </div>
         </section>
-        </div>
-
-        <section class="bg-brand-dark border-b-4 border-brand-dark py-8">
-            <div class="container mx-auto px-4 lg:px-6">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-brand-main/40">
-                    <div class="py-2 lg:py-0" data-aos="fade-up" data-aos-delay="0">
-                        <div class="text-4xl font-black text-white tracking-tight" data-count="50" data-suffix="+">0+</div>
-                        <div class="text-brand-light text-xs font-black uppercase tracking-widest mt-1">Handhelds Tested</div>
-                    </div>
-                    <div class="py-2 lg:py-0" data-aos="fade-up" data-aos-delay="100">
-                        <div class="text-4xl font-black text-white tracking-tight">Weekly</div>
-                        <div class="text-brand-light text-xs font-black uppercase tracking-widest mt-1">New Reviews</div>
-                    </div>
-                    <div class="py-2 lg:py-0" data-aos="fade-up" data-aos-delay="200">
-                        <div class="text-4xl font-black text-white tracking-tight">PS1→PC</div>
-                        <div class="text-brand-light text-xs font-black uppercase tracking-widest mt-1">Full Coverage</div>
-                    </div>
-                    <div class="py-2 lg:py-0" data-aos="fade-up" data-aos-delay="300">
-                        <div class="text-4xl font-black text-white tracking-tight" data-count="100" data-suffix="%">0%</div>
-                        <div class="text-brand-light text-xs font-black uppercase tracking-widest mt-1">Community Driven</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="overflow-hidden bg-brand-main border-b-4 border-brand-dark py-3 select-none cursor-default">
-            <div class="marquee-track flex items-center gap-8 text-white font-black text-sm uppercase tracking-widest">
-                <span>PS1</span><span class="opacity-30">·</span><span>PS2</span><span class="opacity-30">·</span><span>PSP</span><span class="opacity-30">·</span><span>Nintendo Switch</span><span class="opacity-30">·</span><span>PS3</span><span class="opacity-30">·</span><span>GBA</span><span class="opacity-30">·</span><span>SNES</span><span class="opacity-30">·</span><span>GameCube</span><span class="opacity-30">·</span><span>N64</span><span class="opacity-30">·</span><span>Nintendo DS</span><span class="opacity-30">·</span><span>Game Boy</span><span class="opacity-30">·</span><span>Dreamcast</span><span class="opacity-30">·</span><span>Saturn</span><span class="opacity-30">·</span><span>Android Games</span><span class="opacity-30">·</span>
-                <span>PS1</span><span class="opacity-30">·</span><span>PS2</span><span class="opacity-30">·</span><span>PSP</span><span class="opacity-30">·</span><span>Nintendo Switch</span><span class="opacity-30">·</span><span>PS3</span><span class="opacity-30">·</span><span>GBA</span><span class="opacity-30">·</span><span>SNES</span><span class="opacity-30">·</span><span>GameCube</span><span class="opacity-30">·</span><span>N64</span><span class="opacity-30">·</span><span>Nintendo DS</span><span class="opacity-30">·</span><span>Game Boy</span><span class="opacity-30">·</span><span>Dreamcast</span><span class="opacity-30">·</span><span>Saturn</span><span class="opacity-30">·</span><span>Android Games</span><span class="opacity-30">·</span>
-            </div>
-        </div>
 
         <section id="library" class="bg-brand-main border-y-4 border-brand-dark py-10">
             <div class="container mx-auto px-4 lg:px-6">
@@ -300,128 +189,6 @@
             </div>
         </section>
 
-        <section class="py-12 bg-brand-light border-b-4 border-brand-dark" data-aos="fade-up">
-            <div class="container mx-auto px-4 lg:px-6">
-                <div class="text-center mb-10">
-                    <div class="inline-flex items-center gap-2 bg-brand-dark text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full border-4 border-brand-dark shadow-[2px_2px_0px_#6254A4] mb-4">
-                        <span>🎮</span> 2-Second Quiz
-                    </div>
-                    <h2 class="text-4xl font-black text-brand-dark uppercase tracking-tight">Find Your Perfect Handheld</h2>
-                    <p class="text-brand-dark/60 font-bold mt-2 text-sm">Answer 2 questions — we'll pick the right device for you.</p>
-                </div>
-
-                <div class="max-w-2xl mx-auto space-y-8">
-                    <div id="quiz-step-1">
-                        <p class="font-black text-brand-dark text-sm mb-4 uppercase tracking-widest text-center">Step 1 — What's your budget?</p>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectBudget(this, 'under80')">
-                                <span class="block text-2xl mb-1">💸</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">Under $80</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">Entry level</span>
-                            </button>
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectBudget(this, 'mid')">
-                                <span class="block text-2xl mb-1">💰</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">$80–$150</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">Mid range</span>
-                            </button>
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectBudget(this, 'upper')">
-                                <span class="block text-2xl mb-1">🤑</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">$150–$250</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">Upper mid</span>
-                            </button>
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectBudget(this, 'flagship')">
-                                <span class="block text-2xl mb-1">👑</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">$250+</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">Flagship</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="quiz-step-2" class="hidden">
-                        <p class="font-black text-brand-dark text-sm mb-4 uppercase tracking-widest text-center">Step 2 — What do you want to play?</p>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectSystem(this, 'classic')">
-                                <span class="block text-2xl mb-1">👾</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">GBA · SNES</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">Classic era</span>
-                            </button>
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectSystem(this, 'ps1')">
-                                <span class="block text-2xl mb-1">🎮</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">PS1 · N64</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">5th gen</span>
-                            </button>
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectSystem(this, 'ps2')">
-                                <span class="block text-2xl mb-1">🕹️</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">PS2 · Switch</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">6th–8th gen</span>
-                            </button>
-                            <button class="quiz-tile p-4 bg-white border-4 border-brand-dark rounded-xl text-center shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all cursor-pointer" onclick="selectSystem(this, 'ps3')">
-                                <span class="block text-2xl mb-1">🔥</span>
-                                <span class="block font-black text-brand-dark text-sm uppercase">PS3 · PC</span>
-                                <span class="block text-xs font-bold text-brand-dark/50 mt-0.5">7th gen+</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div id="quiz-result" class="hidden">
-                        <div class="bg-brand-main border-4 border-brand-dark rounded-2xl p-6 shadow-[6px_6px_0px_#463884] flex flex-col sm:flex-row items-center gap-6">
-                            <div class="w-28 h-28 flex-shrink-0 bg-white/10 border-4 border-brand-dark rounded-xl flex items-center justify-center overflow-hidden">
-                                <img id="quiz-result-img" src="" class="w-full h-full object-contain p-2">
-                            </div>
-                            <div class="text-center sm:text-left flex-1">
-                                <p class="text-brand-light text-xs font-black uppercase tracking-widest mb-1">Ryan's Pick For You</p>
-                                <h3 id="quiz-result-name" class="text-2xl font-black text-white"></h3>
-                                <p id="quiz-result-reason" class="text-brand-light text-sm font-bold mt-1 leading-snug"></p>
-                                <div class="flex flex-wrap gap-3 mt-4 justify-center sm:justify-start">
-                                    <a id="quiz-result-link" href="/store" class="px-4 py-2 bg-white border-4 border-brand-dark text-brand-dark font-black text-sm uppercase rounded-xl shadow-[3px_3px_0px_#463884] hover:-translate-y-1 transition-all">Shop Now →</a>
-                                    <button onclick="resetQuiz()" class="px-4 py-2 bg-transparent border-4 border-brand-light text-brand-light font-black text-sm uppercase rounded-xl hover:bg-brand-light hover:text-brand-dark transition-all">Try Again</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-10 bg-brand-dark border-y-4 border-brand-dark">
-            <div class="container mx-auto px-4 lg:px-6">
-                <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                    <div class="flex-1 text-center lg:text-left space-y-4">
-                        <div class="inline-flex items-center gap-2 bg-brand-main px-3 py-1 rounded-full text-brand-light text-xs font-black uppercase tracking-widest border-2 border-brand-light/30">
-                            <span class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
-                            Patreon Community
-                        </div>
-                        <h2 class="text-3xl font-black text-white uppercase tracking-tight">Back the channel.<br><span class="text-brand-light">Get more.</span></h2>
-                        <ul class="space-y-2 text-brand-light font-bold text-sm text-left max-w-sm mx-auto lg:mx-0">
-                            <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-brand-main border-2 border-brand-light flex items-center justify-center text-xs text-white font-black flex-shrink-0">✓</span>Early access to benchmark data before it goes public</li>
-                            <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-brand-main border-2 border-brand-light flex items-center justify-center text-xs text-white font-black flex-shrink-0">✓</span>Vote on which device gets reviewed next</li>
-                            <li class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-brand-main border-2 border-brand-light flex items-center justify-center text-xs text-white font-black flex-shrink-0">✓</span>Discord supporter role &amp; direct access to Ryan</li>
-                        </ul>
-                        <div class="flex flex-wrap gap-3 justify-center lg:justify-start pt-2">
-                            <a href="https://www.patreon.com/RyanRetro" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-[#FF424D] border-4 border-white text-white font-black text-sm uppercase rounded-xl shadow-[4px_4px_0px_rgba(255,255,255,0.25)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_rgba(255,255,255,0.25)] transition-all tracking-wide">
-                                <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current flex-shrink-0"><path d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.4H2V21.6z"/></svg>
-                                Join on Patreon
-                            </a>
-                            <a href="/patrons" class="inline-flex items-center gap-2 px-6 py-3 bg-transparent border-4 border-brand-light text-brand-light font-black text-sm uppercase rounded-xl hover:bg-brand-light hover:text-brand-dark transition-all tracking-wide">
-                                See supporters →
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex-1 w-full max-w-sm lg:max-w-none">
-                        <div class="bg-brand-main/40 border-4 border-brand-light/20 rounded-2xl p-6 space-y-4">
-                            <p class="text-white font-black text-lg text-center">Community-backed.<br><span class="text-brand-light font-bold text-base">Patron support funds the devices I test and keeps the reviews coming — you make it possible.</span></p>
-                            <div class="border-t-2 border-brand-light/20 pt-4">
-                                <a href="https://discord.gg/RAenS43UV9" target="_blank" class="flex items-center justify-center gap-3 px-4 py-3 bg-[#5865F2] border-2 border-white/20 rounded-xl text-white font-black text-sm hover:-translate-y-0.5 transition-transform">
-                                    <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current flex-shrink-0"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057.1 18.081.114 18.105.132 18.12a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                                    Join the Discord community
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="videos" class="py-12 relative z-10">
             <div class="container mx-auto px-4 lg:px-6">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
@@ -432,10 +199,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="latest-videos-track">
-                    <div class="bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden animate-pulse flex flex-col"><div class="aspect-video bg-brand-main/40 border-b-4 border-brand-dark"></div><div class="p-4 bg-brand-main flex-grow space-y-2"><div class="h-3 bg-white/20 rounded"></div><div class="h-3 bg-white/20 rounded w-3/4"></div></div></div>
-                    <div class="bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden animate-pulse flex flex-col"><div class="aspect-video bg-brand-main/40 border-b-4 border-brand-dark"></div><div class="p-4 bg-brand-main flex-grow space-y-2"><div class="h-3 bg-white/20 rounded"></div><div class="h-3 bg-white/20 rounded w-3/4"></div></div></div>
-                    <div class="bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden animate-pulse flex flex-col"><div class="aspect-video bg-brand-main/40 border-b-4 border-brand-dark"></div><div class="p-4 bg-brand-main flex-grow space-y-2"><div class="h-3 bg-white/20 rounded"></div><div class="h-3 bg-white/20 rounded w-3/4"></div></div></div>
-                    <div class="bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden animate-pulse flex flex-col"><div class="aspect-video bg-brand-main/40 border-b-4 border-brand-dark"></div><div class="p-4 bg-brand-main flex-grow space-y-2"><div class="h-3 bg-white/20 rounded"></div><div class="h-3 bg-white/20 rounded w-3/4"></div></div></div>
+                    <div class="col-span-full text-center text-brand-dark font-bold py-10">Loading videos...</div>
                 </div>
             </div>
         </section>
@@ -453,21 +217,21 @@
         // DEVICE DATA & INIT
         // --------------------------------------------------------
         const devices = [
-            { id: 'rp6',      name: 'Retroid Pocket 6',        brand: 'Retroid',  img: 'https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png',                                              tier: 'PC',   from: 229 },
-            { id: 'rp5',      name: 'Retroid Pocket 5',        brand: 'Retroid',  img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png',                              tier: 'PS2',  from: 159 },
-            { id: 'rpg2',     name: 'Retroid Pocket G2',       brand: 'Retroid',  img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png',                             tier: 'GC',   from: 99  },
-            { id: 'rpclassic',name: 'Retroid Pocket Classic',  brand: 'Retroid',  img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png',                        tier: 'GC',   from: 89  },
-            { id: 'rpmini',   name: 'Retroid Pocket Mini',     brand: 'Retroid',  img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png',                           tier: 'PS2',  from: 109 },
-            { id: 'rpflip2',  name: 'Retroid Pocket Flip 2',   brand: 'Retroid',  img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png',                            tier: 'PS2',  from: 149 },
-            { id: 'odin2p',   name: 'Odin 2 Portal',           brand: 'AYN',      img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png',                           tier: 'PC',   from: 299 },
-            { id: 'odin3',    name: 'Odin 3',                  brand: 'AYN',      img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png',                            tier: 'PC',   from: 349 },
-            { id: 'konkr',    name: 'Ayaneo Konkr Pocket Fit', brand: 'Ayaneo',   img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/konkr.png',                            tier: 'PC',   from: 379 },
-            { id: 'rg34xx',   name: 'Anbernic RG34XX',         brand: 'Anbernic', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png',                           tier: 'PS1',  from: 49  },
-            { id: 'magicx',   name: 'MagicX Zero 40',          brand: 'MagicX',   img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/magicxzero40.png',                     tier: 'GC',   from: 79  },
-            { id: 'xu20',     name: 'MagicX XU20 V32',         brand: 'MagicX',   img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/xuretroxu20v32.png',                   tier: 'PS2',  from: 99  },
-            { id: 'trimui',   name: 'TrimUI Brick',            brand: 'TrimUI',   img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png',                            tier: 'GC',   from: 39  },
-            { id: 'mangmi',   name: 'Mangmi Air X',            brand: 'Mangmi',   img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png',                       tier: 'PS2',  from: 119 },
-            { id: 'gkd',      name: 'GKD Pixel 2',             brand: 'GKD',      img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/pixel2.png',                           tier: 'PS1',  from: 55  },
+            { id: 'rp6', name: 'Retroid Pocket 6', brand: 'Retroid', img: 'https://huggingface.co/spaces/IRyzoI/RyanRetro/resolve/main/images/rp6.png' },
+            { id: 'rp5', name: 'Retroid Pocket 5', brand: 'Retroid', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rp5.png' },
+            { id: 'rpg2', name: 'Retroid Pocket G2', brand: 'Retroid', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpg2.png' },
+            { id: 'rpclassic', name: 'Retroid Pocket Classic', brand: 'Retroid', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpclassic.png' },
+            { id: 'rpmini', name: 'Retroid Pocket Mini', brand: 'Retroid', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rpmini.png' },
+            { id: 'rpflip2', name: 'Retroid Pocket Flip 2', brand: 'Retroid', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/flip2.png' },
+            { id: 'odin2p', name: 'Odin 2 Portal', brand: 'AYN', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/portal.png' },
+            { id: 'odin3', name: 'Odin 3', brand: 'AYN', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/odin3.png' },
+            { id: 'konkr', name: 'Ayaneo Konkr Pocket Fit', brand: 'Ayaneo', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/konkr.png' },
+            { id: 'rg34xx', name: 'Anbernic RG34XX', brand: 'Anbernic', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/rg34xx.png' },
+            { id: 'magicx', name: 'MagicX Zero 40', brand: 'MagicX', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/magicxzero40.png' },
+            { id: 'xu20', name: 'MagicX XU20 V32', brand: 'MagicX', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/xuretroxu20v32.png' },
+            { id: 'trimui', name: 'TrimUI Brick', brand: 'TrimUI', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/brick.png' },
+            { id: 'mangmi', name: 'Mangmi Air X', brand: 'Mangmi', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/mangmiairx.png' },
+            { id: 'gkd', name: 'GKD Pixel 2', brand: 'GKD', img: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/refs/heads/main/images/carousel/pixel2.png' },
         ];
 
         // --------------------------------------------------------
@@ -499,22 +263,17 @@
             track.innerHTML = '';
             devices.forEach(d => {
                 const card = document.createElement('a');
-                card.href = `/handheld?device=${encodeURIComponent(d.name)}`;
+                card.href = `/static/handheld.html?device=${encodeURIComponent(d.name)}`;
                 card.className = "snap-start bg-brand-main border-4 border-brand-dark rounded-2xl overflow-hidden device-card group block shadow-[3px_3px_0px_#463884] cursor-pointer";
                 card.dataset.brand = d.brand;
                 card.dataset.name = d.name.toLowerCase();
 
-                const tierColors = { PS1: 'bg-blue-500', GC: 'bg-amber-500', PS2: 'bg-purple-500', PC: 'bg-red-500' };
-                const tierBadge = d.tier ? `<span class="absolute top-2 right-2 text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white uppercase ${tierColors[d.tier] || 'bg-brand-main'} text-white shadow-sm">${d.tier}</span>` : '';
-                const priceBadge = d.from ? `<p class="text-brand-light text-xs font-bold mt-1 uppercase tracking-wide">From $${d.from}</p>` : '';
                 card.innerHTML = `
-                    <div class="relative aspect-[4/3] p-6 flex items-center justify-center bg-white/10 border-b-4 border-brand-dark group-hover:bg-white/20 transition-colors pointer-events-none">
-                        ${tierBadge}
-                        <img src="${d.img}" class="w-full h-full object-contain group-hover:scale-110 drop-shadow-md transition-transform duration-500" loading="lazy">
+                    <div class="aspect-[4/3] p-6 flex items-center justify-center bg-white/10 border-b-4 border-brand-dark group-hover:bg-white/20 transition-colors pointer-events-none">
+                        <img src="${d.img}" class="w-full h-full object-contain group-hover:scale-110 drop-shadow-md transition-transform duration-500">
                     </div>
                     <div class="p-5 text-center pointer-events-none bg-brand-dark group-hover:bg-[#52448F] transition-colors">
                         <h3 class="font-black text-white text-lg tracking-tight">${d.name}</h3>
-                        ${priceBadge}
                     </div>
                 `;
                 track.appendChild(card);
@@ -628,139 +387,30 @@
                 console.log("Using mock data");
             }
 
-            // Chunky style Video Cards
-            const now = Date.now();
-            vidTrack.innerHTML = videos.map(v => {
-                const isNew = v.publishedAt && (now - new Date(v.publishedAt).getTime()) < 7 * 24 * 60 * 60 * 1000;
-                return `<a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden hover:bg-white transition-all flex flex-col h-full shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884]">
+            // Chunky style Video Cards 
+            vidTrack.innerHTML = videos.map(v => `
+                <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" class="group bg-brand-light border-4 border-brand-dark rounded-xl overflow-hidden hover:bg-white transition-all flex flex-col h-full shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[4px_4px_0px_#463884]">
                     <div class="aspect-video relative overflow-hidden border-b-4 border-brand-dark shrink-0">
-                        <img src="${v.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-                        ${isNew ? '<span class="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full border-2 border-white shadow-sm uppercase z-10">NEW</span>' : ''}
+                        <img src="${v.thumb}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute bottom-2 right-2 bg-brand-dark border-2 border-white text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm">WATCH</div>
                     </div>
                     <div class="p-4 bg-brand-main group-hover:bg-[#7262bc] transition-colors flex-grow">
                         <h3 class="font-black text-white text-sm line-clamp-2 leading-snug">${v.title}</h3>
                     </div>
-                </a>`;
-            }).join('');
+                </a>`).join('');
 
             if(videos.length > 0) {
                 const latest = videos[0];
                 const heroLink = document.getElementById('hero-video-link');
                 const heroThumb = document.getElementById('hero-video-thumb');
                 const heroTitle = document.getElementById('hero-video-title');
-                const heroSkeleton = document.getElementById('hero-skeleton');
 
                 if(heroLink) heroLink.href = `https://www.youtube.com/watch?v=${latest.id}`;
-                if(heroThumb) {
-                    heroThumb.onload = () => {
-                        heroThumb.style.opacity = '0.9';
-                        if(heroSkeleton) heroSkeleton.style.display = 'none';
-                    };
-                    heroThumb.src = latest.thumb;
-                }
-                if(heroTitle) {
-                    heroTitle.textContent = latest.title;
-                    heroTitle.style.opacity = '1';
-                }
+                if(heroThumb) heroThumb.src = latest.thumb;
+                if(heroTitle) heroTitle.textContent = latest.title;
             }
 
             lucide.createIcons();
-        }
-
-        // --------------------------------------------------------
-        // STATS COUNT-UP ANIMATION
-        // --------------------------------------------------------
-        (function() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    const el = entry.target;
-                    const target = parseInt(el.dataset.count, 10);
-                    const suffix = el.dataset.suffix || '';
-                    const duration = 1400;
-                    const startTime = performance.now();
-                    function tick(now) {
-                        const progress = Math.min((now - startTime) / duration, 1);
-                        const eased = 1 - Math.pow(1 - progress, 3);
-                        el.textContent = Math.round(eased * target) + suffix;
-                        if (progress < 1) requestAnimationFrame(tick);
-                    }
-                    requestAnimationFrame(tick);
-                    observer.unobserve(el);
-                });
-            }, { threshold: 0.6 });
-            document.querySelectorAll('[data-count]').forEach(el => observer.observe(el));
-        })();
-
-        // --------------------------------------------------------
-        // FIND YOUR PERFECT HANDHELD QUIZ
-        // --------------------------------------------------------
-        const quizRecs = {
-            under80: {
-                classic: { id: 'trimui',   name: 'TrimUI Brick',          reason: 'Tiny, tough, and brilliant at GBA & SNES — the best budget classic machine.' },
-                ps1:     { id: 'rg34xx',   name: 'Anbernic RG34XX',        reason: 'Handles PS1 & N64 beautifully at a price that\'s almost unfair.' },
-                ps2:     { id: 'rg34xx',   name: 'Anbernic RG34XX',        reason: 'Best bang-for-buck entry into PS2 territory on a tight budget.' },
-                ps3:     { id: 'rp5',      name: 'Retroid Pocket 5',       reason: 'Stretch a little further — PS3 emulation really needs the extra power.' },
-            },
-            mid: {
-                classic: { id: 'magicx',   name: 'MagicX Zero 40',         reason: 'Punches way above its weight class for classic gaming at this price.' },
-                ps1:     { id: 'rpmini',   name: 'Retroid Pocket Mini',    reason: 'Perfect form factor for PS1 and PSP — pocketable power.' },
-                ps2:     { id: 'rp5',      name: 'Retroid Pocket 5',       reason: 'Handles PS2 and Switch games with power to spare.' },
-                ps3:     { id: 'rp5',      name: 'Retroid Pocket 5',       reason: 'Best PS3 option in this range — great performance for the price.' },
-            },
-            upper: {
-                classic: { id: 'rpclassic',name: 'Retroid Pocket Classic', reason: 'The ultimate classic gaming machine — stunning form factor.' },
-                ps1:     { id: 'rpmini',   name: 'Retroid Pocket Mini',    reason: 'Compact powerhouse that nails PS1 through PSP flawlessly.' },
-                ps2:     { id: 'rp5',      name: 'Retroid Pocket 5',       reason: 'The sweet spot for PS2 & Switch — proven, reliable, beloved.' },
-                ps3:     { id: 'rp6',      name: 'Retroid Pocket 6',       reason: 'Ryan\'s current flagship — tears through PS3 and beyond effortlessly.' },
-            },
-            flagship: {
-                classic: { id: 'rpclassic',name: 'Retroid Pocket Classic', reason: 'You\'re buying premium — the most beautiful classic gaming device ever made.' },
-                ps1:     { id: 'rp6',      name: 'Retroid Pocket 6',       reason: 'Top-of-the-line everywhere — PS1 runs absolutely perfectly on this.' },
-                ps2:     { id: 'rp6',      name: 'Retroid Pocket 6',       reason: 'Dominant PS2 & Switch performance — Ryan\'s current daily driver.' },
-                ps3:     { id: 'odin3',    name: 'Odin 3',                 reason: 'The definitive PS3 & PC handheld — nothing else comes close.' },
-            },
-        };
-
-        let quizBudget = null;
-
-        function selectBudget(btn, budget) {
-            document.querySelectorAll('#quiz-step-1 .quiz-tile').forEach(t => t.classList.remove('selected'));
-            btn.classList.add('selected');
-            quizBudget = budget;
-            setTimeout(() => {
-                const step2 = document.getElementById('quiz-step-2');
-                step2.classList.remove('hidden');
-                step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 350);
-        }
-
-        function selectSystem(btn, system) {
-            if (!quizBudget) return;
-            document.querySelectorAll('#quiz-step-2 .quiz-tile').forEach(t => t.classList.remove('selected'));
-            btn.classList.add('selected');
-            setTimeout(() => showQuizResult(quizBudget, system), 350);
-        }
-
-        function showQuizResult(budget, system) {
-            const rec = quizRecs[budget][system];
-            const device = devices.find(d => d.id === rec.id);
-            document.getElementById('quiz-result-name').textContent = rec.name;
-            document.getElementById('quiz-result-reason').textContent = rec.reason;
-            if (device) document.getElementById('quiz-result-img').src = device.img;
-            document.getElementById('quiz-result-link').href = `/handheld?device=${encodeURIComponent(rec.name)}`;
-            const resultEl = document.getElementById('quiz-result');
-            resultEl.classList.remove('hidden');
-            resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        function resetQuiz() {
-            quizBudget = null;
-            document.querySelectorAll('.quiz-tile').forEach(t => t.classList.remove('selected'));
-            document.getElementById('quiz-step-2').classList.add('hidden');
-            document.getElementById('quiz-result').classList.add('hidden');
-            document.getElementById('quiz-step-1').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         // Initialize Everything
