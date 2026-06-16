@@ -63,7 +63,7 @@ html,body{margin:0; padding:0;}
 body{
   background:var(--page); color:var(--ink);
   font-family:'Poppins',Arial,sans-serif;
-  min-height:100vh; padding-bottom:70px;
+  min-height:100vh; display:flex; flex-direction:column;
   font-size:14px; line-height: 1.6; -webkit-font-smoothing:antialiased;
 }
 h1,h2,h3,.bebas{font-family:'Poppins',Arial,sans-serif; font-weight:700; letter-spacing:0; margin:0;}
@@ -101,10 +101,10 @@ body.dark .btn{background:#2A3040; border-color:var(--bord); color:#C9CEE4;}
 body.dark .btn:hover{background:#333A4E; border-color:#4E5570;}
 
 /* Layout & Cards */
-.wrap{max-width:960px; margin:30px auto 0; padding:30px 40px 40px; background:var(--sheet); border:2px solid var(--title); border-radius:4px;}
+.wrap{max-width:960px; margin:30px auto 40px; padding:30px 40px 40px; background:var(--sheet); border:2px solid var(--title); border-radius:4px;}
 body.dark .wrap{background:var(--sheet); border-color:var(--bord);}
-@media(max-width:768px){.wrap{margin:14px 16px 0; padding:20px 24px 34px;}}
-@media(max-width:600px){.wrap{margin:10px 8px 0; padding:12px 10px 22px; border-width:1px;} .logo h1{font-size:18px;}}
+@media(max-width:768px){.wrap{margin:14px 16px 32px; padding:20px 24px 34px;}}
+@media(max-width:600px){.wrap{margin:10px 8px 24px; padding:12px 10px 22px; border-width:1px;} .logo h1{font-size:18px;}}
 
 .card{background:var(--card); border:1px solid var(--bord); border-radius:3px; padding:20px; min-width:0; overflow-wrap:break-word;}
 .card+.card{margin-top:24px;}
@@ -522,7 +522,7 @@ footer p { margin: 0; }
   
   function applyTheme(theme) {
     document.body.classList.toggle('dark', theme === 'dark');
-    themeBtn.textContent = theme === 'dark' ? '☀  Light mode' : '🌙  Dark mode';
+    themeBtn.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
     localStorage.setItem('rr-guide-theme', theme);
   }
 
