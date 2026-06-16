@@ -204,6 +204,12 @@ body.dark .astro-code span[style*="#6A737D"] { color: #6A737D !important; }
 /* ===== Shared site header/footer (Tailwind) ===== */
 /* Scoped resets so disabling Tailwind Preflight doesn't leave the header/footer
    links, button and icons with default browser styling. */
+/* Re-create Preflight's border reset here so the border-* utilities (the thick
+   dark edge line + logo/icon outlines) actually render solid. */
+header, header *, header::before, header::after,
+footer, footer *, footer::before, footer::after {
+  border-width: 0; border-style: solid; border-color: currentColor;
+}
 header, footer { font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
 header a, footer a { text-decoration: none; }
 header button { background: transparent; border: 0; padding: 0; cursor: pointer; }
