@@ -400,7 +400,7 @@ class CompatSubmission(BaseModel):
     game_title_id: Optional[str] = Field(None, alias="game title id")
     notes: Optional[str] = None
 
-def _find_csv_path(system_name: str) -> str | None:
+def _find_csv_path(system_name: str) -> Optional[str]:
     filename = f"{system_name}.csv"
     p1 = os.path.join(DATA_DIR, filename)
     if os.path.exists(p1): return p1
