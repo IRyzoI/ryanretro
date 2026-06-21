@@ -156,6 +156,14 @@ body.dark .modeseg button.active{color:#14171E;}
   background-attachment:local; background-position:0 0; background-origin:content-box;
 }
 .ta.flat:focus{box-shadow:none; background-color:transparent;}
+.notes-view{white-space:pre-wrap; overflow-wrap:anywhere; cursor:text; overflow:hidden; resize:none; color:var(--ink, inherit);}
+.notes-view, #vNotes{min-height:72px;}
+#vNotes{resize:none;}
+.todo-view{flex:1; white-space:pre-wrap; overflow-wrap:anywhere; cursor:text; line-height:1.5; min-height:20px;}
+.todo-view a{color:var(--teal); text-decoration:underline; word-break:break-all;}
+.notes-view a{color:var(--teal); text-decoration:underline; word-break:break-all;}
+.notes-view a:hover{opacity:.8;}
+.notes-ph{color:var(--soft);}
 .ta:focus,.in:focus,select:focus{outline:none; box-shadow:inset 0 0 0 2px var(--teal); background-color:#eef5ff;}
 .tab:focus-visible,.btn:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
 .in{width:100%; border:1px solid var(--bord); border-radius:5px; padding:8px 11px; font-size:13px; background:#fff;}
@@ -177,11 +185,18 @@ input[type=checkbox]:checked::after{content:""; position:absolute; left:4px; top
 .inspo input{width:100%; border:none; border-top:1px solid var(--sep); padding:6px 9px; font-size:12px; background:#fff;}
 .inspo .x{position:absolute; top:4px; right:4px; width:22px; height:22px; border-radius:50%; border:none;
   background:rgba(0,0,0,.55); color:#fff; font-size:14px; line-height:1; padding:0;}
+#lightbox{position:fixed; inset:0; background:rgba(0,0,0,.86); display:none; align-items:center; justify-content:center; z-index:9999; padding:24px; cursor:zoom-out;}
+#lightbox img{max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 12px 50px rgba(0,0,0,.55);}
+.refgrid{margin-top:0;}
+.refgrid .inspo img{cursor:zoom-in;}
 .dropzone{
   border:1.5px dashed var(--bord); border-radius:6px; padding:16px; text-align:center; color:var(--soft);
   font-weight:500; font-size:12.5px; background:#f7faff; margin-top:4px; cursor:pointer;
 }
 .dropzone.drag{background:var(--purple-bg); border-color:var(--purple); color:var(--purple);}
+.refdrop{background:#f7faff; color:var(--soft); border-color:var(--bord);}
+body.dark .refdrop{background:#1E2330;}
+.refdrop.drag{background:var(--purple-bg); border-color:var(--purple); color:var(--purple);}
 
 /* ---------- video cards ---------- */
 .vid-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px;}
@@ -209,7 +224,7 @@ input[type=checkbox]:checked::after{content:""; position:absolute; left:4px; top
 body.dark .crumb select.in{background-color:#2A3040;}
 .title-row{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;}
 .title-row .in{font-size:16px; font-weight:600;}
-.two-col{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;}
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; align-items:start;}
 .two-col > .card{margin-top:0;}
 @media(max-width:860px){.two-col{grid-template-columns:1fr;}}
 
@@ -578,6 +593,7 @@ function newVideo(title){
     id: uid(), title: title || 'Untitled video', status: 'Idea',
     notes: '', titleIdeas: [], todos: [],            // todo: {id,text,done,phase}
     sponsor: { name:'', deal:'', points:'', ctas:'', fee:'' },
+    refs: [],
     desc: null,
     say: [],                                          // talking points: [{id,text,done}]
     thumbs: { A:null, B:null, C:null }, winner: null,
@@ -788,7 +804,7 @@ async function loadState(){
         v.say = flat;
       }
     });
-    state.videos.forEach(v => { if (v.sponsor && v.sponsor.fee == null) v.sponsor.fee = ''; });
+    state.videos.forEach(v => { if (v.sponsor && v.sponsor.fee == null) v.sponsor.fee = ''; if (!Array.isArray(v.refs)) v.refs = []; });
     state.competitors = state.competitors.filter(c => c.imgId);  // drop URL tiles (sandbox blocks external images)
     ensureDescGlobals();
     /* one-time import of the idea backlog (June 2026) — appends after existing videos */
@@ -932,18 +948,43 @@ document.addEventListener('pointerdown', e => {
 });
 
 /* Detailed Notes fills its card to match the To-Do column, lines edge to edge */
-function syncNotesHeight(){
-  const ta = $('#vNotes'); if (!ta || !ta.offsetParent) return;
-  ta.style.height = 'auto';
-  const content = ta.scrollHeight;
-  let fill = 0;
-  const notesCard = document.getElementById('notesCard');
-  const todoCard = $('#todoList') ? $('#todoList').closest('.card') : null;
-  if (notesCard && todoCard){
-    const chrome = notesCard.offsetHeight - ta.offsetHeight;   // header + padding around the textarea
-    fill = todoCard.offsetHeight - chrome;
+const URL_TLDS = new Set(['com','net','org','io','dev','app','co','gg','tv','me','gov','edu','xyz','store','shop','ai','uk','de','jp','kr','to','ly','be','cc','info','page','site','link','news','live','fm','so']);
+function linkifyNotes(text){
+  const re = /(https?:\/\/[^\s<]+)|((?:www\.)?(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?:\/[^\s<]*)?)/gi;
+  let out = '', last = 0, m;
+  while ((m = re.exec(text))){
+    const raw = m[0];
+    out += esc(text.slice(last, m.index));
+    last = m.index + raw.length;
+    let url = raw, trail = '';
+    const tm = url.match(/[.,;:!?)\]]+$/);
+    if (tm){ trail = tm[0]; url = url.slice(0, -trail.length); }
+    const before = m.index > 0 ? text[m.index - 1] : '';
+    const hasScheme = /^https?:\/\//i.test(url);
+    let isLink = false;
+    if (before !== '@'){
+      if (hasScheme) isLink = true;
+      else if (url.toLowerCase().startsWith('www.')) isLink = true;
+      else if (URL_TLDS.has(url.toLowerCase().split('/')[0].split('.').pop())) isLink = true;
+    }
+    if (isLink){
+      const href = hasScheme ? url : 'https://' + url;
+      out += `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>${esc(trail)}`;
+    } else {
+      out += esc(raw);
+    }
   }
-  ta.style.height = Math.max(content, fill, 220) + 'px';
+  out += esc(text.slice(last));
+  return out;
+}
+function notesViewHTML(text){ return (text && text.trim()) ? linkifyNotes(text) : '<span class="notes-ph">Click to add notes…</span>'; }
+
+function syncNotesHeight(){
+  const ta = $('#vNotes'), view = $('#vNotesView');
+  const el = (ta && ta.offsetParent) ? ta : ((view && view.offsetParent) ? view : null);
+  if (!el) return;
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';   // shrink/grow to fit the actual content
 }
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { growAll(); syncNotesHeight(); });
 window.addEventListener('resize', () => { growAll(); syncNotesHeight(); });
@@ -1161,6 +1202,79 @@ $('#inspoGrid').addEventListener('input', e => {
   const it = state.inspo.find(i => i.id === e.target.closest('.inspo').dataset.id);
   if (it){ it.caption = e.target.value; save(); }
 });
+
+/* ---- per-video reference images: shown in the note view AND filming mode ---- */
+function refsOf(v){ if (!Array.isArray(v.refs)) v.refs = []; return v.refs; }
+
+function refGalleryMarkup(v){
+  const refs = refsOf(v);
+  return `
+    <div class="inspo-grid refgrid">${refs.map(r => `
+      <div class="inspo refcell" data-id="${r.id}">
+        <img data-img-id="${r.imgId}" alt="reference">
+        <button class="x" title="Remove">×</button>
+        <input value="${esc(r.caption||'')}" placeholder="Note">
+      </div>`).join('')}</div>
+    <div class="dropzone refdrop">Drop images here or tap to upload</div>
+    <input type="file" class="reffile" accept="image/*" multiple hidden>`;
+}
+
+function fillRefZone(el, v){
+  if (!el) return;
+  el.dataset.vid = v.id;
+  el.innerHTML = refGalleryMarkup(v);
+  const drop = el.querySelector('.refdrop'), file = el.querySelector('.reffile'), grid = el.querySelector('.refgrid');
+  drop.onclick = () => file.click();
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add('drag'); };
+  drop.ondragleave = () => drop.classList.remove('drag');
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove('drag'); addRefs(v, [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'))); };
+  file.onchange = () => { addRefs(v, [...file.files]); file.value = ''; };
+  grid.onclick = e => {
+    if (e.target.classList.contains('x')){
+      const cell = e.target.closest('.refcell');
+      const r = v.refs.find(x => x.id === cell.dataset.id);
+      if (r) deleteImage(r.imgId);
+      v.refs = v.refs.filter(x => x.id !== cell.dataset.id);
+      save(); refreshRefZones(v);
+      return;
+    }
+    if (e.target.tagName === 'IMG') openLightbox(e.target.getAttribute('src'));
+  };
+  grid.oninput = e => {
+    if (e.target.tagName !== 'INPUT') return;
+    const r = v.refs.find(x => x.id === e.target.closest('.refcell').dataset.id);
+    if (r){ r.caption = e.target.value; save(); }
+  };
+  hydrateImages(el);
+}
+
+function refreshRefZones(v){
+  ['#noteRefs','#filmRefs'].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el && el.dataset.vid === v.id) fillRefZone(el, v);
+  });
+}
+
+async function addRefs(v, files){
+  for (const f of files){
+    try { const imgId = await storeImage(f); refsOf(v).push({ id: uid(), imgId, caption:'' }); }
+    catch(e){ toast(e.message || 'Couldn\'t add that image'); }
+  }
+  save(); refreshRefZones(v);
+}
+
+function openLightbox(src){
+  if (!src) return;
+  let lb = document.getElementById('lightbox');
+  if (!lb){
+    lb = document.createElement('div'); lb.id = 'lightbox';
+    lb.innerHTML = '<img alt="reference">';
+    lb.addEventListener('click', () => { lb.style.display = 'none'; });
+    document.body.appendChild(lb);
+  }
+  lb.querySelector('img').src = src;
+  lb.style.display = 'flex';
+}
 
 /* ---- dump history ---- */
 function renderHistory(){
@@ -1427,10 +1541,16 @@ function openVideo(id){
     </div>
   </div>
 
+  <div class="card edge green" id="refCardNote" style="margin-top:16px;">
+    <h2>Reference Images</h2>
+    <div id="noteRefs"></div>
+  </div>
+
   <div class="two-col">
     <div class="card edge blue" id="notesCard">
       <h2>Detailed Notes</h2>
-      <textarea class="ta flat" id="vNotes" placeholder="">${esc(v.notes)}</textarea>
+      <div class="ta flat notes-view" id="vNotesView">${notesViewHTML(v.notes)}</div>
+      <textarea class="ta flat" id="vNotes" placeholder="" style="display:none;">${esc(v.notes)}</textarea>
     </div>
 
     <div class="card edge orange">
@@ -1481,7 +1601,22 @@ function openVideo(id){
   $('#vTitle').oninput = e => { v.title = e.target.value.replace(/\n/g, ' '); save(); };
   $('#vTitle').onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); e.target.blur(); } };
   /* title ideas reveal when the title is clicked/focused; hide on click elsewhere */
-  $('#vNotes').oninput = e => { v.notes = e.target.value; save(); };
+  const notesView = $('#vNotesView'), notesTA = $('#vNotes');
+  notesView.onclick = e => {
+    if (e.target.closest('a')) return;            // let links open
+    notesView.style.display = 'none';
+    notesTA.style.display = '';
+    notesTA.focus();
+    const len = notesTA.value.length; try { notesTA.setSelectionRange(len, len); } catch(_){}
+    requestAnimationFrame(syncNotesHeight);
+  };
+  notesTA.oninput = e => { v.notes = e.target.value; save(); };
+  notesTA.onblur = () => {
+    notesView.innerHTML = notesViewHTML(v.notes);
+    notesTA.style.display = 'none';
+    notesView.style.display = '';
+    requestAnimationFrame(syncNotesHeight);
+  };
   $('#spName').oninput = e => { v.sponsor.name = e.target.value; save(); };
   $('#spFee').oninput = e => {
     v.sponsor.fee = e.target.value; save();
@@ -1512,6 +1647,7 @@ function openVideo(id){
   $('#newTodo').onkeydown = e => { if (e.key === 'Enter') addTodoFn(); };
 
   renderIdeas(v); renderTodos(v); renderThumbs(v); renderDescBuilder(v);
+  fillRefZone($('#noteRefs'), v);
   growAll(d);
   requestAnimationFrame(syncNotesHeight);
 }
@@ -1556,7 +1692,8 @@ function renderTodos(v){
   $('#todoList').innerHTML = sorted.map(t => `
     <div class="todo-li ${t.done?'done':''}" data-id="${t.id}">
       <input type="checkbox" ${t.done?'checked':''}>
-      <textarea class="t" rows="1">${esc(t.text)}</textarea>
+      <div class="t todo-view">${(t.text && t.text.trim()) ? linkifyNotes(t.text) : '<span class="notes-ph">Tap to add a task…</span>'}</div>
+      <textarea class="t" rows="1" style="display:none;">${esc(t.text)}</textarea>
       <button class="icon-btn" data-act="del" title="Delete">✕</button>
     </div>`).join('') || '<div class="empty">No tasks yet. Auto-Sort a brain dump or add one above.</div>';
   growAll($('#todoList'));
@@ -1565,13 +1702,29 @@ function renderTodos(v){
   $('#todoList').onclick = e => {
     const row = e.target.closest('.todo-li'); if (!row) return;
     const t = v.todos.find(x => x.id === row.dataset.id);
-    if (e.target.type === 'checkbox'){ t.done = e.target.checked; save(); renderTodos(v); }
-    if (e.target.dataset.act === 'del'){ v.todos = v.todos.filter(x => x.id !== t.id); save(); renderTodos(v); }
+    if (e.target.type === 'checkbox'){ t.done = e.target.checked; save(); renderTodos(v); return; }
+    if (e.target.dataset.act === 'del'){ v.todos = v.todos.filter(x => x.id !== t.id); save(); renderTodos(v); return; }
+    const view = e.target.closest('.todo-view');
+    if (view && !e.target.closest('a')){
+      const ta = view.nextElementSibling;
+      view.style.display = 'none';
+      ta.style.display = '';
+      autoGrow(ta); ta.focus();
+      const len = ta.value.length; try { ta.setSelectionRange(len, len); } catch(_){}
+    }
   };
   $('#todoList').oninput = e => {
-    if (!e.target.classList.contains('t')) return;
+    if (e.target.tagName !== 'TEXTAREA' || !e.target.classList.contains('t')) return;
     const t = v.todos.find(x => x.id === e.target.closest('.todo-li').dataset.id);
     if (t){ t.text = e.target.value; save(); }
+  };
+  $('#todoList').onfocusout = e => {
+    if (e.target.tagName !== 'TEXTAREA' || !e.target.classList.contains('t')) return;
+    const row = e.target.closest('.todo-li'); if (!row) return;
+    const t = v.todos.find(x => x.id === row.dataset.id);
+    const view = row.querySelector('.todo-view');
+    if (view){ view.innerHTML = (t && t.text && t.text.trim()) ? linkifyNotes(t.text) : '<span class="notes-ph">Tap to add a task…</span>'; view.style.display = ''; }
+    e.target.style.display = 'none';
   };
 }
 
@@ -1954,6 +2107,7 @@ function renderFilmBody(){
       <button class="btn ghost" id="resetSay">Reset</button>
     </div>
     ${sponsorBits ? `<div class="sponsor-flag"><b>Don't forget on camera:</b><br><span style="white-space:pre-wrap;">${esc(sponsorBits)}</span></div>` : ''}
+    <div class="card edge green" style="margin-top:14px;"><h2>Reference Images</h2><div id="filmRefs"></div></div>
     <div class="film-check" style="margin-top:16px;">
       ${v.say.map(p => p.type === 'sec' ? `
         <div class="fitem fdiv secc-${p.color || 'teal'}" data-say="${p.id}">
@@ -1975,6 +2129,7 @@ function renderFilmBody(){
 
   growAll(body);
   wireSayReorder(body, v);
+  if ($('#filmRefs')) fillRefZone($('#filmRefs'), v);
 
   const addPoint = () => {
     const inp = $('#sayAddInput');
