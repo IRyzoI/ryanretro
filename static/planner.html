@@ -188,7 +188,8 @@ input[type=checkbox]:checked::after{content:""; position:absolute; left:4px; top
 #lightbox{position:fixed; inset:0; background:rgba(0,0,0,.86); display:none; align-items:center; justify-content:center; z-index:9999; padding:24px; cursor:zoom-out;}
 #lightbox img{max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 12px 50px rgba(0,0,0,.55);}
 .refgrid{margin-top:0;}
-.refgrid .inspo img{cursor:zoom-in;}
+.refgrid .inspo img{cursor:grab;}
+.refcell.rdragging{opacity:.4;}
 .dropzone{
   border:1.5px dashed var(--bord); border-radius:6px; padding:16px; text-align:center; color:var(--soft);
   font-weight:500; font-size:12.5px; background:#f7faff; margin-top:4px; cursor:pointer;
@@ -1246,6 +1247,51 @@ function fillRefZone(el, v){
     if (r){ r.caption = e.target.value; save(); }
   };
   hydrateImages(el);
+  wireRefReorder(el, v);
+}
+
+function wireRefReorder(scope, v){
+  const grid = scope.querySelector('.refgrid');
+  if (!grid) return;
+  grid.querySelectorAll('.refcell').forEach(cell => {
+    cell.addEventListener('mousedown', e => {
+      if (e.target.closest('input, button')) return;   // let caption + delete work
+      cell.draggable = true;
+    });
+    cell.addEventListener('dragstart', e => {
+      if (!cell.draggable){ e.preventDefault(); return; }
+      cell.classList.add('rdragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', ''); } catch(_){}
+    });
+    cell.addEventListener('dragend', () => {
+      cell.classList.remove('rdragging');
+      cell.draggable = false;
+      const order = [...grid.querySelectorAll('.refcell')].map(el => el.dataset.id);
+      v.refs.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+      save();
+    });
+  });
+  if (!grid._dnd){
+    grid._dnd = true;
+    grid.addEventListener('dragover', e => {
+      const dragging = grid.querySelector('.refcell.rdragging');
+      if (!dragging) return;
+      e.preventDefault();
+      const cells = [...grid.querySelectorAll('.refcell:not(.rdragging)')];
+      const after = cells.find(c => {
+        const r = c.getBoundingClientRect();
+        if (e.clientY < r.top) return true;                                   // pointer is on an earlier row
+        if (e.clientY <= r.bottom && e.clientX < r.left + r.width / 2) return true;  // same row, left half
+        return false;
+      });
+      if (after) grid.insertBefore(dragging, after);
+      else grid.appendChild(dragging);
+    });
+  }
+  document.addEventListener('mouseup', () => {
+    grid.querySelectorAll('.refcell').forEach(c => { if (!c.classList.contains('rdragging')) c.draggable = false; });
+  }, { once: true });
 }
 
 function refreshRefZones(v){
