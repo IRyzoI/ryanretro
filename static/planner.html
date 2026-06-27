@@ -936,6 +936,15 @@ document.addEventListener('input', e => {
   autoGrow(e.target);
   if (e.target.id === 'vNotes') syncNotesHeight();
 });
+/* Auto-grown textareas are as tall as their content with no inner scrollbar, so
+   clicking to place the caret makes the browser scroll the *page* to bring the
+   caret into view — the box visibly jumps. Capture the scroll position on click
+   and restore it before the next paint so the view stays put. */
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest || !e.target.closest('textarea')) return;
+  const x = window.scrollX, y = window.scrollY;
+  requestAnimationFrame(() => window.scrollTo(x, y));
+}, true);
 /* clicking into the big title reveals the title-ideas panel beneath it */
 document.addEventListener('focusin', e => {
   if (e.target.id === 'vTitle'){
