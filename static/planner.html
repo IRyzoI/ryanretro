@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ryan Retro ‚Äî Creator Planner</title>
+<title>Ryan Retro — Creator Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -164,7 +164,7 @@ select.in{appearance:none; font-weight:600; color:var(--title);}
 .grow{flex:1; min-width:160px;}
 label.lbl{font-size:10.5px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:var(--teal); display:block; margin:12px 0 5px;}
 
-/* checkboxes ‚Äî sheet style */
+/* checkboxes — sheet style */
 input[type=checkbox]{appearance:none; width:17px; height:17px; border:2px solid var(--title); border-radius:4px; cursor:pointer; position:relative; background:#fff; flex:0 0 auto;}
 input[type=checkbox]:checked{background:var(--green); border-color:var(--green);}
 input[type=checkbox]:checked::after{content:""; position:absolute; left:4px; top:0; width:4px; height:9px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg);}
@@ -328,7 +328,7 @@ hr.div{border:none; border-top:1px solid var(--sep); margin:16px 0;}
   .logo h1{font-size:18px;}
 }
 
-/* ================= DARK MODE ‚Äî night sheet ================= */
+/* ================= DARK MODE — night sheet ================= */
 body.dark{
   --page:#14171E; --sheet:#1C202A; --card:#232936; --ink:#DDE1EE; --title:#A9A8F4;
   --bord:#3D4358; --line:#3D4358; --rule:#2F3547; --sep:#2F3547; --soft:#8E95B5;
@@ -472,7 +472,7 @@ body.dark .empty{color:#7B82A3;}
   <section class="view" id="view-dump">
     <div class="card edge yellow">
       <h2>Brain Dump</h2>
-      <textarea class="ta flat" id="dumpText" placeholder="Write anything‚Ä¶"></textarea>
+      <textarea class="ta flat" id="dumpText" placeholder="Write anything…"></textarea>
       <div class="row" style="margin-top:12px;">
         <button class="btn brand big" id="autoSortBtn">Auto-Sort My Notes</button>
         <button class="btn ghost" id="clearDumpBtn">Clear</button>
@@ -507,7 +507,7 @@ body.dark .empty{color:#7B82A3;}
   <!-- ================= FILMING MODE ================= -->
   <section class="view" id="view-film">
     <div class="card titlecard" id="filmPickCard">
-      <div class="bigtitle bigtitle-static" id="filmTitleDisplay">Choose a video<span class="title-caret">‚ñæ</span></div>
+      <div class="bigtitle bigtitle-static" id="filmTitleDisplay">Choose a video<span class="title-caret">▾</span></div>
       <select id="filmSelect" class="bigtitle-select" aria-label="Choose a video"></select>
     </div>
     <div id="filmBody"></div>
@@ -588,7 +588,7 @@ function newVideo(title){
 /* ---- persistence: ALL writes go through one queue, one at a time ----
    The storage backend errors when writes overlap or come too fast, so we
    serialize every set/delete with spacing, retries, and key coalescing. */
-const SEED_IDEAS_V1 = [{"t": "Playing Switch Games on Mac (Astris Emulator)","n": "Need to test across different Apple Silicon chips if possible (M1 vs M3). Compare battery drain playing native Mac games vs emulating Switch via Astris."},{"t": "Xbox 360 Emulation on Android is FINALLY Here! (x360)","n": "Test this on a high-end Snapdragon device (Odin 2, Retroid Pocket 5, or a flagship phone). This is going to be demanding."},{"t": "The Most Beautiful Game Launcher for Mac (Nostalgi)","n": "Link: https://www.nostalgi.app/\nFocus on the aesthetics. This needs to look clean, minimalist, and very 'Apple'. Compare it briefly to OpenEmu and ES-DE."},{"t": "The Lenovo Retro Handheld. What ACTUALLY Is it?!","n": "Make sure to get a screenshot of the RetroDodo email chain confirming the Lenovo connection. Need to pick up a precision screwdriver set for the teardown before filming."},{"t": "Is Google Spying On You? (The Microphone Experiment)","n": "Tone: Drew Gooden-esque comedy.\nKey concept to explain: Baader-Meinhof phenomenon (frequency illusion).\nMake sure to pick a topic I'd NEVER normally see ads for (e.g., cat food when I don't own a cat, or an industrial farm tractor)."},{"t": "This Full PC Costs Less Than an SSD ($100)","n": "AliExpress Link: https://ko.aliexpress.com/item/1005006530105259.html\nPrice Archive (show on screen): https://www.pricearchive.org/aliexpress.com/item/1005006530105259"},{"t": "Korea's #1 Food Market is a Tourist Trap (Go Here Instead)","n": "Find a good nearby alternative market to compare (like Namdaemun, Mangwon, or a smaller local market). Compare exact same dishes for price and quality."},{"t": "Buying Lunch with Ancient Coins at Tongin Market","n": "Arrive early to beat the lunch rush. Make sure to get a good variety of foods to make the lunchbox look colorful and appetizing for the thumbnail."},{"t": "I Tried EVERY Street Food in Myeongdong","n": "Need on-screen graphics for each item: Name, Price, and Rating out of 5. Bring friends to share the food so I don't get full after 5 stalls."},{"t": "I Waited 8 Months for the Odin 3 to Get Good (Review & Giveaway)","n": "Giveaway rules: Just comment, drawn in 2 weeks.\nMake sure to mention the ongoing bugs that STILL haven't been fixed after 8 months.\nLink to Korean channel in the description and pinned comment.\nRelevant Reddit thread: https://www.reddit.com/r/OdinHandheld/s/azrc2TLZ1P\nRelevant YT Post: http://youtube.com/post/UgkxTY3tcoioZY_0MbMHvzKUGlup8AgKE_KS?si=njrry8pdeSsU_LsK"},{"t": "Anbernic FIXED the RG DS! (Official Linux Update)","n": "Key features to highlight from the official video:\n‚Ä¢ Seamless dual-boot (removing the TF card reboots back to Android).\n‚Ä¢ 3 new UI themes (Dark, Light, Classic).\n‚Ä¢ Independent brightness controls for top and bottom screens.\n‚Ä¢ Secondary screen displays platform logos during single-screen emulation (no more dead black screen)."},{"t": "Escaping Seoul: A Quiet Korean Countryside Vlog","n": "Pacing is crucial here! Do not linger on boring, long scenes. Keep the edit tight. Ensure all Korean speaking interactions have clean, easy-to-read subtitles."},{"t": "I Tried Wireless HDMI For My Handhelds (Llano S850)","n": "Testing to-do checklist:\n‚Ä¢ Compare latency: Android native cast to TV VS Android cast to Llano Receiver VS Llano Transmitter to Llano Receiver.\n‚Ä¢ Test AirPlay replacement for the living room (since Mac Mini is gone).\n‚Ä¢ Thermal camera test on the receiver (packaging says hot is normal, let's see HOW hot)."},{"t": "Can I Get My Girlfriend to Approve of the AYN Thor?","n": "Need to find a pastel skin/case, cute thumb grips (paw prints/flowers), and maybe a charm. Set up Daijisho/Beacon or standard Android with a custom girly theme and widgets. Load up 'cozy' games: Animal Crossing, Nintendogs, Stardew Valley. Add Netflix and Spotify."},{"t": "The Best 3D Printed Accessories for the AYN Thor","n": "Featured grips to print:\n‚Ä¢ Thor Grip V5\n‚Ä¢ Thor Xbox Style Grip\n‚Ä¢ Thor Slim Grip - Switch 2 Joycon Style\n‚Ä¢ Thor Slim Grip\n‚Ä¢ Thor Grip Medium Version\n‚Ä¢ Unofficial Official Ryan Retro Channel Thor Grip\n\nResearch needed: Find the best cases, docks, and weird accessories. Make sure to buy black paper/card for the desk snap transition."},{"t": "Why the AYN Thor is THE BEST Handheld","n": "Cover: EQ fix, using bottom screen as a launcher, adding a grip, controlling bottom screen volume independently, app switching between screens."},{"t": "Turning My Apple Watch Into a Game Boy","n": "Research needed: Check MakerWorld or Thingiverse for the best Apple Watch Game Boy case. Need to figure out the best current watchOS emulator (e.g., Arcadia or a web-based workaround)."},{"t": "The Best Handheld Under $100","n": "Contenders to cover: Ayaneo Pocket Air Mini, Mangmi Air X, TrimUI Brick."},{"t": "The Ultimate Docked Handheld Setup (Auto Controller Mapping)","n": "Testing checklist for standalone apps: Eden, GameNative, Flycast, Redream, Dolphin. I need to figure out which of these handle controller hot-swapping or auto-profiles well before filming."},{"t": "GameNative: PC Games on Android","n": "Title: The Best Way To Play ALL Your PC Games On Android.\nThumbnail: Steam, GOG, Epic icons. Huge recognisable game titles.\nGitHub: https://github.com/utkarshdalal/GameNative\nPerformance fork (SD 8 Gen 2+): https://github.com/maxjivi05/GameNative-Performance\nDifferentiator: simplest setup guide on YouTube plus Thor 2nd screen as touchpad plus performance fork demo."},{"t": "Dock Style Comparison","n": "Titles:\n‚Ä¢ The Best Handheld Dock\n‚Ä¢ What Handheld Dock Do You Need?\n‚Ä¢ One Dock To Rule Them All\n\nThumbnail: Holding the Jumpgate dock in the middle, glowing edge, all kinds of handhelds around it (Steam Deck, Switch 2, MacBook).\n\nTarget audience: Handheld gamers (Switch, Steam Deck, Retroid) and laptop users wanting a portable desk setup."},{"t": "Real DS vs Clone vs Thor","n": "Target: Retro gaming enthusiasts, handheld collectors, DS fans.\nThe Twist: The best overall choice is probably neither - it is the AYN Thor.\nRG DS closer in size to DS XL.\nGammaOS: lighter Android, snappier. Rocknix: simpler Linux alternative.\nR4 card: 4,300 games pre-loaded. No affiliate links for R4 cards.\nRG DS exclusives: Light Dreamcast, PortMaster, Android apps, web browser, YouTube."},{"t": "EVERY Pokemon Game EVER on the AYN Thor","n": "Thumbnail concepts:\n1. AYN Thor center with Pokeball joystick caps, flat-lay of iconic Pokemon game boxes and holographic cards, pixel-art grass texture background.\n2. Dual-screen: Z-A on top (modern 3D) vs Pokemon Red on bottom (8-bit). Pokeball caps on sticks.\n3. Huge pile of loose Pokemon carts on the floor. You standing next to it for scale.\nGet Pokeball stick caps for the shoot."},{"t": "Gaming on a Credit Card Sized PC","n": "Titles:\n1. This $30 credit card is a Gaming Computer\n2. Gaming on a Credit Card sized PC\n3. This $30 credit card is a Gaming PC\n\nThumbnail: Mario gameplay visible. Device shown coming out of wallet or pack of cards. $30 price tag overlay. Gaming PC text overlay. Chandler from Friends reading specs.\nReddit: https://www.reddit.com/r/CardPuter/\n3D printed case: https://makerworld.com/models/2417770\nCardputer Fight: https://www.reddit.com/r/CardPuter/comments/1t4gnrn/cardputer_fight/"},{"t": "Tiny iPhone Video Project","n": "Thumbnail: Tiny iPhone in the middle surrounded by handheld controllers for each system tested (NES, SNES, PS1, Dreamcast, arcade stick). Include a real-sized iPhone next to it for scale.\nOS: runs Android.\nDisclaimer: not a mainstream recommendation."},{"t": "Broken Phone to PC","n": "Title: I Turned My Old Broken Phone Into A PC.\nThumbnail: Smashed phone transitioning to a PC setup.\nTarget audience: tech, environment, renewing/restoring, cheap PCs.\nResearch needed: which Android phones support desktop mode and how. DeX for Samsung, other options for other phones."},{"t": "Cannoli MinUI for Android","n": ""},{"t": "Playing Wii Games on my Phone","n": ""},{"t": "Play Retro Games With Friends Online ‚Äî Foxol","n": "https://play.foxol.app/"}];
+const SEED_IDEAS_V1 = [{"t": "Playing Switch Games on Mac (Astris Emulator)","n": "Need to test across different Apple Silicon chips if possible (M1 vs M3). Compare battery drain playing native Mac games vs emulating Switch via Astris."},{"t": "Xbox 360 Emulation on Android is FINALLY Here! (x360)","n": "Test this on a high-end Snapdragon device (Odin 2, Retroid Pocket 5, or a flagship phone). This is going to be demanding."},{"t": "The Most Beautiful Game Launcher for Mac (Nostalgi)","n": "Link: https://www.nostalgi.app/\nFocus on the aesthetics. This needs to look clean, minimalist, and very 'Apple'. Compare it briefly to OpenEmu and ES-DE."},{"t": "The Lenovo Retro Handheld. What ACTUALLY Is it?!","n": "Make sure to get a screenshot of the RetroDodo email chain confirming the Lenovo connection. Need to pick up a precision screwdriver set for the teardown before filming."},{"t": "Is Google Spying On You? (The Microphone Experiment)","n": "Tone: Drew Gooden-esque comedy.\nKey concept to explain: Baader-Meinhof phenomenon (frequency illusion).\nMake sure to pick a topic I'd NEVER normally see ads for (e.g., cat food when I don't own a cat, or an industrial farm tractor)."},{"t": "This Full PC Costs Less Than an SSD ($100)","n": "AliExpress Link: https://ko.aliexpress.com/item/1005006530105259.html\nPrice Archive (show on screen): https://www.pricearchive.org/aliexpress.com/item/1005006530105259"},{"t": "Korea's #1 Food Market is a Tourist Trap (Go Here Instead)","n": "Find a good nearby alternative market to compare (like Namdaemun, Mangwon, or a smaller local market). Compare exact same dishes for price and quality."},{"t": "Buying Lunch with Ancient Coins at Tongin Market","n": "Arrive early to beat the lunch rush. Make sure to get a good variety of foods to make the lunchbox look colorful and appetizing for the thumbnail."},{"t": "I Tried EVERY Street Food in Myeongdong","n": "Need on-screen graphics for each item: Name, Price, and Rating out of 5. Bring friends to share the food so I don't get full after 5 stalls."},{"t": "I Waited 8 Months for the Odin 3 to Get Good (Review & Giveaway)","n": "Giveaway rules: Just comment, drawn in 2 weeks.\nMake sure to mention the ongoing bugs that STILL haven't been fixed after 8 months.\nLink to Korean channel in the description and pinned comment.\nRelevant Reddit thread: https://www.reddit.com/r/OdinHandheld/s/azrc2TLZ1P\nRelevant YT Post: http://youtube.com/post/UgkxTY3tcoioZY_0MbMHvzKUGlup8AgKE_KS?si=njrry8pdeSsU_LsK"},{"t": "Anbernic FIXED the RG DS! (Official Linux Update)","n": "Key features to highlight from the official video:\n• Seamless dual-boot (removing the TF card reboots back to Android).\n• 3 new UI themes (Dark, Light, Classic).\n• Independent brightness controls for top and bottom screens.\n• Secondary screen displays platform logos during single-screen emulation (no more dead black screen)."},{"t": "Escaping Seoul: A Quiet Korean Countryside Vlog","n": "Pacing is crucial here! Do not linger on boring, long scenes. Keep the edit tight. Ensure all Korean speaking interactions have clean, easy-to-read subtitles."},{"t": "I Tried Wireless HDMI For My Handhelds (Llano S850)","n": "Testing to-do checklist:\n• Compare latency: Android native cast to TV VS Android cast to Llano Receiver VS Llano Transmitter to Llano Receiver.\n• Test AirPlay replacement for the living room (since Mac Mini is gone).\n• Thermal camera test on the receiver (packaging says hot is normal, let's see HOW hot)."},{"t": "Can I Get My Girlfriend to Approve of the AYN Thor?","n": "Need to find a pastel skin/case, cute thumb grips (paw prints/flowers), and maybe a charm. Set up Daijisho/Beacon or standard Android with a custom girly theme and widgets. Load up 'cozy' games: Animal Crossing, Nintendogs, Stardew Valley. Add Netflix and Spotify."},{"t": "The Best 3D Printed Accessories for the AYN Thor","n": "Featured grips to print:\n• Thor Grip V5\n• Thor Xbox Style Grip\n• Thor Slim Grip - Switch 2 Joycon Style\n• Thor Slim Grip\n• Thor Grip Medium Version\n• Unofficial Official Ryan Retro Channel Thor Grip\n\nResearch needed: Find the best cases, docks, and weird accessories. Make sure to buy black paper/card for the desk snap transition."},{"t": "Why the AYN Thor is THE BEST Handheld","n": "Cover: EQ fix, using bottom screen as a launcher, adding a grip, controlling bottom screen volume independently, app switching between screens."},{"t": "Turning My Apple Watch Into a Game Boy","n": "Research needed: Check MakerWorld or Thingiverse for the best Apple Watch Game Boy case. Need to figure out the best current watchOS emulator (e.g., Arcadia or a web-based workaround)."},{"t": "The Best Handheld Under $100","n": "Contenders to cover: Ayaneo Pocket Air Mini, Mangmi Air X, TrimUI Brick."},{"t": "The Ultimate Docked Handheld Setup (Auto Controller Mapping)","n": "Testing checklist for standalone apps: Eden, GameNative, Flycast, Redream, Dolphin. I need to figure out which of these handle controller hot-swapping or auto-profiles well before filming."},{"t": "GameNative: PC Games on Android","n": "Title: The Best Way To Play ALL Your PC Games On Android.\nThumbnail: Steam, GOG, Epic icons. Huge recognisable game titles.\nGitHub: https://github.com/utkarshdalal/GameNative\nPerformance fork (SD 8 Gen 2+): https://github.com/maxjivi05/GameNative-Performance\nDifferentiator: simplest setup guide on YouTube plus Thor 2nd screen as touchpad plus performance fork demo."},{"t": "Dock Style Comparison","n": "Titles:\n• The Best Handheld Dock\n• What Handheld Dock Do You Need?\n• One Dock To Rule Them All\n\nThumbnail: Holding the Jumpgate dock in the middle, glowing edge, all kinds of handhelds around it (Steam Deck, Switch 2, MacBook).\n\nTarget audience: Handheld gamers (Switch, Steam Deck, Retroid) and laptop users wanting a portable desk setup."},{"t": "Real DS vs Clone vs Thor","n": "Target: Retro gaming enthusiasts, handheld collectors, DS fans.\nThe Twist: The best overall choice is probably neither - it is the AYN Thor.\nRG DS closer in size to DS XL.\nGammaOS: lighter Android, snappier. Rocknix: simpler Linux alternative.\nR4 card: 4,300 games pre-loaded. No affiliate links for R4 cards.\nRG DS exclusives: Light Dreamcast, PortMaster, Android apps, web browser, YouTube."},{"t": "EVERY Pokemon Game EVER on the AYN Thor","n": "Thumbnail concepts:\n1. AYN Thor center with Pokeball joystick caps, flat-lay of iconic Pokemon game boxes and holographic cards, pixel-art grass texture background.\n2. Dual-screen: Z-A on top (modern 3D) vs Pokemon Red on bottom (8-bit). Pokeball caps on sticks.\n3. Huge pile of loose Pokemon carts on the floor. You standing next to it for scale.\nGet Pokeball stick caps for the shoot."},{"t": "Gaming on a Credit Card Sized PC","n": "Titles:\n1. This $30 credit card is a Gaming Computer\n2. Gaming on a Credit Card sized PC\n3. This $30 credit card is a Gaming PC\n\nThumbnail: Mario gameplay visible. Device shown coming out of wallet or pack of cards. $30 price tag overlay. Gaming PC text overlay. Chandler from Friends reading specs.\nReddit: https://www.reddit.com/r/CardPuter/\n3D printed case: https://makerworld.com/models/2417770\nCardputer Fight: https://www.reddit.com/r/CardPuter/comments/1t4gnrn/cardputer_fight/"},{"t": "Tiny iPhone Video Project","n": "Thumbnail: Tiny iPhone in the middle surrounded by handheld controllers for each system tested (NES, SNES, PS1, Dreamcast, arcade stick). Include a real-sized iPhone next to it for scale.\nOS: runs Android.\nDisclaimer: not a mainstream recommendation."},{"t": "Broken Phone to PC","n": "Title: I Turned My Old Broken Phone Into A PC.\nThumbnail: Smashed phone transitioning to a PC setup.\nTarget audience: tech, environment, renewing/restoring, cheap PCs.\nResearch needed: which Android phones support desktop mode and how. DeX for Samsung, other options for other phones."},{"t": "Cannoli MinUI for Android","n": ""},{"t": "Playing Wii Games on my Phone","n": ""},{"t": "Play Retro Games With Friends Online — Foxol","n": "https://play.foxol.app/"}];
 
 let saveTimer = null, dirty = false;
 let lastSyncedRaw = null, pulling = false;
@@ -628,10 +628,10 @@ let syncErrAt = 0;
 function noteSyncError(status){
   if (Date.now() - syncErrAt < 8000) return;      // don't spam during retries
   syncErrAt = Date.now();
-  const why = status === 401 ? 'token rejected ‚Äî tap Sync and re-paste it'
-    : status === 404 ? 'API route not found ‚Äî is planner_api deployed?'
+  const why = status === 401 ? 'token rejected — tap Sync and re-paste it'
+    : status === 404 ? 'API route not found — is planner_api deployed?'
     : status === 422 ? 'server rejected the data format'
-    : status >= 500 ? 'server/database problem ‚Äî check Railway logs'
+    : status >= 500 ? 'server/database problem — check Railway logs'
     : 'unexpected response';
   toast('Sync error ' + status + ': ' + why);
 }
@@ -741,9 +741,9 @@ const setWithRetry = (key, value) => queueWrite('set', key, value);
 
 function setSaveUI(status){
   const dot = $('#saveDot i'), txt = $('#saveText');
-  if (status === 'saving'){ dot.style.background = 'var(--pop)'; txt.textContent = 'Saving‚Ä¶'; }
+  if (status === 'saving'){ dot.style.background = 'var(--pop)'; txt.textContent = 'Saving…'; }
   else if (status === 'saved'){ dot.style.background = 'var(--green)'; txt.textContent = 'Saved'; }
-  else { dot.style.background = 'var(--red)'; txt.textContent = 'Not saved ‚Äî tap to retry'; }
+  else { dot.style.background = 'var(--red)'; txt.textContent = 'Not saved — tap to retry'; }
 }
 
 function save(){
@@ -759,7 +759,7 @@ async function flushSave(){
   const ok = await setWithRetry('planner_state_v1', payload);
   if (dirty) return;                      // newer changes already queued another pass
   if (ok){ setSaveUI('saved'); lastSyncedRaw = payload; }
-  else { setSaveUI('failed'); toast('Couldn\'t save ‚Äî your work is safe in this tab. Tap the dot up top to retry.'); }
+  else { setSaveUI('failed'); toast('Couldn\'t save — your work is safe in this tab. Tap the dot up top to retry.'); }
 }
 
 /* tap the save indicator to force a retry */
@@ -791,7 +791,7 @@ async function loadState(){
     state.videos.forEach(v => { if (v.sponsor && v.sponsor.fee == null) v.sponsor.fee = ''; });
     state.competitors = state.competitors.filter(c => c.imgId);  // drop URL tiles (sandbox blocks external images)
     ensureDescGlobals();
-    /* one-time import of the idea backlog (June 2026) ‚Äî appends after existing videos */
+    /* one-time import of the idea backlog (June 2026) — appends after existing videos */
     if (!state.seededIdeasV1){
       SEED_IDEAS_V1.forEach(o => {
         const nv = newVideo(o.t);
@@ -801,7 +801,7 @@ async function loadState(){
       state.seededIdeasV1 = true;
       save();
     }
-  } catch(e){ /* first run ‚Äî no saved state yet */ }
+  } catch(e){ /* first run — no saved state yet */ }
 }
 
 /* ---- live pull: bring in edits made on another device (self-host sync only) ---- */
@@ -841,7 +841,7 @@ async function pullRemote(){
     lastSyncedRaw = raw;
     rerenderCurrentView();
     toast('Updated from your other device');
-  } catch(e){ /* offline or mid-write ‚Äî try again next cycle */ }
+  } catch(e){ /* offline or mid-write — try again next cycle */ }
   finally { pulling = false; }
 }
 
@@ -921,7 +921,7 @@ document.addEventListener('input', e => {
 });
 /* Auto-grown textareas are as tall as their content with no inner scrollbar, so
    clicking to place the caret makes the browser scroll the *page* to bring the
-   caret into view ‚Äî the box visibly jumps. Capture the scroll position on click
+   caret into view — the box visibly jumps. Capture the scroll position on click
    and restore it before the next paint so the view stays put. */
 document.addEventListener('pointerdown', e => {
   if (!e.target.closest || !e.target.closest('textarea')) return;
@@ -967,7 +967,7 @@ async function setupSync(){
   if (tok === null) return;
   if (!tok.trim()){
     localStorage.removeItem('planner_sync_token');
-    toast('Sync off ‚Äî this device now saves locally');
+    toast('Sync off — this device now saves locally');
     return;
   }
   localStorage.setItem('planner_sync_token', tok.trim());
@@ -982,10 +982,10 @@ async function setupSync(){
     state = Object.assign({}, state, JSON.parse(serverRaw));
     dumpText.value = state.dump || ''; autoGrow(dumpText);
     applyTheme(); renderInspo(); renderHistory(); renderVideos(); renderFilm();
-    toast('Synced ‚Äî this device now mirrors the server');
+    toast('Synced — this device now mirrors the server');
   };
   if (serverRaw && localEmpty){
-    /* empty device + server has data: only one sane outcome ‚Äî never offer the overwrite */
+    /* empty device + server has data: only one sane outcome — never offer the overwrite */
     pullServer();
     return;
   }
@@ -994,20 +994,20 @@ async function setupSync(){
       pullServer();
       return;
     }
-    /* explicit, double-confirmed push ‚Äî overwriting the server must be deliberate */
+    /* explicit, double-confirmed push — overwriting the server must be deliberate */
     if (!confirm('OVERWRITE the server with THIS device\'s data instead?\n\nThe server copy will be replaced (one previous version is kept server-side as a safety net).\n\nOK = overwrite the server\nCancel = do nothing')){
-      toast('Nothing changed ‚Äî sync is on, no data was moved');
+      toast('Nothing changed — sync is on, no data was moved');
       return;
     }
   }
   /* push local copy up (state + all referenced images) */
-  toast('Uploading this device\'s planner to the server‚Ä¶');
+  toast('Uploading this device\'s planner to the server…');
   for (const id of referencedImageIds()){
     const val = await getImage(id);
     if (val) queueWrite('set', 'img:' + id, val);
   }
   queueWrite('set', 'planner_state_v1', JSON.stringify(state));
-  toast('Sync on ‚Äî server now mirrors this device');
+  toast('Sync on — server now mirrors this device');
 }
 
 /* ---- backup & restore (works in Claude and self-hosted; moves data between devices) ---- */
@@ -1020,7 +1020,7 @@ function referencedImageIds(){
   return [...ids];
 }
 $('#backupBtn').addEventListener('click', async () => {
-  const btn = $('#backupBtn'); btn.disabled = true; btn.textContent = 'Packing‚Ä¶';
+  const btn = $('#backupBtn'); btn.disabled = true; btn.textContent = 'Packing…';
   const imgs = {};
   for (const id of referencedImageIds()){
     const v = await getImage(id);
@@ -1101,7 +1101,7 @@ $('#tabs').addEventListener('click', e => {
   }
 
   if (tab === 'videos'){
-    /* From filming ‚Üí that video's note. From a note ‚Üí the full list. */
+    /* From filming → that video's note. From a note → the full list. */
     if (inFilm && state.filmSel && state.videos.find(x => x.id === state.filmSel)){
       activate('videos'); openVideo(state.filmSel);
     } else {
@@ -1152,7 +1152,7 @@ function renderInspo(){
   g.innerHTML = state.inspo.map(it => `
     <div class="inspo" data-id="${it.id}">
       <img data-img-id="${it.imgId}" alt="inspiration image">
-      <button class="x" title="Remove">√ó</button>
+      <button class="x" title="Remove">×</button>
       <input value="${esc(it.caption)}" placeholder="Note">
     </div>`).join('');
   hydrateImages(g);
@@ -1184,17 +1184,17 @@ let pendingSort = null;
 
 $('#autoSortBtn').addEventListener('click', async () => {
   const text = state.dump.trim();
-  if (!text){ toast('Brain dump is empty ‚Äî type some notes first!'); return; }
+  if (!text){ toast('Brain dump is empty — type some notes first!'); return; }
   const btn = $('#autoSortBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Sorting your notes‚Ä¶';
+  btn.innerHTML = '<span class="spinner"></span> Sorting your notes…';
   try {
     const plan = await callSorter(text);
     pendingSort = plan;
     showSortPreview(plan);
   } catch(e){
     console.error(e);
-    toast('Auto-sort hit a snag ‚Äî try again in a moment');
+    toast('Auto-sort hit a snag — try again in a moment');
   }
   btn.disabled = false;
   btn.innerHTML = 'Auto-Sort My Notes';
@@ -1248,11 +1248,11 @@ Respond with ONLY minified single-line JSON (no markdown fences, no line breaks,
     });
     if (!isArtifact && (res.status === 401 || res.status === 403)){
       localStorage.removeItem('anthropic_api_key');
-      throw new Error('API key rejected ‚Äî it has been cleared, try again');
+      throw new Error('API key rejected — it has been cleared, try again');
     }
     const data = await res.json();
     raw += (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    if (data.stop_reason !== 'max_tokens') break;   // complete ‚Äî otherwise loop continues the JSON
+    if (data.stop_reason !== 'max_tokens') break;   // complete — otherwise loop continues the JSON
   }
   raw = raw.replace(/```json|```/g, '').trim();
   try { return JSON.parse(raw); }
@@ -1305,7 +1305,7 @@ function showSortPreview(plan){
   (g.notes||[]).forEach(n => gItems += `<li><span class="dest-dot" style="background:${dots.notes}"></span> ${esc(n)}</li>`);
   (g.todos||[]).forEach(t => gItems += `<li><span class="dest-dot" style="background:${dots.todos}"></span> To-do: ${esc(todoText(t))}</li>`);
   if (gItems) html += `<div class="file-card"><div class="dest">General (stays in Brain Dump as a tidy list)</div><ul>${gItems}</ul></div>`;
-  if (!html) html = '<div class="empty">Couldn\'t find anything to file ‚Äî try adding a bit more detail.</div>';
+  if (!html) html = '<div class="empty">Couldn\'t find anything to file — try adding a bit more detail.</div>';
   $('#sortResults').innerHTML = html;
   $('#sortOverlay').classList.add('show');
 }
@@ -1321,18 +1321,18 @@ $('#applySortBtn').addEventListener('click', () => {
       target.status = 'Planning';
       state.videos.unshift(target);
     }
-    (v.notes||[]).forEach(n => { target.notes = (target.notes ? target.notes + '\n\n' : '') + '‚Ä¢ ' + n; filed++; });
+    (v.notes||[]).forEach(n => { target.notes = (target.notes ? target.notes + '\n\n' : '') + '• ' + n; filed++; });
     (v.titleIdeas||[]).forEach(t => { target.titleIdeas.push({ id: uid(), text: t, starred: false }); filed++; });
     (v.todos||[]).forEach(t => { target.todos.push({ id: uid(), text: todoText(t), done: false }); filed++; });
     (v.filmingPoints||[]).forEach(t => {
       if (!Array.isArray(target.say)) target.say = [];
       target.say.push({ id: uid(), text: todoText(t), done: false }); filed++;
     });
-    (v.sponsorNotes||[]).forEach(n => { target.sponsor.points = (target.sponsor.points ? target.sponsor.points + '\n' : '') + '‚Ä¢ ' + n; filed++; });
+    (v.sponsorNotes||[]).forEach(n => { target.sponsor.points = (target.sponsor.points ? target.sponsor.points + '\n' : '') + '• ' + n; filed++; });
   });
   const g = pendingSort.general || {};
   const leftover = [];
-  (g.notes||[]).forEach(n => leftover.push('‚Ä¢ ' + n));
+  (g.notes||[]).forEach(n => leftover.push('• ' + n));
   (g.todos||[]).forEach(t => leftover.push('- ' + todoText(t)));
   state.history.unshift({ date: new Date().toLocaleString(), text: state.dump });
   state.history = state.history.slice(0, 8);
@@ -1345,7 +1345,7 @@ $('#applySortBtn').addEventListener('click', () => {
 });
 
 /* =================================================================
-   VIDEOS ‚Äî LIST
+   VIDEOS — LIST
    ================================================================= */
 $('#newVideoBtn').addEventListener('click', () => {
   const v = newVideo('');
@@ -1406,7 +1406,7 @@ $('#vidGrid').addEventListener('click', e => {
 });
 
 /* =================================================================
-   VIDEOS ‚Äî DETAIL
+   VIDEOS — DETAIL
    ================================================================= */
 const STATUSES = ['Idea','Planning','Filming','Editing','Published'];
 
@@ -1420,7 +1420,7 @@ function openVideo(id){
 
   d.innerHTML = `
   <div class="detail-head">
-    <button class="btn ghost" id="backBtn">‚Üê All videos</button>
+    <button class="btn ghost" id="backBtn">← All videos</button>
     ${feeBadge(v, false)}
     <button class="btn ghost red" id="vDelete" style="margin-left:auto;">Delete</button>
   </div>
@@ -1529,9 +1529,9 @@ function renderIdeas(v){
   const sorted = [...v.titleIdeas].sort((a,b) => (b.starred?1:0) - (a.starred?1:0));
   $('#ideaList').innerHTML = sorted.length ? sorted.map(i => `
     <div class="idea-li ${i.starred?'star':''}" data-id="${i.id}">
-      <button class="icon-btn ${i.starred?'on':''}" data-act="star" title="Star to make this the title">${i.starred?'‚òÖ':'‚òÜ'}</button>
+      <button class="icon-btn ${i.starred?'on':''}" data-act="star" title="Star to make this the title">${i.starred?'★':'☆'}</button>
       <textarea class="t" rows="1">${esc(i.text)}</textarea>
-      <button class="icon-btn" data-act="del" title="Delete">‚úï</button>
+      <button class="icon-btn" data-act="del" title="Delete">✕</button>
     </div>`).join('')
     : '<div class="empty">No title ideas yet.</div>';
   growAll($('#ideaList'));
@@ -1566,7 +1566,7 @@ function renderTodos(v){
     <div class="todo-li ${t.done?'done':''}" data-id="${t.id}">
       <input type="checkbox" ${t.done?'checked':''}>
       <textarea class="t" rows="1">${esc(t.text)}</textarea>
-      <button class="icon-btn" data-act="del" title="Delete">‚úï</button>
+      <button class="icon-btn" data-act="del" title="Delete">✕</button>
     </div>`).join('') || '<div class="empty">No tasks yet. Auto-Sort a brain dump or add one above.</div>';
   growAll($('#todoList'));
   requestAnimationFrame(syncNotesHeight);
@@ -1589,7 +1589,7 @@ function renderThumbs(v){
   comp.innerHTML = ['A','B','C'].map(k => {
     const imgId = v.thumbs[k];
     return `<div class="tslot ${v.winner===k && imgId ? 'win':''}" data-slot="${k}">
-      <span class="label">${k}${v.winner===k && imgId ? ' ¬∑ WINNER':''}</span>
+      <span class="label">${k}${v.winner===k && imgId ? ' · WINNER':''}</span>
       ${imgId
         ? `<img data-img-id="${imgId}" alt="Thumbnail ${k}" title="Click to replace">
            <div class="foot">
@@ -1635,17 +1635,17 @@ function renderThumbs(v){
    DESCRIPTION BUILDER
    ================================================================= */
 const DESC_SOCIALS_V2 = [
-  'üåê Website: https://www.ryanretro.com',
-  'üì∏ Instagram: https://www.instagram.com/ryanretroyoutube',
-  'üéµ TikTok: https://www.tiktok.com/@ryanretroyoutube',
-  'üë• Facebook: https://www.facebook.com/RyanRetroYT',
-  'üßµ Threads: https://www.threads.com/@ryanretroyoutube',
-  'üê¶ Twitter/X: https://x.com/RyanRetroYT',
-  'ü¶ã Bluesky: https://bsky.app/profile/ryanretro.bsky.social',
-  'üìß Email: ryanretro.contact@gmail.com',
-  '‚ù§Ô∏è Support me on Patreon: https://www.patreon.com/c/RyanRetro',
-  'üá∞üá∑ My Korea Travel channel: https://www.youtube.com/channel/UC5G1QQybFSC5P8X6O5airIg',
-  'üí¨ Join the Discord community: https://discord.gg/RAenS43UV9'
+  '🌐 Website: https://www.ryanretro.com',
+  '📸 Instagram: https://www.instagram.com/ryanretroyoutube',
+  '🎵 TikTok: https://www.tiktok.com/@ryanretroyoutube',
+  '👥 Facebook: https://www.facebook.com/RyanRetroYT',
+  '🧵 Threads: https://www.threads.com/@ryanretroyoutube',
+  '🐦 Twitter/X: https://x.com/RyanRetroYT',
+  '🦋 Bluesky: https://bsky.app/profile/ryanretro.bsky.social',
+  '📧 Email: ryanretro.contact@gmail.com',
+  '❤️ Support me on Patreon: https://www.patreon.com/c/RyanRetro',
+  '🇰🇷 My Korea Travel channel: https://www.youtube.com/channel/UC5G1QQybFSC5P8X6O5airIg',
+  '💬 Join the Discord community: https://discord.gg/RAenS43UV9'
 ].join('\n');
 
 function DESC_DEVICES_V2(){
@@ -1675,10 +1675,10 @@ function DESC_DEVICES_V2(){
 }
 
 const DESC_OUTROS = [
-  'Thank you so much for watching! ‚ù§Ô∏è',
-  'I really appreciate you spending your time here with me ‚Äî see you in the next one! ‚ù§Ô∏è',
-  'Thanks for watching! If you enjoyed this one, a like or a comment genuinely makes my day ‚ù§Ô∏è',
-  'Thank you for being here ‚Äî this channel exists because of viewers like you ‚ù§Ô∏è'
+  'Thank you so much for watching! ❤️',
+  'I really appreciate you spending your time here with me — see you in the next one! ❤️',
+  'Thanks for watching! If you enjoyed this one, a like or a comment genuinely makes my day ❤️',
+  'Thank you for being here — this channel exists because of viewers like you ❤️'
 ];
 
 function ensureDescGlobals(){
@@ -1711,7 +1711,7 @@ function descSponsorTemplate(v){
   return 'This video is sponsored by ' + name + '! Check them out here: LINK';
 }
 
-const DESC_DIV = '‚îÅ'.repeat(25);
+const DESC_DIV = '━'.repeat(25);
 
 function buildDescription(v){
   ensureDescGlobals(); ensureDesc(v);
@@ -1728,29 +1728,29 @@ function buildDescription(v){
       : names.length === 2 ? `${names[0]} or ${names[1]}`
       : `${names.slice(0, -1).join(', ')}, or ${names[names.length - 1]}`;
     const many = devs.length > 1 || linkLines(devs[0]).length > 1;
-    shop.push(`üéÆ If you‚Äôd like to buy your own ${joined}, you can use my affiliate link${many ? 's' : ''} below ‚Äî it supports the channel at no extra cost to you:`);
+    shop.push(`🎮 If you’d like to buy your own ${joined}, you can use my affiliate link${many ? 's' : ''} below — it supports the channel at no extra cost to you:`);
     if (devs.length === 1){
       linkLines(devs[0]).forEach(l => shop.push(l));
     } else {
       devs.forEach(dv => {
         const lines = linkLines(dv);
-        if (lines.length <= 1) shop.push(`üïπÔ∏è ${dv.name} ‚Äî ${lines[0] || ''}`);
-        else { shop.push(`üïπÔ∏è ${dv.name}`); lines.forEach(l => shop.push('    ' + l)); }
+        if (lines.length <= 1) shop.push(`🕹️ ${dv.name} — ${lines[0] || ''}`);
+        else { shop.push(`🕹️ ${dv.name}`); lines.forEach(l => shop.push('    ' + l)); }
       });
     }
     shop.push('');
   }
-  shop.push(`üõí All my affiliate links: ${G.store}`);
+  shop.push(`🛒 All my affiliate links: ${G.store}`);
   parts.push(shop.join('\n'));
 
-  if (d.sponsorOn && d.sponsorText.trim()) parts.push('ü§ù ' + d.sponsorText.trim());
+  if (d.sponsorOn && d.sponsorText.trim()) parts.push('🤝 ' + d.sponsorText.trim());
 
   const extras = (d.extras || []).filter(x => (x.label || '').trim() || (x.url || '').trim());
   if (extras.length) parts.push(extras.map(x => `${(x.label || '').trim()}: ${(x.url || '').trim()}`).join('\n'));
 
-  parts.push('üîó Let‚Äôs stay connected ‚Äî come say hi:\n' + G.socials);
-  if (d.editorOn) parts.push(`üé® Edited by ${G.editor}`);
-  if (d.timestampsOn) parts.push('‚è∞ Timestamps:\n' + (d.timestamps.trim() || '0:00 Intro'));
+  parts.push('🔗 Let’s stay connected — come say hi:\n' + G.socials);
+  if (d.editorOn) parts.push(`🎨 Edited by ${G.editor}`);
+  if (d.timestampsOn) parts.push('⏰ Timestamps:\n' + (d.timestamps.trim() || '0:00 Intro'));
   if (d.outro >= 0 && DESC_OUTROS[d.outro]) parts.push(DESC_OUTROS[d.outro]);
 
   return parts.join('\n' + DESC_DIV + '\n');
@@ -1771,7 +1771,7 @@ function renderDescBuilder(v){
         <label class="lbl">Handhelds featured</label>
         <button class="btn" id="descDevBtn" style="width:100%; justify-content:space-between;"><span id="descDevLabel">${
           d.devices.length ? esc(d.devices.map(id => (G.devices.find(x=>x.id===id)||{}).name).filter(Boolean).join(', ')) : 'Choose handhelds'
-        }</span><span>‚ñæ</span></button>
+        }</span><span>▾</span></button>
         <div id="descDevPanel" style="display:none; max-height:230px; overflow-y:auto; border:1px solid var(--sep); border-radius:5px; padding:0 8px; margin-top:6px;">${G.devices.map(dv => `
           <label class="todo-li" style="cursor:pointer;">
             <input type="checkbox" data-dev="${dv.id}" ${d.devices.includes(dv.id)?'checked':''}>
@@ -1782,8 +1782,8 @@ function renderDescBuilder(v){
         <div id="descExtras">${(d.extras||[]).map(x => `
           <div class="row" data-ex="${x.id}" style="margin-top:6px;">
             <input class="in" data-f="label" value="${esc(x.label)}" placeholder="Label" style="flex:1; min-width:90px;">
-            <input class="in" data-f="url" value="${esc(x.url)}" placeholder="https://‚Ä¶" style="flex:2; min-width:120px;">
-            <button class="icon-btn" data-act="exdel">‚úï</button>
+            <input class="in" data-f="url" value="${esc(x.url)}" placeholder="https://…" style="flex:2; min-width:120px;">
+            <button class="icon-btn" data-act="exdel">✕</button>
           </div>`).join('')}</div>
         <button class="btn ghost" id="descAddExtra" style="margin-top:8px;">+ Link</button>
 
@@ -1802,14 +1802,14 @@ function renderDescBuilder(v){
           <option value="-1" ${d.outro===-1?'selected':''}>None</option>
         </select>
 
-        <button class="btn ghost" id="descGlobalsBtn" style="margin-top:12px;">Edit devices, links &amp; socials ‚ñæ</button>
+        <button class="btn ghost" id="descGlobalsBtn" style="margin-top:12px;">Edit devices, links &amp; socials ▾</button>
         <div id="descGlobals" style="display:none; margin-top:10px; border-top:1px solid var(--sep); padding-top:10px;">
           <label class="lbl">Devices &amp; affiliate links</label>
           <div id="descDevEdit">${G.devices.map(dv => `
             <div class="row" data-dv="${dv.id}" style="margin-top:6px; align-items:flex-start;">
               <input class="in" data-f="name" value="${esc(dv.name)}" placeholder="Device name" style="flex:1; min-width:90px;">
               <textarea class="in" data-f="link" rows="1" placeholder="Label: link (one per line)" style="flex:2; min-width:120px; resize:none; overflow:hidden;">${esc(dv.link)}</textarea>
-              <button class="icon-btn" data-act="dvdel">‚úï</button>
+              <button class="icon-btn" data-act="dvdel">✕</button>
             </div>`).join('')}</div>
           <button class="btn ghost" id="descAddDev" style="margin-top:8px;">+ Device</button>
           <label class="lbl">Store link</label>
@@ -1855,7 +1855,7 @@ function renderDescBuilder(v){
   card.onclick = e => {
     if (e.target.id === 'descCopy'){
       const text = buildDescription(v);
-      const done = () => toast('Description copied ‚Äî paste it into YouTube');
+      const done = () => toast('Description copied — paste it into YouTube');
       if (navigator.clipboard && navigator.clipboard.writeText){
         navigator.clipboard.writeText(text).then(done).catch(() => {
           const ta = $('#descPreview'); ta.select(); document.execCommand('copy'); done();
@@ -1867,12 +1867,12 @@ function renderDescBuilder(v){
       const ta = $('#descTimes');
       if (navigator.clipboard && navigator.clipboard.readText){
         navigator.clipboard.readText().then(text => {
-          if (!text){ toast('Clipboard is empty ‚Äî paste into the box instead'); ta.focus(); return; }
+          if (!text){ toast('Clipboard is empty — paste into the box instead'); ta.focus(); return; }
           d.timestamps = text.trim();
           ta.value = d.timestamps; autoGrow(ta);
           save(); updatePreview();
           toast('Timestamps pasted');
-        }).catch(() => { toast('Clipboard blocked ‚Äî click the box and press Ctrl/Cmd+V'); ta.focus(); });
+        }).catch(() => { toast('Clipboard blocked — click the box and press Ctrl/Cmd+V'); ta.focus(); });
       } else { toast('Click the box and press Ctrl/Cmd+V'); ta.focus(); }
       return;
     }
@@ -1897,7 +1897,7 @@ function renderDescBuilder(v){
       const p = $('#descGlobals');
       const open = p.style.display === 'none';
       p.style.display = open ? '' : 'none';
-      e.target.textContent = 'Edit devices, links & socials ' + (open ? '‚ñ¥' : '‚ñæ');
+      e.target.textContent = 'Edit devices, links & socials ' + (open ? '▴' : '▾');
       if (open) growAll(p);
       return;
     }
@@ -1930,7 +1930,7 @@ function renderDescBuilder(v){
 }
 
 /* =================================================================
-   FILMING MODE ‚Äî blank "what I'm gonna say" list, fully yours
+   FILMING MODE — blank "what I'm gonna say" list, fully yours
    ================================================================= */
 function renderFilm(){
   const sel = $('#filmSelect');
@@ -1939,7 +1939,7 @@ function renderFilm(){
     active.map(v => `<option value="${v.id}" ${state.filmSel===v.id?'selected':''}>${esc(v.title || 'Untitled')}</option>`).join('');
   sel.onchange = () => { state.filmSel = sel.value; save(); renderFilm(); };
   const cur = state.videos.find(x => x.id === state.filmSel);
-  $('#filmTitleDisplay').innerHTML = (cur ? esc(cur.title || 'Untitled video') : 'Choose a video') + '<span class="title-caret">‚ñæ</span>';
+  $('#filmTitleDisplay').innerHTML = (cur ? esc(cur.title || 'Untitled video') : 'Choose a video') + '<span class="title-caret">▾</span>';
   renderFilmBody();
 }
 
@@ -1959,7 +1959,7 @@ function renderFilmBody(){
     <div class="sticky-prog" style="margin-top:14px;">
       <span>${done}/${total} done</span>
       <div class="bar" style="flex:1; background:#fff;"><i style="width:${pct}%"></i></div>
-      <button class="btn ghost" id="lockX">${state.filmLockX ? 'Show ‚úï' : 'Hide ‚úï'}</button>
+      <button class="btn ghost" id="lockX">${state.filmLockX ? 'Show ✕' : 'Hide ✕'}</button>
       <button class="btn ghost" id="resetSay">Reset</button>
     </div>
     ${sponsorBits ? `<div class="sponsor-flag"><b>Don't forget on camera:</b><br><span style="white-space:pre-wrap;">${esc(sponsorBits)}</span></div>` : ''}
@@ -1967,12 +1967,12 @@ function renderFilmBody(){
       ${v.say.map(p => p.type === 'sec' ? `
         <div class="fitem fdiv secc-${p.color || 'teal'}" data-say="${p.id}">
           <textarea rows="1" class="secname" placeholder="Section" title="Double-click the band to change colour">${esc(p.text)}</textarea>
-          ${state.filmLockX ? '' : '<button class="icon-btn" data-act="del" title="Delete">‚úï</button>'}
+          ${state.filmLockX ? '' : '<button class="icon-btn" data-act="del" title="Delete">✕</button>'}
         </div>` : `
         <div class="fitem ${p.done?'done':''}" data-say="${p.id}">
           <input type="checkbox" ${p.done?'checked':''}>
           <textarea rows="1" placeholder="">${esc(p.text)}</textarea>
-          ${state.filmLockX ? '' : '<button class="icon-btn" data-act="del" title="Delete">‚úï</button>'}
+          ${state.filmLockX ? '' : '<button class="icon-btn" data-act="del" title="Delete">✕</button>'}
         </div>`).join('')}
       ${v.say.length ? '' : '<div class="empty">Add the points you want to say, in the order your video flows.</div>'}
     </div>
@@ -2045,7 +2045,7 @@ function renderFilmBody(){
   $('#resetSay').onclick = () => { v.say.forEach(p => { if (p.type !== 'sec') p.done = false; }); save(); renderFilmBody(); };
 }
 
-/* Drag rows to reorder talking points ‚Äî grab anywhere on a row that isn't
+/* Drag rows to reorder talking points — grab anywhere on a row that isn't
    the checkbox, the text, or a button. No handles, just a grab cursor. */
 function wireSayReorder(body, v){
   const list = body.querySelector('.film-check');
@@ -2090,14 +2090,14 @@ function wireSayReorder(body, v){
    THUMBNAIL LAB
    ================================================================= */
 const FAKE_META = [
-  ['Retro Game Corps','1.2M views ¬∑ 3 days ago','18:42'],
-  ['Wicked Gamer','487K views ¬∑ 1 week ago','12:05'],
-  ['Taki Udon','390K views ¬∑ 5 days ago','15:31'],
-  ['Joey\'s Retro Handhelds','210K views ¬∑ 2 weeks ago','21:09'],
-  ['Retro Dodo','98K views ¬∑ 4 days ago','9:58'],
-  ['The Retro Future','305K views ¬∑ 6 days ago','14:22'],
-  ['Mr. Sujano','156K views ¬∑ 1 day ago','11:47'],
-  ['ETA Prime','602K views ¬∑ 1 week ago','13:14']
+  ['Retro Game Corps','1.2M views · 3 days ago','18:42'],
+  ['Wicked Gamer','487K views · 1 week ago','12:05'],
+  ['Taki Udon','390K views · 5 days ago','15:31'],
+  ['Joey\'s Retro Handhelds','210K views · 2 weeks ago','21:09'],
+  ['Retro Dodo','98K views · 4 days ago','9:58'],
+  ['The Retro Future','305K views · 6 days ago','14:22'],
+  ['Mr. Sujano','156K views · 1 day ago','11:47'],
+  ['ETA Prime','602K views · 1 week ago','13:14']
 ];
 
 function renderLab(){
@@ -2105,9 +2105,9 @@ function renderLab(){
   const pick = $('#labPick');
   const opts = [];
   state.videos.forEach(v => ['A','B','C'].forEach(k => {
-    if (v.thumbs[k]) opts.push({ val: v.id + ':' + k, label: `${v.title || 'Untitled'} ‚Äî Option ${k}${v.winner===k?' (winner)':''}` });
+    if (v.thumbs[k]) opts.push({ val: v.id + ':' + k, label: `${v.title || 'Untitled'} — Option ${k}${v.winner===k?' (winner)':''}` });
   }));
-  pick.innerHTML = '<option value="">‚Äî Pick one of your thumbnails ‚Äî</option>' +
+  pick.innerHTML = '<option value="">— Pick one of your thumbnails —</option>' +
     opts.map(o => `<option value="${o.val}" ${state.lab.source===o.val?'selected':''}>${esc(o.label)}</option>`).join('');
   pick.onchange = () => { state.lab.source = pick.value; state.lab.order = null; save(); renderLab(); };
 
@@ -2128,7 +2128,7 @@ function renderLab(){
   $$('#sizeSeg button').forEach(b => b.classList.toggle('on', b.dataset.size === state.lab.size));
 
   if (!state.competitors.length && !myImgId){
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;">Drag your competitor thumbnail images here (or use Add) ‚Äî they save permanently. Then pick one of yours and see if it wins the scroll.</div>';
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1;">Drag your competitor thumbnail images here (or use Add) — they save permanently. Then pick one of yours and see if it wins the scroll.</div>';
     return;
   }
 
@@ -2146,15 +2146,15 @@ function renderLab(){
   grid.innerHTML = cards.map(c => `
     <div class="ytc ${c.mine?'mine':''}">
       <div class="tn">
-        ${c.comp ? `<button class="rm" data-comp="${c.comp}" title="Remove">√ó</button>` : ''}
+        ${c.comp ? `<button class="rm" data-comp="${c.comp}" title="Remove">×</button>` : ''}
         <img data-img-id="${c.imgId}" alt="">
         <span class="dur">${c.meta[2]}</span>
       </div>
       <div class="info">
         <div class="av">${c.mine ? 'R' : esc(c.meta[0][0])}</div>
         <div>
-          <div class="tt">${esc(c.mine ? (c.title || 'Your video') : 'Competitor upload ‚Äî does yours beat this?')}</div>
-          <div class="ch">${esc(c.meta[0])} ¬∑ ${esc(c.meta[1])}</div>
+          <div class="tt">${esc(c.mine ? (c.title || 'Your video') : 'Competitor upload — does yours beat this?')}</div>
+          <div class="ch">${esc(c.meta[0])} · ${esc(c.meta[1])}</div>
         </div>
       </div>
     </div>`).join('');
@@ -2187,7 +2187,7 @@ async function uploadCompetitors(files){
   if (!files.length){ status.textContent = 'No image files detected in that selection.'; return; }
   let ok = 0; const errors = [];
   for (let i = 0; i < files.length; i++){
-    status.textContent = `Uploading ${i+1}/${files.length}‚Ä¶`;
+    status.textContent = `Uploading ${i+1}/${files.length}…`;
     try {
       const imgId = await storeImage(files[i]);
       state.competitors.push({ id: uid(), imgId });
@@ -2200,9 +2200,9 @@ async function uploadCompetitors(files){
     }
   }
   status.textContent = errors.length
-    ? `Added ${ok} of ${files.length} ‚Äî failed: ${errors[0]}${errors.length > 1 ? ` (+${errors.length-1} more)` : ''}`
+    ? `Added ${ok} of ${files.length} — failed: ${errors[0]}${errors.length > 1 ? ` (+${errors.length-1} more)` : ''}`
     : `Added ${ok} thumbnail${ok===1?'':'s'} \u2714`;
-  if (errors.length) toast(errors.length + ' upload' + (errors.length>1?'s':'') + ' failed ‚Äî details next to the Add button');
+  if (errors.length) toast(errors.length + ' upload' + (errors.length>1?'s':'') + ' failed — details next to the Add button');
 }
 $('#labUploadBtn').addEventListener('click', () => $('#labFile').click());
 $('#labFile').addEventListener('change', async () => {
@@ -2226,9 +2226,9 @@ labView.addEventListener('drop', e => {
    ================================================================= */
 (async function init(){
   await loadState();
-  /* storage health check ‚Äî uses the retry queue, warns only if it truly can't save */
+  /* storage health check — uses the retry queue, warns only if it truly can't save */
   setWithRetry('ping', '1').then(ok => {
-    if (!ok) toast('Storage is unreachable right now ‚Äî changes won\'t persist. Try reloading in a minute.');
+    if (!ok) toast('Storage is unreachable right now — changes won\'t persist. Try reloading in a minute.');
   });
   if (!state.theme) state.theme = (matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
   applyTheme();
