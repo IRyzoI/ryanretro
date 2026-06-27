@@ -2201,7 +2201,7 @@ async function uploadCompetitors(files){
   }
   status.textContent = errors.length
     ? `Added ${ok} of ${files.length} ‚Äî failed: ${errors[0]}${errors.length > 1 ? ` (+${errors.length-1} more)` : ''}`
-    : `Added ${ok} thumbnail${ok===1?'':'s'} ‚úî`;
+    : `Added ${ok} thumbnail${ok===1?'':'s'} \u2714`;
   if (errors.length) toast(errors.length + ' upload' + (errors.length>1?'s':'') + ' failed ‚Äî details next to the Add button');
 }
 $('#labUploadBtn').addEventListener('click', () => $('#labFile').click());
@@ -2235,8 +2235,8 @@ labView.addEventListener('drop', e => {
   if (!isArtifact){
     const sb = $('#syncBtn');
     sb.style.display = '';
-    sb.textContent = syncToken() ? 'Sync ‚úì' : 'Sync';
-    sb.onclick = async () => { await setupSync(); sb.textContent = syncToken() ? 'Sync ‚úì' : 'Sync'; };
+    sb.textContent = syncToken() ? 'Sync \u2713' : 'Sync';
+    sb.onclick = async () => { await setupSync(); sb.textContent = syncToken() ? 'Sync \u2713' : 'Sync'; };
     setInterval(pullRemote, 10000);                                   // catch idle-tab changes
     document.addEventListener('visibilitychange', () => { if (!document.hidden) pullRemote(); });
     window.addEventListener('focus', pullRemote);                     // refresh the instant you return to this device
