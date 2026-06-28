@@ -846,9 +846,10 @@
                     title.onclick = () => window.open(bestUrl, '_blank');
                 }
                 
-                // STORE PRICES — collapsible "compare prices" dropdown (2+ stores)
+                // STORE PRICES — one row per platform (all shown at once); a
+                // platform with multiple sellers becomes individually collapsible.
                 const linksContainer = clone.querySelector('.card-links');
-                const sortedLinks = [...p.links].sort((a, b) => a.price - b.price);
+                const platforms = [...p.links].sort((a, b) => a.price - b.price);
 
                 const storeStyle = (store) => {
                     const s = store.toLowerCase();
@@ -858,51 +859,75 @@
                     if (s.includes('amazon')) return { bg: 'bg-yellow-500 text-black hover:bg-yellow-400', icon: 'package' };
                     return { bg: 'bg-brand-dark text-brand-light hover:bg-[#52448F]', icon: 'shopping-bag' };
                 };
+                const base = "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884]";
 
-                const makeRow = (l) => {
+                platforms.forEach(l => {
                     const st = storeStyle(l.store);
                     const live = l._live || {};
-                    const base = "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884]";
+                    const offers = (live.offers && live.offers.length > 1) ? [...live.offers].sort((a, b) => a.price - b.price) : null;
                     const wasHtml = (live.drop && live.previous != null) ? `<span class="line-through opacity-60 mr-1.5">${formatPrice(live.previous)}</span>` : '';
-                    const seller = (live.merchant && live.merchant.toLowerCase() !== 'official store') ? live.merchant : '';
-                    const trust = live.merchantTrusted ? '<i data-lucide="badge-check" class="w-3 h-3 shrink-0"></i>' : '';
-                    const rating = (live.rating != null) ? `★${live.rating}%${live.sales != null ? ' · ' + live.sales + ' sold' : ''}` : '';
-                    const sub = (seller || rating) ? `<div class="flex items-center gap-1 text-[10px] font-bold opacity-70 normal-case mt-0.5">${trust}${seller ? '<span>' + seller + '</span>' : ''}${rating ? '<span>' + rating + '</span>' : ''}</div>` : '';
-                    const btn = document.createElement('a');
-                    btn.href = l.url;
-                    btn.target = "_blank";
-                    btn.className = `${base} ${st.bg}`;
-                    btn.onclick = (e) => e.stopPropagation();
-                    btn.innerHTML = `
-                        <div class="flex items-center gap-2 text-left">
-                            <i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i>
-                            <div><span class="uppercase tracking-wide">${l.store}</span>${sub}</div>
-                        </div>
-                        <span class="whitespace-nowrap">${wasHtml}${formatPrice(l.price)}</span>`;
-                    return btn;
-                };
 
-                // Cheapest store always visible; the rest fold behind a toggle.
-                linksContainer.appendChild(makeRow(sortedLinks[0]));
-                if (sortedLinks.length > 1) {
-                    const more = document.createElement('div');
-                    more.className = "hidden flex-col gap-2 mt-2";
-                    sortedLinks.slice(1).forEach(l => more.appendChild(makeRow(l)));
-                    const toggle = document.createElement('button');
-                    toggle.className = "w-full mt-2 flex items-center justify-center gap-1.5 text-[11px] font-black text-brand-light/80 hover:text-white uppercase tracking-wide transition-colors";
-                    const label = (open) => open ? 'Hide prices' : `Compare ${sortedLinks.length} prices`;
-                    toggle.innerHTML = `<i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i><span>${label(false)}</span>`;
-                    toggle.onclick = (e) => {
-                        e.stopPropagation();
-                        const open = more.classList.toggle('hidden') === false;
-                        more.classList.toggle('flex', open);
-                        const icon = toggle.querySelector('svg, i');
-                        if (icon) icon.classList.toggle('rotate-180', open);
-                        toggle.querySelector('span').textContent = label(open);
-                    };
-                    linksContainer.appendChild(toggle);
-                    linksContainer.appendChild(more);
-                }
+                    if (!offers) {
+                        // Single seller on this platform: a direct buy link with seller/rating sub-line.
+                        const seller = (live.merchant && live.merchant.toLowerCase() !== 'official store') ? live.merchant : '';
+                        const trust = live.merchantTrusted ? '<i data-lucide="badge-check" class="w-3 h-3 shrink-0"></i>' : '';
+                        const rep = (live.rating != null) ? `★${live.rating}%${live.sales != null ? ' · ' + live.sales + ' sold' : ''}` : '';
+                        const sub = (seller || rep) ? `<div class="flex items-center gap-1 text-[10px] font-bold opacity-70 normal-case mt-0.5">${trust}${seller ? '<span>' + seller + '</span>' : ''}${rep ? '<span>' + rep + '</span>' : ''}</div>` : '';
+                        const a = document.createElement('a');
+                        a.href = l.url;
+                        a.target = "_blank";
+                        a.className = `${base} ${st.bg} hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884]`;
+                        a.onclick = (e) => e.stopPropagation();
+                        a.innerHTML = `
+                            <div class="flex items-center gap-2 text-left">
+                                <i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i>
+                                <div><span class="uppercase tracking-wide">${l.store}</span>${sub}</div>
+                            </div>
+                            <span class="whitespace-nowrap">${wasHtml}${formatPrice(l.price)}</span>`;
+                        linksContainer.appendChild(a);
+                    } else {
+                        // Multiple sellers on this platform: collapsible "N sellers" section.
+                        const cheapest = offers[0].price;
+                        const wrap = document.createElement('div');
+                        const head = document.createElement('button');
+                        head.className = `w-full ${base} ${st.bg}`;
+                        head.innerHTML = `
+                            <div class="flex items-center gap-2 text-left">
+                                <i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i>
+                                <div><span class="uppercase tracking-wide">${l.store}</span><div class="text-[10px] font-bold opacity-70 normal-case mt-0.5">${offers.length} sellers</div></div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <span class="whitespace-nowrap"><span class="opacity-70 font-bold normal-case mr-0.5 text-[10px]">from</span>${formatPrice(cheapest)}</span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                            </div>`;
+                        const body = document.createElement('div');
+                        body.className = "hidden flex-col gap-1.5 mt-1.5 pl-1";
+                        offers.forEach(o => {
+                            const row = document.createElement('a');
+                            row.href = l.url;
+                            row.target = "_blank";
+                            row.className = "flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-bold bg-brand-dark/40 text-brand-light hover:bg-brand-dark/70 border-2 border-brand-dark";
+                            row.onclick = (e) => e.stopPropagation();
+                            const badge = o.trusted ? '<i data-lucide="badge-check" class="w-3 h-3 shrink-0 text-green-400"></i>' : '';
+                            const rep = (o.rating != null) ? `<span class="opacity-70 whitespace-nowrap">★${o.rating}%${o.sales != null ? ' · ' + o.sales : ''}</span>` : '';
+                            row.innerHTML = `
+                                <span class="flex items-center gap-1.5 min-w-0">${badge}<span class="truncate">${o.merchant || l.store}</span>${rep}</span>
+                                <span class="font-black whitespace-nowrap ml-2">${formatPrice(o.price)}</span>`;
+                            body.appendChild(row);
+                        });
+                        head.onclick = (e) => {
+                            e.stopPropagation();
+                            const open = body.classList.toggle('hidden') === false;
+                            body.classList.toggle('flex', open);
+                            const icons = head.querySelectorAll('svg, i');
+                            const chev = icons[icons.length - 1];
+                            if (chev) chev.classList.toggle('rotate-180', open);
+                        };
+                        wrap.appendChild(head);
+                        wrap.appendChild(body);
+                        linksContainer.appendChild(wrap);
+                    }
+                });
 
                 grid.appendChild(clone);
             });

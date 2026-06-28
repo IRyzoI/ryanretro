@@ -151,12 +151,15 @@ async function fetchRawPrice(link, api) {
   }
   if (host.includes('amzn') || host.includes('amazon')) {
     const o = api.amazon.get(link.url);
-    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted };
+    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted, offers: o.offers };
     return { price: await fetchAmazonPrice(link.url), trusted: false, merchant: null, merchantTrusted: false };
   }
   if (host.includes('aliexpress')) {
     const o = api.ali.get(link.url);
-    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted, rating: o.rating, sales: o.sales };
+    if (o) return {
+      price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted, rating: o.rating, sales: o.sales,
+      offers: [{ price: o.price, merchant: o.merchant, trusted: o.trusted, rating: o.rating, sales: o.sales }],
+    };
     return { price: await fetchAliExpressPrice(link.url), trusted: false, merchant: null, merchantTrusted: false };
   }
   return { price: null, trusted: false, merchant: null, merchantTrusted: false };
@@ -191,9 +194,9 @@ for (const p of products) {
   out[p.id] = {};
   for (const link of p.links) {
     const prevEntry = prev[p.id]?.[link.store] || {};
-    let raw = null, trusted = false, merchant = null, merchantTrusted = false, rating = null, sales = null;
+    let raw = null, trusted = false, merchant = null, merchantTrusted = false, rating = null, sales = null, offers = null;
     try {
-      ({ price: raw, trusted, merchant, merchantTrusted, rating = null, sales = null } = await fetchRawPrice(link, api));
+      ({ price: raw, trusted, merchant, merchantTrusted, rating = null, sales = null, offers = null } = await fetchRawPrice(link, api));
     } catch (e) {
       raw = null;
     }
@@ -219,6 +222,7 @@ for (const p of products) {
     entry.merchantTrusted = !!merchantTrusted;
     if (rating != null) entry.rating = rating;
     if (sales != null) entry.sales = sales;
+    if (offers && offers.length > 1) entry.offers = offers;
 
     if (current == null) {
       // Could not read a price — keep last-known, flag as unverified.

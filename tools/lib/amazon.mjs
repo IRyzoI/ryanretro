@@ -173,6 +173,20 @@ function offerFromItem(item) {
   return { price: amountOf(pick), merchant: pick.merchantInfo?.name || 'third-party', trusted: false };
 }
 
+/** All New/in-stock seller offers for an item, cheapest first (top 6), for the per-store dropdown. */
+function offersFromItem(item) {
+  const listings = (item?.offersV2?.listings || item?.offers?.listings || [])
+    .filter((l) => amountOf(l) != null && isNew(l) && inStock(l));
+  return listings
+    .map((l) => ({
+      price: amountOf(l),
+      merchant: l.merchantInfo?.name || 'Amazon',
+      trusted: isTrustedMerchant(l.merchantInfo),
+    }))
+    .sort((a, b) => a.price - b.price)
+    .slice(0, 6);
+}
+
 const chunk = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -202,7 +216,7 @@ export async function getAmazonPrices(links) {
     for (const it of items) {
       const asin = it.asin || it.ASIN;
       const offer = offerFromItem(it);
-      if (asin && offer?.price != null) asinToOffer.set(asin, offer);
+      if (asin && offer?.price != null) asinToOffer.set(asin, { ...offer, offers: offersFromItem(it) });
     }
     await sleep(1100);
   }

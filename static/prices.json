@@ -80,7 +80,7 @@
       "rating": 97.4,
       "sales": 197,
       "current": 153.19,
-      "previous": 113.49,
+      "previous": 153.19,
       "lowest": 113.49,
       "status": "ok",
       "drop": false
@@ -95,7 +95,7 @@
       "rating": 93.8,
       "sales": 495,
       "current": 110.23,
-      "previous": 91.85,
+      "previous": 110.23,
       "lowest": 91.85,
       "status": "ok",
       "drop": false
@@ -121,7 +121,7 @@
       "rating": 93.1,
       "sales": 99,
       "current": 79.71,
-      "previous": 57.77,
+      "previous": 79.71,
       "lowest": 57.77,
       "status": "ok",
       "drop": false
@@ -182,7 +182,7 @@
       "rating": 98.2,
       "sales": 106,
       "current": 107.88,
-      "previous": 67.61,
+      "previous": 107.88,
       "lowest": 67.61,
       "status": "ok",
       "drop": false
@@ -208,7 +208,7 @@
       "rating": 94.1,
       "sales": 122,
       "current": 81.54,
-      "previous": 69.57,
+      "previous": 81.54,
       "lowest": 69.57,
       "status": "ok",
       "drop": false
@@ -244,6 +244,18 @@
       "lastChecked": "2026-06-28",
       "merchant": "UGREEN GROUP LIMITED",
       "merchantTrusted": true,
+      "offers": [
+        {
+          "price": 39.99,
+          "merchant": "UGREEN GROUP LIMITED",
+          "trusted": true
+        },
+        {
+          "price": 59.99,
+          "merchant": "UGREEN GROUP LIMITED",
+          "trusted": true
+        }
+      ],
       "current": 39.99,
       "previous": 39.99,
       "lowest": 39.99,
@@ -338,7 +350,7 @@
       "rating": 96.5,
       "sales": 211,
       "current": 284.99,
-      "previous": 199,
+      "previous": 284.99,
       "lowest": 199,
       "status": "ok",
       "drop": false
@@ -413,7 +425,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T02:21:37.537Z",
+    "generated": "2026-06-28T02:59:23.088Z",
     "products": 25
   }
 }
