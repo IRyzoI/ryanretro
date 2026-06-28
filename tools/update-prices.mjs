@@ -156,7 +156,7 @@ async function fetchRawPrice(link, api) {
   }
   if (host.includes('aliexpress')) {
     const o = api.ali.get(link.url);
-    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted };
+    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted, rating: o.rating, sales: o.sales };
     return { price: await fetchAliExpressPrice(link.url), trusted: false, merchant: null, merchantTrusted: false };
   }
   return { price: null, trusted: false, merchant: null, merchantTrusted: false };
@@ -191,9 +191,9 @@ for (const p of products) {
   out[p.id] = {};
   for (const link of p.links) {
     const prevEntry = prev[p.id]?.[link.store] || {};
-    let raw = null, trusted = false, merchant = null, merchantTrusted = false;
+    let raw = null, trusted = false, merchant = null, merchantTrusted = false, rating = null, sales = null;
     try {
-      ({ price: raw, trusted, merchant, merchantTrusted } = await fetchRawPrice(link, api));
+      ({ price: raw, trusted, merchant, merchantTrusted, rating = null, sales = null } = await fetchRawPrice(link, api));
     } catch (e) {
       raw = null;
     }
@@ -217,6 +217,8 @@ for (const p of products) {
     const entry = { currency: link.currency || '$', lastChecked: TODAY };
     if (merchant) entry.merchant = merchant;
     entry.merchantTrusted = !!merchantTrusted;
+    if (rating != null) entry.rating = rating;
+    if (sales != null) entry.sales = sales;
 
     if (current == null) {
       // Could not read a price — keep last-known, flag as unverified.
@@ -243,7 +245,7 @@ for (const p of products) {
         const atLow = current <= entry.lowest + 0.005;
         drops.push({
           id: p.id, name: p.name, store: link.store, merchant: merchant || link.store,
-          from: measured, to: current, pct, atLow,
+          from: measured, to: current, pct, atLow, rating, sales,
           url: link.url, image: p.image, date: TODAY,
         });
       }

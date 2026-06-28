@@ -19,8 +19,11 @@
     "trustOfficialKeyword": true
   },
   "aliexpress": {
+    "_comment": "Trusted if: store id/name allowlisted, name contains 'official', OR reputation passes (rating >= minRating% AND sales >= minSales). Tune the thresholds to taste.",
     "allowStoreIds": [],
-    "allowNames": ["ampown", "anbernic official store", "retroid official store", "powkiddy official store"],
-    "trustOfficialKeyword": true
+    "allowNames": ["ampown", "anbernic"],
+    "trustOfficialKeyword": true,
+    "minRating": 85,
+    "minSales": 100
   }
 }

@@ -75,22 +75,30 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "merchantTrusted": false,
-      "current": 113.49,
-      "previous": null,
+      "merchant": "AJCOME Store",
+      "merchantTrusted": true,
+      "rating": 97.4,
+      "sales": 197,
+      "current": 153.19,
+      "previous": 113.49,
       "lowest": 113.49,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "trimui_smart_pro_s": {
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "merchantTrusted": false,
-      "current": 91.85,
-      "previous": null,
+      "merchant": "Ampown Store",
+      "merchantTrusted": true,
+      "rating": 93.8,
+      "sales": 495,
+      "current": 110.23,
+      "previous": 91.85,
       "lowest": 91.85,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "trimui_smart_pro": {
@@ -108,11 +116,15 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Factory Game Direct Store",
       "merchantTrusted": false,
-      "current": 57.77,
-      "previous": null,
+      "rating": 93.1,
+      "sales": 99,
+      "current": 79.71,
+      "previous": 57.77,
       "lowest": 57.77,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "rp_classic": {
@@ -165,11 +177,15 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "merchantTrusted": false,
-      "current": 67.61,
-      "previous": null,
+      "merchant": "Anbernic Direct Store",
+      "merchantTrusted": true,
+      "rating": 98.2,
+      "sales": 106,
+      "current": 107.88,
+      "previous": 67.61,
       "lowest": 67.61,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "miyoo_mini_v4": {
@@ -187,11 +203,15 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "merchantTrusted": false,
-      "current": 69.57,
-      "previous": null,
+      "merchant": "Ampown Store",
+      "merchantTrusted": true,
+      "rating": 94.1,
+      "sales": 122,
+      "current": 81.54,
+      "previous": 69.57,
       "lowest": 69.57,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "anker_power": {
@@ -313,11 +333,15 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "merchantTrusted": false,
-      "current": 199,
-      "previous": null,
+      "merchant": "Anbernic Official Store",
+      "merchantTrusted": true,
+      "rating": 96.5,
+      "sales": 211,
+      "current": 284.99,
+      "previous": 199,
       "lowest": 199,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "trimui_brick_hammer": {
@@ -389,7 +413,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T01:44:42.324Z",
+    "generated": "2026-06-28T02:21:37.537Z",
     "products": 25
   }
 }

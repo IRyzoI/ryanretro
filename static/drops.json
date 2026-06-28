@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "trimui_smart_pro_s",
+    "name": "TrimUI Smart Pro S",
+    "store": "AliExpress",
+    "merchant": "Ampown Store",
+    "from": 113.01,
+    "to": 110.23,
+    "pct": 2,
+    "atLow": false,
+    "url": "https://s.click.aliexpress.com/e/_c3d4sfRf",
+    "image": "https://www.trimuistore.com/cdn/shop/files/SMART_PROS_EN_13.jpg?v=1764857370&width=1445",
+    "date": "2026-06-28"
+  }
+]

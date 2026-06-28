@@ -22,15 +22,19 @@ const TRUSTED_PATH = join(dirname(fileURLToPath(import.meta.url)), '..', 'truste
 const TRUSTED = existsSync(TRUSTED_PATH) ? JSON.parse(readFileSync(TRUSTED_PATH, 'utf8')).aliexpress || {} : {};
 const ALLOW_STORE_IDS = new Set((TRUSTED.allowStoreIds || []).map(String));
 const ALLOW_NAMES = new Set((TRUSTED.allowNames || []).map((n) => n.toLowerCase()));
+const MIN_RATING = TRUSTED.minRating ?? 85;
+const MIN_SALES = TRUSTED.minSales ?? 100;
 
-function isTrustedStore(storeId, storeName) {
+// A store is trusted if it's explicitly allowlisted, has "official" in its name,
+// OR earns it on reputation: rating >= minRating% AND sales >= minSales. This
+// auto-trusts reputable stores while ignoring generic "Store 13840193" sellers.
+function isTrustedStore(storeId, storeName, rating, sales) {
   if (storeId && ALLOW_STORE_IDS.has(String(storeId))) return true;
   const name = (storeName || '').toLowerCase();
-  if (name && ALLOW_NAMES.has(name)) return true;
+  for (const allowed of ALLOW_NAMES) if (allowed && name.includes(allowed)) return true;
   if (TRUSTED.trustOfficialKeyword && /\bofficial\b/.test(name)) return true;
-  // If we have no allowlist signal at all, don't block (avoids dropping everything
-  // before the list is tuned); refine once the API is live and store names are seen.
-  return !storeId && !storeName;
+  if (rating != null && sales != null && rating >= MIN_RATING && sales >= MIN_SALES) return true;
+  return false;
 }
 
 const APP_KEY = process.env.ALIEXPRESS_APP_KEY;
@@ -45,12 +49,21 @@ export function aliexpressConfigured() {
 
 const ITEM_RE = /\/item\/(?:[\w-]+\/)?(\d{6,})\.html/;
 
-/** Follow s.click.aliexpress.com redirects (manual) to extract the numeric product id. */
+/**
+ * Resolve an s.click link to the CANONICAL product id (1005...). AliExpress
+ * rewrites legacy item ids to the canonical one only after the full redirect
+ * chain, so we follow all redirects and read the final URL (the affiliate API
+ * returns 0 records for the legacy id). Manual hop-scan is a fallback.
+ */
 async function resolveItemId(url) {
+  try {
+    const res = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': UA } });
+    const m = (res.url || '').match(ITEM_RE);
+    if (m) return m[1];
+  } catch { /* fall through to manual */ }
+
   let cur = url;
   for (let i = 0; i < 5; i++) {
-    const direct = cur.match(ITEM_RE);
-    if (direct) return direct[1];
     let res;
     try {
       res = await fetch(cur, { redirect: 'manual', headers: { 'User-Agent': UA } });
@@ -64,8 +77,7 @@ async function resolveItemId(url) {
     }
     cur = new URL(loc, cur).toString();
   }
-  const m = cur.match(ITEM_RE);
-  return m ? m[1] : null;
+  return cur.match(ITEM_RE)?.[1] || null;
 }
 
 /** TOP/ISV signature: HMAC-SHA256 over the sorted key+value concatenation, hex upper. */
@@ -87,7 +99,7 @@ async function productDetail(ids) {
     target_currency: 'USD',
     target_language: 'EN',
     tracking_id: TRACKING_ID,
-    fields: 'product_id,target_sale_price,target_sale_price_currency,sale_price,product_title,shop_id,shop_url,store_name',
+    fields: 'product_id,target_sale_price,target_sale_price_currency,sale_price,product_title,shop_id,shop_name,evaluate_rate,lastest_volume',
   };
   params.sign = sign(params);
 
@@ -141,10 +153,14 @@ export async function getAliExpressPrices(links) {
       const raw = p.target_sale_price ?? p.sale_price;
       const price = typeof raw === 'string' ? parseFloat(raw) : raw;
       if (price > 0) {
+        const rating = p.evaluate_rate != null ? parseFloat(String(p.evaluate_rate)) : null;
+        const sales = p.lastest_volume != null ? Number(p.lastest_volume) : null;
         idToOffer.set(String(p.product_id), {
           price: Math.round(price * 100) / 100,
-          merchant: p.store_name || (p.shop_id ? `Store ${p.shop_id}` : 'AliExpress'),
-          trusted: isTrustedStore(p.shop_id, p.store_name),
+          merchant: p.shop_name || 'AliExpress',
+          trusted: isTrustedStore(p.shop_id, p.shop_name, rating, sales),
+          rating,
+          sales,
         });
       }
     }
