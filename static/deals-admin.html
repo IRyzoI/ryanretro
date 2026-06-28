@@ -50,19 +50,28 @@
         tokenInput.value = localStorage.getItem('ghDealToken') || '';
         $('saveTok').onclick = () => { localStorage.setItem('ghDealToken', tokenInput.value.trim()); setStatus('Token saved in this browser.'); };
 
-        async function load() {
+        // Always fetch a FRESH copy (the GitHub Contents API is otherwise cached
+        // by the browser, which served stale data + a stale sha).
+        async function fetchCurrent() {
             const token = tokenInput.value.trim();
-            if (!token) return setStatus('Enter a GitHub token first.', true);
+            if (!token) throw new Error('Enter a GitHub token first.');
+            const res = await fetch(API + '?ref=main&t=' + Date.now(), {
+                cache: 'no-store',
+                headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'Cache-Control': 'no-cache' },
+            });
+            if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message || 'error'}`);
+            const j = await res.json();
+            return { sha: j.sha, list: JSON.parse(b64ToStr(j.content)) };
+        }
+
+        async function load() {
             setStatus('Loading…');
             try {
-                const res = await fetch(API + '?ref=main', { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } });
-                if (!res.ok) return setStatus(`GitHub ${res.status}: ${(await res.json()).message || 'error'}`, true);
-                const j = await res.json();
-                sha = j.sha;
-                proposals = JSON.parse(b64ToStr(j.content));
+                const cur = await fetchCurrent();
+                sha = cur.sha; proposals = cur.list;
                 render();
                 setStatus(`Loaded. ${proposals.filter(p => p.status === 'new').length} pending.`);
-            } catch (e) { setStatus('Error: ' + e.message, true); }
+            } catch (e) { setStatus(e.message, true); }
         }
         $('reload').onclick = load;
 
@@ -88,28 +97,29 @@
                 </div>`).join('');
         }
 
-        async function commit(message) {
-            const token = tokenInput.value.trim();
-            const body = { message, content: strToB64(JSON.stringify(proposals, null, 2) + '\n'), sha, branch: 'main' };
-            let res = await fetch(API, { method: 'PUT', headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' }, body: JSON.stringify(body) });
-            if (res.status === 409) { await load(); throw new Error('Conflict — reloaded, try again.'); }
-            if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message || ''}`);
-            sha = (await res.json()).content.sha; // track new sha for next commit
-        }
-
+        // Read-modify-write: fetch the latest file, apply ONE status change, commit
+        // with that fresh sha. Never loses prior decisions; no stale-sha conflicts.
         window.decide = async (key, decision) => {
-            const p = proposals.find(x => x.key === key);
-            if (!p) return;
+            const token = tokenInput.value.trim();
+            if (!token) return setStatus('Enter a GitHub token first.', true);
             const card = document.querySelector(`[data-key="${CSS.escape(key)}"]`);
             if (card) card.style.opacity = '0.4';
-            p.status = decision;
-            p.decidedOn = new Date().toISOString().slice(0, 10);
             try {
-                await commit(`deals: ${decision} ${p.productName} (${p.merchant}) [skip ci]`);
+                const { sha: curSha, list } = await fetchCurrent();
+                const p = list.find(x => x.key === key);
+                if (p && p.status === 'new') {
+                    p.status = decision;
+                    p.decidedOn = new Date().toISOString().slice(0, 10);
+                    const body = { message: `deals: ${decision} ${p.productName} [skip ci]`, content: strToB64(JSON.stringify(list, null, 2) + '\n'), sha: curSha, branch: 'main' };
+                    const res = await fetch(API, { method: 'PUT', headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' }, body: JSON.stringify(body) });
+                    if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message || ''}`);
+                    sha = (await res.json()).content.sha;
+                }
+                proposals = list;           // adopt the latest (keeps earlier decisions)
                 render();
-                setStatus(`${decision === 'approved' ? 'Approved' : 'Rejected'}: ${p.productName}.`);
+                setStatus(`${decision === 'approved' ? 'Approved' : 'Rejected'}: ${p ? p.productName : key}.`);
             } catch (e) {
-                p.status = 'new'; if (card) card.style.opacity = '1';
+                if (card) card.style.opacity = '1';
                 setStatus(e.message, true);
             }
         };
