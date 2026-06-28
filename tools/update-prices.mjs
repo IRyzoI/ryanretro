@@ -1,0 +1,212 @@
+#!/usr/bin/env node
+/**
+ * update-prices.mjs — Ryan Retro store price tracker
+ *
+ * Reads the `products` array straight out of static/shop.html, fetches the
+ * current price for every store link, compares against the previous run, and
+ * writes static/prices.json. The shop page (and later, handheld pages) overlay
+ * that file at runtime to show live prices + "price drop" badges.
+ *
+ * Store handling:
+ *   - Shopify stores (goretroid / ayntec / trimuistore / mangmi / powkiddy):
+ *       hit the product `.js` endpoint — clean JSON, no scraping, no JS render.
+ *   - Amazon / AliExpress: best-effort HTML scrape with browser-like headers.
+ *       If the price can't be read (bot wall / JS-only), we KEEP the last-known
+ *       price and mark it `unverified` rather than inventing or zeroing it.
+ *
+ * Run:  node tools/update-prices.mjs
+ * No dependencies — Node 18+ (built-in fetch).
+ */
+
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const SHOP_HTML = join(ROOT, 'static', 'shop.html');
+const PRICES_JSON = join(ROOT, 'static', 'prices.json');
+
+const SHOPIFY_HOSTS = ['goretroid.com', 'ayntec.com', 'trimuistore.com', 'mangmi.com', 'powkiddy.com'];
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
+const TODAY = new Date().toISOString().slice(0, 10);
+
+// ---------------------------------------------------------------------------
+// 1. Extract the products array from shop.html (single source of truth)
+// ---------------------------------------------------------------------------
+function loadProducts() {
+  const src = readFileSync(SHOP_HTML, 'utf8');
+  const m = src.match(/const products = \[([\s\S]*?)\n\s*\];/);
+  if (!m) throw new Error('Could not locate `const products = [...]` in shop.html');
+  // The array body is plain JS object-literal syntax; evaluate it in isolation.
+  return Function(`"use strict"; return ([${m[1]}]);`)();
+}
+
+const round2 = (n) => Math.round(n * 100) / 100;
+const hostOf = (url) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; } };
+
+async function fetchText(url, opts = {}) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 20000);
+  try {
+    const res = await fetch(url, {
+      redirect: 'follow',
+      signal: ctrl.signal,
+      headers: { 'User-Agent': UA, 'Accept-Language': 'en-US,en;q=0.9', ...(opts.headers || {}) },
+    });
+    return { ok: res.ok, status: res.status, body: await res.text(), finalUrl: res.url };
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 2. Per-store price fetchers — each returns a number (USD) or null
+// ---------------------------------------------------------------------------
+async function fetchShopifyPrice(url) {
+  const u = new URL(url);
+  u.search = '';
+  u.hash = '';
+  const jsUrl = u.toString().replace(/\/$/, '') + '.js';
+  const { ok, body } = await fetchText(jsUrl);
+  if (!ok) return null;
+  let j;
+  try { j = JSON.parse(body); } catch { return null; }
+  const variants = Array.isArray(j.variants) ? j.variants : [];
+  const inStock = variants.filter((v) => v.available);
+  const pool = inStock.length ? inStock : variants;
+  const cents = pool.length ? Math.min(...pool.map((v) => v.price)) : j.price;
+  return typeof cents === 'number' ? round2(cents / 100) : null;
+}
+
+function isBotWall(html) {
+  return /captcha|api-services-support@amazon|To discuss automated access|Enter the characters you see below|Robot Check|punish|x5sec|slidingPuzzle/i.test(html);
+}
+
+async function fetchAmazonPrice(url) {
+  const { body } = await fetchText(url);
+  if (!body || isBotWall(body)) return null;
+  const patterns = [
+    /"priceAmount":\s*([\d.]+)/,
+    /class="a-offscreen">\s*\$([\d,]+\.?\d*)/,
+    /"displayPrice":"\$([\d,]+\.?\d*)"/,
+    /id="priceblock_ourprice"[^>]*>\s*\$([\d,]+\.?\d*)/,
+  ];
+  for (const re of patterns) {
+    const m = body.match(re);
+    if (m) {
+      const n = parseFloat(m[1].replace(/,/g, ''));
+      if (n > 0) return round2(n);
+    }
+  }
+  return null;
+}
+
+async function fetchAliExpressPrice(url) {
+  const { body } = await fetchText(url);
+  if (!body || isBotWall(body)) return null;
+  const patterns = [
+    /"formatedActivityPrice":"US \$([\d.]+)"/,
+    /"formatedPrice":"US \$([\d.]+)"/,
+    /"minActivityAmount":\{[^}]*"value":([\d.]+)/,
+    /"minAmount":\{[^}]*"value":([\d.]+)/,
+  ];
+  for (const re of patterns) {
+    const m = body.match(re);
+    if (m) {
+      const n = parseFloat(m[1]);
+      if (n > 0) return round2(n);
+    }
+  }
+  return null;
+}
+
+function isShopify(host) {
+  return SHOPIFY_HOSTS.some((h) => host.endsWith(h));
+}
+
+// Returns { price, trusted }. Shopify .js is authoritative (trusted); Amazon /
+// AliExpress are best-effort scrapes (untrusted — subject to a sanity bound).
+async function fetchRawPrice(link) {
+  const host = hostOf(link.url);
+  if (isShopify(host)) return { price: await fetchShopifyPrice(link.url), trusted: true };
+  if (host.includes('amzn') || host.includes('amazon')) return { price: await fetchAmazonPrice(link.url), trusted: false };
+  if (host.includes('aliexpress')) return { price: await fetchAliExpressPrice(link.url), trusted: false };
+  return { price: null, trusted: false };
+}
+
+// ---------------------------------------------------------------------------
+// 3. Main
+// ---------------------------------------------------------------------------
+const prev = existsSync(PRICES_JSON) ? JSON.parse(readFileSync(PRICES_JSON, 'utf8')) : {};
+const products = loadProducts();
+const out = {};
+const drops = [];
+const failures = [];
+
+for (const p of products) {
+  if (!p.links?.length) continue;
+  out[p.id] = {};
+  for (const link of p.links) {
+    const prevEntry = prev[p.id]?.[link.store] || {};
+    let raw = null, trusted = false;
+    try {
+      ({ price: raw, trusted } = await fetchRawPrice(link));
+    } catch (e) {
+      raw = null;
+    }
+
+    // Apply coupon discount if one is attached to this link.
+    let current = raw;
+    if (raw != null && typeof link.couponPct === 'number') {
+      current = round2(raw * (1 - link.couponPct));
+    }
+
+    // Sanity bound for untrusted scrapes: a best-effort match that lands wildly
+    // off the known-good reference is almost certainly a garbage regex hit
+    // (e.g. Amazon returning $122,696). Reject it -> falls through to unverified.
+    if (current != null && !trusted) {
+      const ref = prevEntry.current ?? link.price ?? null;
+      if (ref != null && (current > ref * 2.5 || current < ref * 0.4)) {
+        current = null;
+      }
+    }
+
+    const entry = { currency: link.currency || '$', lastChecked: TODAY };
+
+    if (current == null) {
+      // Could not read a price — keep last-known, flag as unverified.
+      entry.current = prevEntry.current ?? link.price ?? null;
+      entry.previous = prevEntry.previous ?? null;
+      entry.lowest = prevEntry.lowest ?? entry.current ?? null;
+      entry.status = 'unverified';
+      failures.push(`${p.name} / ${link.store}`);
+    } else {
+      // `previous` for display falls back to the hardcoded price on first run,
+      // but a DROP is only flagged against a real prior measurement (so the
+      // bootstrap run doesn't fire badges just because a manual price was stale).
+      const measured = prevEntry.current ?? null; // null on first ever run
+      const previous = measured ?? link.price ?? null;
+      entry.current = current;
+      entry.previous = previous;
+      entry.lowest = prevEntry.lowest != null ? Math.min(prevEntry.lowest, current) : current;
+      entry.status = 'ok';
+      entry.drop = measured != null && current < measured - 0.005;
+      if (entry.drop) {
+        drops.push(`${p.name} / ${link.store}: $${measured} → $${current}`);
+      }
+    }
+    out[p.id][link.store] = entry;
+  }
+}
+
+out._meta = { generated: new Date().toISOString(), products: products.length };
+writeFileSync(PRICES_JSON, JSON.stringify(out, null, 2) + '\n');
+
+// ---------------------------------------------------------------------------
+// 4. Console summary (shows up in the GitHub Actions log)
+// ---------------------------------------------------------------------------
+console.log(`\nPrice update complete — ${products.length} products, written to static/prices.json`);
+console.log(`\nPRICE DROPS (${drops.length}):`);
+drops.length ? drops.forEach((d) => console.log('  ▼ ' + d)) : console.log('  (none)');
+console.log(`\nUNVERIFIED (${failures.length}) — kept last-known price:`);
+failures.length ? failures.forEach((f) => console.log('  ? ' + f)) : console.log('  (none)');

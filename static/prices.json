@@ -1,0 +1,334 @@
+{
+  "nova": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 229,
+      "previous": 229,
+      "lowest": 229,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "rp6": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 244,
+      "previous": 244,
+      "lowest": 244,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "steam_deck": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 559,
+      "previous": null,
+      "lowest": 559,
+      "status": "unverified"
+    }
+  },
+  "rp5": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 199,
+      "previous": 199,
+      "lowest": 199,
+      "status": "ok",
+      "drop": false
+    },
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 204,
+      "previous": null,
+      "lowest": 204,
+      "status": "unverified"
+    }
+  },
+  "mangmi_air_x": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 99.99,
+      "previous": 99.99,
+      "lowest": 99.99,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "ayaneo_pocket_air_mini": {
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 113.49,
+      "previous": null,
+      "lowest": 113.49,
+      "status": "unverified"
+    }
+  },
+  "trimui_smart_pro_s": {
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 91.85,
+      "previous": null,
+      "lowest": 91.85,
+      "status": "unverified"
+    }
+  },
+  "trimui_smart_pro": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 89.99,
+      "previous": null,
+      "lowest": 89.99,
+      "status": "unverified"
+    },
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 57.77,
+      "previous": null,
+      "lowest": 57.77,
+      "status": "unverified"
+    }
+  },
+  "rp_classic": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 149,
+      "previous": 149,
+      "lowest": 149,
+      "status": "ok",
+      "drop": false
+    },
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 171.62,
+      "previous": null,
+      "lowest": 171.62,
+      "status": "unverified"
+    }
+  },
+  "rp_flip2": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 179,
+      "previous": 209,
+      "lowest": 179,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "rg34xx": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 79.98,
+      "previous": null,
+      "lowest": 79.98,
+      "status": "unverified"
+    },
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 67.61,
+      "previous": null,
+      "lowest": 67.61,
+      "status": "unverified"
+    }
+  },
+  "miyoo_mini_v4": {
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 51,
+      "previous": null,
+      "lowest": 51,
+      "status": "unverified"
+    }
+  },
+  "miyoo_mini_plus": {
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 69.57,
+      "previous": null,
+      "lowest": 69.57,
+      "status": "unverified"
+    }
+  },
+  "anker_power": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 109.99,
+      "previous": null,
+      "lowest": 109.99,
+      "status": "unverified"
+    }
+  },
+  "ugreen_power": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 89.99,
+      "previous": null,
+      "lowest": 89.99,
+      "status": "unverified"
+    }
+  },
+  "ugreen_dock": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 39.99,
+      "previous": null,
+      "lowest": 39.99,
+      "status": "unverified"
+    }
+  },
+  "rp_ds_addon": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 69,
+      "previous": 69,
+      "lowest": 69,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "gamesir_g8p": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 79.99,
+      "previous": null,
+      "lowest": 79.99,
+      "status": "unverified"
+    }
+  },
+  "odin3": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 339,
+      "previous": 339,
+      "lowest": 339,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "odin2_portal": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 249,
+      "previous": 249,
+      "lowest": 249,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "ayn_thor": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 249,
+      "previous": 249,
+      "lowest": 249,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "sd_card": {
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 59.99,
+      "previous": null,
+      "lowest": 59.99,
+      "status": "unverified"
+    }
+  },
+  "anbernic_rg477v": {
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 199,
+      "previous": null,
+      "lowest": 199,
+      "status": "unverified"
+    }
+  },
+  "trimui_brick_hammer": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 76.4,
+      "previous": 80.75,
+      "lowest": 76.4,
+      "status": "ok",
+      "drop": false
+    },
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 95.99,
+      "previous": null,
+      "lowest": 95.99,
+      "status": "unverified"
+    },
+    "PowKiddy": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 80.74,
+      "previous": 80.75,
+      "lowest": 80.74,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "trimui_brick": {
+    "Official": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 63.65,
+      "previous": 72.75,
+      "lowest": 63.65,
+      "status": "ok",
+      "drop": false
+    },
+    "Amazon": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 73,
+      "previous": null,
+      "lowest": 73,
+      "status": "unverified"
+    },
+    "PowKiddy": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "current": 61.74,
+      "previous": 61.75,
+      "lowest": 61.74,
+      "status": "ok",
+      "drop": false
+    }
+  },
+  "_meta": {
+    "generated": "2026-06-28T00:27:12.626Z",
+    "products": 25
+  }
+}

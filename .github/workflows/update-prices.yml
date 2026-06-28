@@ -1,0 +1,35 @@
+name: Update store prices
+
+on:
+  schedule:
+    # Every 3 days at 13:00 UTC (~6-9am US). Adjust cadence here.
+    - cron: '0 13 */3 * *'
+  workflow_dispatch: {}   # allow manual runs from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch latest prices
+        run: node tools/update-prices.mjs
+
+      - name: Commit prices.json if it changed
+        run: |
+          if git diff --quiet -- static/prices.json; then
+            echo "No price changes."
+          else
+            git config user.name  "ryanretro-price-bot"
+            git config user.email "actions@github.com"
+            git add static/prices.json
+            git commit -m "chore: auto-update store prices [skip ci]"
+            git push
+          fi
