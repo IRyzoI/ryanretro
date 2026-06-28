@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>Ryan Retro | Price Drops</title>
+    <meta name="description" content="Live price drops on retro handhelds and accessories from trusted stores — auto-updated.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="/static/partials/include.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#B9B2DE',
+                            main: '#6254A4',
+                            dark: '#463884',
+                            accent: '#FFFFFF',
+                        }
+                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.97); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-pop-in { animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .deal-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .deal-card:hover { transform: translateY(-3px); box-shadow: 4px 4px 0px #463884; }
+    </style>
+</head>
+<body class="bg-brand-light text-brand-dark font-sans antialiased min-h-screen flex flex-col selection:bg-brand-dark selection:text-white">
+
+    <div data-include="header"></div>
+
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+        <!-- Heading -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 bg-green-500 text-white text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow-[2px_2px_0px_#463884] mb-4">
+                <i data-lucide="trending-down" class="w-4 h-4"></i> Live Price Drops
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-black text-brand-dark leading-tight">Deals &amp; Price Drops</h1>
+            <p class="text-brand-main font-bold mt-3 max-w-xl mx-auto">
+                Auto-tracked drops from official &amp; trusted stores. Updated every few days — no scalper noise.
+            </p>
+            <p id="updated" class="text-brand-main/60 text-xs font-bold mt-2"></p>
+        </div>
+
+        <!-- Drops grid -->
+        <div id="dealsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+        <!-- Empty state -->
+        <div id="empty" class="hidden col-span-full py-20 text-center flex flex-col items-center">
+            <i data-lucide="tag" class="w-16 h-16 text-brand-main mb-4 opacity-40"></i>
+            <h3 class="text-brand-dark font-black text-2xl uppercase">No drops right now</h3>
+            <p class="text-brand-main font-bold mt-2">Check back soon — or browse the full <a href="/store" class="underline">shop</a>.</p>
+        </div>
+    </main>
+
+    <div data-include="footer"></div>
+
+    <script>
+        const grid = document.getElementById('dealsGrid');
+        const empty = document.getElementById('empty');
+
+        const money = (n) => '$' + Number(n).toFixed(2);
+        const storeColor = (m) => {
+            const s = (m || '').toLowerCase();
+            if (s.includes('official') || s.includes('store')) return 'bg-brand-light text-brand-dark';
+            if (s.includes('amazon')) return 'bg-yellow-500 text-black';
+            if (s.includes('ali')) return 'bg-red-600 text-white';
+            if (s.includes('powkiddy')) return 'bg-teal-500 text-white';
+            return 'bg-brand-dark text-brand-light';
+        };
+
+        function card(d) {
+            return `
+            <a href="${d.url}" target="_blank" rel="noopener"
+               class="deal-card group bg-brand-main rounded-2xl border-4 border-brand-dark overflow-hidden flex flex-col animate-pop-in">
+                <div class="relative aspect-[4/3] bg-brand-dark p-5 flex items-center justify-center overflow-hidden">
+                    <div class="absolute top-3 left-3 z-10 bg-green-500 text-white text-[11px] font-black px-2.5 py-1 rounded-md shadow-[2px_2px_0px_#463884]">▼ ${d.pct}% OFF</div>
+                    ${d.atLow ? '<div class="absolute top-3 right-3 z-10 bg-yellow-400 text-brand-dark text-[10px] font-black px-2 py-1 rounded-md shadow-[2px_2px_0px_#463884]">🔥 LOWEST</div>' : ''}
+                    <img src="${d.image}" loading="lazy" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md">
+                </div>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="font-black text-white text-lg leading-tight mb-1">${d.name}</h3>
+                    <span class="self-start text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wide ${storeColor(d.merchant)} mb-3">${d.merchant}</span>
+                    <div class="mt-auto flex items-baseline gap-2">
+                        <span class="text-2xl font-black text-white">${money(d.to)}</span>
+                        <span class="text-brand-light/60 font-bold line-through">${money(d.from)}</span>
+                    </div>
+                    <div class="text-green-300 text-xs font-black mt-1">You save ${money(d.from - d.to)}</div>
+                </div>
+            </a>`;
+        }
+
+        async function load() {
+            let drops = [];
+            try {
+                const res = await fetch('/static/drops.json', { cache: 'no-store' });
+                if (res.ok) drops = await res.json();
+            } catch (e) { /* keep empty */ }
+
+            if (!drops.length) {
+                empty.classList.remove('hidden');
+            } else {
+                grid.innerHTML = drops.map(card).join('');
+                const newest = drops[0]?.date;
+                if (newest) document.getElementById('updated').textContent = 'Last updated ' + newest;
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+        load();
+    </script>
+</body>
+</html>

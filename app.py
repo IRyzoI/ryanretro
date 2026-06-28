@@ -3,6 +3,7 @@ import csv
 import re
 import time
 import json
+import base64
 import shutil
 import hashlib
 import threading
@@ -13,7 +14,7 @@ from datetime import datetime
 import httpx
 import markdown
 from fastapi import FastAPI, HTTPException, Response, Request
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -540,13 +541,66 @@ def ranking_page():
 async def planner_page():
     return FileResponse(os.path.join(STATIC_DIR, "planner.html"))
 
+@app.get("/start", response_class=HTMLResponse)
+async def start_page():
+    return FileResponse(os.path.join(STATIC_DIR, "start.html"))
+
 @app.get("/thumbnail", response_class=FileResponse)
 def ranking_page(): 
     return FileResponse(os.path.join(STATIC_DIR, "thumbnail.html"))
 
 @app.get("/reviews", response_class=FileResponse)
-def ranking_page(): 
+def ranking_page():
     return FileResponse(os.path.join(STATIC_DIR, "reviews.html"))
+
+@app.get("/news", response_class=HTMLResponse)
+async def news_page():
+    return FileResponse(os.path.join(STATIC_DIR, "news.html"))
+
+@app.get("/deals", response_class=HTMLResponse)
+async def deals_page():
+    return FileResponse(os.path.join(STATIC_DIR, "deals.html"))
+
+@app.post("/api/guide/{slug}/save")
+async def save_guide(slug: str, request: Request):
+    data = await request.json()
+    key = data.get("key", "")
+    content = data.get("content", "")
+
+    edit_key = os.getenv("GUIDE_EDIT_KEY", "ryanretro")
+    if key != edit_key:
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+
+    if not re.match(r'^[a-z0-9-]+$', slug):
+        return JSONResponse({"error": "Invalid slug"}, status_code=400)
+
+    guide_path = os.path.join(REPO_DIR, "guides", f"{slug}.html")
+    if not os.path.exists(guide_path):
+        return JSONResponse({"error": "Guide not found"}, status_code=404)
+
+    with open(guide_path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    start_marker = "<!-- EDITABLE-START -->"
+    end_marker   = "<!-- EDITABLE-END -->"
+    start_idx = html.find(start_marker)
+    end_idx   = html.find(end_marker)
+
+    if start_idx == -1 or end_idx == -1:
+        return JSONResponse({"error": "Editable markers not found"}, status_code=400)
+
+    new_html = (
+        html[:start_idx + len(start_marker)] +
+        "\n  <div id=\"guide-cards\">\n" +
+        content +
+        "\n  </div><!-- /guide-cards -->\n  " +
+        html[end_idx:]
+    )
+
+    with open(guide_path, "w", encoding="utf-8") as f:
+        f.write(new_html)
+
+    return JSONResponse({"ok": True})
 
 # 3. Helper Routes (Guides)
 @app.get("/guides/{slug}", response_class=HTMLResponse)
@@ -567,6 +621,695 @@ def serve_guide(slug: str):
     <style>body {{ background: #111827; color: white; }} a {{ color: #facc15; }}</style>
     </head><body class="p-8"><article class="prose prose-invert mx-auto">{html}</article></body></html>
     """
+
+# 3b. Articles (new clean post-template style; stored in /articles)
+@app.get("/articles/{slug}", response_class=HTMLResponse)
+def serve_article(slug: str):
+    html_path = os.path.join(REPO_DIR, "articles", f"{slug}.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path)
+    return HTMLResponse("<h1>Article not found</h1>", status_code=404)
+
+@app.post("/api/article/{slug}/save")
+async def save_article(slug: str, request: Request):
+    data = await request.json()
+    key = data.get("key", "")
+    content = data.get("content", "")
+
+    edit_key = os.getenv("GUIDE_EDIT_KEY", "ryanretro")
+    if key != edit_key:
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+
+    if not re.match(r'^[a-z0-9-]+$', slug):
+        return JSONResponse({"error": "Invalid slug"}, status_code=400)
+
+    article_path = os.path.join(REPO_DIR, "articles", f"{slug}.html")
+    if not os.path.exists(article_path):
+        return JSONResponse({"error": "Article not found"}, status_code=404)
+
+    with open(article_path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    start_marker = "<!-- EDITABLE-START -->"
+    end_marker   = "<!-- EDITABLE-END -->"
+    start_idx = html.find(start_marker)
+    end_idx   = html.find(end_marker)
+
+    if start_idx == -1 or end_idx == -1:
+        return JSONResponse({"error": "Editable markers not found"}, status_code=400)
+
+    new_html = (
+        html[:start_idx + len(start_marker)] +
+        "\n  <div id=\"guide-cards\" class=\"post-body\">\n" +
+        content +
+        "\n  </div><!-- /guide-cards -->\n  " +
+        html[end_idx:]
+    )
+
+    with open(article_path, "w", encoding="utf-8") as f:
+        f.write(new_html)
+
+    return JSONResponse({"ok": True})
+
+# Image upload for the in-page article editor (saves into static/images/)
+ALLOWED_IMG_EXT = {"png", "jpg", "jpeg", "gif", "webp", "avif", "svg"}
+
+def _norm_img_ext(ext: str) -> str:
+    ext = (ext or "").lower().lstrip(".").split("?")[0]
+    if ext == "jpeg": return "jpg"
+    if ext in ("svg+xml", "svg xml"): return "svg"
+    return ext
+
+@app.post("/api/upload-image")
+async def upload_image(request: Request):
+    data = await request.json()
+    key      = data.get("key", "")
+    name     = data.get("name", "")
+    data_url = data.get("dataUrl", "")
+    src_url  = data.get("url", "")
+
+    edit_key = os.getenv("GUIDE_EDIT_KEY", "ryanretro")
+    if key != edit_key:
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+
+    slug = re.sub(r"[^a-z0-9]+", "-", (name or "").lower()).strip("-")
+    if not slug:
+        return JSONResponse({"error": "Please give the image a name"}, status_code=400)
+
+    raw, ext = None, None
+    try:
+        if data_url:
+            m = re.match(r"data:(image/[\w.+-]+);base64,(.*)$", data_url, re.S)
+            if not m:
+                return JSONResponse({"error": "Invalid image data"}, status_code=400)
+            ext = _norm_img_ext(m.group(1).split("/", 1)[1])
+            raw = base64.b64decode(m.group(2))
+        elif src_url:
+            with httpx.Client(timeout=15.0, headers=UA, follow_redirects=True) as client:
+                r = client.get(src_url)
+                r.raise_for_status()
+                raw = r.content
+                ctype = r.headers.get("content-type", "").split(";")[0].strip()
+                if ctype.startswith("image/"):
+                    ext = _norm_img_ext(ctype.split("/", 1)[1])
+                else:
+                    ext = _norm_img_ext(os.path.splitext(src_url.split("?")[0])[1])
+        else:
+            return JSONResponse({"error": "Provide a file or an image URL"}, status_code=400)
+    except Exception as e:
+        return JSONResponse({"error": f"Could not read image: {e}"}, status_code=400)
+
+    if ext not in ALLOWED_IMG_EXT:
+        return JSONResponse({"error": f"Unsupported image type: .{ext or '?'}"}, status_code=400)
+    if not raw:
+        return JSONResponse({"error": "Image was empty"}, status_code=400)
+    if len(raw) > 15 * 1024 * 1024:
+        return JSONResponse({"error": "Image too large (max 15MB)"}, status_code=400)
+
+    images_dir = os.path.join(STATIC_DIR, "images")
+    os.makedirs(images_dir, exist_ok=True)
+    filename = f"{slug}.{ext}"
+    with open(os.path.join(images_dir, filename), "wb") as f:
+        f.write(raw)
+
+    return JSONResponse({"ok": True, "file": filename, "path": f"../static/images/{filename}"})
+
+# --------------------------------------------------------------------------------------
+# Box Art Grabber
+#   Primary  : IGDB (Twitch) — official covers at their NATIVE aspect ratio (all platforms)
+#   Extra    : SteamGridDB    — alternate capsule covers to cycle through
+#   Fallback : Steam          — official PC library art
+# --------------------------------------------------------------------------------------
+SGDB_API_KEY = os.getenv("SGDB_API_KEY") or os.getenv("STEAMGRIDDB_API_KEY", "")
+SGDB_BASE = "https://www.steamgriddb.com/api/v2"
+# Portrait "cover/box art" dimension buckets on SteamGridDB.
+SGDB_COVER_DIMS = "600x900,342x482,660x930"
+
+# IGDB via Twitch OAuth (client-credentials). Create a free app at dev.twitch.tv.
+IGDB_CLIENT_ID = os.getenv("IGDB_CLIENT_ID", "")
+IGDB_CLIENT_SECRET = os.getenv("IGDB_CLIENT_SECRET", "")
+_IGDB_TOKEN: Dict[str, Any] = {"token": None, "exp": 0}
+
+# Domains the image proxy is allowed to fetch from (for ZIP downloads).
+BOXART_ALLOWED_HOSTS = (
+    "igdb.com", "images.igdb.com",
+    "libretro.com", "thumbnails.libretro.com",
+    "steamgriddb.com", "cdn2.steamgriddb.com", "cdn.steamgriddb.com",
+    "steamstatic.com", "akamaihd.net", "steamcdn-a.akamaihd.net",
+)
+
+# IGDB platform name -> libretro-thumbnails system folder (real box scans, native ratios).
+IGDB_TO_LIBRETRO = {
+    "Game Boy Advance": "Nintendo - Game Boy Advance",
+    "Game Boy Color": "Nintendo - Game Boy Color",
+    "Game Boy": "Nintendo - Game Boy",
+    "Nintendo 64": "Nintendo - Nintendo 64",
+    "Super Nintendo Entertainment System": "Nintendo - Super Nintendo Entertainment System",
+    "Super Famicom": "Nintendo - Super Nintendo Entertainment System",
+    "Nintendo Entertainment System": "Nintendo - Nintendo Entertainment System",
+    "Family Computer (FAMICOM)": "Nintendo - Nintendo Entertainment System",
+    "Nintendo GameCube": "Nintendo - GameCube",
+    "Nintendo DS": "Nintendo - Nintendo DS",
+    "Nintendo 3DS": "Nintendo - Nintendo 3DS",
+    "Wii": "Nintendo - Wii",
+    "Wii U": "Nintendo - Wii U",
+    "Virtual Boy": "Nintendo - Virtual Boy",
+    "Sega Mega Drive/Genesis": "Sega - Mega Drive - Genesis",
+    "Sega Master System/Mark III": "Sega - Master System - Mark III",
+    "Sega Game Gear": "Sega - Game Gear",
+    "Sega Saturn": "Sega - Saturn",
+    "Dreamcast": "Sega - Dreamcast",
+    "Sega CD": "Sega - Mega-CD - Sega CD",
+    "Sega 32X": "Sega - 32X",
+    "PlayStation": "Sony - PlayStation",
+    "PlayStation 2": "Sony - PlayStation 2",
+    "PlayStation Portable": "Sony - PlayStation Portable",
+    "Atari 2600": "Atari - 2600",
+    "Atari 7800": "Atari - 7800",
+    "Atari Lynx": "Atari - Lynx",
+    "TurboGrafx-16/PC Engine": "NEC - PC Engine - TurboGrafx 16",
+    "Neo Geo Pocket Color": "SNK - Neo Geo Pocket Color",
+    "WonderSwan Color": "Bandai - WonderSwan Color",
+    "Xbox": "Microsoft - Xbox",
+}
+
+# On exact-name collisions across systems (e.g. an original + a later remake), prefer the
+# more iconic/original hardware. Higher wins ties; this never overrides title/region scoring.
+LIBRETRO_PRIORITY = {
+    "Nintendo - Nintendo 64": 5, "Nintendo - Super Nintendo Entertainment System": 5,
+    "Nintendo - Nintendo Entertainment System": 5, "Nintendo - GameCube": 5,
+    "Sega - Mega Drive - Genesis": 5, "Sony - PlayStation": 5, "Sony - PlayStation 2": 5,
+    "Sega - Saturn": 5, "Sega - Dreamcast": 5, "Microsoft - Xbox": 5,
+    "Nintendo - Game Boy": 4, "Nintendo - Game Boy Color": 4, "Nintendo - Game Boy Advance": 4,
+    "Sega - Master System - Mark III": 4, "NEC - PC Engine - TurboGrafx 16": 4,
+    "Nintendo - Wii": 2, "Nintendo - Nintendo DS": 2, "Nintendo - Nintendo 3DS": 2,
+    "Sony - PlayStation Portable": 2, "Nintendo - Wii U": 1,
+}
+def _sys_priority(system: str) -> int:
+    return LIBRETRO_PRIORITY.get(system, 3)
+
+# Short, friendly console label shown on each cover badge.
+_SYS_LABEL = {
+    "Nintendo - Super Nintendo Entertainment System": "SNES",
+    "Nintendo - Nintendo Entertainment System": "NES",
+    "Nintendo - Nintendo 64": "Nintendo 64", "Nintendo - GameCube": "GameCube",
+    "Nintendo - Game Boy Advance": "Game Boy Advance", "Nintendo - Game Boy Color": "Game Boy Color",
+    "Nintendo - Game Boy": "Game Boy", "Nintendo - Nintendo DS": "Nintendo DS",
+    "Nintendo - Nintendo 3DS": "Nintendo 3DS", "Nintendo - Wii": "Wii",
+    "Nintendo - Wii U": "Wii U", "Nintendo - Virtual Boy": "Virtual Boy",
+    "Sega - Mega Drive - Genesis": "Genesis", "Sega - Master System - Mark III": "Master System",
+    "Sega - Game Gear": "Game Gear", "Sega - Saturn": "Saturn", "Sega - Dreamcast": "Dreamcast",
+    "Sega - Mega-CD - Sega CD": "Sega CD", "Sega - 32X": "32X",
+    "Sony - PlayStation": "PlayStation", "Sony - PlayStation 2": "PlayStation 2",
+    "Sony - PlayStation Portable": "PSP", "Microsoft - Xbox": "Xbox",
+    "Atari - 2600": "Atari 2600", "Atari - 7800": "Atari 7800", "Atari - Lynx": "Lynx",
+    "NEC - PC Engine - TurboGrafx 16": "TurboGrafx-16",
+    "SNK - Neo Geo Pocket Color": "Neo Geo Pocket", "Bandai - WonderSwan Color": "WonderSwan",
+}
+def _system_label(system: str) -> str:
+    return _SYS_LABEL.get(system, system.split(" - ")[-1])
+
+def _sgdb_headers():
+    return {"Authorization": f"Bearer {SGDB_API_KEY}", **UA}
+
+def _sgdb_search(term: str) -> List[Dict[str, Any]]:
+    """Fuzzy-search SteamGridDB for a game name -> list of {id, name}."""
+    if not SGDB_API_KEY:
+        return []
+    from urllib.parse import quote
+    try:
+        with httpx.Client(timeout=12.0, headers=_sgdb_headers()) as c:
+            r = c.get(f"{SGDB_BASE}/search/autocomplete/{quote(term.strip())}")
+            r.raise_for_status()
+            data = r.json().get("data", []) or []
+        return [{"id": g.get("id"), "name": g.get("name", "")} for g in data if g.get("id")]
+    except Exception as e:
+        print(f"[boxart] sgdb search error: {e}")
+        return []
+
+def _sgdb_covers(game_id: int, limit: int = 12) -> List[Dict[str, Any]]:
+    """Fetch portrait covers for a SteamGridDB game, best (largest + most upvoted) first."""
+    if not SGDB_API_KEY:
+        return []
+    try:
+        params = {"dimensions": SGDB_COVER_DIMS, "types": "static", "nsfw": "false"}
+        with httpx.Client(timeout=12.0, headers=_sgdb_headers()) as c:
+            r = c.get(f"{SGDB_BASE}/grids/game/{game_id}", params=params)
+            r.raise_for_status()
+            grids = r.json().get("data", []) or []
+    except Exception as e:
+        print(f"[boxart] sgdb covers error: {e}")
+        return []
+    out, seen = [], set()
+    for g in grids:
+        url = g.get("url")
+        if not url or url in seen:
+            continue
+        seen.add(url)
+        out.append({
+            "url": url,
+            "thumb": g.get("thumb") or url,
+            "w": g.get("width") or 0,
+            "h": g.get("height") or 0,
+            "score": g.get("upvotes", 0) or 0,
+            "source": "steamgriddb",
+        })
+    # Largest resolution first, then most upvoted.
+    out.sort(key=lambda x: (x["w"] * x["h"], x["score"]), reverse=True)
+    return out[:limit]
+
+def _steam_search(term: str, limit: int = 3) -> List[Dict[str, Any]]:
+    try:
+        with httpx.Client(timeout=10.0, headers=UA, follow_redirects=True) as c:
+            r = c.get("https://store.steampowered.com/api/storesearch/",
+                      params={"term": term.strip(), "cc": "us", "l": "en"})
+            r.raise_for_status()
+            items = r.json().get("items", []) or []
+        return [{"appid": it.get("id"), "name": it.get("name", "")} for it in items[:limit] if it.get("id")]
+    except Exception as e:
+        print(f"[boxart] steam search error: {e}")
+        return []
+
+def _steam_cover(appid: int) -> Optional[Dict[str, Any]]:
+    """Steam's official 1200x1800 library portrait, if the game has one."""
+    url = f"https://steamcdn-a.akamaihd.net/steam/apps/{appid}/library_600x900_2x.jpg"
+    try:
+        with httpx.Client(timeout=8.0, headers=UA, follow_redirects=True) as c:
+            r = c.head(url)
+            if r.status_code != 200:
+                return None
+    except Exception:
+        return None
+    return {"url": url, "thumb": url, "w": 1200, "h": 1800, "score": 0, "source": "steam"}
+
+# ---- IGDB (native-ratio official covers) ----
+def _igdb_token() -> Optional[str]:
+    """A valid Twitch app token, cached in memory + on disk (tokens last ~60 days)."""
+    if not (IGDB_CLIENT_ID and IGDB_CLIENT_SECRET):
+        return None
+    now = time.time()
+    if _IGDB_TOKEN.get("token") and _IGDB_TOKEN.get("exp", 0) - 120 > now:
+        return _IGDB_TOKEN["token"]
+    disk = _cache_read_any_age("igdb_token:v1")
+    if disk and disk.get("exp", 0) - 120 > now:
+        _IGDB_TOKEN.update(disk)
+        return disk["token"]
+    try:
+        with httpx.Client(timeout=12.0) as c:
+            r = c.post("https://id.twitch.tv/oauth2/token", params={
+                "client_id": IGDB_CLIENT_ID, "client_secret": IGDB_CLIENT_SECRET,
+                "grant_type": "client_credentials"})
+            r.raise_for_status()
+            d = r.json()
+        tok = {"token": d["access_token"], "exp": now + int(d.get("expires_in", 5000000))}
+        _IGDB_TOKEN.update(tok)
+        _cache_write("igdb_token:v1", tok)
+        return tok["token"]
+    except Exception as e:
+        print(f"[boxart] igdb token error: {e}")
+        return None
+
+def _igdb_query(body: str) -> List[Dict[str, Any]]:
+    tok = _igdb_token()
+    if not tok:
+        return []
+    headers = {"Client-ID": IGDB_CLIENT_ID, "Authorization": f"Bearer {tok}", **UA}
+    try:
+        with httpx.Client(timeout=12.0, headers=headers) as c:
+            r = c.post("https://api.igdb.com/v4/games", content=body)
+            r.raise_for_status()
+            return r.json() or []
+    except Exception as e:
+        print(f"[boxart] igdb query error: {e}")
+        return []
+
+def _igdb_cover_obj(g: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Build a native-ratio cover from an IGDB game. t_1080p/t_720p preserve aspect ratio."""
+    cov = g.get("cover") or {}
+    iid = cov.get("image_id")
+    if not iid:
+        return None
+    base = "https://images.igdb.com/igdb/image/upload"
+    return {
+        "url": f"{base}/t_1080p/{iid}.jpg",
+        "thumb": f"{base}/t_720p/{iid}.jpg",
+        "w": cov.get("width") or 0, "h": cov.get("height") or 0,
+        "score": 0, "source": "igdb",
+    }
+
+_IGDB_FIELDS = ("name,cover.image_id,cover.width,cover.height,"
+                "platforms.name,alternative_names.name,category,first_release_date")
+
+def _igdb_search(term: str) -> List[Dict[str, Any]]:
+    safe = term.replace('"', '\\"').strip()
+    body = f'search "{safe}"; fields {_IGDB_FIELDS}; where cover != null; limit 15;'
+    return _igdb_query(body)
+
+def _igdb_game(gid: int) -> List[Dict[str, Any]]:
+    body = f'fields {_IGDB_FIELDS}; where id = {int(gid)};'
+    return _igdb_query(body)
+
+# ---- libretro thumbnails (real box scans at native physical aspect ratios) ----
+def _norm_title(s: str) -> str:
+    """Normalize a title for fuzzy matching: drop region/rev tags, punctuation, leading 'the'."""
+    import unicodedata
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode()
+    s = s.lower()
+    s = re.sub(r"\([^)]*\)", " ", s)      # (USA), (Rev 1), ...
+    s = re.sub(r"\[[^\]]*\]", " ", s)     # [!], [b], ...
+    s = s.replace("&", " and ")
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    # Drop "the" everywhere (titles flip it: "The Legend of Zelda" vs "Legend of Zelda, The").
+    s = " ".join(t for t in s.split() if t != "the")
+    return s
+
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")        # optional: lifts the 60/hr rate limit
+
+def _libretro_system_files(system: str) -> List[str]:
+    """All Named_Boxarts base filenames for a system (cached 7 days via GitHub tree API).
+       Per-system locked so concurrent lookups fetch each tree only once."""
+    key = f"libretro_files:{system}"
+    cached = _cache_read(key, ttl=7 * 86400)
+    if cached is not None:
+        return cached
+    with _lock_for(key):
+        cached = _cache_read(key, ttl=7 * 86400)   # another thread may have just filled it
+        if cached is not None:
+            return cached
+        from urllib.parse import quote
+        repo = system.replace(" ", "_")
+        url = f"https://api.github.com/repos/libretro-thumbnails/{quote(repo)}/git/trees/HEAD?recursive=1"
+        headers = dict(UA)
+        if GITHUB_TOKEN:
+            headers["Authorization"] = f"Bearer {GITHUB_TOKEN}"
+        try:
+            with httpx.Client(timeout=25.0, headers=headers, follow_redirects=True) as c:
+                r = c.get(url)
+                r.raise_for_status()
+                tree = r.json().get("tree", []) or []
+            files = [t["path"][14:-4] for t in tree
+                     if t.get("path", "").startswith("Named_Boxarts/")
+                     and t["path"].lower().endswith(".png")]
+            _cache_write(key, files)
+            return files
+        except Exception as e:
+            print(f"[boxart] libretro tree error for {system}: {e}")
+            stale = _cache_read_any_age(key)
+            return stale if stale is not None else []
+
+def _warm_libretro_cache():
+    """Pre-fetch every system's box-art listing once (cached to disk) so the first user
+       lookups don't race GitHub's rate limit. No-op when caches are already warm."""
+    for system in sorted(set(IGDB_TO_LIBRETRO.values())):
+        try:
+            _libretro_system_files(system)
+        except Exception:
+            pass
+
+threading.Thread(target=_warm_libretro_cache, daemon=True).start()
+
+_LIBRETRO_BAD_TAGS = ("virtual console", "demo", "beta", "proto", "sample", "promo",
+                      "kiosk", "(rev", "aftermarket", "unl", "pirate", "enhanced", "hack",
+                      "mini", "classic", "collection", "all-stars", "anniversary", "switch online")
+
+def _best_libretro_file(files: List[str], names: List[str]) -> tuple:
+    """Best (filename, score) for the given candidate names. Title match dominates; region +
+       'clean retail' cleanliness break ties (USA retail > JP / Virtual Console / revisions)."""
+    targets = [frozenset(_norm_title(n).split()) for n in names]
+    targets = [t for t in targets if t]
+    # Collapsed (space-free) forms so "yugioh" matches "yu gi oh", "megaman" matches "mega man".
+    ctargets = [c for c in (_norm_title(n).replace(" ", "") for n in names) if c]
+    if not targets:
+        return (None, 0)
+    best, best_score = None, 0
+    for f in files:
+        nf = _norm_title(f)
+        ft = frozenset(nf.split())
+        cf = nf.replace(" ", "")
+        if not ft:
+            continue
+        base = 0
+        for tt in targets:
+            if tt == ft:
+                base = max(base, 1000)
+            elif tt <= ft:                                   # file has all title words (+ "version" etc.)
+                base = max(base, 820 - len(ft - tt) * 8)
+            else:
+                inter = tt & ft
+                if len(inter) >= max(2, round(len(tt) * 0.8)) and len(tt - ft) <= 1:
+                    base = max(base, 520 + len(inter) * 8 - len(ft - tt) * 4)
+        for ct in ctargets:                                  # spacing/punctuation-insensitive match
+            if ct == cf:
+                base = max(base, 1000)
+            elif len(ct) >= 8 and (cf.startswith(ct) or ct.startswith(cf)):
+                base = max(base, 760)
+        if base <= 0:
+            continue
+        low = f.lower()
+        for i, reg in enumerate(["(usa", "(world", "(europe", "(japan"]):  # region preference
+            if reg in low:
+                base += 12 - i * 3
+                break
+        base -= sum(6 for t in _LIBRETRO_BAD_TAGS if t in low)            # non-retail penalty
+        base -= max(0, f.count("(") - 1) * 2                              # prefer fewer tags
+        if base > best_score:
+            best_score, best = base, f
+    return (best, best_score)
+
+def _libretro_cover_obj(system: str, filename: str, name: str) -> Dict[str, Any]:
+    from urllib.parse import quote
+    url = (f"https://thumbnails.libretro.com/{quote(system)}"
+           f"/Named_Boxarts/{quote(filename)}.png")
+    return {"url": url, "thumb": url, "w": 0, "h": 0, "score": 0, "source": "libretro",
+            "system": _system_label(system), "name": name}
+
+def _pretty_libretro_name(cover: Dict[str, Any]) -> str:
+    """A display title from a libretro filename: drop region/tags, flip 'Zelda, The' -> 'The Zelda'."""
+    from urllib.parse import unquote
+    fn = unquote(cover["url"].split("/Named_Boxarts/")[-1])[:-4]   # strip .png
+    fn = re.sub(r"\s*\(.*$", "", fn).strip()                       # drop "(USA) ..." onward
+    m = re.match(r"^(.*),\s*(The|A|An)$", fn)
+    if m:
+        fn = f"{m.group(2)} {m.group(1)}"
+    return fn
+
+def _match_in_system(system: str, names: List[str]) -> tuple:
+    files = _libretro_system_files(system)
+    if not files:
+        return (None, 0)
+    return _best_libretro_file(files, names)
+
+def _libretro_covers(names: List[str], platform_names: List[str], limit: int = 8) -> List[Dict[str, Any]]:
+    """Real box scans for the game across EVERY system it appears on (so the user can pick
+       per-system), best match first. Trusts IGDB's platforms, then scans all systems for
+       exact-title hits (IGDB mistags many retro originals' platforms)."""
+    names = [n for n in names if n]
+    if not names:
+        return []
+    igdb_systems = [IGDB_TO_LIBRETRO[p] for p in platform_names if p in IGDB_TO_LIBRETRO]
+    hits, seen = [], set()  # hits: (score, priority, system, file)
+
+    # 1. IGDB-declared platforms — trusted, so accept decent (>=700) matches.
+    for system in igdb_systems:
+        if system in seen:
+            continue
+        f, s = _match_in_system(system, names)
+        if f and s >= 700:
+            hits.append((s, _sys_priority(system), system, f))
+            seen.add(system)
+
+    # 2. All other systems — accept only exact-title (>=1000) matches to stay safe.
+    for system in set(IGDB_TO_LIBRETRO.values()):
+        if system in seen:
+            continue
+        f, s = _match_in_system(system, names)
+        if f and s >= 1000:
+            hits.append((s, _sys_priority(system), system, f))
+            seen.add(system)
+
+    hits.sort(key=lambda h: (h[0], h[1]), reverse=True)   # best match, then original-hardware priority
+    return [_libretro_cover_obj(system, f, names[0]) for _s, _p, system, f in hits[:limit]]
+
+# ---- picking the canonical IGDB game (avoid remakes / ROM hacks / wrong platform) ----
+def _name_score(nq: str, nm: str) -> int:
+    if not nm:
+        return -999
+    if nm == nq:
+        return 100
+    if nq.replace(" ", "") == nm.replace(" ", ""):   # spacing-only diff: "yugioh" == "yu gi oh"
+        return 95
+    tq, tn = set(nq.split()), set(nm.split())
+    if tq and tq <= tn:
+        return 60 - len(tn - tq) * 6        # candidate has all query words + a few extra
+    if tn and tn <= tq:
+        return 40 - len(tq - tn) * 6
+    inter = tq & tn
+    if len(inter) >= max(1, round(len(tq) * 0.6)):
+        return 20 + len(inter) * 4 - len(tq - tn) * 4
+    return -999
+
+# IGDB category: 0 main_game, 8 remake, 9 remaster, 10 expanded, 11 port, 5 mod/ROM-hack.
+_CAT_BONUS = {0: 400, 10: 90, 8: 80, 9: 80, 11: 60}
+
+def _pick_igdb(games: List[Dict[str, Any]], q: str) -> Dict[str, Any]:
+    nq = _norm_title(q)
+    def rank(g):
+        ns = _name_score(nq, _norm_title(g.get("name", "")))
+        if ns <= -900:
+            return (-1e9, 0)
+        cat = g.get("category", 0)
+        cb = -5000 if cat == 5 else _CAT_BONUS.get(cat, -200)
+        frd = g.get("first_release_date") or 4102444800   # default: far future
+        return (ns * 10 + cb, -frd)                        # name+category first, earliest release breaks ties
+    return max(games, key=rank)
+
+def _collect_platforms(games: List[Dict[str, Any]], chosen: Dict[str, Any]) -> List[str]:
+    """Union platforms across every result that shares the chosen game's name (handles split entries)."""
+    nchosen = _norm_title(chosen.get("name", ""))
+    plats, seen = [], set()
+    for g in games:
+        if _norm_title(g.get("name", "")) == nchosen:
+            for p in (g.get("platforms") or []):
+                nm = p.get("name", "")
+                if nm and nm not in seen:
+                    seen.add(nm)
+                    plats.append(nm)
+    return plats
+
+def _boxart_lookup(q: str, pc: bool = False) -> Dict[str, Any]:
+    """pc=True: these are PC games — skip console box scans and serve the PC cover
+       (Steam store capsule first, then IGDB cover, then SteamGridDB)."""
+    q = (q or "").strip()
+    matched, covers, alts = None, [], []
+
+    # 1. IGDB identifies the game; for console games libretro adds the native-ratio box scan.
+    igdb_games = _igdb_search(q)
+    igdb_names: List[str] = []
+    if igdb_games:
+        g0 = _pick_igdb(igdb_games, q)
+        matched = {"source": "igdb", "id": g0["id"], "name": g0.get("name", "")}
+        igdb_names = [g0.get("name", "")] + [a.get("name", "") for a in (g0.get("alternative_names") or [])]
+        if not pc:
+            covers.extend(_libretro_covers(igdb_names, _collect_platforms(igdb_games, g0)))
+        co = _igdb_cover_obj(g0)
+        if co:
+            covers.append(co)
+        alts += [{"source": "igdb", "id": g["id"], "name": g.get("name", "")}
+                 for g in igdb_games if g.get("id") != g0.get("id")][:5]
+
+    # 1b. (console mode only) No scan yet — search libretro across all systems with the raw
+    #     query too. Collapsed matching bridges "yugioh" -> "Yu-Gi-Oh!".
+    if not pc and not any(c.get("source") == "libretro" for c in covers):
+        libs = _libretro_covers(igdb_names + [q], [])
+        if libs:
+            covers[:0] = libs
+            if matched is None:
+                matched = {"source": "libretro", "id": 0, "name": _pretty_libretro_name(libs[0])}
+
+    # 2. SteamGridDB — extra capsule covers to cycle through (and a match if IGDB missed).
+    sgdb_games = _sgdb_search(q)
+    if sgdb_games:
+        if matched is None:
+            matched = {"source": "steamgriddb", "id": sgdb_games[0]["id"], "name": sgdb_games[0]["name"]}
+        covers += _sgdb_covers(sgdb_games[0]["id"])
+        if not alts:
+            alts = [{"source": "steamgriddb", "id": g["id"], "name": g["name"]} for g in sgdb_games[1:6]]
+
+    # 3. Steam official store art. In PC mode it's the canonical cover -> put it first; otherwise
+    #    only a last-resort fallback when nothing else matched.
+    if pc or not covers:
+        steam_hits = _steam_search(q, limit=1)
+        if steam_hits:
+            sc = _steam_cover(steam_hits[0]["appid"])
+            if sc:
+                sc["name"] = steam_hits[0]["name"]
+                if pc:
+                    covers.insert(0, sc)
+                else:
+                    covers.append(sc)
+                if matched is None:
+                    matched = {"source": "steam", "id": steam_hits[0]["appid"], "name": steam_hits[0]["name"]}
+
+    return {"query": q, "matched": matched, "covers": covers, "alts": alts}
+
+@app.get("/api/boxart")
+def boxart_lookup(q: str, force: int = 0, platform: str = ""):
+    if not q.strip():
+        raise HTTPException(status_code=400, detail="Missing game name")
+    pc = platform.lower() == "pc"
+    key = f"boxart:v6:{'pc:' if pc else ''}{q.strip().lower()}"
+    if not force:
+        cached = _cache_read(key)
+        if cached:
+            return cached
+    with _lock_for(key):
+        if not force:
+            cached = _cache_read(key)
+            if cached:
+                return cached
+        result = _boxart_lookup(q, pc=pc)
+        if not (IGDB_CLIENT_ID and IGDB_CLIENT_SECRET):
+            result["warning"] = ("IGDB credentials not set — add IGDB_CLIENT_ID / "
+                                 "IGDB_CLIENT_SECRET for native-ratio box art.")
+        if result.get("covers"):
+            _cache_write(key, result)
+        return result
+
+@app.get("/api/boxart/covers")
+def boxart_covers(source: str, id: int, platform: str = ""):
+    """Covers for a specific game the user picked as an override."""
+    pc = platform.lower() == "pc"
+    if source == "igdb":
+        games = _igdb_game(id)
+        out: List[Dict[str, Any]] = []
+        if games:
+            g = games[0]
+            names = [g.get("name", "")] + [a.get("name", "") for a in (g.get("alternative_names") or [])]
+            plats = [p.get("name", "") for p in (g.get("platforms") or [])]
+            if not pc:
+                out.extend(_libretro_covers(names, plats))
+            co = _igdb_cover_obj(g)
+            if co:
+                out.append(co)
+            if pc:
+                sh = _steam_search(g.get("name", ""), limit=1)
+                if sh:
+                    sc = _steam_cover(sh[0]["appid"])
+                    if sc:
+                        sc["name"] = sh[0]["name"]
+                        out.insert(0, sc)
+        return {"covers": out}
+    if source == "steamgriddb":
+        return {"covers": _sgdb_covers(id)}
+    if source == "steam":
+        sc = _steam_cover(id)
+        return {"covers": [sc] if sc else []}
+    raise HTTPException(status_code=400, detail="Unknown source")
+
+@app.get("/api/boxart/proxy")
+def boxart_proxy(url: str):
+    """Stream an allowed image through our origin so the page can ZIP it (CORS-safe)."""
+    from urllib.parse import urlparse
+    host = (urlparse(url).hostname or "").lower()
+    if not any(host == d or host.endswith("." + d) for d in BOXART_ALLOWED_HOSTS):
+        raise HTTPException(status_code=400, detail="Host not allowed")
+    try:
+        with httpx.Client(timeout=20.0, headers=UA, follow_redirects=True) as c:
+            r = c.get(url)
+            r.raise_for_status()
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Fetch failed: {e}")
+    ctype = r.headers.get("content-type", "image/jpeg")
+    return Response(content=r.content, media_type=ctype,
+                    headers={"Cache-Control": "public, max-age=86400"})
+
+@app.get("/boxart", response_class=HTMLResponse)
+async def boxart_page():
+    return FileResponse(os.path.join(STATIC_DIR, "boxart.html"))
+
+@app.get("/animate", response_class=HTMLResponse)
+async def animate_page():
+    return FileResponse(os.path.join(STATIC_DIR, "animate.html"))
 
 # --------------------------------------------------------------------------------------
 # Pretty URL Routing (Dynamic Handheld/Accessory IDs)

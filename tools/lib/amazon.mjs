@@ -17,6 +17,25 @@
  * If keys are absent, amazonConfigured() returns false and getAmazonPrices()
  * resolves to an empty map — the caller then falls back to best-effort scraping.
  */
+import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+// Trusted-seller config (Amazon section). Controls which merchants we price from.
+const TRUSTED_PATH = join(dirname(fileURLToPath(import.meta.url)), '..', 'trusted-sellers.json');
+const TRUSTED = existsSync(TRUSTED_PATH) ? JSON.parse(readFileSync(TRUSTED_PATH, 'utf8')).amazon || {} : {};
+const ALLOW_IDS = new Set(TRUSTED.allowIds || []);
+const ALLOW_NAMES = new Set((TRUSTED.allowNames || []).map((n) => n.toLowerCase()));
+
+function isTrustedMerchant(merchant) {
+  if (!merchant) return false;
+  if (merchant.id && ALLOW_IDS.has(merchant.id)) return true;
+  const name = (merchant.name || '').toLowerCase();
+  if (ALLOW_NAMES.has(name)) return true;
+  if (TRUSTED.trustOfficialKeyword && /\bofficial\b/.test(name)) return true;
+  return false;
+}
+
 const CLIENT_ID = process.env.AMAZON_CLIENT_ID;
 const CLIENT_SECRET = process.env.AMAZON_CLIENT_SECRET;
 const PARTNER_TAG = process.env.AMAZON_PARTNER_TAG || 'ryanretro-20';
@@ -100,7 +119,12 @@ async function getItems(asins) {
       partnerTag: PARTNER_TAG,
       partnerType: 'Associates',
       marketplace: MARKETPLACE,
-      resources: ['offersV2.listings.price'],
+      resources: [
+        'offersV2.listings.price',
+        'offersV2.listings.condition',
+        'offersV2.listings.merchantInfo',
+        'offersV2.listings.availability',
+      ],
     }),
   });
   const text = await res.text();
@@ -113,16 +137,8 @@ async function getItems(asins) {
   return json;
 }
 
-/**
- * Pull a numeric USD price from an item's offers. Prefers the buy-box winner
- * (the price shoppers see by default), falling back to the first listing.
- * Real shape: offersV2.listings[].price.money.{amount,displayAmount}.
- */
-function priceFromItem(item) {
-  const listings = item?.offersV2?.listings || item?.offers?.listings || [];
-  if (!listings.length) return null;
-  const pick = listings.find((l) => l.isBuyBoxWinner) || listings[0];
-  const money = pick?.price?.money || pick?.price;
+const amountOf = (listing) => {
+  const money = listing?.price?.money || listing?.price;
   if (!money) return null;
   if (typeof money.amount === 'number' && money.amount > 0) return Math.round(money.amount * 100) / 100;
   const disp = money.displayAmount || money.value;
@@ -131,6 +147,30 @@ function priceFromItem(item) {
     if (n > 0) return Math.round(n * 100) / 100;
   }
   return null;
+};
+const isNew = (l) => (l?.condition?.value || 'New') === 'New';
+const inStock = (l) => !l?.availability?.type || /^IN_STOCK/.test(l.availability.type);
+
+/**
+ * Choose the best offer for an item:
+ *   1. cheapest New + in-stock offer from a TRUSTED seller (Amazon / official / allowlisted)
+ *   2. else the buy-box (or cheapest New) offer, flagged untrusted so alerts can skip it
+ * Returns { price, merchant, trusted } or null.
+ */
+function offerFromItem(item) {
+  const listings = (item?.offersV2?.listings || item?.offers?.listings || []).filter((l) => amountOf(l) != null);
+  if (!listings.length) return null;
+  const fresh = listings.filter((l) => isNew(l) && inStock(l));
+  const pool = fresh.length ? fresh : listings;
+
+  const trusted = pool
+    .filter((l) => isTrustedMerchant(l.merchantInfo))
+    .sort((a, b) => amountOf(a) - amountOf(b));
+  if (trusted.length) {
+    return { price: amountOf(trusted[0]), merchant: trusted[0].merchantInfo?.name || 'Amazon', trusted: true };
+  }
+  const pick = pool.find((l) => l.isBuyBoxWinner) || pool[0];
+  return { price: amountOf(pick), merchant: pick.merchantInfo?.name || 'third-party', trusted: false };
 }
 
 const chunk = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
@@ -138,7 +178,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
  * @param {Array<{url:string}>} links  Amazon store links from products
- * @returns {Promise<Map<string, number>>}  url -> price (USD). Empty if unconfigured.
+ * @returns {Promise<Map<string, {price:number, merchant:string, trusted:boolean}>>}
+ *          url -> offer. Empty if unconfigured.
  */
 export async function getAmazonPrices(links) {
   const out = new Map();
@@ -154,21 +195,21 @@ export async function getAmazonPrices(links) {
   if (!asins.length) return out;
 
   // 2. Batch getItems (max 10 ASINs/request).
-  const asinToPrice = new Map();
+  const asinToOffer = new Map();
   for (const group of chunk(asins, 10)) {
     const json = await getItems(group);
     const items = json?.itemsResult?.items || json?.items || [];
     for (const it of items) {
       const asin = it.asin || it.ASIN;
-      const price = priceFromItem(it);
-      if (asin && price != null) asinToPrice.set(asin, price);
+      const offer = offerFromItem(it);
+      if (asin && offer?.price != null) asinToOffer.set(asin, offer);
     }
     await sleep(1100);
   }
 
-  // 3. Map prices back onto the original link URLs.
+  // 3. Map offers back onto the original link URLs.
   for (const [url, asin] of urlToAsin) {
-    if (asinToPrice.has(asin)) out.set(url, asinToPrice.get(asin));
+    if (asinToOffer.has(asin)) out.set(url, asinToOffer.get(asin));
   }
   return out;
 }

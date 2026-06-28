@@ -141,20 +141,25 @@ function isShopify(host) {
   return SHOPIFY_HOSTS.some((h) => host.endsWith(h));
 }
 
-// Returns { price, trusted }. Trusted sources (Shopify .js, official APIs) skip
-// the sanity bound; best-effort scrapes are untrusted and get bounds-checked.
+// Returns { price, trusted, merchant, merchantTrusted }.
+//   trusted        = data SOURCE is authoritative (Shopify .js / official API) -> skip sanity bound
+//   merchantTrusted = the SELLER is on our allowlist (Amazon.com / official / Ampown...) -> ok to alert
 async function fetchRawPrice(link, api) {
   const host = hostOf(link.url);
-  if (isShopify(host)) return { price: await fetchShopifyPrice(link.url), trusted: true };
+  if (isShopify(host)) {
+    return { price: await fetchShopifyPrice(link.url), trusted: true, merchant: 'Official store', merchantTrusted: true };
+  }
   if (host.includes('amzn') || host.includes('amazon')) {
-    if (api.amazon.has(link.url)) return { price: api.amazon.get(link.url), trusted: true };
-    return { price: await fetchAmazonPrice(link.url), trusted: false };
+    const o = api.amazon.get(link.url);
+    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted };
+    return { price: await fetchAmazonPrice(link.url), trusted: false, merchant: null, merchantTrusted: false };
   }
   if (host.includes('aliexpress')) {
-    if (api.ali.has(link.url)) return { price: api.ali.get(link.url), trusted: true };
-    return { price: await fetchAliExpressPrice(link.url), trusted: false };
+    const o = api.ali.get(link.url);
+    if (o) return { price: o.price, trusted: true, merchant: o.merchant, merchantTrusted: o.trusted };
+    return { price: await fetchAliExpressPrice(link.url), trusted: false, merchant: null, merchantTrusted: false };
   }
-  return { price: null, trusted: false };
+  return { price: null, trusted: false, merchant: null, merchantTrusted: false };
 }
 
 // ---------------------------------------------------------------------------
@@ -186,9 +191,9 @@ for (const p of products) {
   out[p.id] = {};
   for (const link of p.links) {
     const prevEntry = prev[p.id]?.[link.store] || {};
-    let raw = null, trusted = false;
+    let raw = null, trusted = false, merchant = null, merchantTrusted = false;
     try {
-      ({ price: raw, trusted } = await fetchRawPrice(link, api));
+      ({ price: raw, trusted, merchant, merchantTrusted } = await fetchRawPrice(link, api));
     } catch (e) {
       raw = null;
     }
@@ -210,6 +215,8 @@ for (const p of products) {
     }
 
     const entry = { currency: link.currency || '$', lastChecked: TODAY };
+    if (merchant) entry.merchant = merchant;
+    entry.merchantTrusted = !!merchantTrusted;
 
     if (current == null) {
       // Could not read a price — keep last-known, flag as unverified.
@@ -228,9 +235,17 @@ for (const p of products) {
       entry.previous = previous;
       entry.lowest = prevEntry.lowest != null ? Math.min(prevEntry.lowest, current) : current;
       entry.status = 'ok';
-      entry.drop = measured != null && current < measured - 0.005;
+      // A real drop: cheaper than last measurement, AND from a trusted seller
+      // (so we never alert on a scalper shaving a few dollars off an inflated price).
+      entry.drop = measured != null && current < measured - 0.005 && merchantTrusted;
       if (entry.drop) {
-        drops.push(`${p.name} / ${link.store}: $${measured} → $${current}`);
+        const pct = Math.round(((measured - current) / measured) * 100);
+        const atLow = current <= entry.lowest + 0.005;
+        drops.push({
+          id: p.id, name: p.name, store: link.store, merchant: merchant || link.store,
+          from: measured, to: current, pct, atLow,
+          url: link.url, image: p.image, date: TODAY,
+        });
       }
     }
     out[p.id][link.store] = entry;
@@ -241,10 +256,48 @@ out._meta = { generated: new Date().toISOString(), products: products.length };
 writeFileSync(PRICES_JSON, JSON.stringify(out, null, 2) + '\n');
 
 // ---------------------------------------------------------------------------
-// 4. Console summary (shows up in the GitHub Actions log)
+// 4. Price history — append a dated point per link whenever the price changes.
+// ---------------------------------------------------------------------------
+const HISTORY_JSON = join(ROOT, 'static', 'price-history.json');
+const history = existsSync(HISTORY_JSON) ? JSON.parse(readFileSync(HISTORY_JSON, 'utf8')) : {};
+for (const id of Object.keys(out)) {
+  if (id === '_meta') continue;
+  for (const store of Object.keys(out[id])) {
+    const e = out[id][store];
+    if (e.current == null) continue;
+    const key = `${id}|${store}`;
+    const arr = history[key] || (history[key] = []);
+    const last = arr[arr.length - 1];
+    if (!last || last[1] !== e.current) arr.push([TODAY, e.current]);
+    if (arr.length > 180) history[key] = arr.slice(-180);
+  }
+}
+writeFileSync(HISTORY_JSON, JSON.stringify(history) + '\n');
+
+// ---------------------------------------------------------------------------
+// 5. Drops feed (rolling, newest-first, capped) + alert artifacts + Discord.
+// ---------------------------------------------------------------------------
+const DROPS_JSON = join(ROOT, 'static', 'drops.json');
+const feed = existsSync(DROPS_JSON) ? JSON.parse(readFileSync(DROPS_JSON, 'utf8')) : [];
+writeFileSync(DROPS_JSON, JSON.stringify([...drops, ...feed].slice(0, 60), null, 2) + '\n');
+
+// This run's new drops, for the email step + a quick CI signal.
+writeFileSync(join(ROOT, 'tools', 'last-run-drops.json'), JSON.stringify(drops, null, 2) + '\n');
+const { postDiscord, buildEmailHtml } = await import('./lib/alerts.mjs');
+writeFileSync(join(ROOT, 'tools', 'email-body.html'), buildEmailHtml(drops));
+
+if (drops.length && process.env.DISCORD_WEBHOOK_URL) {
+  try { await postDiscord(process.env.DISCORD_WEBHOOK_URL, drops); console.log('Posted drops to Discord.'); }
+  catch (e) { console.error('Discord post failed:', e.message); }
+}
+
+// ---------------------------------------------------------------------------
+// 6. Console summary (shows up in the GitHub Actions log)
 // ---------------------------------------------------------------------------
 console.log(`\nPrice update complete — ${products.length} products, written to static/prices.json`);
 console.log(`\nPRICE DROPS (${drops.length}):`);
-drops.length ? drops.forEach((d) => console.log('  ▼ ' + d)) : console.log('  (none)');
+drops.length
+  ? drops.forEach((d) => console.log(`  ▼ ${d.name} / ${d.merchant}: $${d.from} → $${d.to} (-${d.pct}%)`))
+  : console.log('  (none)');
 console.log(`\nUNVERIFIED (${failures.length}) — kept last-known price:`);
 failures.length ? failures.forEach((f) => console.log('  ? ' + f)) : console.log('  (none)');

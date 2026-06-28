@@ -3,6 +3,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 229,
       "previous": 229,
       "lowest": 229,
@@ -14,6 +16,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 244,
       "previous": 244,
       "lowest": 244,
@@ -25,6 +29,7 @@
     "Steam": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 549,
       "previous": null,
       "lowest": 549,
@@ -35,6 +40,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 199,
       "previous": 199,
       "lowest": 199,
@@ -44,6 +51,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 204,
       "previous": null,
       "lowest": 204,
@@ -54,6 +62,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 99.99,
       "previous": 99.99,
       "lowest": 99.99,
@@ -65,6 +75,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 113.49,
       "previous": null,
       "lowest": 113.49,
@@ -75,6 +86,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 91.85,
       "previous": null,
       "lowest": 91.85,
@@ -85,6 +97,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "game console",
+      "merchantTrusted": false,
       "current": 88.99,
       "previous": 88.99,
       "lowest": 88.99,
@@ -94,6 +108,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 57.77,
       "previous": null,
       "lowest": 57.77,
@@ -104,6 +119,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 149,
       "previous": 149,
       "lowest": 149,
@@ -113,6 +130,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 171.62,
       "previous": null,
       "lowest": 171.62,
@@ -123,6 +141,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 179,
       "previous": 179,
       "lowest": 179,
@@ -134,6 +154,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "YANGMINGYU",
+      "merchantTrusted": false,
       "current": 79.98,
       "previous": 79.98,
       "lowest": 79.98,
@@ -143,6 +165,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 67.61,
       "previous": null,
       "lowest": 67.61,
@@ -153,6 +176,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 51,
       "previous": null,
       "lowest": 51,
@@ -163,6 +187,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 69.57,
       "previous": null,
       "lowest": 69.57,
@@ -173,6 +198,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "AnkerDirect",
+      "merchantTrusted": true,
       "current": 119.99,
       "previous": 119.99,
       "lowest": 109.99,
@@ -184,6 +211,7 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 89.99,
       "previous": null,
       "lowest": 89.99,
@@ -194,6 +222,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "UGREEN GROUP LIMITED",
+      "merchantTrusted": true,
       "current": 39.99,
       "previous": 39.99,
       "lowest": 39.99,
@@ -205,6 +235,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 69,
       "previous": 69,
       "lowest": 69,
@@ -216,6 +248,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "GameSir Official Store US",
+      "merchantTrusted": true,
       "current": 79.99,
       "previous": 79.99,
       "lowest": 79.99,
@@ -227,6 +261,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 339,
       "previous": 339,
       "lowest": 339,
@@ -238,6 +274,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 249,
       "previous": 249,
       "lowest": 249,
@@ -249,6 +287,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 249,
       "previous": 249,
       "lowest": 249,
@@ -260,6 +300,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Amazon.com",
+      "merchantTrusted": true,
       "current": 106.99,
       "previous": 106.99,
       "lowest": 59.99,
@@ -271,6 +313,7 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 199,
       "previous": null,
       "lowest": 199,
@@ -281,6 +324,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 76.4,
       "previous": 76.4,
       "lowest": 76.4,
@@ -290,6 +335,8 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Timexplayer",
+      "merchantTrusted": false,
       "current": 99.99,
       "previous": 99.99,
       "lowest": 95.99,
@@ -299,6 +346,8 @@
     "PowKiddy": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 80.74,
       "previous": 80.74,
       "lowest": 80.74,
@@ -310,6 +359,8 @@
     "Official": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 63.65,
       "previous": 63.65,
       "lowest": 63.65,
@@ -319,6 +370,7 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchantTrusted": false,
       "current": 73,
       "previous": null,
       "lowest": 73,
@@ -327,6 +379,8 @@
     "PowKiddy": {
       "currency": "$",
       "lastChecked": "2026-06-28",
+      "merchant": "Official store",
+      "merchantTrusted": true,
       "current": 61.74,
       "previous": 61.74,
       "lowest": 61.74,
@@ -335,7 +389,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T01:08:46.475Z",
+    "generated": "2026-06-28T01:26:43.036Z",
     "products": 25
   }
 }

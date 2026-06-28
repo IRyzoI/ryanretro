@@ -1,0 +1,26 @@
+{
+  "_comment": "Sellers we trust for price tracking + alerts. Amazon: match by merchant id, exact name, or (optionally) any name containing 'official'. AliExpress: trusted store ids/names (used once the affiliate API is live). Add sellers here as you vet them.",
+  "amazon": {
+    "allowIds": ["ATVPDKIKX0DER"],
+    "allowNames": [
+      "amazon.com",
+      "ankerdirect",
+      "anker",
+      "ugreen group limited",
+      "ugreen",
+      "gamesir official",
+      "gamesir",
+      "anbernic official",
+      "retroid",
+      "trimui",
+      "ampown",
+      "sandisk"
+    ],
+    "trustOfficialKeyword": true
+  },
+  "aliexpress": {
+    "allowStoreIds": [],
+    "allowNames": ["ampown", "anbernic official store", "retroid official store", "powkiddy official store"],
+    "trustOfficialKeyword": true
+  }
+}

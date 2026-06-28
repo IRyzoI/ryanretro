@@ -13,3 +13,7 @@ data/.DS_Store
 .DS_Store
 static/.DS_Store
 
+
+# price tracker run artifacts (regenerated each run)
+tools/last-run-drops.json
+tools/email-body.html

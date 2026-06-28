@@ -13,6 +13,25 @@
  * request signing, method aliexpress.affiliate.productdetail.get.
  */
 import crypto from 'node:crypto';
+import { readFileSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+// Trusted-store config (AliExpress section) — focus on Ampown / official stores.
+const TRUSTED_PATH = join(dirname(fileURLToPath(import.meta.url)), '..', 'trusted-sellers.json');
+const TRUSTED = existsSync(TRUSTED_PATH) ? JSON.parse(readFileSync(TRUSTED_PATH, 'utf8')).aliexpress || {} : {};
+const ALLOW_STORE_IDS = new Set((TRUSTED.allowStoreIds || []).map(String));
+const ALLOW_NAMES = new Set((TRUSTED.allowNames || []).map((n) => n.toLowerCase()));
+
+function isTrustedStore(storeId, storeName) {
+  if (storeId && ALLOW_STORE_IDS.has(String(storeId))) return true;
+  const name = (storeName || '').toLowerCase();
+  if (name && ALLOW_NAMES.has(name)) return true;
+  if (TRUSTED.trustOfficialKeyword && /\bofficial\b/.test(name)) return true;
+  // If we have no allowlist signal at all, don't block (avoids dropping everything
+  // before the list is tuned); refine once the API is live and store names are seen.
+  return !storeId && !storeName;
+}
 
 const APP_KEY = process.env.ALIEXPRESS_APP_KEY;
 const APP_SECRET = process.env.ALIEXPRESS_APP_SECRET;
@@ -68,7 +87,7 @@ async function productDetail(ids) {
     target_currency: 'USD',
     target_language: 'EN',
     tracking_id: TRACKING_ID,
-    fields: 'product_id,target_sale_price,target_sale_price_currency,sale_price,product_title',
+    fields: 'product_id,target_sale_price,target_sale_price_currency,sale_price,product_title,shop_id,shop_url,store_name',
   };
   params.sign = sign(params);
 
@@ -115,20 +134,26 @@ export async function getAliExpressPrices(links) {
   if (!ids.length) return out;
 
   // 2. Fetch product detail (the endpoint accepts multiple ids; chunk to be safe).
-  const idToPrice = new Map();
+  const idToOffer = new Map();
   for (const group of chunk(ids, 20)) {
     const json = await productDetail(group);
     for (const p of extractProducts(json)) {
       const raw = p.target_sale_price ?? p.sale_price;
       const price = typeof raw === 'string' ? parseFloat(raw) : raw;
-      if (price > 0) idToPrice.set(String(p.product_id), Math.round(price * 100) / 100);
+      if (price > 0) {
+        idToOffer.set(String(p.product_id), {
+          price: Math.round(price * 100) / 100,
+          merchant: p.store_name || (p.shop_id ? `Store ${p.shop_id}` : 'AliExpress'),
+          trusted: isTrustedStore(p.shop_id, p.store_name),
+        });
+      }
     }
     await sleep(500);
   }
 
-  // 3. Map prices back onto the original link URLs.
+  // 3. Map offers back onto the original link URLs.
   for (const [url, id] of urlToId) {
-    if (idToPrice.has(id)) out.set(url, idToPrice.get(id));
+    if (idToOffer.has(id)) out.set(url, idToOffer.get(id));
   }
   return out;
 }
