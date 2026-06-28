@@ -12,6 +12,21 @@
       "drop": false
     }
   },
+  "anbernic_rg_rotate": {
+    "AliExpress": {
+      "currency": "$",
+      "lastChecked": "2026-06-28",
+      "merchant": "Curated Retro Handhelds (Anbernic Authorized Store) Store",
+      "merchantTrusted": true,
+      "rating": 100,
+      "sales": 149,
+      "current": 110.81,
+      "previous": 110.81,
+      "lowest": 110.81,
+      "status": "ok",
+      "drop": false
+    }
+  },
   "rp6": {
     "Official": {
       "currency": "$",
@@ -182,7 +197,7 @@
       "rating": 98.2,
       "sales": 106,
       "current": 107.88,
-      "previous": 99.5,
+      "previous": 107.88,
       "lowest": 99.5,
       "status": "ok",
       "drop": false
@@ -413,7 +428,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T03:23:27.029Z",
-    "products": 25
+    "generated": "2026-06-28T07:27:34.801Z",
+    "products": 26
   }
 }

@@ -40,6 +40,10 @@ function isTrustedStore(storeId, storeName, rating, sales) {
 const APP_KEY = process.env.ALIEXPRESS_APP_KEY;
 const APP_SECRET = process.env.ALIEXPRESS_APP_SECRET;
 const TRACKING_ID = process.env.ALIEXPRESS_TRACKING_ID || 'default';
+// Ship-to country for pricing. AliExpress geo-prices, so we fetch US prices to
+// match the (mostly US) audience — NOT the price the operator sees in their own
+// country. Override with ALIEXPRESS_COUNTRY if your audience is elsewhere.
+const COUNTRY = process.env.ALIEXPRESS_COUNTRY || 'US';
 const GATEWAY = process.env.ALIEXPRESS_GATEWAY || 'https://api-sg.aliexpress.com/sync';
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 
@@ -98,6 +102,7 @@ async function productDetail(ids) {
     product_ids: ids.join(','),
     target_currency: 'USD',
     target_language: 'EN',
+    country: COUNTRY,
     tracking_id: TRACKING_ID,
     fields: 'product_id,target_sale_price,target_sale_price_currency,sale_price,product_title,shop_id,shop_name,evaluate_rate,lastest_volume',
   };
