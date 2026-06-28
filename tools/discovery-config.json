@@ -1,0 +1,6 @@
+{
+  "_comment": "Per-product discovery tuning for ambiguous product names. query = override the Amazon search query; include = title MUST contain ALL these phrases; exclude = title must NOT contain ANY of these. All case-insensitive substrings. Add an entry whenever a product name collides with a different variant.",
+  "ugreen_dock": { "query": "UGREEN Steam Deck Dock 9-in-1", "include": ["steam deck"] },
+  "trimui_smart_pro": { "exclude": ["pro s"] },
+  "trimui_smart_pro_s": { "include": ["pro s"] }
+}

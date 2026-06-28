@@ -36,6 +36,8 @@ function loadProducts() {
   return Function(`"use strict"; return ([${src.match(/const products = \[([\s\S]*?)\n\s*\];/)[1]}]);`)();
 }
 const prices = JSON.parse(readFileSync(join(ROOT, 'static', 'prices.json'), 'utf8'));
+const CFG_PATH = join(ROOT, 'tools', 'discovery-config.json');
+const CONFIG = existsSync(CFG_PATH) ? JSON.parse(readFileSync(CFG_PATH, 'utf8')) : {};
 
 const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const STOP = new Set(['the', 'for', 'with', 'and']);
@@ -71,11 +73,16 @@ async function discover() {
   const out = [];
   for (const p of products) {
     const ref = currentBest(p.id);
+    const cfg = CONFIG[p.id] || {};
     let results = [];
-    try { results = await searchAmazonDeals(p.name, 8); } catch (e) { console.error(`  ! ${p.name}: ${e.message}`); }
+    try { results = await searchAmazonDeals(cfg.query || p.name, 8); } catch (e) { console.error(`  ! ${p.name}: ${e.message}`); }
     for (const r of results) {
       // Amazon: any seller is acceptable (Amazon's return policy covers buyers).
       if (!titleMatches(r.title, p.name) || !(r.price > 0)) continue;
+      // normalize separators so "pro-s" and "pro s" both match the phrase "pro s"
+      const tl = (r.title || '').toLowerCase().replace(/[-_\/]+/g, ' ').replace(/\s+/g, ' ');
+      if ((cfg.include || []).some((x) => !tl.includes(x.toLowerCase()))) continue;   // must contain all
+      if ((cfg.exclude || []).some((x) => tl.includes(x.toLowerCase()))) continue;    // must contain none
       if (ref && (r.price < ref * 0.5 || r.price > ref * 2)) continue;  // sane band (>50% off = likely mismatch)
       if (ref && r.price >= ref - 0.01) continue;                       // must be cheaper
       out.push({
