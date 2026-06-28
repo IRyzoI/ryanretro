@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ryan Retro — Retroid Pocket 5 Setup Guide (Easy)</title>
+<meta name="description" content="A beginner-friendly, step-by-step guide to setting up the Retroid Pocket 5 — first boot, the apps to install first, and how to configure every emulator from PS1 to Switch.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    corePlugins: { preflight: false },
+    theme: { extend: { colors: { brand: { light: '#B9B2DE', main: '#6254A4', dark: '#463884' } } } }
+  };
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script defer src="/static/partials/include.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ── Brand tokens ── */
+:root {
+  --purple: #6254A4;
+  --purple-dark: #463884;
+  --purple-light: #B9B2DE;
+  --purple-tint: #f3f1fc;
+  --ink: #111111;
+  --ink-soft: #555555;
+  --ink-faint: #999999;
+  --rule: #e8e8e8;
+  --bg: #ffffff;
+  --tag-bg: #f0eefb;
+}
+body.dark {
+  --ink: #E8E4F8;
+  --ink-soft: #A89FCC;
+  --ink-faint: #6B6490;
+  --rule: #2a2538;
+  --bg: #13111d;
+  --tag-bg: #1e1a2e;
+}
+
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+h1, h2, h3 { margin: 0; font-weight: 700; }
+p { margin: 0 0 24px; }
+a { color: var(--purple); }
+img { display: block; max-width: 100%; }
+
+/* ── Shared header/footer resets ── */
+header, header *, header::before, header::after,
+footer, footer *, footer::before, footer::after {
+  border-width: 0; border-style: solid; border-color: currentColor;
+}
+header, footer { font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
+header a, footer a { text-decoration: none; }
+header button { background: transparent; border: 0; padding: 0; cursor: pointer; }
+header svg, footer svg { display: block; }
+footer p { margin: 0; }
+
+/* ── Article layout ── */
+.post-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 24px 96px;
+  flex: 1;
+}
+@media (min-width: 1200px) { .post-wrap { max-width: 880px; } }
+@media (min-width: 1600px) { .post-wrap { max-width: 1040px; } }
+
+/* ── Article header ── */
+.post-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+}
+.post-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--purple);
+  background: var(--tag-bg);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.post-title {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.post-meta {
+  font-size: 13px;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.post-meta strong { color: var(--ink-soft); font-weight: 600; }
+
+/* ── Table of contents (left rail) ── */
+.toc {
+  position: fixed;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  max-width: 42px;
+  max-height: 78vh;
+  overflow: hidden;
+  padding: 14px 16px 14px 18px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font-family: 'Poppins', sans-serif;
+  transition: max-width .25s ease, background .2s, box-shadow .2s, border-color .2s;
+}
+.toc.empty { display: none; }
+.toc-head {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.6px;
+  text-transform: uppercase; color: var(--ink-faint);
+  white-space: nowrap; margin: 0 0 12px 1px;
+  opacity: 0; transition: opacity .2s;
+}
+.toc-list { display: flex; flex-direction: column; gap: 1px; list-style: none; margin: 0; padding: 0; }
+.toc-item {
+  display: flex; align-items: center; gap: 13px;
+  text-decoration: none; padding: 5px 0; cursor: pointer;
+}
+.toc-tick {
+  width: 16px; height: 2px; border-radius: 2px;
+  background: var(--ink-faint); opacity: .45; flex: none;
+  transition: width .2s, background .2s, opacity .2s;
+}
+.toc-label {
+  font-size: 13px; line-height: 1.35; color: var(--ink-soft);
+  white-space: nowrap; opacity: 0; transform: translateX(-4px);
+  transition: opacity .2s, transform .2s, color .15s;
+}
+.toc-item:hover .toc-tick { background: var(--purple); opacity: 1; }
+.toc-item:hover .toc-label { color: var(--purple); }
+.toc-item.active .toc-tick { width: 22px; background: var(--purple); opacity: 1; }
+.toc-item.active .toc-label { color: var(--purple); font-weight: 600; }
+.toc:hover, .toc.open {
+  max-width: 280px;
+  background: var(--bg);
+  border-color: var(--rule);
+  box-shadow: 0 14px 50px rgba(0,0,0,.12);
+  overflow-y: auto;
+}
+.toc:hover .toc-head, .toc.open .toc-head { opacity: 1; }
+.toc:hover .toc-label, .toc.open .toc-label { opacity: 1; transform: none; }
+@media (max-width: 1080px) { .toc { display: none; } }
+
+/* ── Article body ── */
+.post-body { color: var(--ink); }
+
+/* ── Article blocks (editable units) ── */
+.ab { margin-bottom: 32px; }
+.ab:last-child { margin-bottom: 0; }
+
+/* Text block */
+.ab-text h2 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 8px 0 14px;
+  color: var(--ink);
+}
+.ab-text p { margin: 0 0 20px; }
+.ab-text p:last-child { margin-bottom: 0; }
+.ab-text ul, .ab-text ol { padding-left: 22px; margin: 0 0 20px; }
+.ab-text li { margin-bottom: 8px; }
+
+/* Image block */
+.ab-image { }
+.ab-image img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: zoom-in;
+}
+.ab-image figcaption {
+  font-size: 13px;
+  color: var(--ink-faint);
+  text-align: center;
+  line-height: 1.5;
+}
+.edit-mode .ab-image figcaption[contenteditable]:empty::before {
+  content: 'Add a caption (optional)';
+  color: var(--ink-faint); font-style: italic; opacity: .7;
+}
+
+/* Pull quote */
+.ab-quote blockquote {
+  margin: 0;
+  padding: 6px 0 6px 22px;
+  border-left: 3px solid var(--purple);
+  font-size: 19px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* Divider */
+.ab-divider { text-align: center; color: var(--rule); font-size: 22px; letter-spacing: 10px; user-select: none; }
+
+/* Affiliate CTA */
+.ab-cta {
+  background: var(--purple-tint);
+  border: 1px solid var(--purple-light);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+body.dark .ab-cta { background: #1e1a30; border-color: #3a3060; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background-color: var(--purple); color: #fff;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.14), rgba(0,0,0,0.12));
+  font-weight: 700; font-size: 15px;
+  padding: 13px 28px; border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.22);
+  transition: background-color .15s, transform .1s, box-shadow .15s;
+  font-family: 'Poppins', sans-serif;
+}
+.cta-btn:hover { background-color: var(--purple-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.22); }
+.cta-btn:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.12); }
+.cta-btn svg { width: 18px; height: 18px; flex: none; }
+.cta-btn.full { display: flex; justify-content: center; width: 100%; }
+.cta-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.cta-btns .cta-btn { flex: 1 1 200px; justify-content: center; text-align: center; }
+.cta-add-btn { display: block; margin: 14px auto 0; padding: 8px 16px; border: 1.5px dashed var(--purple-light); border-radius: 8px; background: transparent; color: var(--purple); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+.cta-add-btn:hover { background: var(--purple-tint); }
+.edit-mode .ab-cta .cta-btn { cursor: pointer; }
+.cta-btn.cta-amazon { background-color:#FFD814; color:#0F1111; }
+.cta-btn.cta-amazon:hover { background-color:#F7CA00; }
+.cta-btn.cta-aliexpress { background-color:#E62E04; color:#fff; }
+.cta-btn.cta-aliexpress:hover { background-color:#c92704; }
+.link-colors { display:flex; gap:10px; align-items:center; justify-content:center; padding:2px 0; }
+.lc-swatch { width:30px; height:30px; border-radius:50%; border:2px solid var(--rule); cursor:pointer; padding:0; overflow:hidden; }
+.lc-swatch.selected { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--purple); }
+.lc-custom { background: conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); position:relative; }
+.lc-custom input[type=color] { position:absolute; inset:0; opacity:0; width:100%; height:100%; border:none; cursor:pointer; padding:0; }
+.link-icons { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap; padding:2px 0; }
+.li-icon { width:34px; height:34px; border-radius:8px; border:1.5px solid var(--rule); background:var(--bg); color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; font-size:15px; }
+.li-icon:hover { border-color:var(--purple); color:var(--purple); }
+.li-icon.selected { border-color:var(--purple); color:var(--purple); box-shadow:0 0 0 2px var(--purple-tint); }
+.li-icon svg { width:17px; height:17px; }
+
+/* ── Image lightbox ── */
+.lb { display:none; position:fixed; inset:0; z-index:500; background:rgba(10,8,20,0.93); align-items:center; justify-content:center; }
+.lb.open { display:flex; }
+.lb-fig { margin:0; display:flex; flex-direction:column; align-items:center; gap:14px; padding:20px; }
+.lb-fig img { max-width:92vw; max-height:82vh; width:auto; height:auto; border-radius:8px; box-shadow:0 24px 70px rgba(0,0,0,.55); cursor:default; }
+.lb-cap { color:#d8d3ea; font-size:14px; line-height:1.5; text-align:center; font-family:'Poppins',sans-serif; max-width:700px; }
+.lb-close, .lb-nav { position:fixed; background:rgba(255,255,255,0.12); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:999px; transition:background .15s; font-family:'Poppins',sans-serif; line-height:1; }
+.lb-close:hover, .lb-nav:hover { background:rgba(255,255,255,0.26); }
+.lb-close { top:16px; right:18px; width:44px; height:44px; font-size:20px; }
+.lb-nav { top:50%; transform:translateY(-50%); width:52px; height:52px; font-size:34px; padding-bottom:4px; }
+.lb-prev { left:16px; } .lb-next { right:16px; }
+.lb-count { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); color:#c9c4dd; font-size:13px; font-family:'Poppins',sans-serif; letter-spacing:.5px; }
+@media (max-width:600px){ .lb-nav{ width:44px; height:44px; font-size:28px; } }
+
+/* ── Dark-mode toggle (left side, near the contents rail) ── */
+#themeToggle {
+  position: fixed; left: 16px; bottom: 16px; z-index: 55;
+  width: 42px; height: 42px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); color: var(--purple);
+  border: 1px solid var(--rule);
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+}
+#themeToggle:hover { background: var(--tag-bg); border-color: var(--purple-light); transform: translateY(-1px); }
+#themeToggle svg { width: 20px; height: 20px; display: block; }
+body.dark #themeToggle { color: var(--purple-light); }
+.cta-note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+/* ── Add block button ── */
+#add-block-btn {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 2px dashed var(--purple-light);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--purple);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background .15s;
+}
+#add-block-btn:hover { background: var(--purple-tint); }
+.edit-mode #add-block-btn { display: block; }
+
+/* ── Edit mode ── */
+.edit-fab {
+  position: fixed; left: 16px; bottom: 70px; z-index: 60;
+  display: none; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--purple); color: #fff;
+  border: none; font-weight: 700; font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 16px rgba(98,84,164,.35);
+  cursor: pointer; transition: background .15s;
+}
+.edit-fab:hover { background: var(--purple-dark); }
+.edit-fab.show { display: inline-flex; }
+.edit-fab.active { background: #22a06b; }
+
+.theme-fab {
+  position: fixed; right: 18px; bottom: 18px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px;
+  background: var(--bg); color: var(--purple);
+  border: 1px solid var(--rule);
+  font-weight: 600; font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  cursor: pointer; transition: background .15s;
+}
+.theme-fab:hover { background: var(--tag-bg); }
+
+/* Edit-mode block decoration */
+.edit-mode .ab {
+  position: relative;
+  outline: 1.5px dashed transparent;
+  border-radius: 6px;
+  padding: 4px;
+  transition: outline-color .15s;
+}
+.edit-mode .ab:hover { outline-color: var(--purple-light); }
+
+.block-toolbar {
+  display: none;
+  position: absolute;
+  top: -14px; right: 0;
+  gap: 4px;
+  z-index: 20;
+}
+.edit-mode .ab:hover .block-toolbar,
+.edit-mode .ab:focus-within .block-toolbar { display: flex; }
+
+.block-btn {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+.block-btn.drag  { background: #e0ddf8; color: var(--purple); cursor: grab; }
+.block-btn.drag:active { cursor: grabbing; }
+.block-btn.del   { background: #fde8e8; color: #c0392b; }
+
+.edit-mode [contenteditable] {
+  outline: none;
+  border-radius: 3px;
+  cursor: text;
+}
+.edit-mode [contenteditable]:focus {
+  background: rgba(98,84,164,.05);
+  box-shadow: 0 0 0 2px var(--purple-light);
+  border-radius: 4px;
+}
+
+.edit-mode .ab-image img { cursor: pointer; }
+.edit-mode .ab-image img:hover { opacity: 0.85; }
+
+.spec-row-del { display: none; background: #fde8e8; color: #c0392b; border: none; border-radius: 3px; padding: 1px 5px; font-size: 10px; cursor: pointer; margin-left: 5px; vertical-align: middle; }
+.edit-mode .spec-row-del { display: inline; }
+.spec-add-row { display: none; width: 100%; padding: 7px; border: none; border-top: 1px dashed var(--rule); background: var(--tag-bg); color: var(--purple); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+.edit-mode .spec-add-row { display: block; }
+
+.sortable-ghost { opacity: 0.3; }
+.sortable-chosen { box-shadow: 0 8px 30px rgba(0,0,0,.12) !important; }
+
+/* ── Modals & Toast ── */
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 400; align-items: center; justify-content: center; }
+.modal-backdrop.open { display: flex; }
+.modal-box { background: var(--bg); border: 1px solid var(--rule); border-radius: 14px; padding: 28px; width: min(360px, 92vw); display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+.modal-box h3 { font-size: 14px; font-weight: 700; color: var(--purple); text-align: center; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px; }
+.modal-input { padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 8px; background: var(--bg); color: var(--ink); font-size: 14px; font-family: 'Poppins', sans-serif; width: 100%; }
+.modal-input:focus { outline: none; border-color: var(--purple); }
+.modal-btns { display: flex; gap: 8px; }
+.modal-btns button { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; border: 1.5px solid var(--rule); }
+.modal-btns .primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+.modal-btns .secondary { background: transparent; color: var(--ink-faint); }
+.img-up-btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:11px; border:1.5px dashed var(--purple-light); border-radius:8px; background:var(--tag-bg); color:var(--purple); font-size:13px; font-weight:600; cursor:pointer; }
+.img-up-btn:hover { background:#ece8fb; }
+.img-or { text-align:center; font-size:11px; color:var(--ink-faint); letter-spacing:1px; }
+.img-file-name { font-size:12px; color:var(--purple); text-align:center; min-height:14px; word-break:break-all; }
+
+.bm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bm-btn { padding: 14px 8px; border: 1.5px solid var(--rule); border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: border-color .15s, background .15s; font-family: 'Poppins', sans-serif; }
+.bm-btn:hover { border-color: var(--purple); background: var(--tag-bg); }
+.bm-btn span { font-size: 22px; }
+.bm-cancel { margin-top: 4px; background: transparent; border: 1px solid var(--rule); border-radius: 8px; padding: 8px; color: var(--ink-faint); font-size: 13px; cursor: pointer; font-family: 'Poppins', sans-serif; }
+
+#toast { position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 9px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.2); opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 600; white-space: nowrap; }
+#toast.show { opacity: 1; }
+
+/* ── Block palette (edit mode) ── */
+.block-palette {
+  display: none;
+  position: fixed; right: 14px; top: 50%; transform: translateY(-50%);
+  z-index: 70; flex-direction: column; gap: 5px;
+  width: 142px; max-height: 86vh; overflow-y: auto;
+  padding: 12px 10px;
+  background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 14px; box-shadow: 0 14px 50px rgba(0,0,0,.16);
+  font-family: 'Poppins', sans-serif;
+}
+.edit-mode .block-palette { display: flex; }
+.bp-head { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-faint); text-align: center; margin-bottom: 4px; }
+.bp-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--rule); background: var(--tag-bg);
+  color: var(--ink); font-size: 12.5px; font-weight: 600;
+  cursor: grab; user-select: none;
+  transition: border-color .12s, color .12s, background .12s;
+}
+.bp-item:hover { border-color: var(--purple); color: var(--purple); }
+.bp-item:active { cursor: grabbing; }
+.bp-ic { font-size: 14px; width: 18px; text-align: center; flex: none; }
+.bp-hint { font-size: 9.5px; color: var(--ink-faint); text-align: center; margin-top: 4px; line-height: 1.35; }
+@media (max-width: 1080px) {
+  /* Narrow screens: dock the palette as a horizontal bar above the FABs so it never covers the article */
+  .block-palette {
+    top: auto; bottom: 72px; right: 50%; transform: translateX(50%);
+    flex-direction: row; width: auto; max-width: 92vw; max-height: none;
+    overflow-x: auto; overflow-y: hidden; gap: 6px;
+  }
+  .block-palette .bp-head, .block-palette .bp-hint { display: none; }
+  .bp-item { flex: 0 0 auto; }
+}
+
+/* ── Spec table (optional) ── */
+.spec-wrap { border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+.spec-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.spec-table th, .spec-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.spec-table tr:last-child th, .spec-table tr:last-child td { border-bottom: 0; }
+.spec-table th { width: 38%; font-weight: 600; color: var(--purple); background: var(--tag-bg); border-right: 1px solid var(--rule); }
+.spec-table td { color: var(--ink); background: var(--bg); }
+</style>
+</head>
+<body>
+
+<div data-include="header"></div>
+
+<div class="post-wrap">
+
+  <!-- Article header (not in editable region — edit the HTML directly for title/tag/date) -->
+  <header class="post-header">
+    <div class="post-tag">Setup Guide</div>
+    <h1 class="post-title">Retroid Pocket 5 Setup Guide</h1>
+    <div class="post-meta"><strong>Ryan Retro</strong> · Nov 24, 2024</div>
+  </header>
+
+  <!-- EDITABLE-START -->
+  <div id="guide-cards" class="post-body">
+
+  <figure class="ab ab-image">
+    <img src="../static/images/rp5-hero.png" alt="The Retroid Pocket 5 held in both hands, showing the boot logo">
+    <figcaption>The Retroid Pocket 5 — let's get it set up.</figcaption>
+  </figure>
+
+  <div class="ab ab-text">
+    <p>So you just got your Retroid Pocket 5 — congratulations, the wait is over. Open the box, take it out, and let's set it up together. This is a basic setup guide aimed at emulation beginners: by the end you'll be through the first-boot menu, you'll have the handful of apps I recommend installed, and you'll have every emulator from PlayStation 1 up to Nintendo Switch configured and ready to play.</p>
+    <p>One quick tip before we start: pop your microSD card in <em>before</em> you begin the process. It just makes everything easier down the line. I'd also suggest getting all of your games onto that external SD card in a single folder called <strong>ROMs</strong> — we'll be pointing every emulator at it, so having everything in one place keeps things simple.</p>
+    <p>I can't help with where to get game or BIOS files, so please don't ask in the comments — but everything else, I've got you covered.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="first-boot-0" style="scroll-margin-top: 90px;">First Boot &amp; the Setup Menu</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-first-boot.png" alt="The bottom edge of the Retroid Pocket 5 showing its ports">
+      <figcaption>A quick look at the ports before we dive in.</figcaption>
+    </figure>
+    <p>Turn it on and you'll see the Retroid Pocket 5 logo, then a very simple setup menu. You can move through it with the <strong>Next</strong> button on screen, or just push <strong>R1</strong> (the bumper — it's actually labelled R1 on the button itself).</p>
+    <p>First, pick your language. Before you go any further, you might see a red message at the top saying your joystick is not calibrated. If you have that, tap the message and it'll take you into the calibration tool. Push down each analog stick and the trigger, and you'll see the bar move as you do — run through all the buttons it asks for, then push <strong>B</strong> to go back. (It's worth doing this properly now; it saves headaches later.)</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="wifi-timezone-google-1" style="scroll-margin-top: 90px;">Wi-Fi, Time Zone &amp; Google</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-wifi.png" alt="Connecting to a Wi-Fi network in the setup wizard">
+      <figcaption>Connecting to Wi-Fi in the setup wizard.</figcaption>
+    </figure>
+    <p>Next, connect to the internet. Open the WLAN settings, toggle Wi-Fi on, choose your network and enter your password. Once it says the device is connected, push <strong>B</strong> to go back and hit Next.</p>
+    <p>Now your time zone. It's set to New York by default, so open the time zone settings, search for where you actually are, choose your country, and it'll set the correct zone for you. Double-check it matches your region before moving on.</p>
+    <p>Then you'll be asked about Google Play services. Some people prefer not to hand their information to Google, and that's completely your choice — just uncheck the box if you'd rather skip it. Personally I do like using Google Play services, so I leave it checked. Either way, hit Next.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="pre-install-launcher-2" style="scroll-margin-top: 90px;">Pre-Installed Apps &amp; Launcher</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-launcher.png" alt="The Select Launcher screen during setup">
+      <figcaption>Choosing your launcher — I go with AOSP.</figcaption>
+    </figure>
+    <p>Now you can choose which apps to pre-install — there are up to 28 of them. You'll find the Dolphin emulator for GameCube and Wii, DuckStation for PlayStation 1, M64Plus for N64, plus useful extras like Moonlight for streaming games from your PC and MiXplorer (a file manager). Pick whatever you want; because I'm reviewing this unit I'm going to install all of them so I can walk you through everything. Don't stress about missing something here — you can always grab anything later from the Play Store or online.</p>
+    <p>Once they're installed (it only takes a minute), you'll choose your launcher: the custom Retroid launcher, or the more generic AOSP launcher. I'm personally not the biggest fan of the Retroid launcher, so I go with AOSP — and again, you can change this any time later. Hit the Complete/Start button and you're into your device. First setup done — congratulations!</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="two-apps-first-3" style="scroll-margin-top: 90px;">Two Apps to Install First</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-localsend.png" alt="The LocalSend app ready to send a file between devices">
+      <figcaption>LocalSend makes wireless file transfers effortless.</figcaption>
+    </figure>
+    <p>Once you're on the home screen, swipe down to confirm your SD card is recognised, then jump into the Google Play Store and sign in. If you get a "something went wrong" error while signing in, don't worry — it's very common. Give it a minute or two, check back, and you'll usually find you're signed in just fine.</p>
+    <p>Before we touch any games, there are two apps I really want you to install:</p>
+    <ul>
+      <li><strong>LocalSend</strong> — install this on <em>all</em> your devices. It lets you send files between them over Wi-Fi with no ads. Download a game or a file on your computer, then fire it across to the Retroid Pocket 5 in seconds. Each device gets a fun random name (mine became the "powerful banana"); to send something you just hit Send, choose file (you can also send text, media, or even paste links), pick the device, and accept it on the other end. I transfer huge files this way and they fly across. <a href="https://localsend.org/download" target="_blank" rel="noopener">Download LocalSend here</a>.</li>
+      <li><strong>RAR (WinRAR)</strong> — a lot of files you download for this device come as ZIPs that need extracting. There are plenty of unzip tools on Android, but RAR is the one I've used for years and it just works. Search the Play Store for "RAR", install it, allow it access to your files, and dismiss the little donation prompt when it appears. From then on, extracting a ZIP is quick and painless.</li>
+    </ul>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="file-manager-tips-4" style="scroll-margin-top: 90px;">File Manager Tips</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-file-manager.png" alt="The file manager with its navigation pane open">
+      <figcaption>Pinning your most-used folders in the file manager.</figcaption>
+    </figure>
+    <p>If you installed the MiXplorer file manager during setup, open it and allow it to manage your files (it needs that to do its job), then accept the privacy policy. It can unzip files too, but I've found it often fails on big ones — which is exactly why I lean on a dedicated tool like RAR for extraction.</p>
+    <p>What's great about this file manager is favourites. Tap the hamburger menu and you can rearrange your locations — I like to drag my SD card to the top, followed by internal storage. Then, for folders you open constantly (like your ROMs folder), tap the three dots and choose <strong>Pin</strong> to keep them right at the top. I pin my ROMs folder and my Downloads folder.</p>
+    <p>One more housekeeping tip: send your Chrome downloads to the SD card so you don't fill up internal storage. In Chrome, go to the three dots → Settings → Downloads → Download location, and pick the SD card. If you've got a large external card, most people should do this.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="golden-rules-5" style="scroll-margin-top: 90px;">The Golden Rules for Every Emulator</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-golden-rules.png" alt="A handwritten notebook listing the general rules: use turnip drivers, scale to 1080p, lower resolution and sharpen if it can't run, set up controller">
+      <figcaption>My four golden rules for every emulator.</figcaption>
+    </figure>
+    <p>Now for the fun part — emulators and games. Before we go one by one, here's the simple four-step formula we'll follow for <em>every</em> emulator. Once it clicks, setting up a new one takes a couple of minutes:</p>
+    <ol>
+      <li><strong>Use Turnip drivers if available.</strong> They give better performance than the built-in Qualcomm driver, but they're only worth using for GameCube, Wii and Switch. (They technically work for PSP too, but PSP already runs flawlessly on the default driver, so don't bother there.)</li>
+      <li><strong>Scale every game to 1080p</strong> — that's the Retroid Pocket 5's native resolution, so the picture matches the screen nicely.</li>
+      <li><strong>If a game is too demanding, lower the resolution</strong> and add sharpening to make the picture crisp again.</li>
+      <li><strong>Set up the controller.</strong> In most emulators this is done for you automatically; where it isn't, you map the buttons manually (I'll show you how).</li>
+    </ol>
+    <p>A couple of universal tricks worth knowing up front: to bring up an in-game menu or get rid of the on-screen touch controls, <strong>swipe in from the left edge of the screen toward the middle</strong>. And to hide Retroid's own FPS/info bar, swipe down from the top, swipe across once, and tap <strong>Floating icon</strong> to toggle it off.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="pointing-emulators-roms-6" style="scroll-margin-top: 90px;">Pointing Emulators at Your Games</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-rom-folder.png" alt="Selecting the ROMs folder on the SD card inside an emulator">
+      <figcaption>Pointing an emulator at your ROMs folder on the SD card.</figcaption>
+    </figure>
+    <p>When you first open each standalone emulator, it'll ask for permission to access your files (and sometimes to accept a privacy policy — read those if you like; I've done it before so I just allow everything). Then it'll ask where your games are.</p>
+    <p>By default it shows the internal storage. If your games are on the SD card like mine, tap the <strong>three dots</strong> at the top to back out of the internal drive and pick a different drive. Your SD card usually shows up as a long string of numbers — tap that, and you'll recognise it by your own folders. Navigate into your ROMs folder, choose the right system's sub-folder, and select the directory. Your games will populate instantly. That same "find the SD card → ROMs → system folder" pattern is what you'll repeat in every emulator below.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="3ds-citra-7" style="scroll-margin-top: 90px;">3DS — Citra</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-citra.png" alt="The internal resolution setting in the Citra 3DS emulator">
+      <figcaption>Bumping the internal resolution all the way up in Citra.</figcaption>
+    </figure>
+    <p>Let's use Citra (for 3DS) as our first worked example, since it needs a fully manual controller setup and shows off the whole process. Point it at your 3DS folder (mine is called <code>n3ds</code>) and your games appear.</p>
+    <p>Run through the golden rules. No Turnip drivers for Citra, so skip step one. For resolution, go to <strong>Graphics → Internal Resolution</strong>. Citra is one of the few emulators that doesn't list an actual resolution like 1080p — instead push it to the maximum <strong>4×</strong>. It runs flawlessly that way; if it ever struggled you'd drop to 3× or 2×.</p>
+    <p>Now the controller. Go to <strong>Gamepad</strong> and map the buttons — match A, B, X, Y to the same letters on the handheld, set Select and Start to the little buttons either side of the screen, and map the d-pad and sticks (the left stick is usually listed first, the right stick second). Once you're in a game, swipe in from the left, choose <strong>Toggle controls</strong>, and turn off the on-screen overlay for a nice clean screen.</p>
+  </div>
+
+  <div class="ab ab-quote">
+    <blockquote>If the sticks won't register while mapping, go to Settings → Handheld Settings → Input → Joystick Calibration, run through every stick and trigger as the red line tells you (it'll ask you to spin the stick vigorously), then push Select to finish. After that they'll work perfectly.</blockquote>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="ps1-duckstation-8" style="scroll-margin-top: 90px;">PlayStation 1 — DuckStation</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-duckstation.png" alt="DuckStation showing a Missing BIOS image prompt">
+      <figcaption>DuckStation asks for a PS1 BIOS before it'll boot a game.</figcaption>
+    </figure>
+    <p>Choose <strong>Add Game Directory</strong>, point it at your PS1 folder, use that folder and allow — your games load right in. No Turnip drivers for PS1, so go straight to graphics: open the hamburger menu → <strong>App Settings → Graphics → GPU Renderer</strong>, and choose <strong>Vulkan</strong> (I use Vulkan wherever I can). Set the resolution scale to <strong>1080p (5×)</strong>.</p>
+    <p>For the controller, go back to the menu → <strong>Controller Settings → Port 1 → Perform Automatic Mapping</strong>, pick the Retroid Pocket controller, and everything maps itself.</p>
+    <p>PS1 needs a BIOS. Try to launch a game and you'll get "No BIOS image found." You'll need to find a PS1 BIOS yourself online (mine is <code>scph7502</code> — there are several and they all work). Send it over with LocalSend, extract it with RAR if it's zipped, then in DuckStation point it at the BIOS file. After that, every game will boot. To clean up the screen, swipe in from the left, tap the gamepad icon → <strong>Touchscreen → Controller View → None</strong>.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="ps2-ethersx2-9" style="scroll-margin-top: 90px;">PlayStation 2 — EtherSX2</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-ethersx2.png" alt="The welcome screen of the AetherSX2 PS2 emulator">
+      <figcaption>Setting up PS2 emulation in EtherSX2.</figcaption>
+    </figure>
+    <p>Open EtherSX2 and tap Next. It'll ask for a BIOS straight away — choose <strong>Import BIOS</strong> and bring a PS2 BIOS file over with LocalSend (extract it first to make life easier), then select it. Next, set your game directory the same way as always: the plus button → your ROMs → PS2 → use this folder → allow. Finish, and your games populate.</p>
+    <p>No Turnip drivers here. Go to the menu → <strong>App Settings → Graphics → GPU Renderer → Vulkan</strong>. PS2 is harder to run than PS1, and there's no straight "1080p" option — how high you can push the upscale multiplier is game-by-game. Start at <strong>2× native</strong> to be safe, then nudge up to 3× if a game has the headroom. (A few light games like Auto Modellista will happily do 5×, but most won't — stick around 2–3× and find what works.) Finally, menu → <strong>Controller Settings → Port 1 → Automatic Mapping → Retroid Pocket controller</strong>, then Touchscreen → Controller View → None to hide the overlay.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="gamecube-wii-dolphin-10" style="scroll-margin-top: 90px;">GameCube &amp; Wii — Dolphin (Turnip)</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-dolphin.png" alt="The Dolphin emulator game manager on the Retroid Pocket 5">
+      <figcaption>Dolphin handles both GameCube and Wii.</figcaption>
+    </figure>
+    <p>Dolphin is two emulators in one — you toggle between GameCube and Wii at the top — so there's a bit more to do. First add your games: <strong>Add Games</strong> → your GameCube (GC) folder, then switch to Wii at the top and add your Wii folder.</p>
+    <p>Now the Turnip driver. Go to the settings cog → <strong>Graphics Settings → Video Backend → Vulkan</strong>, then at the bottom under <strong>GPU Driver</strong> choose Install Driver. You'll need to download a Turnip driver first — I'll link them below, along with the version I'm liking most right now. Grab the ZIP in Chrome, then in Dolphin install it from your Downloads folder (tip: tap the view icon to switch from icon view to list view so you can read the full file names). Once it says the driver installed successfully, you're using it.</p>
+    <p>Scale up via <strong>Enhancements → Internal Resolution → 1080p</strong>. Then the controllers — and there are two of them.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="dolphin-controllers-11" style="scroll-margin-top: 90px;">Mapping the Wii Remote &amp; Nunchuk</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-wii-mapping.png" alt="The Wii controller settings menu in Dolphin">
+      <figcaption>Mapping the Wii Remote and Nunchuk controls.</figcaption>
+    </figure>
+    <p>For <strong>GameCube</strong>: GameCube Input → cog next to Controller 1 → map A/B/X/Y, the control stick (left stick), the C-stick (right stick), Z to Select, the triggers to L/R, and the d-pad. Done.</p>
+    <p>The <strong>Wii</strong> controller is trickier because we're emulating a Wii Remote <em>and</em> a Nunchuk with motion. Pick the Retroid Pocket controller, then map the face buttons how you like (I use A→B, B→X, 1→A, 2→Y). The key parts are the motion settings:</p>
+    <ul>
+      <li><strong>Point</strong> (aiming the remote) → the left analog stick, with <strong>Recenter</strong> set to the right stick click so you can snap back to the middle.</li>
+      <li><strong>Shake</strong> (needed in a lot of games) → put the X, Y and Z axes all on one button, like R1, so holding R1 shakes the remote in every direction.</li>
+      <li><strong>Motion Input</strong> is already mapped to the handheld's gyro by default; if you'd rather use a stick to aim, you can remap pitch/roll to the right stick instead. Play with it per game.</li>
+    </ul>
+    <p>One setting people miss: go to <strong>Extension</strong> and set it to <strong>Nunchuk</strong>. Many games won't even load without it, throwing up a "please connect a Nunchuk" message. And honestly — if you're struggling, there are great community control profiles online you can import per game. Once you're set, swipe in from the left → Overlay controls → Toggle all to clear the screen.</p>
+  </div>
+
+  <div class="ab ab-quote">
+    <blockquote>Turn on save states! Settings → General → enable save states. Then mid-game you can swipe in from the left and choose Quick Save or Quick Load to pick up exactly where you left off — it's my favourite thing about emulation.</blockquote>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="switch-citron-12" style="scroll-margin-top: 90px;">Nintendo Switch — Citron (Turnip)</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-citron.png" alt="A prod.keys title card over the Citron Switch emulator">
+      <figcaption>Switch emulation needs a prod.keys file and matching firmware.</figcaption>
+    </figure>
+    <p>Switch emulation needs two files: a <strong>prod.keys</strong> file and a <strong>firmware</strong> file. Get the latest versions you can, and make sure they match — if you grab version 19 keys, get version 19 firmware too. I'm using version 19, which I believe is the newest at recording.</p>
+    <p>I'm showing Citron here on purpose: most other Switch emulators walk you through importing keys and firmware step-by-step, but Citron leaves you on your own — so if you can do it here, you can do it anywhere. Go to <strong>Settings → Open Citron Folder</strong>. (Handy note: the built-in file manager gives every emulator its own section in the left pane, so they're easy to find.)</p>
+    <ul>
+      <li><strong>prod.keys:</strong> in the file manager, select your prod.keys file → Copy to → open the left pane → Citron → the <code>keys</code> folder.</li>
+      <li><strong>Firmware:</strong> extract the firmware ZIP with RAR first. Open the extracted folder, select all the files (three dots → Select all — mine was 229 files), then three dots → Move to → Citron → <code>nand/system/Contents/placeholder</code>. Let all the files move across.</li>
+    </ul>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="switch-settings-13" style="scroll-margin-top: 90px;">Switch Graphics Settings</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-switch-settings.png" alt="The graphics settings menu in the Citron Switch emulator">
+      <figcaption>The graphics settings that keep Switch games running smoothly.</figcaption>
+    </figure>
+    <p>Back to the golden rules — Switch <em>can</em> use Turnip, so in Citron go to the GPU Driver Manager, install your Turnip driver and select it. Then add games: <strong>Manage Game Folders → +</strong> → your ROMs → Switch → use this folder → allow. Say yes to <strong>deep scan</strong> (it looks in folders inside folders, just in case you've buried a ROM), and your games populate.</p>
+    <p>Now the settings that make Switch run nicely:</p>
+    <ul>
+      <li><strong>Advanced Settings → Graphics</strong> → turn on <strong>Use asynchronous shaders</strong>. This smooths things out with fewer hiccups.</li>
+      <li><strong>Audio</strong> → change the output engine to <strong>cubeb</strong>. This stops audio stuttering and glitches.</li>
+    </ul>
+    <p>That's most of what you need — everything else can stay default and runs really well. To clean up the screen, swipe in from the left → Overlay options → toggle off the overlay (and the FPS counter if you want).</p>
+    <p>If one particular game struggles, close it, hold your finger on it to open its <em>per-game</em> settings, and drop the graphics from 1× to <strong>0.75×</strong>. That can look a little blurry, so also change the window adapting filter from bilinear to <strong>AMD FidelityFX Super Resolution</strong>. That combo gives a sharp image that barely looks worse than 1× to my eyes, and runs much more smoothly.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="any-other-emulator-14" style="scroll-margin-top: 90px;">Any Other Emulator</h2>
+    <p>That covers the main systems, but the beauty of the formula is that everything else works the same way. For any emulator I didn't show here, you won't need Turnip drivers — just find the graphics setting and scale to 1080p (or as high as it'll go). If a game won't run, lower the resolution and add sharpening. And set up the controller — most do it automatically, and where they don't, you select the button you want and press it on the handheld. That's it.</p>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="wrapping-up-15" style="scroll-margin-top: 90px;">Wrapping Up</h2>
+    <figure class="ab ab-image">
+      <img src="../static/images/rp5-wrapping-up.png" alt="The Retroid Pocket 5 with a subscribe prompt at the end of the video">
+      <figcaption>That's everything — now go and play!</figcaption>
+    </figure>
+    <p>If you followed along, you should now be set up and happily playing games across the whole range — from PS1 right up to Switch. This was deliberately a simple beginner's guide to get you going. If you want to go deeper and run something like RetroArch with a front-end like EmulationStation, that's more advanced and I'll cover it in a future video.</p>
+    <p>I hope this helped. If it did, let me know in the comments, and if you haven't bought your Retroid Pocket 5 yet, the link below goes to the official Retroid store — the same place I bought mine.</p>
+  </div>
+
+  <div class="ab ab-cta">
+    <div class="cta-btns">
+      <a href="https://www.goretroid.com/products/retroid-pocket-5-handheld?sca_ref=7339476.fIz7oKv7uT" target="_blank" rel="sponsored noopener" class="cta-btn" data-icon="shopping-cart"><i data-lucide="shopping-cart"></i> Buy from Retroid</a>
+      <a href="https://github.com/K11MCH1/AdrenoToolsDrivers/releases/tag/v24.3.0_r9" target="_blank" rel="noopener" class="cta-btn" data-icon="download" data-cta-color="#2a2538" style="background-color:#2a2538;color:#ffffff;"><i data-lucide="download"></i> Turnip Driver</a>
+    </div>
+    <p class="cta-note">The Retroid link is an affiliate link which supports me at no extra cost to you! Thank you very much if you use it ❤️</p>
+  </div>
+
+  </div><!-- /guide-cards -->
+  <!-- EDITABLE-END -->
+
+  <button id="add-block-btn">+ Add Block</button>
+
+</div><!-- /post-wrap -->
+
+<div data-include="footer"></div>
+
+<nav class="toc empty" id="toc" aria-label="Table of contents">
+  <div class="toc-head">Contents</div>
+  <ul class="toc-list" id="toc-list"></ul>
+</nav>
+
+<button id="themeToggle" type="button" aria-label="Toggle dark mode"></button>
+<button class="edit-fab" id="editFab">✏️ Edit</button>
+
+<div class="block-palette" id="blockPalette" aria-label="Add blocks">
+  <div class="bp-head">Add block</div>
+  <div class="bp-item" data-block="heading"><span class="bp-ic">H</span>Heading</div>
+  <div class="bp-item" data-block="text"><span class="bp-ic">¶</span>Text</div>
+  <div class="bp-item" data-block="image"><span class="bp-ic">🖼️</span>Image</div>
+  <div class="bp-item" data-block="quote"><span class="bp-ic">❝</span>Quote</div>
+  <div class="bp-item" data-block="specs"><span class="bp-ic">▦</span>Spec table</div>
+  <div class="bp-item" data-block="divider"><span class="bp-ic">—</span>Divider</div>
+  <div class="bp-item" data-block="affiliate"><span class="bp-ic">🔗</span>Buy button</div>
+  <div class="bp-hint">Click to add · or drag onto the page</div>
+</div>
+
+<!-- Password modal -->
+<div id="ep-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Edit Mode</h3>
+    <input type="password" id="ep-input" class="modal-input" placeholder="Password" autocomplete="current-password">
+    <div class="modal-btns">
+      <button id="ep-confirm" class="primary">Enter Edit Mode</button>
+      <button id="ep-cancel" class="secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image modal -->
+<div id="img-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Add / Change Image</h3>
+    <label class="img-up-btn">📁 Upload from your computer
+      <input type="file" id="img-file-input" accept="image/*" hidden>
+    </label>
+    <div id="img-file-name" class="img-file-name"></div>
+    <div class="img-or">— OR PASTE A LINK —</div>
+    <input type="text" id="img-url-input" class="modal-input" placeholder="Image URL from the web…">
+    <input type="text" id="img-name-input" class="modal-input" placeholder="Name this image (e.g. nova-back)">
+    <div class="modal-btns">
+      <button id="img-confirm" class="primary">Insert</button>
+      <button id="img-cancel" class="secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add block modal -->
+<div id="block-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Add a Block</h3>
+    <div class="bm-grid">
+      <button class="bm-btn" data-block="text"><span>📝</span>Text</button>
+      <button class="bm-btn" data-block="image"><span>🖼️</span>Image</button>
+      <button class="bm-btn" data-block="quote"><span>💬</span>Pull Quote</button>
+      <button class="bm-btn" data-block="divider"><span>—</span>Divider</button>
+      <button class="bm-btn" data-block="specs"><span>📊</span>Spec Table</button>
+      <button class="bm-btn" data-block="affiliate"><span>🔗</span>Affiliate CTA</button>
+    </div>
+    <button class="bm-cancel" id="bm-close">Cancel</button>
+  </div>
+</div>
+
+<!-- Affiliate link modal -->
+<div id="link-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Affiliate Button</h3>
+    <input type="text" id="link-label-input" class="modal-input" placeholder="Button label (e.g. Amazon)">
+    <input type="text" id="link-url-input" class="modal-input" placeholder="Affiliate URL (https://…)">
+    <div class="link-colors">
+      <button type="button" class="lc-swatch" data-color="brand" style="background:#6254A4" title="Brand purple"></button>
+      <button type="button" class="lc-swatch" data-color="amazon" style="background:#FFD814" title="Amazon yellow"></button>
+      <button type="button" class="lc-swatch" data-color="aliexpress" style="background:#E62E04" title="AliExpress red"></button>
+      <label class="lc-swatch lc-custom" title="Custom colour"><input type="color" id="link-custom-color" value="#6254A4"></label>
+    </div>
+    <div class="link-icons">
+      <button type="button" class="li-icon" data-icon="" title="No icon">∅</button>
+      <button type="button" class="li-icon" data-icon="shopping-cart" title="Cart"><i data-lucide="shopping-cart"></i></button>
+      <button type="button" class="li-icon" data-icon="star" title="Star"><i data-lucide="star"></i></button>
+      <button type="button" class="li-icon" data-icon="package" title="Box"><i data-lucide="package"></i></button>
+      <button type="button" class="li-icon" data-icon="tag" title="Tag"><i data-lucide="tag"></i></button>
+      <button type="button" class="li-icon" data-icon="gift" title="Gift"><i data-lucide="gift"></i></button>
+      <button type="button" class="li-icon" data-icon="external-link" title="Link"><i data-lucide="external-link"></i></button>
+    </div>
+    <div class="modal-btns">
+      <button id="link-confirm" class="primary">Save</button>
+      <button id="link-cancel" class="secondary">Cancel</button>
+    </div>
+    <button id="link-remove" class="bm-cancel" style="color:#c0392b;">Remove this button</button>
+  </div>
+</div>
+
+<!-- Image lightbox -->
+<div id="lightbox" class="lb" aria-hidden="true">
+  <button class="lb-close" id="lb-close" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
+  <figure class="lb-fig">
+    <img id="lb-img" src="" alt="">
+    <figcaption class="lb-cap" id="lb-cap"></figcaption>
+  </figure>
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Next image">›</button>
+  <div class="lb-count" id="lb-count"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// Safe storage — sandboxed/file:// previews throw on localStorage access
+function safeGet(s, k) { try { return s.getItem(k); } catch (e) { return null; } }
+function safeSet(s, k, v) { try { s.setItem(k, v); } catch (e) {} }
+function safeDel(s, k) { try { s.removeItem(k); } catch (e) {} }
+
+// Dark mode — toggle pinned to the left side (near the contents rail)
+const themeToggle = document.getElementById('themeToggle');
+let theme = safeGet(localStorage, 'rr-theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+function applyTheme(t) {
+  document.body.classList.toggle('dark', t === 'dark');
+  safeSet(localStorage, 'rr-theme', t);
+  const dark = t === 'dark';
+  themeToggle.innerHTML = '<i data-lucide="' + (dark ? 'sun' : 'moon') + '"></i>';
+  themeToggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  themeToggle.setAttribute('aria-label', themeToggle.title);
+  if (window.lucide) lucide.createIcons();
+}
+applyTheme(theme);
+themeToggle.addEventListener('click', () => applyTheme(document.body.classList.contains('dark') ? 'light' : 'dark'));
+</script>
+
+<script>
+// ── Edit Mode ──────────────────────────────────────────────────────────────
+const EDIT_KEY   = 'rr-edit-key';
+const guideSlug  = location.pathname.split('/').pop();
+const editFab    = document.getElementById('editFab');
+const guideCards = document.getElementById('guide-cards');
+const addBtn     = document.getElementById('add-block-btn');
+const blockModal = document.getElementById('block-modal');
+const epModal    = document.getElementById('ep-modal');
+const epInput    = document.getElementById('ep-input');
+const imgModal   = document.getElementById('img-modal');
+const imgInput   = document.getElementById('img-url-input');
+const imgFile    = document.getElementById('img-file-input');
+const imgName    = document.getElementById('img-name-input');
+const imgFileEl  = document.getElementById('img-file-name');
+const toast      = document.getElementById('toast');
+const blockPalette = document.getElementById('blockPalette');
+const linkModal  = document.getElementById('link-modal');
+const linkLabel  = document.getElementById('link-label-input');
+const linkUrl    = document.getElementById('link-url-input');
+let isEditing = false, sortable = null, pendingImg = null, palette = null, pendingBtn = null;
+
+// Reveal the Edit button only for the owner: ?edit in the URL, or already unlocked this session.
+if (new URLSearchParams(location.search).has('edit') || location.hash === '#edit' || safeGet(sessionStorage, EDIT_KEY)) {
+  editFab.classList.add('show');
+}
+
+// Toast
+function showToast(msg, ms = 2500) { toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), ms); }
+
+// Password modal
+document.getElementById('ep-confirm').onclick = () => {
+  const k = epInput.value.trim(); if (!k) return;
+  safeSet(sessionStorage, EDIT_KEY, k); epModal.classList.remove('open'); _enter(k);
+};
+document.getElementById('ep-cancel').onclick = () => epModal.classList.remove('open');
+epInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('ep-confirm').click(); });
+
+// Image modal — upload from computer or paste a URL; server saves it into static/images/
+function resetImgModal() { imgInput.value = ''; imgName.value = ''; imgFile.value = ''; imgFileEl.textContent = ''; }
+imgFile.addEventListener('change', () => {
+  const f = imgFile.files[0];
+  imgFileEl.textContent = f ? ('📎 ' + f.name) : '';
+  if (f && !imgName.value.trim()) imgName.value = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+});
+function readAsDataURL(file) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); }); }
+async function insertImage() {
+  const key = safeGet(sessionStorage, EDIT_KEY);
+  if (!key) { showToast('Enter edit mode first'); return; }
+  const file = imgFile.files[0], url = imgInput.value.trim(), name = imgName.value.trim();
+  if (!file && !url) { showToast('Upload a file or paste an image URL'); return; }
+  if (!name) { showToast('Give the image a name first'); imgName.focus(); return; }
+  showToast('Uploading…', 10000);
+  try {
+    const body = { key, name };
+    if (file) body.dataUrl = await readAsDataURL(file); else body.url = url;
+    const d = await fetch('/api/upload-image', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(r => r.json());
+    if (d.ok && pendingImg) { pendingImg.src = d.path; showToast('✅ Saved as ' + d.file); imgModal.classList.remove('open'); pendingImg = null; }
+    else { showToast('Error: ' + (d.error || 'upload failed'), 4000); }
+  } catch (e) { showToast('Upload failed — check connection', 4000); }
+}
+document.getElementById('img-confirm').onclick = insertImage;
+document.getElementById('img-cancel').onclick = () => { imgModal.classList.remove('open'); pendingImg = null; };
+imgInput.addEventListener('keydown', e => { if (e.key === 'Enter') insertImage(); });
+imgName.addEventListener('keydown', e => { if (e.key === 'Enter') insertImage(); });
+
+// Optional captions
+function ensureCaption(fig) { if (!fig.querySelector('figcaption')) fig.appendChild(document.createElement('figcaption')); }
+function stripEmptyCaptions(root) { root.querySelectorAll('figcaption').forEach(fc => { if (!fc.textContent.trim()) fc.remove(); }); }
+
+// Affiliate link button modal (label + URL, with remove)
+function setBtnLabel(a, label) {
+  const icon = a.querySelector('svg, i');
+  a.textContent = '';
+  if (icon) { a.appendChild(icon); a.appendChild(document.createTextNode(' ' + label)); }
+  else a.textContent = label;
+}
+function setBtnContent(a, label, iconName) {
+  a.textContent = '';
+  if (iconName) {
+    const i = document.createElement('i'); i.setAttribute('data-lucide', iconName);
+    a.appendChild(i); a.appendChild(document.createTextNode(' '));
+    a.dataset.icon = iconName;
+  } else { a.removeAttribute('data-icon'); }
+  a.appendChild(document.createTextNode(label));
+  if (window.lucide) lucide.createIcons();
+}
+function getBtnIcon(a) {
+  if (a.dataset.icon) return a.dataset.icon;
+  const svg = a.querySelector('svg[class*="lucide-"]');
+  if (svg) { const m = (svg.getAttribute('class') || '').match(/lucide-([a-z0-9-]+)/); if (m) return m[1]; }
+  const i = a.querySelector('i[data-lucide]'); if (i) return i.getAttribute('data-lucide');
+  return '';
+}
+const iconBtns = document.querySelectorAll('.li-icon');
+function selectIcon(el) { iconBtns.forEach(b => b.classList.remove('selected')); if (el) el.classList.add('selected'); }
+iconBtns.forEach(b => b.addEventListener('click', () => selectIcon(b)));
+const linkCustom = document.getElementById('link-custom-color');
+const swatches = document.querySelectorAll('.lc-swatch');
+function selectSwatch(el) { swatches.forEach(s => s.classList.remove('selected')); if (el) el.classList.add('selected'); }
+swatches.forEach(s => s.addEventListener('click', () => selectSwatch(s)));
+linkCustom.addEventListener('input', () => selectSwatch(linkCustom.closest('.lc-swatch')));
+function pickText(hex) {
+  const h = (hex || '').replace('#',''); if (h.length < 6) return '#ffffff';
+  const r = parseInt(h.substr(0,2),16), g = parseInt(h.substr(2,2),16), b = parseInt(h.substr(4,2),16);
+  return (0.299*r + 0.587*g + 0.114*b) > 150 ? '#111111' : '#ffffff';
+}
+function applyBtnColor(a, choice, custom) {
+  a.classList.remove('cta-amazon','cta-aliexpress');
+  a.style.backgroundColor = ''; a.style.color = ''; a.removeAttribute('data-cta-color');
+  if (choice === 'amazon') a.classList.add('cta-amazon');
+  else if (choice === 'aliexpress') a.classList.add('cta-aliexpress');
+  else if (choice === 'custom') { a.style.backgroundColor = custom; a.style.color = pickText(custom); a.setAttribute('data-cta-color', custom); }
+}
+function getBtnColor(a) {
+  if (a.classList.contains('cta-amazon')) return ['amazon', '#FFD814'];
+  if (a.classList.contains('cta-aliexpress')) return ['aliexpress', '#E62E04'];
+  const c = a.getAttribute('data-cta-color'); if (c) return ['custom', c];
+  return ['brand', '#6254A4'];
+}
+function openLinkModal(a) {
+  pendingBtn = a;
+  linkLabel.value = (a.textContent || '').trim();
+  linkUrl.value = a.getAttribute('href') || '';
+  const [choice, hex] = getBtnColor(a);
+  if (choice === 'custom') { linkCustom.value = hex; selectSwatch(linkCustom.closest('.lc-swatch')); }
+  else selectSwatch([...swatches].find(s => s.dataset.color === choice) || swatches[0]);
+  selectIcon([...iconBtns].find(b => b.dataset.icon === getBtnIcon(a)) || iconBtns[0]);
+  const row = a.closest('.cta-btns');
+  document.getElementById('link-remove').style.display = (row && row.querySelectorAll('.cta-btn').length > 1) ? '' : 'none';
+  linkModal.classList.add('open');
+  setTimeout(() => linkLabel.focus(), 50);
+}
+document.getElementById('link-confirm').onclick = () => {
+  if (pendingBtn) {
+    const selIcon = document.querySelector('.li-icon.selected');
+    setBtnContent(pendingBtn, linkLabel.value.trim() || 'Link', selIcon ? selIcon.dataset.icon : '');
+    pendingBtn.setAttribute('href', linkUrl.value.trim() || '#');
+    const sel = document.querySelector('.lc-swatch.selected');
+    const choice = sel ? (sel.classList.contains('lc-custom') ? 'custom' : sel.dataset.color) : 'brand';
+    applyBtnColor(pendingBtn, choice, linkCustom.value);
+  }
+  linkModal.classList.remove('open'); pendingBtn = null;
+};
+document.getElementById('link-cancel').onclick = () => { linkModal.classList.remove('open'); pendingBtn = null; };
+document.getElementById('link-remove').onclick = () => {
+  if (pendingBtn) { const cta = pendingBtn.closest('.ab-cta'); pendingBtn.remove(); if (cta) refreshCtaAdd(cta); }
+  linkModal.classList.remove('open'); pendingBtn = null;
+};
+linkUrl.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('link-confirm').click(); });
+linkLabel.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('link-confirm').click(); });
+
+// Helpers
+function makeEditable(el) { el.querySelectorAll('h2, h3, p, li, figcaption, blockquote, td, th, .cta-note').forEach(n => n.contentEditable = 'true'); }
+function clearEditable(el) { el.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable')); }
+
+function addToolbar(block) {
+  if (block.querySelector('.block-toolbar')) return;
+  const t = document.createElement('div'); t.className = 'block-toolbar edit-ui';
+  const drag = document.createElement('button'); drag.className = 'block-btn drag edit-ui'; drag.textContent = '⠿'; drag.title = 'Drag to reorder';
+  const del = document.createElement('button'); del.className = 'block-btn del edit-ui'; del.textContent = '✕'; del.title = 'Delete'; del.onclick = () => block.remove();
+  t.append(drag, del); block.appendChild(t);
+}
+function removeToolbar(block) { block.querySelectorAll('.edit-ui').forEach(e => e.remove()); }
+
+function setupImageClick(img) {
+  img._imgEdit = () => { if (!isEditing) return; pendingImg = img; resetImgModal(); imgModal.classList.add('open'); setTimeout(() => imgName.focus(), 50); };
+  img.addEventListener('click', img._imgEdit);
+}
+function teardownImageClick(img) { if (img._imgEdit) { img.removeEventListener('click', img._imgEdit); delete img._imgEdit; } }
+
+function setupSpecTable(wrap) {
+  const tbody = wrap.querySelector('tbody'); if (!tbody) return;
+  tbody.querySelectorAll('tr').forEach(row => addRowDel(row));
+  if (!wrap.querySelector('.spec-add-row')) {
+    const b = document.createElement('button'); b.className = 'spec-add-row edit-ui'; b.textContent = '+ Add row';
+    b.onclick = () => { const tr = document.createElement('tr'); tr.innerHTML = '<th contenteditable="true">Label</th><td contenteditable="true">Value</td>'; addRowDel(tr); tbody.appendChild(tr); };
+    wrap.appendChild(b);
+  }
+}
+function addRowDel(row) {
+  if (row.querySelector('.spec-row-del')) return;
+  const b = document.createElement('button'); b.className = 'spec-row-del edit-ui'; b.textContent = '✕'; b.onclick = () => row.remove();
+  const td = row.querySelector('td') || row.querySelector('th'); if (td) td.appendChild(b);
+}
+
+// Affiliate CTA — up to 3 buttons in a row
+function setupCtaBtn(a) {
+  if (a._ctaEdit) return;
+  a._ctaEdit = e => { if (!isEditing) return; e.preventDefault(); openLinkModal(a); };
+  a.addEventListener('click', a._ctaEdit);
+}
+function refreshCtaAdd(block) {
+  const add = block.querySelector('.cta-add-btn');
+  if (add) add.style.display = block.querySelectorAll('.cta-btn').length >= 3 ? 'none' : 'block';
+}
+function setupCta(block) {
+  let row = block.querySelector('.cta-btns');
+  if (!row) {
+    row = document.createElement('div'); row.className = 'cta-btns';
+    [...block.querySelectorAll('.cta-btn')].forEach(b => row.appendChild(b));
+    block.insertBefore(row, block.firstChild);
+  }
+  row.querySelectorAll('.cta-btn').forEach(b => { b.classList.remove('full'); setupCtaBtn(b); });
+  if (!block.querySelector('.cta-add-btn')) {
+    const add = document.createElement('button');
+    add.type = 'button'; add.className = 'cta-add-btn edit-ui'; add.textContent = '＋ Add button';
+    add.onclick = () => {
+      if (row.querySelectorAll('.cta-btn').length >= 3) { showToast('Up to 3 buttons'); return; }
+      const a = document.createElement('a'); a.className = 'cta-btn'; a.target = '_blank'; a.rel = 'sponsored noopener'; a.href = '#'; a.textContent = 'New link';
+      row.appendChild(a); setupCtaBtn(a); refreshCtaAdd(block); openLinkModal(a);
+    };
+    block.insertBefore(add, block.querySelector('.cta-note') || null);
+  }
+  refreshCtaAdd(block);
+}
+function teardownCta(block) {
+  block.querySelectorAll('.cta-btn').forEach(a => { if (a._ctaEdit) { a.removeEventListener('click', a._ctaEdit); delete a._ctaEdit; } });
+}
+
+// Enter / exit
+function _enter() {
+  isEditing = true; document.body.classList.add('edit-mode');
+  editFab.textContent = '💾 Save'; editFab.classList.add('active');
+  guideCards.querySelectorAll('.ab-image').forEach(ensureCaption);
+  guideCards.querySelectorAll('.ab').forEach(b => { addToolbar(b); makeEditable(b); });
+  guideCards.querySelectorAll('.ab-image img').forEach(setupImageClick);
+  guideCards.querySelectorAll('.spec-wrap').forEach(setupSpecTable);
+  guideCards.querySelectorAll('.ab-cta').forEach(setupCta);
+  if (window.Sortable) {
+    sortable = Sortable.create(guideCards, {
+      handle: '.drag', animation: 150, ghostClass: 'sortable-ghost', chosenClass: 'sortable-chosen',
+      group: { name: 'ab', put: ['palette'] },
+      onAdd: evt => {
+        const block = createBlock(evt.item.getAttribute('data-block'));
+        if (block) { evt.item.replaceWith(block); block.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        else evt.item.remove();
+        if (window.buildTOC) window.buildTOC();
+      }
+    });
+    palette = Sortable.create(blockPalette, { group: { name: 'palette', pull: 'clone', put: false }, sort: false, draggable: '.bp-item' });
+  }
+  showToast('Edit mode — click a palette block (right) to add it, or drag it onto the page');
+}
+function exit() {
+  isEditing = false; document.body.classList.remove('edit-mode');
+  editFab.textContent = '✏️ Edit'; editFab.classList.remove('active');
+  if (sortable) { sortable.destroy(); sortable = null; }
+  if (palette) { palette.destroy(); palette = null; }
+  guideCards.querySelectorAll('.ab').forEach(b => { clearEditable(b); removeToolbar(b); });
+  guideCards.querySelectorAll('.ab-image img').forEach(teardownImageClick);
+  guideCards.querySelectorAll('.spec-wrap').forEach(w => w.querySelectorAll('.edit-ui').forEach(e => e.remove()));
+  guideCards.querySelectorAll('.ab-cta').forEach(teardownCta);
+  stripEmptyCaptions(guideCards);
+  if (window.buildTOC) window.buildTOC();
+}
+
+// Save
+async function save() {
+  const key = safeGet(sessionStorage, EDIT_KEY); if (!key) return;
+  const clone = guideCards.cloneNode(true);
+  clone.querySelectorAll('.edit-ui').forEach(e => e.remove());
+  clone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+  clone.querySelectorAll('figcaption').forEach(fc => { if (!fc.textContent.trim()) fc.remove(); });
+  try {
+    const res = await fetch(`/api/article/${guideSlug}/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key, content: clone.innerHTML }) });
+    const d = await res.json();
+    if (d.ok) { showToast('✅ Saved!'); exit(); }
+    else { showToast('Error: ' + (d.error || 'Unknown'), 4000); if (d.error === 'Unauthorized') safeDel(sessionStorage, EDIT_KEY); }
+  } catch { showToast('Save failed — check connection.', 4000); }
+}
+
+// Main button
+editFab.addEventListener('click', () => {
+  if (isEditing) { save(); return; }
+  const k = safeGet(sessionStorage, EDIT_KEY);
+  if (k) _enter(k);
+  else { epInput.value = ''; epModal.classList.add('open'); setTimeout(() => epInput.focus(), 50); }
+});
+
+// Add block
+addBtn.onclick = () => blockModal.classList.add('open');
+blockModal.addEventListener('click', e => { if (e.target === blockModal) blockModal.classList.remove('open'); });
+document.getElementById('bm-close').onclick = () => blockModal.classList.remove('open');
+
+const TEMPLATES = {
+  heading:   `<div class="ab ab-text"><h2>New heading</h2></div>`,
+  text:      `<div class="ab ab-text"><p>Write your text here.</p></div>`,
+  image:     `<figure class="ab ab-image"><img src="../static/images/nova-power.png" alt="Image"><figcaption></figcaption></figure>`,
+  quote:     `<div class="ab ab-quote"><blockquote>Your pull quote goes here.</blockquote></div>`,
+  divider:   `<div class="ab ab-divider">· · ·</div>`,
+  specs:     `<div class="ab ab-text"><div class="spec-wrap"><table class="spec-table"><tbody><tr><th>Spec</th><td>Value</td></tr><tr><th>Spec</th><td>Value</td></tr></tbody></table></div></div>`,
+  affiliate: `<div class="ab ab-cta"><div class="cta-btns"><a href="https://www.goretroid.com/?sca_ref=7339476.fIz7oKv7uT" target="_blank" rel="sponsored noopener" class="cta-btn">Buy / Pre-Order Here</a></div><p class="cta-note">This is an affiliate link which supports me at no extra cost to you! Thank you very much if you use it ❤️</p></div>`,
+};
+
+function createBlock(type) {
+  const tpl = TEMPLATES[type]; if (!tpl) return null;
+  const div = document.createElement('div'); div.innerHTML = tpl.trim();
+  const block = div.firstElementChild;
+  addToolbar(block); makeEditable(block);
+  block.querySelectorAll('.ab-image img').forEach(setupImageClick);
+  block.querySelectorAll('.spec-wrap').forEach(setupSpecTable);
+  return block;
+}
+function insertBlock(type) {
+  const block = createBlock(type); if (!block) return;
+  guideCards.appendChild(block);
+  if (window.buildTOC) window.buildTOC();
+  block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Block modal buttons (secondary entry point)
+document.querySelectorAll('.bm-btn').forEach(btn => {
+  btn.onclick = () => { insertBlock(btn.dataset.block); blockModal.classList.remove('open'); };
+});
+
+// Floating palette — click to add (drag-to-place wired via Sortable in edit mode)
+document.querySelectorAll('.bp-item').forEach(item => {
+  item.addEventListener('click', () => { if (isEditing) insertBlock(item.dataset.block); });
+});
+
+// ── Image lightbox (view mode only) ─────────────────────────────────────────
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbCap = document.getElementById('lb-cap');
+const lbCount = document.getElementById('lb-count');
+const lbPrev = document.getElementById('lb-prev');
+const lbNext = document.getElementById('lb-next');
+let lbList = [], lbIndex = 0;
+function lbShow(i) {
+  if (!lbList.length) return;
+  lbIndex = (i + lbList.length) % lbList.length;
+  const img = lbList[lbIndex];
+  lbImg.src = img.currentSrc || img.src;
+  lbImg.alt = img.alt || '';
+  const fig = img.closest('figure');
+  const cap = fig && fig.querySelector('figcaption') ? fig.querySelector('figcaption').textContent.trim() : '';
+  lbCap.textContent = cap; lbCap.style.display = cap ? '' : 'none';
+  const multi = lbList.length > 1;
+  lbCount.textContent = multi ? (lbIndex + 1) + ' / ' + lbList.length : '';
+  lbPrev.style.display = multi ? '' : 'none';
+  lbNext.style.display = multi ? '' : 'none';
+}
+function openLightbox(img) {
+  lbList = Array.from(guideCards.querySelectorAll('.ab-image img'));
+  const i = lbList.indexOf(img);
+  if (i < 0) return;
+  lbShow(i);
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+lbPrev.onclick = e => { e.stopPropagation(); lbShow(lbIndex - 1); };
+lbNext.onclick = e => { e.stopPropagation(); lbShow(lbIndex + 1); };
+document.getElementById('lb-close').onclick = closeLightbox;
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  else if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+  else if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+});
+guideCards.addEventListener('click', e => {
+  if (isEditing) return;
+  const img = e.target.closest('.ab-image img');
+  if (img) openLightbox(img);
+});
+</script>
+
+<script>
+// ── Table of contents (left rail) ───────────────────────────────────────────
+(function () {
+  const toc     = document.getElementById('toc');
+  const tocList = document.getElementById('toc-list');
+  const body    = document.getElementById('guide-cards');
+  if (!toc || !tocList || !body) return;
+  let io = null;
+  const linkById = {};
+
+  function slug(s, i) {
+    const base = (s || '').toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'section';
+    return base + '-' + i;
+  }
+
+  window.buildTOC = function buildTOC() {
+    tocList.innerHTML = '';
+    Object.keys(linkById).forEach(k => delete linkById[k]);
+    if (io) { io.disconnect(); io = null; }
+
+    const heads = Array.from(body.querySelectorAll('h2'));
+    if (!heads.length) { toc.classList.add('empty'); return; }
+    toc.classList.remove('empty');
+
+    heads.forEach((h, i) => {
+      if (!h.id) h.id = slug(h.textContent, i);
+      h.style.scrollMarginTop = '90px';
+      const a = document.createElement('a');
+      a.className = 'toc-item';
+      a.href = '#' + h.id;
+      a.innerHTML = '<span class="toc-tick"></span><span class="toc-label"></span>';
+      a.querySelector('.toc-label').textContent = h.textContent.trim();
+      const li = document.createElement('li');
+      li.appendChild(a);
+      tocList.appendChild(li);
+      linkById[h.id] = a;
+    });
+
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          Object.values(linkById).forEach(a => a.classList.remove('active'));
+          const a = linkById[e.target.id];
+          if (a) a.classList.add('active');
+        });
+      }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+      heads.forEach(h => io.observe(h));
+    }
+  };
+
+  toc.addEventListener('click', e => {
+    const link = e.target.closest('.toc-item');
+    if (link) { toc.classList.remove('open'); return; } // native #hash nav handles the scroll
+    toc.classList.toggle('open'); // tapping the rail opens it (touch/click)
+  });
+  document.addEventListener('click', e => { if (!toc.contains(e.target)) toc.classList.remove('open'); });
+
+  buildTOC();
+})();
+</script>
+
+</body>
+</html>
