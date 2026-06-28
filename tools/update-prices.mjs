@@ -220,9 +220,9 @@ for (const p of products) {
     const entry = { currency: link.currency || '$', lastChecked: TODAY };
     if (merchant) entry.merchant = merchant;
     entry.merchantTrusted = !!merchantTrusted;
+    // Reputation kept for internal store-quality checks (not displayed on the site).
     if (rating != null) entry.rating = rating;
     if (sales != null) entry.sales = sales;
-    if (offers && offers.length > 1) entry.offers = offers;
 
     if (current == null) {
       // Could not read a price — keep last-known, flag as unverified.

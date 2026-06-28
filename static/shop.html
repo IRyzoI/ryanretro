@@ -846,94 +846,34 @@
                     title.onclick = () => window.open(bestUrl, '_blank');
                 }
                 
-                // STORE PRICES — one row per platform (all shown at once); a
-                // platform with multiple sellers collapses individually.
+                // STORE PRICES — one clean row per platform (icon + name + price).
+                // Seller reputation (rating / sales / trust) is used upstream to pick the
+                // price we show, but is intentionally NOT displayed here.
                 const linksContainer = clone.querySelector('.card-links');
                 const platforms = [...p.links].sort((a, b) => a.price - b.price);
 
                 const storeStyle = (store) => {
                     const s = store.toLowerCase();
-                    if (s.includes('amazon')) return { head: 'bg-yellow-500 text-black hover:bg-yellow-400', row: 'bg-yellow-400 text-black hover:bg-yellow-300', icon: 'package', amazon: true };
-                    if (s.includes('ali')) return { head: 'bg-red-600 text-white hover:bg-red-500', row: 'bg-red-500 text-white hover:bg-red-400', icon: 'shopping-cart' };
-                    if (s.includes('powkiddy')) return { head: 'bg-teal-500 text-white hover:bg-teal-400', row: 'bg-teal-400 text-white hover:bg-teal-300', icon: 'shopping-bag' };
-                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi') || s.includes('steam')) return { head: 'bg-brand-light text-brand-dark hover:bg-white', row: 'bg-brand-light text-brand-dark hover:bg-white', icon: 'star' };
-                    return { head: 'bg-brand-dark text-brand-light hover:bg-[#52448F]', row: 'bg-brand-main text-brand-light hover:bg-[#52448F]', icon: 'shopping-bag' };
+                    if (s.includes('amazon')) return { bg: 'bg-yellow-500 text-black hover:bg-yellow-400', icon: 'package' };
+                    if (s.includes('ali')) return { bg: 'bg-red-600 text-white hover:bg-red-500', icon: 'shopping-cart' };
+                    if (s.includes('powkiddy')) return { bg: 'bg-teal-500 text-white hover:bg-teal-400', icon: 'shopping-bag' };
+                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi') || s.includes('steam')) return { bg: 'bg-brand-light text-brand-dark hover:bg-white', icon: 'star' };
+                    return { bg: 'bg-brand-dark text-brand-light hover:bg-[#52448F]', icon: 'shopping-bag' };
                 };
-                const base = "block w-full px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884]";
-
-                // Amazon third-party seller names rotate / go stale between fetches, so only
-                // surface a name when the seller is trusted (Amazon.com / stable brand stores).
-                const sellerName = (st, o, fallback) => (st.amazon && !o.trusted) ? 'Other seller' : (o.merchant || fallback);
-                const repLine = (o) => (o.rating != null)
-                    ? `<div class="text-[10px] font-bold opacity-80 normal-case mt-1">★${o.rating}% rating${o.sales != null ? ' · ' + o.sales + ' sold' : ''}</div>`
-                    : '';
-                const checkIcon = '<i data-lucide="badge-check" class="w-3.5 h-3.5 shrink-0"></i>';
 
                 platforms.forEach(l => {
                     const st = storeStyle(l.store);
                     const live = l._live || {};
-                    const offers = (live.offers && live.offers.length > 1) ? [...live.offers].sort((a, b) => a.price - b.price) : null;
                     const wasHtml = (live.drop && live.previous != null) ? `<span class="line-through opacity-60 mr-1.5">${formatPrice(live.previous)}</span>` : '';
-
-                    if (!offers) {
-                        // Single seller on this platform: a direct buy link, two lines.
-                        const single = { merchant: live.merchant, trusted: live.merchantTrusted, rating: live.rating, sales: live.sales };
-                        const name = sellerName(st, single, '');
-                        const showName = name && name.toLowerCase() !== 'official store';
-                        const sub = (showName || single.rating != null)
-                            ? `<div class="flex items-center gap-1.5 mt-1 text-[10px] font-bold normal-case opacity-80">${single.trusted ? checkIcon : ''}${showName ? '<span class="truncate">' + name + '</span>' : ''}${single.rating != null ? '<span class="whitespace-nowrap">★' + single.rating + '% · ' + (single.sales != null ? single.sales + ' sold' : '') + '</span>' : ''}</div>`
-                            : '';
-                        const a = document.createElement('a');
-                        a.href = l.url;
-                        a.target = "_blank";
-                        a.className = `${base} ${st.head} hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884]`;
-                        a.onclick = (e) => e.stopPropagation();
-                        a.innerHTML = `
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="flex items-center gap-2"><i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i><span class="uppercase tracking-wide">${l.store}</span></span>
-                                <span class="whitespace-nowrap">${wasHtml}${formatPrice(l.price)}</span>
-                            </div>${sub}`;
-                        linksContainer.appendChild(a);
-                    } else {
-                        // Multiple sellers: collapsible header + tinted seller rows.
-                        const cheapest = offers[0].price;
-                        const wrap = document.createElement('div');
-                        const head = document.createElement('button');
-                        head.className = `${base} ${st.head} text-left`;
-                        head.innerHTML = `
-                            <div class="flex items-center justify-between gap-2">
-                                <span class="flex items-center gap-2"><i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i><span class="uppercase tracking-wide">${l.store}</span></span>
-                                <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="opacity-70 text-[10px] mr-0.5">from</span>${formatPrice(cheapest)}<i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i></span>
-                            </div>
-                            <div class="text-[10px] font-bold opacity-80 normal-case mt-1">${offers.length} sellers · tap to compare</div>`;
-                        const body = document.createElement('div');
-                        body.className = "hidden flex-col gap-1.5 mt-1.5";
-                        offers.forEach(o => {
-                            const name = sellerName(st, o, l.store);
-                            const row = document.createElement('a');
-                            row.href = l.url;
-                            row.target = "_blank";
-                            row.className = `${base} ${st.row} shadow-[2px_2px_0px_#463884]`;
-                            row.onclick = (e) => e.stopPropagation();
-                            row.innerHTML = `
-                                <div class="flex items-center justify-between gap-2">
-                                    <span class="flex items-center gap-1.5 min-w-0">${o.trusted ? checkIcon : ''}<span class="truncate normal-case">${name}</span></span>
-                                    <span class="font-black whitespace-nowrap">${formatPrice(o.price)}</span>
-                                </div>${repLine(o)}`;
-                            body.appendChild(row);
-                        });
-                        head.onclick = (e) => {
-                            e.stopPropagation();
-                            const open = body.classList.toggle('hidden') === false;
-                            body.classList.toggle('flex', open);
-                            const icons = head.querySelectorAll('svg, i');
-                            const chev = icons[icons.length - 1];
-                            if (chev) chev.classList.toggle('rotate-180', open);
-                        };
-                        wrap.appendChild(head);
-                        wrap.appendChild(body);
-                        linksContainer.appendChild(wrap);
-                    }
+                    const a = document.createElement('a');
+                    a.href = l.url;
+                    a.target = "_blank";
+                    a.className = `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884] ${st.bg}`;
+                    a.onclick = (e) => e.stopPropagation();
+                    a.innerHTML = `
+                        <span class="flex items-center gap-2"><i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i><span class="uppercase tracking-wide">${l.store}</span></span>
+                        <span class="whitespace-nowrap">${wasHtml}${formatPrice(l.price)}</span>`;
+                    linksContainer.appendChild(a);
                 });
 
                 grid.appendChild(clone);
