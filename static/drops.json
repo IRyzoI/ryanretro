@@ -1,5 +1,20 @@
 [
   {
+    "id": "sd_card",
+    "name": "SanDisk Extreme 512GB",
+    "store": "Amazon",
+    "merchant": "Amazon.com",
+    "from": 106.99,
+    "to": 105.99,
+    "pct": 1,
+    "atLow": false,
+    "rating": null,
+    "sales": null,
+    "url": "https://amzn.to/44tg0ln",
+    "image": "https://m.media-amazon.com/images/I/61MRn7f3m2L.jpg",
+    "date": "2026-06-28"
+  },
+  {
     "id": "trimui_smart_pro_s",
     "name": "TrimUI Smart Pro S",
     "store": "AliExpress",

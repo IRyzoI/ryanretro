@@ -19,8 +19,8 @@
       "merchant": "Curated Retro Handhelds (Anbernic Authorized Store) Store",
       "merchantTrusted": true,
       "rating": 100,
-      "sales": 149,
-      "current": 110.81,
+      "sales": 150,
+      "current": 124.47,
       "previous": 110.81,
       "lowest": 110.81,
       "status": "ok",
@@ -93,7 +93,7 @@
       "merchant": "AJCOME Store",
       "merchantTrusted": true,
       "rating": 97.4,
-      "sales": 197,
+      "sales": 196,
       "current": 153.19,
       "previous": 153.19,
       "lowest": 113.49,
@@ -132,10 +132,10 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "merchant": "Factory Game Direct Store",
-      "merchantTrusted": false,
-      "rating": 93.1,
-      "sales": 99,
-      "current": 79.71,
+      "merchantTrusted": true,
+      "rating": 93.2,
+      "sales": 100,
+      "current": 82.03,
       "previous": 79.71,
       "lowest": 57.77,
       "status": "ok",
@@ -220,7 +220,7 @@
       "lastChecked": "2026-06-28",
       "merchant": "Ampown Store",
       "merchantTrusted": true,
-      "rating": 94.1,
+      "rating": 94.2,
       "sales": 122,
       "current": 81.54,
       "previous": 81.54,
@@ -337,11 +337,11 @@
       "lastChecked": "2026-06-28",
       "merchant": "Amazon.com",
       "merchantTrusted": true,
-      "current": 106.99,
+      "current": 105.99,
       "previous": 106.99,
       "lowest": 59.99,
       "status": "ok",
-      "drop": false
+      "drop": true
     }
   },
   "anbernic_rg477v": {
@@ -428,7 +428,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T07:27:34.801Z",
+    "generated": "2026-06-28T14:44:34.610Z",
     "products": 26
   }
 }
