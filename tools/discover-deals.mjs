@@ -39,13 +39,25 @@ const prices = JSON.parse(readFileSync(join(ROOT, 'static', 'prices.json'), 'utf
 
 const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const STOP = new Set(['the', 'for', 'with', 'and']);
-const nameTokens = (name) => name.split(/\s+/).map(norm).filter((t) => (t.length >= 2 || /\d/.test(t)) && !STOP.has(t));
-// Require EVERY meaningful product-name token to appear in the listing title
-// (e.g. "retroid"+"pocket"+"nova"), not just the brand — kills wrong-model matches.
+// Match a listing title to a product name. Every meaningful name token must
+// appear; crucially a BARE MODEL NUMBER (e.g. "6", "5", "2") must sit right
+// after its preceding word ("pocket6"), so "6" can't match "64GB"/"6.0 inch"
+// on a different model (Classic, 4/4 Pro, etc.).
 function titleMatches(title, name) {
-  const t = norm(title);
-  const toks = nameTokens(name);
-  return toks.length > 0 && toks.every((tok) => t.includes(tok));
+  const tn = norm(title);
+  const toks = name.split(/\s+/).map(norm);
+  for (let i = 0; i < toks.length; i++) {
+    const tok = toks[i];
+    if (!tok || STOP.has(tok)) continue;
+    if (/^\d+$/.test(tok)) {
+      const prev = toks.slice(0, i).reverse().find((x) => x && !STOP.has(x)) || '';
+      if (!tn.includes(prev + tok)) return false;          // model number must be glued to prior word
+    } else if (tok.length >= 2 || /\d/.test(tok)) {
+      if (!tn.includes(tok)) return false;                  // meaningful word must appear
+    }
+    // single non-digit chars (e.g. trailing "S") are ignored
+  }
+  return true;
 }
 const round2 = (n) => Math.round(n * 100) / 100;
 const currentBest = (id) => {
