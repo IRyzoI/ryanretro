@@ -22,12 +22,12 @@
     }
   },
   "steam_deck": {
-    "Amazon": {
+    "Steam": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "current": 559,
+      "current": 549,
       "previous": null,
-      "lowest": 559,
+      "lowest": 549,
       "status": "unverified"
     }
   },
@@ -85,10 +85,11 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "current": 89.99,
-      "previous": null,
-      "lowest": 89.99,
-      "status": "unverified"
+      "current": 88.99,
+      "previous": 88.99,
+      "lowest": 88.99,
+      "status": "ok",
+      "drop": false
     },
     "AliExpress": {
       "currency": "$",
@@ -134,9 +135,10 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 79.98,
-      "previous": null,
+      "previous": 79.98,
       "lowest": 79.98,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     },
     "AliExpress": {
       "currency": "$",
@@ -171,10 +173,11 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "current": 109.99,
-      "previous": null,
+      "current": 119.99,
+      "previous": 119.99,
       "lowest": 109.99,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "ugreen_power": {
@@ -192,9 +195,10 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 39.99,
-      "previous": null,
+      "previous": 39.99,
       "lowest": 39.99,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "rp_ds_addon": {
@@ -213,9 +217,10 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 79.99,
-      "previous": null,
+      "previous": 79.99,
       "lowest": 79.99,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "odin3": {
@@ -255,10 +260,11 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "current": 59.99,
-      "previous": null,
+      "current": 106.99,
+      "previous": 106.99,
       "lowest": 59.99,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     }
   },
   "anbernic_rg477v": {
@@ -284,10 +290,11 @@
     "Amazon": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "current": 95.99,
-      "previous": null,
+      "current": 99.99,
+      "previous": 99.99,
       "lowest": 95.99,
-      "status": "unverified"
+      "status": "ok",
+      "drop": false
     },
     "PowKiddy": {
       "currency": "$",
@@ -328,7 +335,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T00:47:00.614Z",
+    "generated": "2026-06-28T01:08:46.475Z",
     "products": 25
   }
 }
