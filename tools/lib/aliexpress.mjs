@@ -1,0 +1,134 @@
+/**
+ * AliExpress Affiliate (Open Platform) API — price lookup.
+ *
+ * Env vars (set in .env locally, GitHub Secrets in CI):
+ *   ALIEXPRESS_APP_KEY        Open Platform app key
+ *   ALIEXPRESS_APP_SECRET     Open Platform app secret
+ *   ALIEXPRESS_TRACKING_ID    affiliate tracking id (default: default)
+ *
+ * If keys are absent, aliexpressConfigured() returns false and
+ * getAliExpressPrices() resolves to an empty map — caller falls back to scraping.
+ *
+ * Uses the system API gateway (api-sg.aliexpress.com/sync) with HMAC-SHA256
+ * request signing, method aliexpress.affiliate.productdetail.get.
+ */
+import crypto from 'node:crypto';
+
+const APP_KEY = process.env.ALIEXPRESS_APP_KEY;
+const APP_SECRET = process.env.ALIEXPRESS_APP_SECRET;
+const TRACKING_ID = process.env.ALIEXPRESS_TRACKING_ID || 'default';
+const GATEWAY = process.env.ALIEXPRESS_GATEWAY || 'https://api-sg.aliexpress.com/sync';
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
+
+export function aliexpressConfigured() {
+  return Boolean(APP_KEY && APP_SECRET);
+}
+
+const ITEM_RE = /\/item\/(?:[\w-]+\/)?(\d{6,})\.html/;
+
+/** Follow s.click.aliexpress.com redirects (manual) to extract the numeric product id. */
+async function resolveItemId(url) {
+  let cur = url;
+  for (let i = 0; i < 5; i++) {
+    const direct = cur.match(ITEM_RE);
+    if (direct) return direct[1];
+    let res;
+    try {
+      res = await fetch(cur, { redirect: 'manual', headers: { 'User-Agent': UA } });
+    } catch {
+      return null;
+    }
+    const loc = res.headers.get('location');
+    if (!loc) {
+      const m = (res.url || '').match(ITEM_RE);
+      return m ? m[1] : null;
+    }
+    cur = new URL(loc, cur).toString();
+  }
+  const m = cur.match(ITEM_RE);
+  return m ? m[1] : null;
+}
+
+/** TOP/ISV signature: HMAC-SHA256 over the sorted key+value concatenation, hex upper. */
+function sign(params) {
+  const base = Object.keys(params).sort().map((k) => k + params[k]).join('');
+  return crypto.createHmac('sha256', APP_SECRET).update(base, 'utf8').digest('hex').toUpperCase();
+}
+
+async function productDetail(ids) {
+  const params = {
+    app_key: APP_KEY,
+    method: 'aliexpress.affiliate.productdetail.get',
+    sign_method: 'sha256',
+    timestamp: String(Date.now()),
+    format: 'json',
+    v: '2.0',
+    // business params
+    product_ids: ids.join(','),
+    target_currency: 'USD',
+    target_language: 'EN',
+    tracking_id: TRACKING_ID,
+    fields: 'product_id,target_sale_price,target_sale_price_currency,sale_price,product_title',
+  };
+  params.sign = sign(params);
+
+  const res = await fetch(GATEWAY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': UA },
+    body: new URLSearchParams(params).toString(),
+  });
+  const text = await res.text();
+  let json;
+  try { json = JSON.parse(text); } catch { json = null; }
+  if (!json) throw new Error(`AliExpress API non-JSON response: ${text.slice(0, 200)}`);
+  const err = json.error_response;
+  if (err) throw new Error(`AliExpress API error: ${err.code} ${err.msg || err.sub_msg || ''}`);
+  return json;
+}
+
+const chunk = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** Pull the product array out of the (somewhat nested) response shape. */
+function extractProducts(json) {
+  const resp = json?.aliexpress_affiliate_productdetail_get_response || json;
+  const result = resp?.resp_result?.result || resp?.result;
+  const products = result?.products?.product;
+  return Array.isArray(products) ? products : products ? [products] : [];
+}
+
+/**
+ * @param {Array<{url:string}>} links  AliExpress store links from products
+ * @returns {Promise<Map<string, number>>}  url -> price (USD). Empty if unconfigured.
+ */
+export async function getAliExpressPrices(links) {
+  const out = new Map();
+  if (!aliexpressConfigured() || !links.length) return out;
+
+  // 1. Resolve every link to a numeric product id.
+  const urlToId = new Map();
+  for (const l of links) {
+    const id = await resolveItemId(l.url);
+    if (id) urlToId.set(l.url, id);
+  }
+  const ids = [...new Set(urlToId.values())];
+  if (!ids.length) return out;
+
+  // 2. Fetch product detail (the endpoint accepts multiple ids; chunk to be safe).
+  const idToPrice = new Map();
+  for (const group of chunk(ids, 20)) {
+    const json = await productDetail(group);
+    for (const p of extractProducts(json)) {
+      const raw = p.target_sale_price ?? p.sale_price;
+      const price = typeof raw === 'string' ? parseFloat(raw) : raw;
+      if (price > 0) idToPrice.set(String(p.product_id), Math.round(price * 100) / 100);
+    }
+    await sleep(500);
+  }
+
+  // 3. Map prices back onto the original link URLs.
+  for (const [url, id] of urlToId) {
+    if (idToPrice.has(id)) out.set(url, idToPrice.get(id));
+  }
+  return out;
+}

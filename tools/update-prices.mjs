@@ -26,6 +26,23 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SHOP_HTML = join(ROOT, 'static', 'shop.html');
 const PRICES_JSON = join(ROOT, 'static', 'prices.json');
 
+// Load .env (for local runs; in CI the values come from GitHub Secrets) BEFORE
+// importing the API modules, which read their keys from process.env at load time.
+loadEnv(join(ROOT, '.env'));
+function loadEnv(path) {
+  if (!existsSync(path)) return;
+  for (const line of readFileSync(path, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+    if (!m) continue;
+    const key = m[1];
+    let val = m[2].replace(/^["']|["']$/g, '');
+    if (process.env[key] === undefined) process.env[key] = val;
+  }
+}
+
+const { getAmazonPrices, amazonConfigured } = await import('./lib/amazon.mjs');
+const { getAliExpressPrices, aliexpressConfigured } = await import('./lib/aliexpress.mjs');
+
 const SHOPIFY_HOSTS = ['goretroid.com', 'ayntec.com', 'trimuistore.com', 'mangmi.com', 'powkiddy.com'];
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -124,13 +141,19 @@ function isShopify(host) {
   return SHOPIFY_HOSTS.some((h) => host.endsWith(h));
 }
 
-// Returns { price, trusted }. Shopify .js is authoritative (trusted); Amazon /
-// AliExpress are best-effort scrapes (untrusted — subject to a sanity bound).
-async function fetchRawPrice(link) {
+// Returns { price, trusted }. Trusted sources (Shopify .js, official APIs) skip
+// the sanity bound; best-effort scrapes are untrusted and get bounds-checked.
+async function fetchRawPrice(link, api) {
   const host = hostOf(link.url);
   if (isShopify(host)) return { price: await fetchShopifyPrice(link.url), trusted: true };
-  if (host.includes('amzn') || host.includes('amazon')) return { price: await fetchAmazonPrice(link.url), trusted: false };
-  if (host.includes('aliexpress')) return { price: await fetchAliExpressPrice(link.url), trusted: false };
+  if (host.includes('amzn') || host.includes('amazon')) {
+    if (api.amazon.has(link.url)) return { price: api.amazon.get(link.url), trusted: true };
+    return { price: await fetchAmazonPrice(link.url), trusted: false };
+  }
+  if (host.includes('aliexpress')) {
+    if (api.ali.has(link.url)) return { price: api.ali.get(link.url), trusted: true };
+    return { price: await fetchAliExpressPrice(link.url), trusted: false };
+  }
   return { price: null, trusted: false };
 }
 
@@ -143,6 +166,21 @@ const out = {};
 const drops = [];
 const failures = [];
 
+// --- Pre-pass: pull official-API prices in batch (empty maps if unconfigured) ---
+const allLinks = products.flatMap((p) => p.links || []);
+const amazonLinks = allLinks.filter((l) => /amzn|amazon/.test(hostOf(l.url)));
+const aliLinks = allLinks.filter((l) => hostOf(l.url).includes('aliexpress'));
+
+console.log(`Amazon PA-API: ${amazonConfigured() ? 'configured' : 'NOT configured (scrape fallback)'}`);
+console.log(`AliExpress API: ${aliexpressConfigured() ? 'configured' : 'NOT configured (scrape fallback)'}`);
+
+const api = { amazon: new Map(), ali: new Map() };
+try { api.amazon = await getAmazonPrices(amazonLinks); }
+catch (e) { console.error('Amazon API failed, falling back to scrape:', e.message); }
+try { api.ali = await getAliExpressPrices(aliLinks); }
+catch (e) { console.error('AliExpress API failed, falling back to scrape:', e.message); }
+console.log(`API prices fetched — Amazon: ${api.amazon.size}/${amazonLinks.length}, AliExpress: ${api.ali.size}/${aliLinks.length}\n`);
+
 for (const p of products) {
   if (!p.links?.length) continue;
   out[p.id] = {};
@@ -150,7 +188,7 @@ for (const p of products) {
     const prevEntry = prev[p.id]?.[link.store] || {};
     let raw = null, trusted = false;
     try {
-      ({ price: raw, trusted } = await fetchRawPrice(link));
+      ({ price: raw, trusted } = await fetchRawPrice(link, api));
     } catch (e) {
       raw = null;
     }

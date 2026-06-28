@@ -20,6 +20,15 @@ jobs:
           node-version: '20'
 
       - name: Fetch latest prices
+        env:
+          # Add these under Settings → Secrets and variables → Actions.
+          # Unset secrets resolve to "" → the script falls back to scraping.
+          AMAZON_ACCESS_KEY: ${{ secrets.AMAZON_ACCESS_KEY }}
+          AMAZON_SECRET_KEY: ${{ secrets.AMAZON_SECRET_KEY }}
+          AMAZON_PARTNER_TAG: ${{ secrets.AMAZON_PARTNER_TAG }}
+          ALIEXPRESS_APP_KEY: ${{ secrets.ALIEXPRESS_APP_KEY }}
+          ALIEXPRESS_APP_SECRET: ${{ secrets.ALIEXPRESS_APP_SECRET }}
+          ALIEXPRESS_TRACKING_ID: ${{ secrets.ALIEXPRESS_TRACKING_ID }}
         run: node tools/update-prices.mjs
 
       - name: Commit prices.json if it changed
