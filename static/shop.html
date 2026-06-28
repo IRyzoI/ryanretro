@@ -846,49 +846,63 @@
                     title.onclick = () => window.open(bestUrl, '_blank');
                 }
                 
-                // INJECT INDIVIDUAL LINKS (Themed Buttons)
+                // STORE PRICES — collapsible "compare prices" dropdown (2+ stores)
                 const linksContainer = clone.querySelector('.card-links');
-                const sortedLinks = [...p.links].sort((a,b) => a.price - b.price);
+                const sortedLinks = [...p.links].sort((a, b) => a.price - b.price);
 
-                sortedLinks.forEach(l => {
-                    let baseBtnClass = "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884]";
-                    let bgClass = "bg-brand-dark text-brand-light hover:bg-[#52448F]"; // default accessory/other
-                    let icon = "shopping-bag";
-                    const s = l.store.toLowerCase();
-                    
-                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi')) {
-                        bgClass = "bg-brand-light text-brand-dark hover:bg-white";
-                        icon = "star";
-                    } else if (s.includes('powkiddy')) {
-                        bgClass = "bg-teal-500 text-white hover:bg-teal-400";
-                        icon = "shopping-bag";
-                    } else if (s.includes('ali')) {
-                        bgClass = "bg-red-600 text-white hover:bg-red-500";
-                        icon = "shopping-cart";
-                    } else if (s.includes('amazon')) {
-                        bgClass = "bg-yellow-500 text-black hover:bg-yellow-400";
-                        icon = "package";
-                    }
+                const storeStyle = (store) => {
+                    const s = store.toLowerCase();
+                    if (s.includes('official') || s.includes('goretroid') || s.includes('ayntec') || s.includes('trimui') || s.includes('mangmi') || s.includes('steam')) return { bg: 'bg-brand-light text-brand-dark hover:bg-white', icon: 'star' };
+                    if (s.includes('powkiddy')) return { bg: 'bg-teal-500 text-white hover:bg-teal-400', icon: 'shopping-bag' };
+                    if (s.includes('ali')) return { bg: 'bg-red-600 text-white hover:bg-red-500', icon: 'shopping-cart' };
+                    if (s.includes('amazon')) return { bg: 'bg-yellow-500 text-black hover:bg-yellow-400', icon: 'package' };
+                    return { bg: 'bg-brand-dark text-brand-light hover:bg-[#52448F]', icon: 'shopping-bag' };
+                };
 
+                const makeRow = (l) => {
+                    const st = storeStyle(l.store);
+                    const live = l._live || {};
+                    const base = "flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884] hover:-translate-y-1 hover:shadow-[5px_5px_0px_#463884]";
+                    const wasHtml = (live.drop && live.previous != null) ? `<span class="line-through opacity-60 mr-1.5">${formatPrice(live.previous)}</span>` : '';
+                    const seller = (live.merchant && live.merchant.toLowerCase() !== 'official store') ? live.merchant : '';
+                    const trust = live.merchantTrusted ? '<i data-lucide="badge-check" class="w-3 h-3 shrink-0"></i>' : '';
+                    const rating = (live.rating != null) ? `★${live.rating}%${live.sales != null ? ' · ' + live.sales + ' sold' : ''}` : '';
+                    const sub = (seller || rating) ? `<div class="flex items-center gap-1 text-[10px] font-bold opacity-70 normal-case mt-0.5">${trust}${seller ? '<span>' + seller + '</span>' : ''}${rating ? '<span>' + rating + '</span>' : ''}</div>` : '';
                     const btn = document.createElement('a');
                     btn.href = l.url;
                     btn.target = "_blank";
-                    btn.className = `${baseBtnClass} ${bgClass}`;
-                    btn.onclick = (e) => e.stopPropagation(); 
-                    
-                    const wasHtml = (l._live && l._live.drop && l._live.previous != null)
-                        ? `<span class="line-through opacity-60 mr-1.5">${formatPrice(l._live.previous)}</span>`
-                        : '';
-
+                    btn.className = `${base} ${st.bg}`;
+                    btn.onclick = (e) => e.stopPropagation();
                     btn.innerHTML = `
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="${icon}" class="w-4 h-4"></i>
-                            <span class="uppercase tracking-wide">${l.store}</span>
+                        <div class="flex items-center gap-2 text-left">
+                            <i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i>
+                            <div><span class="uppercase tracking-wide">${l.store}</span>${sub}</div>
                         </div>
-                        <span>${wasHtml}${formatPrice(l.price)}</span>
-                    `;
-                    linksContainer.appendChild(btn);
-                });
+                        <span class="whitespace-nowrap">${wasHtml}${formatPrice(l.price)}</span>`;
+                    return btn;
+                };
+
+                // Cheapest store always visible; the rest fold behind a toggle.
+                linksContainer.appendChild(makeRow(sortedLinks[0]));
+                if (sortedLinks.length > 1) {
+                    const more = document.createElement('div');
+                    more.className = "hidden flex-col gap-2 mt-2";
+                    sortedLinks.slice(1).forEach(l => more.appendChild(makeRow(l)));
+                    const toggle = document.createElement('button');
+                    toggle.className = "w-full mt-2 flex items-center justify-center gap-1.5 text-[11px] font-black text-brand-light/80 hover:text-white uppercase tracking-wide transition-colors";
+                    const label = (open) => open ? 'Hide prices' : `Compare ${sortedLinks.length} prices`;
+                    toggle.innerHTML = `<i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i><span>${label(false)}</span>`;
+                    toggle.onclick = (e) => {
+                        e.stopPropagation();
+                        const open = more.classList.toggle('hidden') === false;
+                        more.classList.toggle('flex', open);
+                        const icon = toggle.querySelector('svg, i');
+                        if (icon) icon.classList.toggle('rotate-180', open);
+                        toggle.querySelector('span').textContent = label(open);
+                    };
+                    linksContainer.appendChild(toggle);
+                    linksContainer.appendChild(more);
+                }
 
                 grid.appendChild(clone);
             });
