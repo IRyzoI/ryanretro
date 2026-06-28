@@ -60,14 +60,44 @@ jobs:
           from: Ryan Retro Price Bot <${{ secrets.MAIL_USERNAME }}>
           html_body: file://tools/email-body.html
 
-      - name: Commit updated price data if changed
+      - name: Discover new deals (Amazon)
+        id: discover
+        env:
+          AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
+          AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
+          AMAZON_PARTNER_TAG: ${{ secrets.AMAZON_PARTNER_TAG }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          if git diff --quiet -- static/prices.json static/drops.json static/price-history.json; then
-            echo "No price changes."
+          node tools/discover-deals.mjs
+          if [ -s tools/last-proposals.json ] && [ "$(jq 'length' tools/last-proposals.json)" -gt 0 ]; then
+            echo "has_proposals=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_proposals=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Email new deals to review
+        if: steps.discover.outputs.has_proposals == 'true'
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🛒 Ryan Retro — new deals to review"
+          to: rowdyrake@gmail.com
+          from: Ryan Retro Deal Finder <${{ secrets.MAIL_USERNAME }}>
+          html_body: file://tools/proposals-email.html
+
+      - name: Commit updated data if changed
+        run: |
+          if git diff --quiet -- static/prices.json static/drops.json static/price-history.json static/proposals.json; then
+            echo "No changes."
           else
             git config user.name  "ryanretro-price-bot"
             git config user.email "actions@github.com"
-            git add static/prices.json static/drops.json static/price-history.json
-            git commit -m "chore: auto-update store prices [skip ci]"
+            git add static/prices.json static/drops.json static/price-history.json static/proposals.json
+            git commit -m "chore: auto-update prices + deal proposals [skip ci]"
             git push
           fi

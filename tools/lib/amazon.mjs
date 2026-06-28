@@ -227,3 +227,35 @@ export async function getAmazonPrices(links) {
   }
   return out;
 }
+
+const SEARCH_URL = (process.env.AMAZON_SEARCH_URL || CATALOG_URL.replace(/getItems\/?$/, 'searchItems'));
+
+/**
+ * Keyword-search Amazon for a product. Returns candidate listings with title +
+ * best New/in-stock offer (trusted-aware). Caller filters by title match / price.
+ * @returns {Promise<Array<{asin,title,price,merchant,trusted,url}>>}
+ */
+export async function searchAmazonDeals(query, count = 8) {
+  if (!amazonConfigured() || !query) return [];
+  const token = await getToken();
+  const res = await fetch(SEARCH_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', 'x-marketplace': MARKETPLACE },
+    body: JSON.stringify({
+      keywords: query,
+      itemCount: Math.min(count, 10),
+      partnerTag: PARTNER_TAG,
+      partnerType: 'Associates',
+      marketplace: MARKETPLACE,
+      resources: ['itemInfo.title', 'offersV2.listings.price', 'offersV2.listings.condition', 'offersV2.listings.merchantInfo', 'offersV2.listings.availability'],
+    }),
+  });
+  const text = await res.text();
+  let json; try { json = JSON.parse(text); } catch { json = null; }
+  if (!res.ok) throw new Error(`Creators searchItems ${res.status} — ${json?.errors?.map((e) => e.code + ': ' + e.message).join('; ') || text.slice(0, 200)}`);
+  return (json?.searchResult?.items || []).map((it) => {
+    const offer = offerFromItem(it);
+    if (!offer) return null;
+    return { asin: it.asin, title: it.itemInfo?.title?.displayValue || '', price: offer.price, merchant: offer.merchant, trusted: offer.trusted, url: it.detailPageURL };
+  }).filter(Boolean);
+}
