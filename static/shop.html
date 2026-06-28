@@ -900,8 +900,13 @@
                     } else {
                         const wrap = document.createElement('div');
                         const head = document.createElement('button');
-                        head.className = `w-full ${base} ${st.bg}`;
-                        head.innerHTML = `<span class="flex items-center gap-2"><i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i><span class="uppercase tracking-wide">${g.store}</span><span class="opacity-70 text-[10px] normal-case">${g.opts.length} options</span></span><span class="flex items-center gap-1.5 whitespace-nowrap"><span class="opacity-70 text-[10px] mr-0.5">from</span>${formatPrice(g.cheapest)}<i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i></span>`;
+                        head.className = `w-full block px-3 py-2.5 rounded-xl text-xs font-black transition-all border-2 border-brand-dark shadow-[3px_3px_0px_#463884] ${st.bg}`;
+                        head.innerHTML = `
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="flex items-center gap-2"><i data-lucide="${st.icon}" class="w-4 h-4 shrink-0"></i><span class="uppercase tracking-wide">${g.store}</span></span>
+                                <span class="flex items-center gap-1.5 whitespace-nowrap"><span class="opacity-70 text-[10px]">from</span>${formatPrice(g.cheapest)}<i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i></span>
+                            </div>
+                            <div class="text-[10px] font-bold opacity-70 normal-case mt-0.5">${g.opts.length} options</div>`;
                         const body = document.createElement('div');
                         body.className = "hidden flex-col gap-1.5 mt-1.5";
                         g.opts.forEach(l => {
