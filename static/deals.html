@@ -94,7 +94,7 @@
                 </div>
                 <div class="p-4 flex flex-col flex-grow">
                     <h3 class="font-black text-white text-lg leading-tight mb-1">${d.name}</h3>
-                    <span class="self-start text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wide ${storeColor(d.merchant)} mb-2">${d.merchant}</span>
+                    <span class="self-start text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wide ${storeColor(d.store || d.merchant)} mb-2">${d.merchant}</span>
                     <div class="mt-auto flex items-baseline gap-2">
                         <span class="text-2xl font-black text-white">${money(d.to)}</span>
                         <span class="text-brand-light/60 font-bold line-through">${money(d.from)}</span>
@@ -105,19 +105,29 @@
         }
 
         async function load() {
-            let drops = [];
-            try {
-                const res = await fetch('/static/drops.json', { cache: 'no-store' });
-                if (res.ok) drops = await res.json();
-            } catch (e) { /* keep empty */ }
+            const grab = (u) => fetch(u, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null);
+            const [drops, proposals] = await Promise.all([grab('/static/drops.json'), grab('/static/proposals.json')]);
 
-            if (!drops.length) {
-                empty.classList.remove('hidden');
-            } else {
-                grid.innerHTML = drops.map(card).join('');
-                const newest = drops[0]?.date;
-                if (newest) document.getElementById('updated').textContent = 'Last updated ' + newest;
-            }
+            const deals = [];
+            (Array.isArray(drops) ? drops : []).forEach(d => deals.push({ ...d, _date: d.date }));
+            (Array.isArray(proposals) ? proposals : [])
+                .filter(p => p.status === 'approved' && p.currentBest > p.price)
+                .forEach(p => deals.push({
+                    name: p.productName, merchant: p.merchant, store: p.store,
+                    from: p.currentBest, to: p.price,
+                    pct: Math.round((p.currentBest - p.price) / p.currentBest * 100), atLow: false,
+                    url: p.url, image: p.image, _date: p.decidedOn || p.firstSeen || '',
+                }));
+
+            // newest first, de-dupe by link, cap to a sensible number
+            const seen = new Set();
+            const list = deals
+                .sort((a, b) => (b._date || '').localeCompare(a._date || ''))
+                .filter(d => d.url && !seen.has(d.url) && seen.add(d.url))
+                .slice(0, 30);
+
+            grid.innerHTML = list.map(card).join('');
+            if (list[0]?._date) document.getElementById('updated').textContent = 'Updated ' + list[0]._date;
             if (window.lucide) lucide.createIcons();
         }
         load();
