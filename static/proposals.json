@@ -30,8 +30,9 @@
     "currentBest": 153.19,
     "savings": 18.2,
     "url": "https://www.amazon.com/dp/B0GCRLD9H9?tag=ryanretro-20&linkCode=osi&th=1&psc=1",
-    "status": "new",
-    "firstSeen": "2026-06-28"
+    "status": "approved",
+    "firstSeen": "2026-06-28",
+    "decidedOn": "2026-06-28"
   },
   {
     "key": "ayaneo_pocket_air_mini:B0GJF12DC6",
