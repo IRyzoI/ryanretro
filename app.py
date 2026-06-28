@@ -561,6 +561,10 @@ async def news_page():
 async def deals_page():
     return FileResponse(os.path.join(STATIC_DIR, "deals.html"))
 
+@app.get("/admin/deals", response_class=HTMLResponse)
+async def deals_admin_page():
+    return FileResponse(os.path.join(STATIC_DIR, "deals-admin.html"))
+
 @app.post("/api/guide/{slug}/save")
 async def save_guide(slug: str, request: Request):
     data = await request.json()

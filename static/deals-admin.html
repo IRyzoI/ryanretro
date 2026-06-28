@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Deal Review — Ryan Retro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: {
+            colors: { brand: { light: '#B9B2DE', main: '#6254A4', dark: '#463884' } },
+            fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }
+        } } };
+    </script>
+</head>
+<body class="bg-brand-light text-brand-dark font-sans min-h-screen p-4 sm:p-8">
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl font-black text-brand-dark mb-1">🛒 Deal Review</h1>
+        <p class="text-brand-main font-bold mb-6">Approve or reject discovered deals. Decisions commit to GitHub; approved deals show on the store.</p>
+
+        <!-- Token -->
+        <div class="bg-white border-4 border-brand-dark rounded-2xl p-4 mb-6 shadow-[4px_4px_0px_#463884]">
+            <label class="block text-xs font-black uppercase tracking-wide text-brand-main mb-2">GitHub token (fine-grained, Contents: Read &amp; Write on ryanretro)</label>
+            <div class="flex gap-2">
+                <input id="token" type="password" placeholder="github_pat_..." class="flex-1 border-2 border-brand-dark rounded-xl px-3 py-2 font-bold text-sm focus:outline-none focus:border-brand-main">
+                <button id="saveTok" class="px-4 py-2 bg-brand-main text-white font-black rounded-xl border-2 border-brand-dark text-sm">Save</button>
+                <button id="reload" class="px-4 py-2 bg-brand-dark text-white font-black rounded-xl border-2 border-brand-dark text-sm">Load deals</button>
+            </div>
+            <p id="status" class="text-xs font-bold text-brand-main mt-2"></p>
+        </div>
+
+        <div id="list" class="flex flex-col gap-4"></div>
+        <div id="empty" class="hidden text-center py-16 text-brand-main font-black text-xl">No deals waiting for review 🎉</div>
+    </div>
+
+    <script>
+        const REPO = 'IRyzoI/ryanretro';
+        const PATH = 'static/proposals.json';
+        const API = `https://api.github.com/repos/${REPO}/contents/${PATH}`;
+        const $ = (id) => document.getElementById(id);
+        const setStatus = (m, err) => { $('status').textContent = m; $('status').className = 'text-xs font-bold mt-2 ' + (err ? 'text-red-600' : 'text-brand-main'); };
+
+        // base64 <-> utf8
+        const b64ToStr = (b) => decodeURIComponent(escape(atob(b.replace(/\n/g, ''))));
+        const strToB64 = (s) => btoa(unescape(encodeURIComponent(s)));
+
+        let proposals = [], sha = null;
+        const tokenInput = $('token');
+        tokenInput.value = localStorage.getItem('ghDealToken') || '';
+        $('saveTok').onclick = () => { localStorage.setItem('ghDealToken', tokenInput.value.trim()); setStatus('Token saved in this browser.'); };
+
+        async function load() {
+            const token = tokenInput.value.trim();
+            if (!token) return setStatus('Enter a GitHub token first.', true);
+            setStatus('Loading…');
+            try {
+                const res = await fetch(API + '?ref=main', { headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' } });
+                if (!res.ok) return setStatus(`GitHub ${res.status}: ${(await res.json()).message || 'error'}`, true);
+                const j = await res.json();
+                sha = j.sha;
+                proposals = JSON.parse(b64ToStr(j.content));
+                render();
+                setStatus(`Loaded. ${proposals.filter(p => p.status === 'new').length} pending.`);
+            } catch (e) { setStatus('Error: ' + e.message, true); }
+        }
+        $('reload').onclick = load;
+
+        function render() {
+            const pending = proposals.filter(p => p.status === 'new');
+            $('empty').classList.toggle('hidden', pending.length > 0);
+            $('list').innerHTML = pending.map((p, i) => `
+                <div class="bg-white border-4 border-brand-dark rounded-2xl p-4 shadow-[4px_4px_0px_#463884] flex gap-4" data-key="${p.key}">
+                    <img src="${p.image || ''}" class="w-20 h-20 object-contain rounded-lg bg-brand-light/40 shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-black text-brand-dark">${p.productName}</div>
+                        <div class="text-xs font-bold text-brand-main mb-1">${p.store} · ${p.merchant}${p.trusted ? ' · ✓ trusted' : ''}</div>
+                        <div class="text-[11px] text-gray-500 truncate mb-2">${p.title || ''}</div>
+                        <div class="text-sm font-black"><span class="text-green-700">$${p.price}</span>
+                            <span class="text-gray-400 line-through ml-1">$${p.currentBest}</span>
+                            <span class="text-green-700 ml-1">save $${p.savings}</span></div>
+                        <a href="${p.url}" target="_blank" class="text-xs font-bold text-brand-main underline">View on ${p.store} ↗</a>
+                    </div>
+                    <div class="flex flex-col gap-2 justify-center shrink-0">
+                        <button onclick="decide('${p.key}','approved')" class="px-4 py-2 bg-green-500 text-white font-black rounded-xl border-2 border-brand-dark text-sm hover:bg-green-400">Accept</button>
+                        <button onclick="decide('${p.key}','rejected')" class="px-4 py-2 bg-red-500 text-white font-black rounded-xl border-2 border-brand-dark text-sm hover:bg-red-400">Reject</button>
+                    </div>
+                </div>`).join('');
+        }
+
+        async function commit(message) {
+            const token = tokenInput.value.trim();
+            const body = { message, content: strToB64(JSON.stringify(proposals, null, 2) + '\n'), sha, branch: 'main' };
+            let res = await fetch(API, { method: 'PUT', headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' }, body: JSON.stringify(body) });
+            if (res.status === 409) { await load(); throw new Error('Conflict — reloaded, try again.'); }
+            if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message || ''}`);
+            sha = (await res.json()).content.sha; // track new sha for next commit
+        }
+
+        window.decide = async (key, decision) => {
+            const p = proposals.find(x => x.key === key);
+            if (!p) return;
+            const card = document.querySelector(`[data-key="${CSS.escape(key)}"]`);
+            if (card) card.style.opacity = '0.4';
+            p.status = decision;
+            p.decidedOn = new Date().toISOString().slice(0, 10);
+            try {
+                await commit(`deals: ${decision} ${p.productName} (${p.merchant}) [skip ci]`);
+                render();
+                setStatus(`${decision === 'approved' ? 'Approved' : 'Rejected'}: ${p.productName}.`);
+            } catch (e) {
+                p.status = 'new'; if (card) card.style.opacity = '1';
+                setStatus(e.message, true);
+            }
+        };
+
+        if (tokenInput.value) load();
+    </script>
+</body>
+</html>

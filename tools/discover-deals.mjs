@@ -61,12 +61,13 @@ async function discover() {
     let results = [];
     try { results = await searchAmazonDeals(p.name, 8); } catch (e) { console.error(`  ! ${p.name}: ${e.message}`); }
     for (const r of results) {
-      if (!r.trusted || !titleMatches(r.title, p.name) || !(r.price > 0)) continue;
+      // Amazon: any seller is acceptable (Amazon's return policy covers buyers).
+      if (!titleMatches(r.title, p.name) || !(r.price > 0)) continue;
       if (ref && (r.price < ref * 0.3 || r.price > ref * 2)) continue;  // sane band
       if (ref && r.price >= ref - 0.01) continue;                       // must be cheaper
       out.push({
         key: `${p.id}:${r.asin}`, productId: p.id, productName: p.name, image: p.image,
-        store: 'Amazon', merchant: r.merchant, asin: r.asin, title: r.title,
+        store: 'Amazon', merchant: r.merchant, trusted: r.trusted, asin: r.asin, title: r.title,
         price: round2(r.price), currentBest: ref, savings: ref ? round2(ref - r.price) : null,
         url: r.url, status: 'new', firstSeen: TODAY,
       });
