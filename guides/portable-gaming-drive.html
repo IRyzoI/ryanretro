@@ -3,209 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ryan Retro — Portable Drive Guide</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<title>Ryan Retro — Build a Portable PC &amp; Emulation Drive</title>
+<meta name="description" content="A complete guide to building your own standalone, zero-hassle portable gaming drive: format the SSD, install RetroBat, automate launchers with a master script, and add ROMs, GOG, Steam, and Switch games.">
 
-<!-- Shared Ryan Retro site header/footer dependencies -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  // Preflight OFF so Tailwind's CSS reset never touches this guide's own
-  // styling — only the header/footer utility classes are needed.
   tailwind.config = {
     corePlugins: { preflight: false },
-    theme: { extend: { colors: { brand: { light: '#B9B2DE', main: '#6254A4', dark: '#463884', accent: '#FFFFFF' } } } }
+    theme: { extend: { colors: { brand: { light: '#B9B2DE', main: '#6254A4', dark: '#463884' } } } }
   };
 </script>
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script defer src="/static/partials/include.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-/* Core Variables */
-:root{
-  --page:#EBE8F8; --sheet:#FCFBFF; --card:#FFFFFF; --ink:#1a1a1a; --title:#6C5DD3;
-  --bord:#B3A8E8; --line:#B3A8E8; --rule:#EBE8F8; --sep:#EBE8F8; --soft:#8e95b5;
-  --brand:#6C5DD3; --dark:#5144A6; --light:#e5e1f9;
-  --teal:#208ab0; --teal-bg:#e5f9ff;
-  --green:#107a47; --green-bg:#e6faf3;
-  --blue:#3a69b9; --blue-bg:#d3e4ff;
-  --purple:#6b46c1; --purple-bg:#efe9fb;
-  --amber:#b5701a; --amber-bg:#fdf3df;
-  --rose:#d6336c; --rose-bg:#fdeaf2;
-  --pop:#b5701a; --red:#c0392b; --orange:#b5701a; --pink:#d6336c; --cyan:#208ab0;
-  --band:var(--blue-bg); --bandText:var(--blue);
+/* ── Brand tokens ── */
+:root {
+  --purple: #6254A4;
+  --purple-dark: #463884;
+  --purple-light: #B9B2DE;
+  --purple-tint: #f3f1fc;
+  --ink: #111111;
+  --ink-soft: #555555;
+  --ink-faint: #999999;
+  --rule: #e8e8e8;
+  --bg: #ffffff;
+  --tag-bg: #f0eefb;
+}
+body.dark {
+  --ink: #E8E4F8;
+  --ink-soft: #A89FCC;
+  --ink-faint: #6B6490;
+  --rule: #2a2538;
+  --bg: #13111d;
+  --tag-bg: #1e1a2e;
 }
 
-/* Dark Mode Variables */
-body.dark{
-  --page:#14131A; --sheet:#1C1A24; --card:#242131; --ink:#DDE1EE; --title:#A092F6;
-  --bord:#3D3858; --line:#3D3858; --rule:#2F2B47; --sep:#2F2B47; --soft:#8E95B5;
-  --brand:#8174DE; --dark:#6255B8; --light:#322D4D; --cyan:#5BC8DE;
-  --teal:#5BC8DE; --teal-bg:rgba(91,200,222,.12);
-  --green:#4CC388; --green-bg:rgba(76,195,136,.13);
-  --blue:#8FA9F0; --blue-bg:rgba(143,169,240,.13);
-  --purple:#B49CEF; --purple-bg:rgba(180,156,239,.13);
-  --amber:#E3B964; --amber-bg:rgba(227,185,100,.12);
-  --rose:#E68DB8; --rose-bg:rgba(230,141,184,.13);
-  --band:var(--blue-bg); --bandText:var(--blue);
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Poppins', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-body.dark .edge{--band:var(--blue-bg); --bandText:var(--blue);}
-body.dark .edge.yellow{--band:var(--purple-bg); --bandText:var(--purple);}
-body.dark .edge.green{--band:var(--green-bg); --bandText:var(--green);}
-body.dark .edge.blue{--band:var(--teal-bg); --bandText:var(--teal);}
-body.dark .edge.pink{--band:var(--rose-bg); --bandText:var(--rose);}
-body.dark .edge.orange{--band:var(--amber-bg); --bandText:var(--amber);}
+h1, h2, h3 { margin: 0; font-weight: 700; }
+p { margin: 0 0 24px; }
+a { color: var(--purple); }
+img { display: block; max-width: 100%; }
 
-/* Base Styles */
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-html,body{margin:0; padding:0;}
-body{
-  background:var(--page); color:var(--ink);
-  font-family:'Poppins',Arial,sans-serif;
-  min-height:100vh; display:flex; flex-direction:column;
-  font-size:14px; line-height: 1.6; -webkit-font-smoothing:antialiased;
-}
-h1,h2,h3,.bebas{font-family:'Poppins',Arial,sans-serif; font-weight:700; letter-spacing:0; margin:0;}
-p { margin-top: 0; margin-bottom: 16px; }
-ul, ol { margin-top: 0; padding-left: 20px; margin-bottom: 16px; }
-li { margin-bottom: 8px; }
-button{font-family:inherit; cursor:pointer;}
-
-/* Header */
-.topbar{
-  position:sticky; top:0; z-index:50; background:var(--sheet);
-  border-bottom:2px solid var(--title); padding:10px 20px;
-  display:flex; align-items:center; justify-content: space-between; gap:12px; flex-wrap:wrap;
-}
-body.dark .topbar{background:var(--sheet); border-color:var(--bord);}
-.logo{display:flex; align-items:center; gap:12px;}
-.header-logo {width:38px; height:38px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(108, 93, 211, 0.25);}
-body.dark .header-logo {box-shadow:0 2px 6px rgba(0, 0, 0, 0.5);}
-.logo h1{font-size:23px; line-height:1.05; color:#3b3a8d; letter-spacing:-0.8px;}
-body.dark .logo h1{color:#A9A8F4;}
-.logo h1 span{color:var(--teal);}
-body.dark .logo h1 span{color:var(--teal);}
-
-/* Buttons */
-.btn{
-  border:1px solid var(--bord); border-radius:5px; background:#fff; font-weight:600; font-size:12px;
-  padding:6px 12px; transition:background .12s; color:var(--title);
-  display:inline-flex; align-items:center; justify-content:center; gap:7px; line-height:1.35; text-decoration: none;
-}
-.btn:hover{background:var(--teal-bg);}
-.btn.brand{background:var(--title); border-color:var(--title); color:#fff;}
-.btn.brand:hover{background:var(--dark);}
-.btn.ghost{padding:5px 10px; font-size:12px; color:var(--title);}
-body.dark .btn{background:#2A3040; border-color:var(--bord); color:#C9CEE4;}
-body.dark .btn:hover{background:#333A4E; border-color:#4E5570;}
-
-/* Layout & Cards */
-.wrap{max-width:1240px; margin:30px auto 40px; padding:30px 40px 40px; background:var(--sheet); border:2px solid var(--title); border-radius:4px;}
-body.dark .wrap{background:var(--sheet); border-color:var(--bord);}
-@media(max-width:1280px){.wrap{margin:30px 24px 40px;}}
-@media(max-width:768px){.wrap{margin:14px 16px 32px; padding:20px 24px 34px;}}
-@media(max-width:600px){.wrap{margin:10px 8px 24px; padding:12px 10px 22px; border-width:1px;} .logo h1{font-size:18px;}}
-
-.card{background:var(--card); border:1px solid var(--bord); border-radius:3px; padding:20px; min-width:0; overflow-wrap:break-word;}
-.card+.card{margin-top:24px;}
-body.dark .card{background:var(--card); border-color:var(--bord);}
-
-/* Card Headers with Colored Bands */
-.card h2{
-  font-size:14px; font-weight:600; letter-spacing:.3px; color:var(--bandText); background:var(--band);
-  margin:-20px -20px 20px; padding:10px 20px; position:relative;
-  display:flex; align-items:center; justify-content:flex-start; gap:9px; text-align:left;
-}
-body.dark .card h2{border-bottom:1px solid var(--rule);}
-
-/* Colored Edge Classes */
-.edge{--band:var(--blue-bg); --bandText:var(--blue);}
-.edge.yellow{--band:var(--purple-bg); --bandText:var(--purple);}
-.edge.green{--band:var(--green-bg); --bandText:var(--green);}
-.edge.blue{--band:var(--teal-bg); --bandText:var(--teal);}
-.edge.pink{--band:var(--rose-bg); --bandText:var(--rose);}
-.edge.orange{--band:var(--amber-bg); --bandText:var(--amber);}
-
-/* Title Block */
-.titlecard{padding:30px 20px 24px; text-align:center; margin-bottom: 24px;}
-.bigtitle{font-size:clamp(28px,4vw,50px); line-height:1.12; color:#3b3a8d; text-align:center; letter-spacing:-1.5px; margin-bottom: 10px;}
-body.dark .bigtitle{color:#A9A8F4;}
-.subtitle { font-size: 15px; color: var(--soft); font-weight: 500; }
-
-/* Grid Layouts for Content */
-.two-col{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
-.two-col > .card{margin-top:0;}
-@media(max-width:860px){.two-col{grid-template-columns:1fr;}}
-
-/* Guide Specific Content Formatting */
-.guide-image { max-width: 100%; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; border: 1px solid var(--bord); margin-bottom: 16px; display: block; background: var(--teal-bg); }
-.guide-callout { background: var(--band); border-left: 4px solid var(--bandText); padding: 14px 18px; margin-bottom: 16px; border-radius: 0 4px 4px 0; color: var(--ink); font-size: 13.5px;}
-body.dark .guide-callout { color: var(--ink); }
-
-/* File Tree formatting */
-.file-tree { background: #eef2fa; padding: 18px 20px; border-radius: 8px; border: 2px solid #d4e4ff; font-family: monospace; font-size: 13.5px; margin-bottom: 16px; overflow-x: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.04); }
-body.dark .file-tree { background: #1e2235; border-color: #3a4156; box-shadow: inset 0 2px 6px rgba(0,0,0,0.2); }
-.file-tree ul { list-style: none; padding-left: 20px; margin: 0; }
-.file-tree > ul { padding-left: 0; }
-.file-tree li { margin-bottom: 4px; position: relative; }
-.file-tree li::before { content: "├─"; color: var(--soft); position: absolute; left: -16px; }
-.file-tree li:last-child::before { content: "└─"; }
-.file-tree > ul > li::before { content: ""; }
-.file-tree .folder { font-weight: 700; color: var(--blue); }
-.file-tree .file { color: var(--ink); }
-.file-tree .note { color: var(--soft); font-style: italic; font-size: 11.5px; margin-left: 8px;}
-
-/* Code Window Styles */
-.rr-code-window { border-radius: 8px; overflow: hidden; background: #fafbfc; border: 1px solid var(--bord); margin-top: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 100%; }
-body.dark .rr-code-window { background: #24292e; border-color: var(--rule); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-
-.rr-code-chrome { display: flex; align-items: center; padding: 10px 14px; background: #f0f3f6; border-bottom: 1px solid var(--bord); cursor: pointer; user-select: none; list-style: none; font-family: 'Poppins', sans-serif;}
-body.dark .rr-code-chrome { background: #1e2235; border-bottom-color: #141722; }
-.rr-code-chrome::-webkit-details-marker { display: none; }
-
-.rr-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; display: inline-block; }
-.rr-dot-r { background: #ff5f56; }
-.rr-dot-y { background: #ffbd2e; }
-.rr-dot-g { background: #27c93f; }
-
-.rr-code-lang { color: var(--title); font-size: 12px; margin-left: 10px; font-weight: 600; }
-body.dark .rr-code-lang { color: #8e95b5; font-weight: 500; }
-
-.rr-code-toggle { margin-left: auto; font-size: 11px; color: var(--title); font-weight: 600; padding: 4px 8px; border-radius: 4px; background: rgba(0,0,0,0.05); }
-body.dark .rr-code-toggle { color: #8e95b5; background: rgba(255,255,255,0.05); }
-
-details[open] .rr-toggle-closed { display: none; }
-details:not([open]) .rr-toggle-open { display: none; }
-
-.rr-copy-btn { background: transparent; border: 1px solid rgba(0,0,0,0.1); color: var(--title); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 11px; font-family: 'Poppins', sans-serif; font-weight: 500; margin-left: 10px; padding: 4px 10px; border-radius: 4px; transition: background 0.2s, color 0.2s; }
-.rr-copy-btn:hover { background: rgba(0,0,0,0.05); color: var(--title); }
-body.dark .rr-copy-btn { border-color: rgba(255,255,255,0.1); color: #8e95b5; }
-body.dark .rr-copy-btn:hover { background: rgba(255,255,255,0.1); color: #dde1ee; }
-
-.astro-code { margin: 0; padding: 16px; font-size: 13.5px; line-height: 1.5; font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; background: transparent !important; }
-
-/* Auto-adapting syntax highlight colors (Light Mode overrides) */
-.astro-code span[style*="#E1E4E8"] { color: #24292e !important; }
-.astro-code span[style*="#F97583"] { color: #d73a49 !important; }
-.astro-code span[style*="#9ECBFF"] { color: #032f62 !important; }
-.astro-code span[style*="#79B8FF"] { color: #005cc5 !important; }
-.astro-code span[style*="#FFAB70"] { color: #e36209 !important; }
-.astro-code span[style*="#6A737D"] { color: #6a737d !important; }
-
-/* Dark Mode retains original syntax colors */
-body.dark .astro-code span[style*="#E1E4E8"] { color: #e1e4e8 !important; }
-body.dark .astro-code span[style*="#F97583"] { color: #F97583 !important; }
-body.dark .astro-code span[style*="#9ECBFF"] { color: #9ECBFF !important; }
-body.dark .astro-code span[style*="#79B8FF"] { color: #79B8FF !important; }
-body.dark .astro-code span[style*="#FFAB70"] { color: #FFAB70 !important; }
-body.dark .astro-code span[style*="#6A737D"] { color: #6A737D !important; }
-
-/* ===== Shared site header/footer (Tailwind) ===== */
-/* Scoped resets so disabling Tailwind Preflight doesn't leave the header/footer
-   links, button and icons with default browser styling. */
-/* Re-create Preflight's border reset here so the border-* utilities (the thick
-   dark edge line + logo/icon outlines) actually render solid. */
+/* ── Shared header/footer resets ── */
 header, header *, header::before, header::after,
 footer, footer *, footer::before, footer::after {
   border-width: 0; border-style: solid; border-color: currentColor;
@@ -216,344 +75,1378 @@ header button { background: transparent; border: 0; padding: 0; cursor: pointer;
 header svg, footer svg { display: block; }
 footer p { margin: 0; }
 
-/* ===== Floating dark-mode toggle (scoped to this guide) ===== */
+/* ── Article layout ── */
+.post-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 24px 96px;
+  flex: 1;
+  min-width: 0; /* let wide descendants (code blocks) scroll instead of widening the page */
+}
+@media (min-width: 1200px) { .post-wrap { max-width: 880px; } }
+@media (min-width: 1600px) { .post-wrap { max-width: 1040px; } }
+
+/* ── Article header ── */
+.post-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+}
+.post-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--purple);
+  background: var(--tag-bg);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.post-title {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.post-meta {
+  font-size: 13px;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.post-meta strong { color: var(--ink-soft); font-weight: 600; }
+
+/* ── Table of contents (left rail) ── */
+.toc {
+  position: fixed;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  max-width: 42px;
+  max-height: 78vh;
+  overflow: hidden;
+  padding: 14px 16px 14px 18px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font-family: 'Poppins', sans-serif;
+  transition: max-width .25s ease, background .2s, box-shadow .2s, border-color .2s;
+}
+.toc.empty { display: none; }
+.toc-head {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1.6px;
+  text-transform: uppercase; color: var(--ink-faint);
+  white-space: nowrap; margin: 0 0 12px 1px;
+  opacity: 0; transition: opacity .2s;
+}
+.toc-list { display: flex; flex-direction: column; gap: 1px; list-style: none; margin: 0; padding: 0; }
+.toc-item {
+  display: flex; align-items: center; gap: 13px;
+  text-decoration: none; padding: 5px 0; cursor: pointer;
+}
+.toc-tick {
+  width: 16px; height: 2px; border-radius: 2px;
+  background: var(--ink-faint); opacity: .45; flex: none;
+  transition: width .2s, background .2s, opacity .2s;
+}
+.toc-label {
+  font-size: 13px; line-height: 1.35; color: var(--ink-soft);
+  white-space: nowrap; opacity: 0; transform: translateX(-4px);
+  transition: opacity .2s, transform .2s, color .15s;
+}
+.toc-item:hover .toc-tick { background: var(--purple); opacity: 1; }
+.toc-item:hover .toc-label { color: var(--purple); }
+.toc-item.active .toc-tick { width: 22px; background: var(--purple); opacity: 1; }
+.toc-item.active .toc-label { color: var(--purple); font-weight: 600; }
+.toc:hover, .toc.open {
+  width: max-content;     /* grow to fit the longest title… */
+  max-width: 360px;       /* …but never run off the edge */
+  background: var(--bg);
+  border-color: var(--rule);
+  box-shadow: 0 14px 50px rgba(0,0,0,.12);
+  overflow-y: auto;
+}
+.toc:hover .toc-head, .toc.open .toc-head { opacity: 1; }
+.toc:hover .toc-label, .toc.open .toc-label { opacity: 1; transform: none; }
+@media (max-width: 1080px) { .toc { display: none; } }
+
+/* ── Article body ── */
+.post-body { color: var(--ink); }
+
+/* ── Article blocks (editable units) ── */
+.ab { margin-bottom: 32px; }
+.ab:last-child { margin-bottom: 0; }
+
+/* Text block */
+.ab-text h2 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 8px 0 14px;
+  color: var(--ink);
+}
+.ab-text p { margin: 0 0 20px; }
+.ab-text p:last-child { margin-bottom: 0; }
+.ab-text ul, .ab-text ol { padding-left: 22px; margin: 0 0 20px; }
+.ab-text li { margin-bottom: 8px; }
+
+/* Image block */
+.ab-image { }
+.ab-image img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: zoom-in;
+}
+.ab-image figcaption {
+  font-size: 13px;
+  color: var(--ink-faint);
+  text-align: center;
+  line-height: 1.5;
+}
+.edit-mode .ab-image figcaption[contenteditable]:empty::before {
+  content: 'Add a caption (optional)';
+  color: var(--ink-faint); font-style: italic; opacity: .7;
+}
+
+/* Pull quote */
+.ab-quote blockquote {
+  margin: 0;
+  padding: 6px 0 6px 22px;
+  border-left: 3px solid var(--purple);
+  font-size: 19px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* Divider */
+.ab-divider { text-align: center; color: var(--rule); font-size: 22px; letter-spacing: 10px; user-select: none; }
+
+/* Affiliate CTA */
+.ab-cta {
+  background: var(--purple-tint);
+  border: 1px solid var(--purple-light);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+body.dark .ab-cta { background: #1e1a30; border-color: #3a3060; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background-color: var(--purple); color: #fff;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.14), rgba(0,0,0,0.12));
+  font-weight: 700; font-size: 15px;
+  padding: 13px 28px; border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.22);
+  transition: background-color .15s, transform .1s, box-shadow .15s;
+  font-family: 'Poppins', sans-serif;
+}
+.cta-btn:hover { background-color: var(--purple-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.22); }
+.cta-btn:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.12); }
+.cta-btn svg { width: 18px; height: 18px; flex: none; }
+.cta-btn.full { display: flex; justify-content: center; width: 100%; }
+.cta-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.cta-btns .cta-btn { flex: 1 1 200px; justify-content: center; text-align: center; }
+.cta-add-btn { display: block; margin: 14px auto 0; padding: 8px 16px; border: 1.5px dashed var(--purple-light); border-radius: 8px; background: transparent; color: var(--purple); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+.cta-add-btn:hover { background: var(--purple-tint); }
+.edit-mode .ab-cta .cta-btn { cursor: pointer; }
+.cta-btn.cta-amazon { background-color:#FFD814; color:#0F1111; }
+.cta-btn.cta-amazon:hover { background-color:#F7CA00; }
+.cta-btn.cta-aliexpress { background-color:#E62E04; color:#fff; }
+.cta-btn.cta-aliexpress:hover { background-color:#c92704; }
+.link-colors { display:flex; gap:10px; align-items:center; justify-content:center; padding:2px 0; }
+.lc-swatch { width:30px; height:30px; border-radius:50%; border:2px solid var(--rule); cursor:pointer; padding:0; overflow:hidden; }
+.lc-swatch.selected { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--purple); }
+.lc-custom { background: conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); position:relative; }
+.lc-custom input[type=color] { position:absolute; inset:0; opacity:0; width:100%; height:100%; border:none; cursor:pointer; padding:0; }
+.link-icons { display:flex; gap:6px; align-items:center; justify-content:center; flex-wrap:wrap; padding:2px 0; }
+.li-icon { width:34px; height:34px; border-radius:8px; border:1.5px solid var(--rule); background:var(--bg); color:var(--ink-soft); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; font-size:15px; }
+.li-icon:hover { border-color:var(--purple); color:var(--purple); }
+.li-icon.selected { border-color:var(--purple); color:var(--purple); box-shadow:0 0 0 2px var(--purple-tint); }
+.li-icon svg { width:17px; height:17px; }
+
+/* ── Image lightbox ── */
+.lb { display:none; position:fixed; inset:0; z-index:500; background:rgba(10,8,20,0.93); align-items:center; justify-content:center; }
+.lb.open { display:flex; }
+.lb-fig { margin:0; display:flex; flex-direction:column; align-items:center; gap:14px; padding:20px; }
+.lb-fig img { max-width:92vw; max-height:82vh; width:auto; height:auto; border-radius:8px; box-shadow:0 24px 70px rgba(0,0,0,.55); cursor:default; }
+.lb-cap { color:#d8d3ea; font-size:14px; line-height:1.5; text-align:center; font-family:'Poppins',sans-serif; max-width:700px; }
+.lb-close, .lb-nav { position:fixed; background:rgba(255,255,255,0.12); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:999px; transition:background .15s; font-family:'Poppins',sans-serif; line-height:1; }
+.lb-close:hover, .lb-nav:hover { background:rgba(255,255,255,0.26); }
+.lb-close { top:16px; right:18px; width:44px; height:44px; font-size:20px; }
+.lb-nav { top:50%; transform:translateY(-50%); width:52px; height:52px; font-size:34px; padding-bottom:4px; }
+.lb-prev { left:16px; } .lb-next { right:16px; }
+.lb-count { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); color:#c9c4dd; font-size:13px; font-family:'Poppins',sans-serif; letter-spacing:.5px; }
+@media (max-width:600px){ .lb-nav{ width:44px; height:44px; font-size:28px; } }
+
+/* ── Dark-mode toggle (left side, near the contents rail) ── */
+#themeToggle {
+  position: fixed; left: 16px; bottom: 16px; z-index: 55;
+  width: 42px; height: 42px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); color: var(--purple);
+  border: 1px solid var(--rule);
+  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  cursor: pointer; transition: background .15s, border-color .15s, transform .1s;
+}
+#themeToggle:hover { background: var(--tag-bg); border-color: var(--purple-light); transform: translateY(-1px); }
+#themeToggle svg { width: 20px; height: 20px; display: block; }
+body.dark #themeToggle { color: var(--purple-light); }
+.cta-note {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+/* ── Add block button ── */
+#add-block-btn {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 2px dashed var(--purple-light);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--purple);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: background .15s;
+}
+#add-block-btn:hover { background: var(--purple-tint); }
+.edit-mode #add-block-btn { display: block; }
+
+/* ── Edit mode ── */
+.edit-fab {
+  position: fixed; left: 16px; bottom: 70px; z-index: 60;
+  display: none; align-items: center; gap: 7px;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--purple); color: #fff;
+  border: none; font-weight: 700; font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 16px rgba(98,84,164,.35);
+  cursor: pointer; transition: background .15s;
+}
+.edit-fab:hover { background: var(--purple-dark); }
+.edit-fab.show { display: inline-flex; }
+.edit-fab.active { background: #22a06b; }
+
 .theme-fab {
   position: fixed; right: 18px; bottom: 18px; z-index: 60;
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 16px; border-radius: 999px;
-  background: var(--card); color: var(--title);
-  border: 1px solid var(--bord); font-weight: 600; font-size: 13px;
-  font-family: 'Poppins', Arial, sans-serif;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.18); cursor: pointer;
-  transition: background .15s, border-color .15s;
+  background: var(--bg); color: var(--purple);
+  border: 1px solid var(--rule);
+  font-weight: 600; font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  cursor: pointer; transition: background .15s;
 }
-.theme-fab:hover { background: var(--teal-bg); border-color: var(--title); }
+.theme-fab:hover { background: var(--tag-bg); }
 
+/* Edit-mode block decoration */
+.edit-mode .ab {
+  position: relative;
+  outline: 1.5px dashed transparent;
+  border-radius: 6px;
+  padding: 4px;
+  transition: outline-color .15s;
+}
+.edit-mode .ab:hover { outline-color: var(--purple-light); }
+
+.block-toolbar {
+  display: none;
+  position: absolute;
+  top: -14px; right: 0;
+  gap: 4px;
+  z-index: 20;
+}
+.edit-mode .ab:hover .block-toolbar,
+.edit-mode .ab:focus-within .block-toolbar { display: flex; }
+
+.block-btn {
+  width: 26px; height: 26px;
+  border-radius: 5px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+.block-btn.drag  { background: #e0ddf8; color: var(--purple); cursor: grab; }
+.block-btn.drag:active { cursor: grabbing; }
+.block-btn.del   { background: #fde8e8; color: #c0392b; }
+
+.edit-mode [contenteditable] {
+  outline: none;
+  border-radius: 3px;
+  cursor: text;
+}
+.edit-mode [contenteditable]:focus {
+  background: rgba(98,84,164,.05);
+  box-shadow: 0 0 0 2px var(--purple-light);
+  border-radius: 4px;
+}
+
+.edit-mode .ab-image img { cursor: pointer; }
+.edit-mode .ab-image img:hover { opacity: 0.85; }
+
+.spec-row-del { display: none; background: #fde8e8; color: #c0392b; border: none; border-radius: 3px; padding: 1px 5px; font-size: 10px; cursor: pointer; margin-left: 5px; vertical-align: middle; }
+.edit-mode .spec-row-del { display: inline; }
+.spec-add-row { display: none; width: 100%; padding: 7px; border: none; border-top: 1px dashed var(--rule); background: var(--tag-bg); color: var(--purple); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+.edit-mode .spec-add-row { display: block; }
+
+.sortable-ghost { opacity: 0.3; }
+.sortable-chosen { box-shadow: 0 8px 30px rgba(0,0,0,.12) !important; }
+
+/* ── Modals & Toast ── */
+.modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 400; align-items: center; justify-content: center; }
+.modal-backdrop.open { display: flex; }
+.modal-box { background: var(--bg); border: 1px solid var(--rule); border-radius: 14px; padding: 28px; width: min(360px, 92vw); display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+.modal-box h3 { font-size: 14px; font-weight: 700; color: var(--purple); text-align: center; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px; }
+.modal-input { padding: 10px 14px; border: 1.5px solid var(--rule); border-radius: 8px; background: var(--bg); color: var(--ink); font-size: 14px; font-family: 'Poppins', sans-serif; width: 100%; }
+.modal-input:focus { outline: none; border-color: var(--purple); }
+.modal-btns { display: flex; gap: 8px; }
+.modal-btns button { flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; border: 1.5px solid var(--rule); }
+.modal-btns .primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+.modal-btns .secondary { background: transparent; color: var(--ink-faint); }
+.img-up-btn { display:flex; align-items:center; justify-content:center; gap:8px; padding:11px; border:1.5px dashed var(--purple-light); border-radius:8px; background:var(--tag-bg); color:var(--purple); font-size:13px; font-weight:600; cursor:pointer; }
+.img-up-btn:hover { background:#ece8fb; }
+.img-or { text-align:center; font-size:11px; color:var(--ink-faint); letter-spacing:1px; }
+.img-file-name { font-size:12px; color:var(--purple); text-align:center; min-height:14px; word-break:break-all; }
+
+.bm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bm-btn { padding: 14px 8px; border: 1.5px solid var(--rule); border-radius: 10px; background: var(--bg); color: var(--ink); font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: border-color .15s, background .15s; font-family: 'Poppins', sans-serif; }
+.bm-btn:hover { border-color: var(--purple); background: var(--tag-bg); }
+.bm-btn span { font-size: 22px; }
+.bm-cancel { margin-top: 4px; background: transparent; border: 1px solid var(--rule); border-radius: 8px; padding: 8px; color: var(--ink-faint); font-size: 13px; cursor: pointer; font-family: 'Poppins', sans-serif; }
+
+#toast { position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 9px 20px; border-radius: 999px; font-size: 13px; font-weight: 500; font-family: 'Poppins', sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.2); opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 600; white-space: nowrap; }
+#toast.show { opacity: 1; }
+
+/* ── Block palette (edit mode) ── */
+.block-palette {
+  display: none;
+  position: fixed; right: 14px; top: 50%; transform: translateY(-50%);
+  z-index: 70; flex-direction: column; gap: 5px;
+  width: 142px; max-height: 86vh; overflow-y: auto;
+  padding: 12px 10px;
+  background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 14px; box-shadow: 0 14px 50px rgba(0,0,0,.16);
+  font-family: 'Poppins', sans-serif;
+}
+.edit-mode .block-palette { display: flex; }
+.bp-head { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-faint); text-align: center; margin-bottom: 4px; }
+.bp-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--rule); background: var(--tag-bg);
+  color: var(--ink); font-size: 12.5px; font-weight: 600;
+  cursor: grab; user-select: none;
+  transition: border-color .12s, color .12s, background .12s;
+}
+.bp-item:hover { border-color: var(--purple); color: var(--purple); }
+.bp-item:active { cursor: grabbing; }
+.bp-ic { font-size: 14px; width: 18px; text-align: center; flex: none; }
+.bp-hint { font-size: 9.5px; color: var(--ink-faint); text-align: center; margin-top: 4px; line-height: 1.35; }
+@media (max-width: 1080px) {
+  /* Narrow screens: dock the palette as a horizontal bar above the FABs so it never covers the article */
+  .block-palette {
+    top: auto; bottom: 72px; right: 50%; transform: translateX(50%);
+    flex-direction: row; width: auto; max-width: 92vw; max-height: none;
+    overflow-x: auto; overflow-y: hidden; gap: 6px;
+  }
+  .block-palette .bp-head, .block-palette .bp-hint { display: none; }
+  .bp-item { flex: 0 0 auto; }
+}
+
+/* ── Spec table (optional) ── */
+.spec-wrap { border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; margin-bottom: 8px; }
+.spec-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.spec-table th, .spec-table td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.spec-table tr:last-child th, .spec-table tr:last-child td { border-bottom: 0; }
+.spec-table th { width: 38%; font-weight: 600; color: var(--purple); background: var(--tag-bg); border-right: 1px solid var(--rule); }
+.spec-table td { color: var(--ink); background: var(--bg); }
+
+/* ── Callout / note box (guide-specific) ── */
+.ab-note .note-box {
+  background: var(--purple-tint);
+  border-left: 4px solid var(--purple);
+  padding: 14px 18px;
+  border-radius: 0 8px 8px 0;
+  color: var(--ink);
+  font-size: 15.5px;
+  line-height: 1.65;
+}
+.ab-note .note-box p { margin: 0; }
+.ab-note .note-box p + p { margin-top: 10px; }
+body.dark .ab-note .note-box { background: #1e1a30; }
+
+/* ── Sub-heading (guide-specific) ── */
+.ab-text h3 { font-size: 17px; font-weight: 700; margin: 20px 0 8px; color: var(--ink); }
+.ab-text h3 .h3-sub { font-size: 12.5px; font-weight: 500; color: var(--ink-faint); margin-left: 4px; }
+
+/* ── Inline code (guide-specific) ── */
+/* Scoped to #guide-cards (not .post-body) so styling survives the guide save
+   endpoint, which re-wraps content without the post-body class. */
+#guide-cards code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.88em;
+  background: var(--tag-bg);
+  color: var(--purple);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+body.dark #guide-cards code { color: var(--purple-light); }
+/* The code window's own <pre><code> must stay unstyled by the inline-code rule. */
+#guide-cards .astro-code code { background: transparent; color: inherit; padding: 0; font-size: inherit; }
+
+/* ── Horizontal-scroll blocks (code window, file tree) ── */
+/* Grid the wrapper with a minmax(0,1fr) track so the inner box is locked to the
+   column width and can never widen the page — its content scrolls inside the box.
+   This sidesteps the flex-column min-content quirk that lets wide <pre> content
+   push the whole page sideways on narrow/mobile screens. */
+.ab-scroll { display: grid; grid-template-columns: minmax(0, 1fr); }
+
+/* ── File tree (guide-specific) ── */
+.file-tree {
+  background: var(--tag-bg);
+  padding: 18px 22px;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  overflow-x: auto;
+}
+.file-tree ul { list-style: none; padding-left: 20px; margin: 0; }
+.file-tree > ul { padding-left: 0; }
+.file-tree li { margin-bottom: 4px; position: relative; }
+.file-tree li::before { content: "├─"; color: var(--ink-faint); position: absolute; left: -16px; }
+.file-tree li:last-child::before { content: "└─"; }
+.file-tree > ul > li::before { content: ""; }
+.file-tree .folder { font-weight: 700; color: var(--purple); }
+body.dark .file-tree .folder { color: var(--purple-light); }
+.file-tree .file { color: var(--ink); }
+.file-tree .note { color: var(--ink-faint); font-style: italic; font-size: 12px; margin-left: 8px; }
+
+/* ── Code window (guide-specific) ── */
+.rr-code-window { border-radius: 10px; overflow: hidden; background: var(--bg); border: 1px solid var(--rule); box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 100%; min-width: 0; }
+body.dark .rr-code-window { background: #1b1726; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.rr-code-chrome { display: flex; align-items: center; padding: 10px 14px; background: var(--tag-bg); border-bottom: 1px solid var(--rule); cursor: pointer; user-select: none; list-style: none; font-family: 'Poppins', sans-serif; }
+.rr-code-chrome::-webkit-details-marker { display: none; }
+.rr-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; display: inline-block; }
+.rr-dot-r { background: #ff5f56; } .rr-dot-y { background: #ffbd2e; } .rr-dot-g { background: #27c93f; }
+.rr-code-lang { color: var(--purple); font-size: 12px; margin-left: 10px; font-weight: 600; }
+body.dark .rr-code-lang { color: var(--ink-faint); font-weight: 500; }
+.rr-code-toggle { margin-left: auto; font-size: 11px; color: var(--purple); font-weight: 600; padding: 4px 8px; border-radius: 4px; background: rgba(98,84,164,.1); }
+body.dark .rr-code-toggle { color: var(--ink-faint); background: rgba(255,255,255,.05); }
+details[open] .rr-toggle-closed { display: none; }
+details:not([open]) .rr-toggle-open { display: none; }
+.rr-copy-btn { background: transparent; border: 1px solid var(--rule); color: var(--purple); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 11px; font-family: 'Poppins', sans-serif; font-weight: 500; margin-left: 10px; padding: 4px 10px; border-radius: 4px; transition: background .2s, color .2s; }
+.rr-copy-btn:hover { background: var(--tag-bg); }
+body.dark .rr-copy-btn { border-color: var(--rule); color: var(--ink-faint); }
+body.dark .rr-copy-btn:hover { background: rgba(255,255,255,.06); color: var(--ink); }
+.astro-code { margin: 0; padding: 16px; font-size: 13px; line-height: 1.55; font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; background: transparent !important; overflow-x: auto; max-width: 100%; }
+.astro-code code { background: transparent; padding: 0; color: inherit; font-size: inherit; }
+/* Syntax highlight — light-mode overrides of the github-dark inline colors */
+.astro-code span[style*="#E1E4E8"] { color: #24292e !important; }
+.astro-code span[style*="#F97583"] { color: #d73a49 !important; }
+.astro-code span[style*="#9ECBFF"] { color: #032f62 !important; }
+.astro-code span[style*="#79B8FF"] { color: #005cc5 !important; }
+.astro-code span[style*="#FFAB70"] { color: #e36209 !important; }
+.astro-code span[style*="#6A737D"] { color: #6a737d !important; }
+/* Dark mode keeps the original github-dark colors */
+body.dark .astro-code span[style*="#E1E4E8"] { color: #e1e4e8 !important; }
+body.dark .astro-code span[style*="#F97583"] { color: #F97583 !important; }
+body.dark .astro-code span[style*="#9ECBFF"] { color: #9ECBFF !important; }
+body.dark .astro-code span[style*="#79B8FF"] { color: #79B8FF !important; }
+body.dark .astro-code span[style*="#FFAB70"] { color: #FFAB70 !important; }
+body.dark .astro-code span[style*="#6A737D"] { color: #6A737D !important; }
 </style>
 </head>
 <body>
 
 <div data-include="header"></div>
 
-<main class="wrap">
-  
-  <div class="card titlecard">
-    <h1 class="bigtitle">Build a Portable PC & Emulation Drive</h1>
-    <div class="subtitle">A complete guide to a standalone, zero-hassle gaming setup.</div>
+<div class="post-wrap">
+
+  <!-- Article header (not in editable region — edit the HTML directly for title/tag/date) -->
+  <header class="post-header">
+    <div class="post-tag">Guide</div>
+    <h1 class="post-title">Build a Portable PC &amp; Emulation Drive</h1>
+    <div class="post-meta">A standalone, zero-hassle gaming setup you can plug into any Windows PC.</div>
+  </header>
+
+  <!-- EDITABLE-START -->
+  <div id="guide-cards" class="post-body">
+
+  <figure class="ab ab-image">
+    <img src="https://placehold.co/1200x675/f3f1fc/6254A4?text=Custom+Drive+vs+Pre-built" alt="A clean custom-built drive compared to a messy commercial pre-built">
+    <figcaption>A clean, custom-built drive vs. a cluttered commercial pre-built.</figcaption>
+  </figure>
+
+  <div class="ab ab-text">
+    <h2 id="introduction-0" style="scroll-margin-top: 90px;">Introduction &amp; Why Build Your Own?</h2>
+    <p>This tutorial will show you how to safely and easily build your own fully portable, standalone emulation and modern PC gaming drive. By the end of this setup, you&rsquo;ll have an external SSD or USB stick that you can plug into any Windows computer, instantly boot a beautiful retro gaming frontend, and jump straight into your games with auto-mapped controllers.</p>
   </div>
 
-  <div class="card edge blue">
-    <h2>Introduction & Why Build Your Own?</h2>
-    <p>This tutorial will show you how to safely and easily build your own fully portable, standalone emulation and modern PC gaming drive. By the end of this setup, you’ll have an external SSD or USB stick that you can plug into any Windows computer, instantly boot a beautiful retro gaming frontend, and jump straight into your games with auto-mapped controllers.</p>
-    
-    <p><strong>Note:</strong> This guide is intended for Windows users. Everything we do here is done in a specific order. If you skip around and get lost, just scroll up a bit to find the initial instructions.</p>
-    
-    <img src="https://placehold.co/800x450/eef5ff/3b3a8d?text=Clean+Custom+Drive+vs+Messy+Pre-built" alt="Custom vs Pre-built comparison" class="guide-image">
+  <div class="ab ab-note">
+    <div class="note-box"><p><strong>Note:</strong> This guide is intended for Windows users. Everything we do here is done in a specific order. If you skip around and get lost, just scroll up a bit to find the initial instructions.</p></div>
+  </div>
 
-    <p>There are many pre-built drives sold by companies like Kinhank and Peaprit, but I highly recommend building your own instead. Those commercial drives often rely on malicious background scripts and pre-cracked files that actually require you to dangerously disable your PC’s antivirus just to play a game.</p>
-    
+  <div class="ab ab-text">
+    <p>There are many pre-built drives sold by companies like Kinhank and Peaprit, but I highly recommend building your own instead. Those commercial drives often rely on malicious background scripts and pre-cracked files that actually require you to dangerously disable your PC&rsquo;s antivirus just to play a game.</p>
     <p>Our build is 100% transparent. We are using purely legal, open-source structures and standard Windows commands. It makes the whole system incredibly safe, lightweight, and completely customizable to your exact preferences.</p>
   </div>
 
-  <div class="card edge pink">
-    <h2>Understanding Your Drive Layout</h2>
+  <div class="ab ab-text">
+    <h2 id="drive-layout-1" style="scroll-margin-top: 90px;">Understanding Your Drive Layout</h2>
     <p>The golden rule to building a high-end emulation drive is preventing interface clutter. If you place raw PC installation files inside the emulator scanning folders, your frontend (RetroBat) will become cluttered with duplicate executables, unins000 files, and messy layout components.</p>
-    <p>To solve this, we use a separated directory architecture. Your massive PC game installations will live in a custom root folder, completely hidden from the emulation system’s eyes. Meanwhile, only tiny launcher scripts will sit in your scanning path.</p>
-    
+    <p>To solve this, we use a separated directory architecture. Your massive PC game installations will live in a custom root folder, completely hidden from the emulation system&rsquo;s eyes. Meanwhile, only tiny launcher scripts will sit in your scanning path.</p>
     <p>Here is what your drive structure will look like:</p>
-    
+  </div>
+
+  <div class="ab ab-scroll">
     <div class="file-tree">
-      <ul>
-        <li><span class="folder">💾 D:\ (Root of your drive)</span>
           <ul>
-            <li><span class="folder">📁 PC-Games</span> <span class="note">(All massive GOG/DRM-free folders live safely here)</span>
+            <li><span class="folder">💾 D:\ (Root of your drive)</span>
               <ul>
-                <li><span class="folder">📁 Snapshot</span></li>
-                <li><span class="folder">📁 MinaTheHollower</span></li>
-              </ul>
-            </li>
-            <li><span class="folder">📁 RetroBat</span> <span class="note">(Your emulation frontend core files)</span>
-              <ul>
-                <li><span class="folder">📁 roms</span>
+                <li><span class="folder">📁 PC-Games</span> <span class="note">(All massive GOG/DRM-free folders live safely here)</span>
                   <ul>
-                    <li><span class="folder">📁 windows</span> <span class="note">(Contains ONLY your clean, generated .bat launchers)</span></li>
+                    <li><span class="folder">📁 Snapshot</span></li>
+                    <li><span class="folder">📁 MinaTheHollower</span></li>
                   </ul>
                 </li>
+                <li><span class="folder">📁 RetroBat</span> <span class="note">(Your emulation frontend core files)</span>
+                  <ul>
+                    <li><span class="folder">📁 roms</span>
+                      <ul>
+                        <li><span class="folder">📁 windows</span> <span class="note">(Contains ONLY your clean, generated .bat launchers)</span></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><span class="file">📄 Update_My_Games.bat</span> <span class="note">(The master game scanning automation script)</span></li>
               </ul>
             </li>
-            <li><span class="file">📄 Update_My_Games.bat</span> <span class="note">(The master game scanning automation script)</span></li>
           </ul>
-        </li>
-      </ul>
-    </div>
+        </div>
   </div>
 
-  <div class="card edge green">
-    <h2>1. Format and Initial Setup</h2>
+  <div class="ab ab-text">
+    <h2 id="format-setup-2" style="scroll-margin-top: 90px;">1. Format and Initial Setup</h2>
     <p>Formatting and placing folders correctly on your drive right now prevents common read/write crashes and path-finding faults later on.</p>
-      
-      <ol>
-        <li><strong>Format the Drive as exFAT:</strong> Plug your external SSD into your PC. Back up any vital files, then format it. Select exFAT as the File System. This is mandatory — exFAT allows the SSD to easily share data across different versions of Windows, bypassing local system administrative blockades and 4GB single-file limits.</li>
-        <li><strong>Install RetroBat to the Root:</strong> Download the latest installer from the RetroBat website. When running the installer, change the path to point directly to the root directory of your portable drive (e.g., <code>D:\RetroBat</code>). Do not let it install to your local internal <code>C:</code> drive.</li>
-        <li><strong>Construct the "PC-Games" Vault:</strong> Go to the root of your external drive in File Explorer, right-click, and create a brand-new folder named exactly <code>PC-Games</code>. This is your safe zone where you will deposit all heavy, standalone PC games.</li>
-      </ol>
-      
-      <img src="https://placehold.co/800x450/e6faf3/107a47?text=exFAT+Format+Screen" alt="Windows exFAT Formatting Screen" class="guide-image">
-    </div>
-
-    <div class="card edge orange">
-      <h2>2. The Master Automation Script</h2>
-      <p>When you move an external SSD from PC to PC, Windows dynamically shifts the drive letter depending on what else is plugged in. For instance, the drive might load as <code>D:</code> on your desktop, but turn into <code>G:</code> on your laptop. If you write static folders, your game links will break immediately.</p>
-      
-      <p>We solve this drive letter problem permanently with a master orchestration script. In addition to handling dynamic drive letters, this script includes a Smart Steamworks API Injector. It automatically detects if you are copying a Steam game, resolves the official Steam AppID, and auto-creates the required <code>steam_appid.txt</code> file to prevent licensing errors on startup.</p>
-
-      <div class="guide-callout">
-        <strong>Action Item:</strong> Create a new text file directly on the root of your external drive, name it exactly <code>Update_My_Games.bat</code>, copy the exact code block you have for your script inside it, and save the file.
-      </div>
-
-      <details class="rr-code-window"><summary class="rr-code-chrome"><span class="rr-dot rr-dot-r"></span><span class="rr-dot rr-dot-y"></span><span class="rr-dot rr-dot-g"></span><span class="rr-code-lang">Batch Script</span><span class="rr-code-toggle rr-toggle-closed">▶  Show Code</span><span class="rr-code-toggle rr-toggle-open">▼  Hide</span><button class="rr-copy-btn" aria-label="Copy code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span class="rr-copy-label">Copy</span></button></summary><pre class="astro-code github-dark" style="overflow-x: auto;" tabindex="0" data-language="batch"><code><span class="line"><span style="color:#F97583">@echo</span><span style="color:#F97583"> off</span></span>
-<span class="line"><span style="color:#F97583">setlocal</span><span style="color:#F97583"> enabledelayedexpansion</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> ===================================================</span></span>
-<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> RyanRetro Master Drive Sync </span><span style="color:#79B8FF">^</span><span style="color:#E1E4E8">&amp; Steam Orchestrator</span></span>
-<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> ===================================================</span></span>
-<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8">.</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">pcGamesDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%~dp0</span><span style="color:#9ECBFF">PC-Games\"</span></span>
-<span class="line"><span style="color:#F97583">set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">retroBatWindowsDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%~dp0</span><span style="color:#9ECBFF">RetroBat\roms\windows\"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Error: Could not find the \PC-Games folder on the root of the drive.</span></span>
-<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Creating it for you now...</span></span>
-<span class="line"><span style="color:#F97583">    mkdir</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#E1E4E8">)</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%retroBatWindowsDir%</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Error: Could not find RetroBat\roms\windows\.</span></span>
-<span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Please ensure RetroBat is installed correctly on this drive.</span></span>
-<span class="line"><span style="color:#F97583">    pause</span></span>
-<span class="line"><span style="color:#F97583">    exit</span><span style="color:#E1E4E8"> /b</span></span>
-<span class="line"><span style="color:#E1E4E8">)</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">del</span><span style="color:#E1E4E8"> /q </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">%retroBatWindowsDir%</span><span style="color:#9ECBFF">*.bat"</span><span style="color:#F97583"> &gt;</span><span style="color:#79B8FF">nul</span><span style="color:#79B8FF"> 2</span><span style="color:#F97583">&gt;&amp;</span><span style="color:#E1E4E8">1</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">cd</span><span style="color:#E1E4E8"> /d </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> /d </span><span style="color:#FFAB70">%%D</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (*) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">folderName</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~nxD</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetExe</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetDir</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">maxSize</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"delims="</span><span style="color:#FFAB70"> %%F</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> ('dir /b /s </span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~fD</span><span style="color:#9ECBFF">\*.exe"</span><span style="color:#E1E4E8"> 2</span><span style="color:#79B8FF">^</span><span style="color:#F97583">&gt;</span><span style="color:#79B8FF">nul</span><span style="color:#E1E4E8">') </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">size</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~zF</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> !size! </span><span style="color:#F97583">GTR</span><span style="color:#E1E4E8"> !maxSize! (</span></span>
-<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">maxSize</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!size!</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetExe</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~nxF</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~dpF</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#E1E4E8">        )</span></span>
-<span class="line"><span style="color:#E1E4E8">    )</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">    if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> targetExe (</span></span>
-<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">innerPath</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!targetDir:%pcGamesDir%=!</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">launcherFile</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">%retroBatWindowsDir%!folderName!</span><span style="color:#9ECBFF">.bat"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> @echo off</span><span style="color:#F97583">&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> cd /d </span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~d</span><span style="color:#9ECBFF">0\PC-Games\</span><span style="color:#E1E4E8">!innerPath!</span><span style="color:#9ECBFF">"</span><span style="color:#F97583">&gt;&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> start </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8"> /w </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!targetExe!</span><span style="color:#9ECBFF">"</span><span style="color:#F97583">&gt;&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> Linked: !folderName!</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">        rem</span><span style="color:#6A737D"> --- STEAM AUTO-DETECTOR &amp; APPID INJECTOR ---</span></span>
-<span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_api.dll"</span><span style="color:#F97583"> set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1"</span></span>
-<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_api64.dll"</span><span style="color:#F97583"> set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_appid.txt"</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#E1E4E8">        )</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> isSteamGame (</span></span>
-<span class="line"><span style="color:#F97583">            echo</span><span style="color:#E1E4E8"> [Steam Detect] </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> contains Steam API files. Fixing...</span></span>
-<span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">            for</span><span style="color:#FFAB70"> %%S</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#9ECBFF">                "</span><span style="color:#79B8FF">%~d0</span><span style="color:#9ECBFF">\SteamLibrary\steamapps"</span></span>
-<span class="line"><span style="color:#9ECBFF">                "</span><span style="color:#79B8FF">%~d0</span><span style="color:#9ECBFF">\Steam\steamapps"</span></span>
-<span class="line"><span style="color:#9ECBFF">                "C:\Program Files (x86)\Steam\steamapps"</span></span>
-<span class="line"><span style="color:#9ECBFF">                "C:\Program Files\Steam\steamapps"</span></span>
-<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">                if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%~S</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
-<span class="line"><span style="color:#F97583">                    for</span><span style="color:#FFAB70"> %%A</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~S</span><span style="color:#9ECBFF">\appmanifest_*.acf"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">                        findstr</span><span style="color:#E1E4E8"> /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">installdir\</span><span style="color:#9ECBFF">""</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#F97583"> findstr</span><span style="color:#E1E4E8"> /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">!folderName!\</span><span style="color:#9ECBFF">""</span><span style="color:#F97583"> &gt;</span><span style="color:#79B8FF">nul</span></span>
-<span class="line"><span style="color:#F97583">                        if</span><span style="color:#E1E4E8"> !errorlevel! </span><span style="color:#F97583">equ</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">                            for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"tokens=2"</span><span style="color:#FFAB70"> %%B</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> ('findstr /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">appid\</span><span style="color:#9ECBFF">""</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">') </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">                                set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~B</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#E1E4E8">                            )</span></span>
-<span class="line"><span style="color:#E1E4E8">                        )</span></span>
-<span class="line"><span style="color:#E1E4E8">                    )</span></span>
-<span class="line"><span style="color:#E1E4E8">                )</span></span>
-<span class="line"><span style="color:#E1E4E8">            )</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">            if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
-<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Local manifest not found. Querying Steam Web API...</span></span>
-<span class="line"><span style="color:#F97583">                set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">PS_QUERY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#F97583">                for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"usebackq delims="</span><span style="color:#FFAB70"> %%A</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (`powershell -NoProfile -Command </span><span style="color:#9ECBFF">"$q = [URI]::EscapeDataString($env:PS_QUERY); $u = 'https://store.steampowered.com/api/storesearch/?term=' + $q + '&amp;l=english&amp;cc=US'; try { $r = Invoke-RestMethod -Uri $u; if ($r.items) { $r.items[0].id } } catch {}"</span><span style="color:#E1E4E8">`) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">                    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span></span>
-<span class="line"><span style="color:#E1E4E8">                )</span></span>
-<span class="line"><span style="color:#E1E4E8">            )</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">            if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
-<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Successfully resolved ID: !foundAppId!</span></span>
-<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> !foundAppId!</span><span style="color:#F97583">&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_appid.txt"</span></span>
-<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Warning: Could not resolve AppID for </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">.</span></span>
-<span class="line"><span style="color:#E1E4E8">            )</span></span>
-<span class="line"><span style="color:#E1E4E8">        )</span></span>
-<span class="line"><span style="color:#E1E4E8">    ) </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> Skipping: No executable found in </span><span style="color:#FFAB70">%%D</span></span>
-<span class="line"><span style="color:#E1E4E8">    )</span></span>
-<span class="line"><span style="color:#E1E4E8">)</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8">.</span></span>
-<span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> Sync Complete! Open RetroBat and your games will be perfectly clean.</span></span>
-<span class="line"><span style="color:#F97583">pause</span></span></code></pre></details>
+    <ol>
+      <li><strong>Format the Drive as exFAT:</strong> Plug your external SSD into your PC. Back up any vital files, then format it. Select exFAT as the File System. This is mandatory &mdash; exFAT allows the SSD to easily share data across different versions of Windows, bypassing local system administrative blockades and 4GB single-file limits.</li>
+      <li><strong>Install RetroBat to the Root:</strong> Download the latest installer from the RetroBat website. When running the installer, change the path to point directly to the root directory of your portable drive (e.g., <code>D:\RetroBat</code>). Do not let it install to your local internal <code>C:</code> drive.</li>
+      <li><strong>Construct the &ldquo;PC-Games&rdquo; Vault:</strong> Go to the root of your external drive in File Explorer, right-click, and create a brand-new folder named exactly <code>PC-Games</code>. This is your safe zone where you will deposit all heavy, standalone PC games.</li>
+    </ol>
   </div>
 
-  <div class="card edge yellow">
-    <h2>3. Loading Your Games (ROMs and BIOS)</h2>
+  <figure class="ab ab-image">
+    <img src="https://placehold.co/1200x675/f3f1fc/6254A4?text=exFAT+Format+Screen" alt="Windows exFAT formatting screen">
+    <figcaption>Format the external drive as exFAT before installing anything.</figcaption>
+  </figure>
+
+  <div class="ab ab-text">
+    <h2 id="automation-script-3" style="scroll-margin-top: 90px;">2. The Master Automation Script</h2>
+    <p>When you move an external SSD from PC to PC, Windows dynamically shifts the drive letter depending on what else is plugged in. For instance, the drive might load as <code>D:</code> on your desktop, but turn into <code>G:</code> on your laptop. If you write static folders, your game links will break immediately.</p>
+    <p>We solve this drive letter problem permanently with a master orchestration script. In addition to handling dynamic drive letters, this script includes a Smart Steamworks API Injector. It automatically detects if you are copying a Steam game, resolves the official Steam AppID, and auto-creates the required <code>steam_appid.txt</code> file to prevent licensing errors on startup.</p>
+  </div>
+
+  <div class="ab ab-note">
+    <div class="note-box"><p><strong>Action Item:</strong> Create a new text file directly on the root of your external drive, name it exactly <code>Update_My_Games.bat</code>, copy the code block below inside it, and save the file.</p></div>
+  </div>
+
+  <div class="ab ab-scroll">
+    <details class="rr-code-window"><summary class="rr-code-chrome"><span class="rr-dot rr-dot-r"></span><span class="rr-dot rr-dot-y"></span><span class="rr-dot rr-dot-g"></span><span class="rr-code-lang">Batch Script</span><span class="rr-code-toggle rr-toggle-closed">▶  Show Code</span><span class="rr-code-toggle rr-toggle-open">▼  Hide</span><button class="rr-copy-btn" aria-label="Copy code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span class="rr-copy-label">Copy</span></button></summary><pre class="astro-code github-dark" style="overflow-x: auto;" tabindex="0" data-language="batch"><code><span class="line"><span style="color:#F97583">@echo</span><span style="color:#F97583"> off</span></span>
+    <span class="line"><span style="color:#F97583">setlocal</span><span style="color:#F97583"> enabledelayedexpansion</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> ===================================================</span></span>
+    <span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> RyanRetro Master Drive Sync </span><span style="color:#79B8FF">^</span><span style="color:#E1E4E8">&amp; Steam Orchestrator</span></span>
+    <span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> ===================================================</span></span>
+    <span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8">.</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">pcGamesDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%~dp0</span><span style="color:#9ECBFF">PC-Games\"</span></span>
+    <span class="line"><span style="color:#F97583">set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">retroBatWindowsDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%~dp0</span><span style="color:#9ECBFF">RetroBat\roms\windows\"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Error: Could not find the \PC-Games folder on the root of the drive.</span></span>
+    <span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Creating it for you now...</span></span>
+    <span class="line"><span style="color:#F97583">    mkdir</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#E1E4E8">)</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">%retroBatWindowsDir%</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Error: Could not find RetroBat\roms\windows\.</span></span>
+    <span class="line"><span style="color:#F97583">    echo</span><span style="color:#E1E4E8"> Please ensure RetroBat is installed correctly on this drive.</span></span>
+    <span class="line"><span style="color:#F97583">    pause</span></span>
+    <span class="line"><span style="color:#F97583">    exit</span><span style="color:#E1E4E8"> /b</span></span>
+    <span class="line"><span style="color:#E1E4E8">)</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">del</span><span style="color:#E1E4E8"> /q </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">%retroBatWindowsDir%</span><span style="color:#9ECBFF">*.bat"</span><span style="color:#F97583"> &gt;</span><span style="color:#79B8FF">nul</span><span style="color:#79B8FF"> 2</span><span style="color:#F97583">&gt;&amp;</span><span style="color:#E1E4E8">1</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">cd</span><span style="color:#E1E4E8"> /d </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">%pcGamesDir%</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">for</span><span style="color:#E1E4E8"> /d </span><span style="color:#FFAB70">%%D</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (*) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">folderName</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~nxD</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetExe</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetDir</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">maxSize</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">0"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"delims="</span><span style="color:#FFAB70"> %%F</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> ('dir /b /s </span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~fD</span><span style="color:#9ECBFF">\*.exe"</span><span style="color:#E1E4E8"> 2</span><span style="color:#79B8FF">^</span><span style="color:#F97583">&gt;</span><span style="color:#79B8FF">nul</span><span style="color:#E1E4E8">') </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">size</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~zF</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> !size! </span><span style="color:#F97583">GTR</span><span style="color:#E1E4E8"> !maxSize! (</span></span>
+    <span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">maxSize</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!size!</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetExe</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~nxF</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">targetDir</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~dpF</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#E1E4E8">        )</span></span>
+    <span class="line"><span style="color:#E1E4E8">    )</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">    if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> targetExe (</span></span>
+    <span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">innerPath</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!targetDir:%pcGamesDir%=!</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">launcherFile</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">%retroBatWindowsDir%!folderName!</span><span style="color:#9ECBFF">.bat"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> @echo off</span><span style="color:#F97583">&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> cd /d </span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~d</span><span style="color:#9ECBFF">0\PC-Games\</span><span style="color:#E1E4E8">!innerPath!</span><span style="color:#9ECBFF">"</span><span style="color:#F97583">&gt;&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> start </span><span style="color:#9ECBFF">""</span><span style="color:#E1E4E8"> /w </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!targetExe!</span><span style="color:#9ECBFF">"</span><span style="color:#F97583">&gt;&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!launcherFile!</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> Linked: !folderName!</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">        rem</span><span style="color:#6A737D"> --- STEAM AUTO-DETECTOR &amp; APPID INJECTOR ---</span></span>
+    <span class="line"><span style="color:#F97583">        set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_api.dll"</span><span style="color:#F97583"> set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1"</span></span>
+    <span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_api64.dll"</span><span style="color:#F97583"> set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">1"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_appid.txt"</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">isSteamGame</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#E1E4E8">        )</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">        if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> isSteamGame (</span></span>
+    <span class="line"><span style="color:#F97583">            echo</span><span style="color:#E1E4E8"> [Steam Detect] </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8"> contains Steam API files. Fixing...</span></span>
+    <span class="line"><span style="color:#F97583">            set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">            for</span><span style="color:#FFAB70"> %%S</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#9ECBFF">                "</span><span style="color:#79B8FF">%~d0</span><span style="color:#9ECBFF">\SteamLibrary\steamapps"</span></span>
+    <span class="line"><span style="color:#9ECBFF">                "</span><span style="color:#79B8FF">%~d0</span><span style="color:#9ECBFF">\Steam\steamapps"</span></span>
+    <span class="line"><span style="color:#9ECBFF">                "C:\Program Files (x86)\Steam\steamapps"</span></span>
+    <span class="line"><span style="color:#9ECBFF">                "C:\Program Files\Steam\steamapps"</span></span>
+    <span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">                if</span><span style="color:#F97583"> exist</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%~S</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
+    <span class="line"><span style="color:#F97583">                    for</span><span style="color:#FFAB70"> %%A</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF">%%~S</span><span style="color:#9ECBFF">\appmanifest_*.acf"</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">                        findstr</span><span style="color:#E1E4E8"> /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">installdir\</span><span style="color:#9ECBFF">""</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span><span style="color:#F97583"> |</span><span style="color:#F97583"> findstr</span><span style="color:#E1E4E8"> /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">!folderName!\</span><span style="color:#9ECBFF">""</span><span style="color:#F97583"> &gt;</span><span style="color:#79B8FF">nul</span></span>
+    <span class="line"><span style="color:#F97583">                        if</span><span style="color:#E1E4E8"> !errorlevel! </span><span style="color:#F97583">equ</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">                            for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"tokens=2"</span><span style="color:#FFAB70"> %%B</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> ('findstr /i /c:</span><span style="color:#9ECBFF">"\"</span><span style="color:#E1E4E8">appid\</span><span style="color:#9ECBFF">""</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">') </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">                                set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%~B</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#E1E4E8">                            )</span></span>
+    <span class="line"><span style="color:#E1E4E8">                        )</span></span>
+    <span class="line"><span style="color:#E1E4E8">                    )</span></span>
+    <span class="line"><span style="color:#E1E4E8">                )</span></span>
+    <span class="line"><span style="color:#E1E4E8">            )</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">            if</span><span style="color:#F97583"> not</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
+    <span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Local manifest not found. Querying Steam Web API...</span></span>
+    <span class="line"><span style="color:#F97583">                set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">PS_QUERY</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#F97583">                for</span><span style="color:#E1E4E8"> /f </span><span style="color:#9ECBFF">"usebackq delims="</span><span style="color:#FFAB70"> %%A</span><span style="color:#F97583"> in</span><span style="color:#E1E4E8"> (`powershell -NoProfile -Command </span><span style="color:#9ECBFF">"$q = [URI]::EscapeDataString($env:PS_QUERY); $u = 'https://store.steampowered.com/api/storesearch/?term=' + $q + '&amp;l=english&amp;cc=US'; try { $r = Invoke-RestMethod -Uri $u; if ($r.items) { $r.items[0].id } } catch {}"</span><span style="color:#E1E4E8">`) </span><span style="color:#F97583">do</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">                    set</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">foundAppId</span><span style="color:#F97583">=</span><span style="color:#79B8FF">%%A</span><span style="color:#9ECBFF">"</span></span>
+    <span class="line"><span style="color:#E1E4E8">                )</span></span>
+    <span class="line"><span style="color:#E1E4E8">            )</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">            if</span><span style="color:#F97583"> defined</span><span style="color:#E1E4E8"> foundAppId (</span></span>
+    <span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Successfully resolved ID: !foundAppId!</span></span>
+    <span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> !foundAppId!</span><span style="color:#F97583">&gt;</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">!targetDir!</span><span style="color:#9ECBFF">steam_appid.txt"</span></span>
+    <span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">                echo</span><span style="color:#E1E4E8"> [Steam Detect] Warning: Could not resolve AppID for </span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">!folderName!</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">.</span></span>
+    <span class="line"><span style="color:#E1E4E8">            )</span></span>
+    <span class="line"><span style="color:#E1E4E8">        )</span></span>
+    <span class="line"><span style="color:#E1E4E8">    ) </span><span style="color:#F97583">else</span><span style="color:#E1E4E8"> (</span></span>
+    <span class="line"><span style="color:#F97583">        echo</span><span style="color:#E1E4E8"> Skipping: No executable found in </span><span style="color:#FFAB70">%%D</span></span>
+    <span class="line"><span style="color:#E1E4E8">    )</span></span>
+    <span class="line"><span style="color:#E1E4E8">)</span></span>
+    <span class="line"></span>
+    <span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8">.</span></span>
+    <span class="line"><span style="color:#F97583">echo</span><span style="color:#E1E4E8"> Sync Complete! Open RetroBat and your games will be perfectly clean.</span></span>
+    <span class="line"><span style="color:#F97583">pause</span></span></code></pre></details>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="loading-games-4" style="scroll-margin-top: 90px;">3. Loading Your Games (ROMs and BIOS)</h2>
     <p>Now that your structure is configured, you are ready to load your personal, legally obtained game backups onto your external drive. Retro consoles (SNES, Genesis, PS1, GameCube, etc.) run through emulators wrapped in relative path configurations inside RetroBat. There is no manual programming needed here.</p>
-    
     <ul>
       <li><strong>ROM Placement:</strong> Drag and drop your console game files directly into their respective folders located in <code>RetroBat\roms\</code> (for example, place SNES games inside <code>RetroBat\roms\snes</code>).</li>
       <li><strong>BIOS Placement:</strong> Drop any necessary system console BIOS files directly into the <code>RetroBat\bios\</code> folder.</li>
     </ul>
-
-    <img src="https://placehold.co/800x450/fdf3df/b5701a?text=ROMs+and+BIOS+Folder+Structure" alt="ROMs and BIOS Folders" class="guide-image">
   </div>
 
-  <div class="card edge blue">
-    <h2>4. Adding Standalone and GOG Games</h2>
+  <figure class="ab ab-image">
+    <img src="https://placehold.co/1200x675/f3f1fc/6254A4?text=ROMs+and+BIOS+Folders" alt="ROMs and BIOS folder structure">
+    <figcaption>Drop ROMs and BIOS files into their matching RetroBat folders.</figcaption>
+  </figure>
+
+  <div class="ab ab-text">
+    <h2 id="gog-games-5" style="scroll-margin-top: 90px;">4. Adding Standalone and GOG Games</h2>
     <p>GOG titles are the premier choice for custom SSD drives because they have absolutely no DRM built into their architecture. Here is how to add them:</p>
-    
     <ol>
       <li>Download and install your game using GOG Galaxy onto your main computer.</li>
       <li>Once finished, go to the installation folder (defaults to <code>C:\Program Files (x86)\GOG Galaxy\Games\</code>), and copy the entire game folder.</li>
       <li>Paste that game folder directly into <code>D:\PC-Games\</code> on your external drive.</li>
       <li>Double-click <code>Update_My_Games.bat</code> on the root of your drive.</li>
     </ol>
-
-    <div class="guide-callout">
-      RetroBat will instantly construct a perfectly working shortcut file. You can now uninstall GOG Galaxy on your PC — the game on your drive is completely independent! Celebrate with champagne and mac & cheese.
-    </div>
   </div>
 
-  <div class="card edge pink">
-    <h2>5. Adding Steam Games</h2>
+  <div class="ab ab-note">
+    <div class="note-box"><p>RetroBat will instantly construct a perfectly working shortcut file. You can now uninstall GOG Galaxy on your PC &mdash; the game on your drive is completely independent! Celebrate with champagne and mac &amp; cheese.</p></div>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="steam-games-6" style="scroll-margin-top: 90px;">5. Adding Steam Games</h2>
     <p>Since Steam requires license checks, you can load titles via two different pathways depending on your storage needs:</p>
-    
-    <div class="two-col" style="margin-top: 16px;">
-      <div style="background: var(--sheet); border: 1px solid var(--bord); border-radius: 6px; padding: 18px;">
-        <h3 style="color: var(--bandText); margin-bottom: 4px; font-size: 15px;">Strategy A: The "Master Remote"</h3>
-        <p style="font-size: 12.5px; color: var(--soft); margin-bottom: 14px; font-weight: 500;">(Conserves SSD Space)</p>
-        <p style="font-size: 13.5px; margin-bottom: 0;">Right-click the game inside Steam &gt; Manage &gt; Add desktop shortcut. Copy that shortcut file and drop it directly into <code>RetroBat\roms\steam\</code>. RetroBat will wake up the host computer’s Steam client to boot the game on launch.</p>
-      </div>
-      
-      <div style="background: var(--sheet); border: 1px solid var(--bord); border-radius: 6px; padding: 18px;">
-        <h3 style="color: var(--bandText); margin-bottom: 4px; font-size: 15px;">Strategy B: The "True Portable"</h3>
-        <p style="font-size: 12.5px; color: var(--soft); margin-bottom: 14px; font-weight: 500;">(SSD Library)</p>
-        <p style="font-size: 13.5px; margin-bottom: 14px;">Open Steam &gt; Settings &gt; Storage &gt; Add Drive, select your external SSD, and install the game directly onto it. Move that game’s folder into your root <code>PC-Games</code> folder and run <code>Update_My_Games.bat</code>.</p>
-        <div class="guide-callout" style="margin-bottom: 0; padding: 10px 14px; font-size: 12.5px;"><em>Note that the host machine must have Steam running in the background for the license check to pass.</em></div>
-      </div>
-    </div>
+    <h3>Strategy A: The &ldquo;Master Remote&rdquo; <span class="h3-sub">(Conserves SSD space)</span></h3>
+    <p>Right-click the game inside Steam &gt; Manage &gt; Add desktop shortcut. Copy that shortcut file and drop it directly into <code>RetroBat\roms\steam\</code>. RetroBat will wake up the host computer&rsquo;s Steam client to boot the game on launch.</p>
+    <h3>Strategy B: The &ldquo;True Portable&rdquo; <span class="h3-sub">(SSD library)</span></h3>
+    <p>Open Steam &gt; Settings &gt; Storage &gt; Add Drive, select your external SSD, and install the game directly onto it. Move that game&rsquo;s folder into your root <code>PC-Games</code> folder and run <code>Update_My_Games.bat</code>.</p>
   </div>
 
-  <div class="card edge orange">
-    <h2>6. Nintendo Switch Emulation</h2>
+  <div class="ab ab-note">
+    <div class="note-box"><p><em>Note that the host machine must have Steam running in the background for the license check to pass.</em></p></div>
+  </div>
+
+  <div class="ab ab-text">
+    <h2 id="switch-emulation-7" style="scroll-margin-top: 90px;">6. Nintendo Switch Emulation</h2>
     <p>For high-end Switch emulation, we will use Ryujinx.</p>
-    
     <ol>
       <li><strong>Install Ryujinx:</strong> Download the latest standalone release. Extract and copy all contents directly into <code>RetroBat\emulators\ryujinx\</code>.</li>
       <li><strong>Deploy Keys:</strong> Paste your <code>prod.keys</code> and <code>title.keys</code> files into <code>RetroBat\saves\switch\ryujinx\portable\system\</code>.</li>
-      <li><strong>Install Firmware:</strong> Double-click <code>Configure Ryujinx.bat</code>, then inside Ryujinx click Tools > Install Firmware.</li>
-      <li><strong>Set Core Targeting:</strong> Drop your <code>.nsp</code> or <code>.xci</code> files into <code>RetroBat\roms\switch\</code>. Inside RetroBat, hover over a title > Select > Advanced System Options > Emulator > RYUJINX.</li>
+      <li><strong>Install Firmware:</strong> Double-click <code>Configure Ryujinx.bat</code>, then inside Ryujinx click Tools &gt; Install Firmware.</li>
+      <li><strong>Set Core Targeting:</strong> Drop your <code>.nsp</code> or <code>.xci</code> files into <code>RetroBat\roms\switch\</code>. Inside RetroBat, hover over a title &gt; Select &gt; Advanced System Options &gt; Emulator &gt; RYUJINX.</li>
     </ol>
-    
-    <img src="https://placehold.co/800x450/fdf3df/b5701a?text=Ryujinx+Configuration+Screen" alt="Ryujinx Emulator Setup" class="guide-image">
   </div>
 
-  <div class="card edge green">
-    <h2>7. Interface Polish & Customization</h2>
-    <p>When you first open RetroBat, the interface might show long folder directory chains and ugly platform flags like "Snapshot [Windows]". We can clean this up easily in the menus.</p>
-    
+  <figure class="ab ab-image">
+    <img src="https://placehold.co/1200x675/f3f1fc/6254A4?text=Ryujinx+Configuration" alt="Ryujinx emulator setup screen">
+    <figcaption>Ryujinx handles high-end Switch emulation on the drive.</figcaption>
+  </figure>
+
+  <div class="ab ab-text">
+    <h2 id="interface-polish-8" style="scroll-margin-top: 90px;">7. Interface Polish &amp; Customization</h2>
+    <p>When you first open RetroBat, the interface might show long folder directory chains and ugly platform flags like &ldquo;Snapshot [Windows]&rdquo;. We can clean this up easily in the menus.</p>
     <ul>
-      <li><strong>Remove Platform Indicators:</strong><br>Press Start > Game Collection Settings. Find "Show System Name in Collections" and toggle it OFF.</li>
-      <li><strong>Hide Messy Game Folders:</strong><br>Press Start > Game Collection Settings > File Extensions. Uncheck the "Folders" option.</li>
-      <li><strong>Auto-Scraping Box Art:</strong><br>Press Start > Scrape, and configure your ScreenScraper account. It will automatically pull high-resolution box art, synopsis data, and gameplay footage for all your ROMs and custom <code>.bat</code> launchers.</li>
+      <li><strong>Remove Platform Indicators:</strong> Press Start &gt; Game Collection Settings. Find &ldquo;Show System Name in Collections&rdquo; and toggle it OFF.</li>
+      <li><strong>Hide Messy Game Folders:</strong> Press Start &gt; Game Collection Settings &gt; File Extensions. Uncheck the &ldquo;Folders&rdquo; option.</li>
+      <li><strong>Auto-Scraping Box Art:</strong> Press Start &gt; Scrape, and configure your ScreenScraper account. It will automatically pull high-resolution box art, synopsis data, and gameplay footage for all your ROMs and custom <code>.bat</code> launchers.</li>
     </ul>
   </div>
 
-  <div class="card edge yellow">
-    <h2>8. Controller Setup & Troubleshooting</h2>
+  <div class="ab ab-text">
+    <h2 id="controller-setup-9" style="scroll-margin-top: 90px;">8. Controller Setup &amp; Troubleshooting</h2>
     <p>Controllers behave differently inside RetroBat depending on whether you are running a classic console game or a modern PC game.</p>
-    
     <ul>
-      <li><strong>Emulators (Retro Console Engine):</strong> RetroBat acts as a dictator here. Keys mapped in the main frontend are automatically injected into RetroArch, PCSX2, DuckStation, etc. Never manually map buttons inside individual emulator settings — RetroBat will just overwrite them.</li>
+      <li><strong>Emulators (Retro Console Engine):</strong> RetroBat acts as a dictator here. Keys mapped in the main frontend are automatically injected into RetroArch, PCSX2, DuckStation, etc. Never manually map buttons inside individual emulator settings &mdash; RetroBat will just overwrite them.</li>
       <li><strong>Windows PC Games:</strong> For PC games, RetroBat steps out of the way. Modern PC games expect a standard XInput layout (like a standard Xbox Controller).</li>
     </ul>
-
-    <div class="guide-callout">
-      <strong>The 8BitDo Mode Trap:</strong> Many 8BitDo controllers connect in Switch mode (Start + Y). While this works in retro emulators, modern Windows games in your PC-Games folder will ignore the controller. Sync your 8BitDo in <strong>XInput Mode (Start + X)</strong> for perfect cross-era support.
-    </div>
-    
-    <div class="guide-callout">
-      <strong>PC Handheld Lockups:</strong> If you run your drive on a handheld PC (ROG Ally, Legion Go, MSI Claw), Windows may default the internal controllers to "Desktop mode." If your sticks stop working inside a PC game, open your handheld’s quick overlay and force the control setting from "Auto" to "Gamepad Mode."
-    </div>
   </div>
 
-</main>
+  <div class="ab ab-note">
+    <div class="note-box"><p><strong>The 8BitDo Mode Trap:</strong> Many 8BitDo controllers connect in Switch mode (Start + Y). While this works in retro emulators, modern Windows games in your PC-Games folder will ignore the controller. Sync your 8BitDo in <strong>XInput Mode (Start + X)</strong> for perfect cross-era support.</p></div>
+  </div>
+
+  <div class="ab ab-note">
+    <div class="note-box"><p><strong>PC Handheld Lockups:</strong> If you run your drive on a handheld PC (ROG Ally, Legion Go, MSI Claw), Windows may default the internal controllers to &ldquo;Desktop mode.&rdquo; If your sticks stop working inside a PC game, open your handheld&rsquo;s quick overlay and force the control setting from &ldquo;Auto&rdquo; to &ldquo;Gamepad Mode.&rdquo;</p></div>
+  </div>
+
+  </div><!-- /guide-cards -->
+  <!-- EDITABLE-END -->
+
+  <button id="add-block-btn">+ Add Block</button>
+
+</div><!-- /post-wrap -->
 
 <div data-include="footer"></div>
 
-<button class="theme-fab" id="themeBtn" title="Toggle dark mode">Dark mode</button>
+<nav class="toc empty" id="toc" aria-label="Table of contents">
+  <div class="toc-head">Contents</div>
+  <ul class="toc-list" id="toc-list"></ul>
+</nav>
+
+<button id="themeToggle" type="button" aria-label="Toggle dark mode"></button>
+<button class="edit-fab" id="editFab">✏️ Edit</button>
+
+<div class="block-palette" id="blockPalette" aria-label="Add blocks">
+  <div class="bp-head">Add block</div>
+  <div class="bp-item" data-block="heading"><span class="bp-ic">H</span>Heading</div>
+  <div class="bp-item" data-block="text"><span class="bp-ic">¶</span>Text</div>
+  <div class="bp-item" data-block="image"><span class="bp-ic">🖼️</span>Image</div>
+  <div class="bp-item" data-block="quote"><span class="bp-ic">❝</span>Quote</div>
+  <div class="bp-item" data-block="specs"><span class="bp-ic">▦</span>Spec table</div>
+  <div class="bp-item" data-block="divider"><span class="bp-ic">—</span>Divider</div>
+  <div class="bp-item" data-block="affiliate"><span class="bp-ic">🔗</span>Buy button</div>
+  <div class="bp-hint">Click to add · or drag onto the page</div>
+</div>
+
+<!-- Password modal -->
+<div id="ep-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Edit Mode</h3>
+    <input type="password" id="ep-input" class="modal-input" placeholder="Password" autocomplete="current-password">
+    <div class="modal-btns">
+      <button id="ep-confirm" class="primary">Enter Edit Mode</button>
+      <button id="ep-cancel" class="secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Image modal -->
+<div id="img-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Add / Change Image</h3>
+    <label class="img-up-btn">📁 Upload from your computer
+      <input type="file" id="img-file-input" accept="image/*" hidden>
+    </label>
+    <div id="img-file-name" class="img-file-name"></div>
+    <div class="img-or">— OR PASTE A LINK —</div>
+    <input type="text" id="img-url-input" class="modal-input" placeholder="Image URL from the web…">
+    <input type="text" id="img-name-input" class="modal-input" placeholder="Name this image (e.g. drive-format)">
+    <div class="modal-btns">
+      <button id="img-confirm" class="primary">Insert</button>
+      <button id="img-cancel" class="secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add block modal -->
+<div id="block-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Add a Block</h3>
+    <div class="bm-grid">
+      <button class="bm-btn" data-block="text"><span>📝</span>Text</button>
+      <button class="bm-btn" data-block="image"><span>🖼️</span>Image</button>
+      <button class="bm-btn" data-block="quote"><span>💬</span>Pull Quote</button>
+      <button class="bm-btn" data-block="divider"><span>—</span>Divider</button>
+      <button class="bm-btn" data-block="specs"><span>📊</span>Spec Table</button>
+      <button class="bm-btn" data-block="affiliate"><span>🔗</span>Affiliate CTA</button>
+    </div>
+    <button class="bm-cancel" id="bm-close">Cancel</button>
+  </div>
+</div>
+
+<!-- Affiliate link modal -->
+<div id="link-modal" class="modal-backdrop">
+  <div class="modal-box">
+    <h3>Affiliate Button</h3>
+    <input type="text" id="link-label-input" class="modal-input" placeholder="Button label (e.g. Amazon)">
+    <input type="text" id="link-url-input" class="modal-input" placeholder="Affiliate URL (https://…)">
+    <div class="link-colors">
+      <button type="button" class="lc-swatch" data-color="brand" style="background:#6254A4" title="Brand purple"></button>
+      <button type="button" class="lc-swatch" data-color="amazon" style="background:#FFD814" title="Amazon yellow"></button>
+      <button type="button" class="lc-swatch" data-color="aliexpress" style="background:#E62E04" title="AliExpress red"></button>
+      <label class="lc-swatch lc-custom" title="Custom colour"><input type="color" id="link-custom-color" value="#6254A4"></label>
+    </div>
+    <div class="link-icons">
+      <button type="button" class="li-icon" data-icon="" title="No icon">∅</button>
+      <button type="button" class="li-icon" data-icon="shopping-cart" title="Cart"><i data-lucide="shopping-cart"></i></button>
+      <button type="button" class="li-icon" data-icon="star" title="Star"><i data-lucide="star"></i></button>
+      <button type="button" class="li-icon" data-icon="package" title="Box"><i data-lucide="package"></i></button>
+      <button type="button" class="li-icon" data-icon="tag" title="Tag"><i data-lucide="tag"></i></button>
+      <button type="button" class="li-icon" data-icon="gift" title="Gift"><i data-lucide="gift"></i></button>
+      <button type="button" class="li-icon" data-icon="external-link" title="Link"><i data-lucide="external-link"></i></button>
+    </div>
+    <div class="modal-btns">
+      <button id="link-confirm" class="primary">Save</button>
+      <button id="link-cancel" class="secondary">Cancel</button>
+    </div>
+    <button id="link-remove" class="bm-cancel" style="color:#c0392b;">Remove this button</button>
+  </div>
+</div>
+
+<!-- Image lightbox -->
+<div id="lightbox" class="lb" aria-hidden="true">
+  <button class="lb-close" id="lb-close" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
+  <figure class="lb-fig">
+    <img id="lb-img" src="" alt="">
+    <figcaption class="lb-cap" id="lb-cap"></figcaption>
+  </figure>
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Next image">›</button>
+  <div class="lb-count" id="lb-count"></div>
+</div>
+
+<div id="toast"></div>
 
 <script>
-  // Simple Dark Mode Toggle
-  const themeBtn = document.getElementById('themeBtn');
-  
-  // Check for saved theme or system preference
-  let currentTheme = localStorage.getItem('rr-guide-theme');
-  if (!currentTheme) {
-    currentTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+// Safe storage — sandboxed/file:// previews throw on localStorage access
+function safeGet(s, k) { try { return s.getItem(k); } catch (e) { return null; } }
+function safeSet(s, k, v) { try { s.setItem(k, v); } catch (e) {} }
+function safeDel(s, k) { try { s.removeItem(k); } catch (e) {} }
+
+// Dark mode — toggle pinned to the left side (near the contents rail)
+const themeToggle = document.getElementById('themeToggle');
+let theme = safeGet(localStorage, 'rr-theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+function applyTheme(t) {
+  document.body.classList.toggle('dark', t === 'dark');
+  safeSet(localStorage, 'rr-theme', t);
+  const dark = t === 'dark';
+  themeToggle.innerHTML = '<i data-lucide="' + (dark ? 'sun' : 'moon') + '"></i>';
+  themeToggle.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  themeToggle.setAttribute('aria-label', themeToggle.title);
+  if (window.lucide) lucide.createIcons();
+}
+applyTheme(theme);
+themeToggle.addEventListener('click', () => applyTheme(document.body.classList.contains('dark') ? 'light' : 'dark'));
+</script>
+
+<script>
+// ── Edit Mode ──────────────────────────────────────────────────────────────
+const EDIT_KEY   = 'rr-edit-key';
+const guideSlug  = location.pathname.split('/').pop();
+const editFab    = document.getElementById('editFab');
+const guideCards = document.getElementById('guide-cards');
+const addBtn     = document.getElementById('add-block-btn');
+const blockModal = document.getElementById('block-modal');
+const epModal    = document.getElementById('ep-modal');
+const epInput    = document.getElementById('ep-input');
+const imgModal   = document.getElementById('img-modal');
+const imgInput   = document.getElementById('img-url-input');
+const imgFile    = document.getElementById('img-file-input');
+const imgName    = document.getElementById('img-name-input');
+const imgFileEl  = document.getElementById('img-file-name');
+const toast      = document.getElementById('toast');
+const blockPalette = document.getElementById('blockPalette');
+const linkModal  = document.getElementById('link-modal');
+const linkLabel  = document.getElementById('link-label-input');
+const linkUrl    = document.getElementById('link-url-input');
+let isEditing = false, sortable = null, pendingImg = null, palette = null, pendingBtn = null;
+
+// Reveal the Edit button only for the owner: ?edit in the URL, or already unlocked this session.
+if (new URLSearchParams(location.search).has('edit') || location.hash === '#edit' || safeGet(sessionStorage, EDIT_KEY)) {
+  editFab.classList.add('show');
+}
+
+// Toast
+function showToast(msg, ms = 2500) { toast.textContent = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), ms); }
+
+// Password modal
+document.getElementById('ep-confirm').onclick = () => {
+  const k = epInput.value.trim(); if (!k) return;
+  safeSet(sessionStorage, EDIT_KEY, k); epModal.classList.remove('open'); _enter(k);
+};
+document.getElementById('ep-cancel').onclick = () => epModal.classList.remove('open');
+epInput.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('ep-confirm').click(); });
+
+// Image modal — upload from computer or paste a URL; server saves it into static/images/
+function resetImgModal() { imgInput.value = ''; imgName.value = ''; imgFile.value = ''; imgFileEl.textContent = ''; }
+imgFile.addEventListener('change', () => {
+  const f = imgFile.files[0];
+  imgFileEl.textContent = f ? ('📎 ' + f.name) : '';
+  if (f && !imgName.value.trim()) imgName.value = f.name.replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+});
+function readAsDataURL(file) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); }); }
+async function insertImage() {
+  const key = safeGet(sessionStorage, EDIT_KEY);
+  if (!key) { showToast('Enter edit mode first'); return; }
+  const file = imgFile.files[0], url = imgInput.value.trim(), name = imgName.value.trim();
+  if (!file && !url) { showToast('Upload a file or paste an image URL'); return; }
+  if (!name) { showToast('Give the image a name first'); imgName.focus(); return; }
+  showToast('Uploading…', 10000);
+  try {
+    const body = { key, name };
+    if (file) body.dataUrl = await readAsDataURL(file); else body.url = url;
+    const d = await fetch('/api/upload-image', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(r => r.json());
+    if (d.ok && pendingImg) { pendingImg.src = d.path; showToast('✅ Saved as ' + d.file); imgModal.classList.remove('open'); pendingImg = null; }
+    else { showToast('Error: ' + (d.error || 'upload failed'), 4000); }
+  } catch (e) { showToast('Upload failed — check connection', 4000); }
+}
+document.getElementById('img-confirm').onclick = insertImage;
+document.getElementById('img-cancel').onclick = () => { imgModal.classList.remove('open'); pendingImg = null; };
+imgInput.addEventListener('keydown', e => { if (e.key === 'Enter') insertImage(); });
+imgName.addEventListener('keydown', e => { if (e.key === 'Enter') insertImage(); });
+
+// Optional captions
+function ensureCaption(fig) { if (!fig.querySelector('figcaption')) fig.appendChild(document.createElement('figcaption')); }
+function stripEmptyCaptions(root) { root.querySelectorAll('figcaption').forEach(fc => { if (!fc.textContent.trim()) fc.remove(); }); }
+
+// Affiliate link button modal (label + URL, with remove)
+function setBtnLabel(a, label) {
+  const icon = a.querySelector('svg, i');
+  a.textContent = '';
+  if (icon) { a.appendChild(icon); a.appendChild(document.createTextNode(' ' + label)); }
+  else a.textContent = label;
+}
+function setBtnContent(a, label, iconName) {
+  a.textContent = '';
+  if (iconName) {
+    const i = document.createElement('i'); i.setAttribute('data-lucide', iconName);
+    a.appendChild(i); a.appendChild(document.createTextNode(' '));
+    a.dataset.icon = iconName;
+  } else { a.removeAttribute('data-icon'); }
+  a.appendChild(document.createTextNode(label));
+  if (window.lucide) lucide.createIcons();
+}
+function getBtnIcon(a) {
+  if (a.dataset.icon) return a.dataset.icon;
+  const svg = a.querySelector('svg[class*="lucide-"]');
+  if (svg) { const m = (svg.getAttribute('class') || '').match(/lucide-([a-z0-9-]+)/); if (m) return m[1]; }
+  const i = a.querySelector('i[data-lucide]'); if (i) return i.getAttribute('data-lucide');
+  return '';
+}
+const iconBtns = document.querySelectorAll('.li-icon');
+function selectIcon(el) { iconBtns.forEach(b => b.classList.remove('selected')); if (el) el.classList.add('selected'); }
+iconBtns.forEach(b => b.addEventListener('click', () => selectIcon(b)));
+const linkCustom = document.getElementById('link-custom-color');
+const swatches = document.querySelectorAll('.lc-swatch');
+function selectSwatch(el) { swatches.forEach(s => s.classList.remove('selected')); if (el) el.classList.add('selected'); }
+swatches.forEach(s => s.addEventListener('click', () => selectSwatch(s)));
+linkCustom.addEventListener('input', () => selectSwatch(linkCustom.closest('.lc-swatch')));
+function pickText(hex) {
+  const h = (hex || '').replace('#',''); if (h.length < 6) return '#ffffff';
+  const r = parseInt(h.substr(0,2),16), g = parseInt(h.substr(2,2),16), b = parseInt(h.substr(4,2),16);
+  return (0.299*r + 0.587*g + 0.114*b) > 150 ? '#111111' : '#ffffff';
+}
+function applyBtnColor(a, choice, custom) {
+  a.classList.remove('cta-amazon','cta-aliexpress');
+  a.style.backgroundColor = ''; a.style.color = ''; a.removeAttribute('data-cta-color');
+  if (choice === 'amazon') a.classList.add('cta-amazon');
+  else if (choice === 'aliexpress') a.classList.add('cta-aliexpress');
+  else if (choice === 'custom') { a.style.backgroundColor = custom; a.style.color = pickText(custom); a.setAttribute('data-cta-color', custom); }
+}
+function getBtnColor(a) {
+  if (a.classList.contains('cta-amazon')) return ['amazon', '#FFD814'];
+  if (a.classList.contains('cta-aliexpress')) return ['aliexpress', '#E62E04'];
+  const c = a.getAttribute('data-cta-color'); if (c) return ['custom', c];
+  return ['brand', '#6254A4'];
+}
+function openLinkModal(a) {
+  pendingBtn = a;
+  linkLabel.value = (a.textContent || '').trim();
+  linkUrl.value = a.getAttribute('href') || '';
+  const [choice, hex] = getBtnColor(a);
+  if (choice === 'custom') { linkCustom.value = hex; selectSwatch(linkCustom.closest('.lc-swatch')); }
+  else selectSwatch([...swatches].find(s => s.dataset.color === choice) || swatches[0]);
+  selectIcon([...iconBtns].find(b => b.dataset.icon === getBtnIcon(a)) || iconBtns[0]);
+  const row = a.closest('.cta-btns');
+  document.getElementById('link-remove').style.display = (row && row.querySelectorAll('.cta-btn').length > 1) ? '' : 'none';
+  linkModal.classList.add('open');
+  setTimeout(() => linkLabel.focus(), 50);
+}
+document.getElementById('link-confirm').onclick = () => {
+  if (pendingBtn) {
+    const selIcon = document.querySelector('.li-icon.selected');
+    setBtnContent(pendingBtn, linkLabel.value.trim() || 'Link', selIcon ? selIcon.dataset.icon : '');
+    pendingBtn.setAttribute('href', linkUrl.value.trim() || '#');
+    const sel = document.querySelector('.lc-swatch.selected');
+    const choice = sel ? (sel.classList.contains('lc-custom') ? 'custom' : sel.dataset.color) : 'brand';
+    applyBtnColor(pendingBtn, choice, linkCustom.value);
   }
-  
-  function applyTheme(theme) {
-    document.body.classList.toggle('dark', theme === 'dark');
-    themeBtn.textContent = theme === 'dark' ? 'Light mode' : 'Dark mode';
-    localStorage.setItem('rr-guide-theme', theme);
+  linkModal.classList.remove('open'); pendingBtn = null;
+};
+document.getElementById('link-cancel').onclick = () => { linkModal.classList.remove('open'); pendingBtn = null; };
+document.getElementById('link-remove').onclick = () => {
+  if (pendingBtn) { const cta = pendingBtn.closest('.ab-cta'); pendingBtn.remove(); if (cta) refreshCtaAdd(cta); }
+  linkModal.classList.remove('open'); pendingBtn = null;
+};
+linkUrl.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('link-confirm').click(); });
+linkLabel.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('link-confirm').click(); });
+
+// Helpers
+function makeEditable(el) { el.querySelectorAll('h2, h3, p, li, figcaption, blockquote, td, th, .cta-note').forEach(n => n.contentEditable = 'true'); }
+function clearEditable(el) { el.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable')); }
+
+function addToolbar(block) {
+  if (block.querySelector('.block-toolbar')) return;
+  const t = document.createElement('div'); t.className = 'block-toolbar edit-ui';
+  const drag = document.createElement('button'); drag.className = 'block-btn drag edit-ui'; drag.textContent = '⠿'; drag.title = 'Drag to reorder';
+  const del = document.createElement('button'); del.className = 'block-btn del edit-ui'; del.textContent = '✕'; del.title = 'Delete'; del.onclick = () => block.remove();
+  t.append(drag, del); block.appendChild(t);
+}
+function removeToolbar(block) { block.querySelectorAll('.edit-ui').forEach(e => e.remove()); }
+
+function setupImageClick(img) {
+  img._imgEdit = () => { if (!isEditing) return; pendingImg = img; resetImgModal(); imgModal.classList.add('open'); setTimeout(() => imgName.focus(), 50); };
+  img.addEventListener('click', img._imgEdit);
+}
+function teardownImageClick(img) { if (img._imgEdit) { img.removeEventListener('click', img._imgEdit); delete img._imgEdit; } }
+
+function setupSpecTable(wrap) {
+  const tbody = wrap.querySelector('tbody'); if (!tbody) return;
+  tbody.querySelectorAll('tr').forEach(row => addRowDel(row));
+  if (!wrap.querySelector('.spec-add-row')) {
+    const b = document.createElement('button'); b.className = 'spec-add-row edit-ui'; b.textContent = '+ Add row';
+    b.onclick = () => { const tr = document.createElement('tr'); tr.innerHTML = '<th contenteditable="true">Label</th><td contenteditable="true">Value</td>'; addRowDel(tr); tbody.appendChild(tr); };
+    wrap.appendChild(b);
+  }
+}
+function addRowDel(row) {
+  if (row.querySelector('.spec-row-del')) return;
+  const b = document.createElement('button'); b.className = 'spec-row-del edit-ui'; b.textContent = '✕'; b.onclick = () => row.remove();
+  const td = row.querySelector('td') || row.querySelector('th'); if (td) td.appendChild(b);
+}
+
+// Affiliate CTA — up to 3 buttons in a row
+function setupCtaBtn(a) {
+  if (a._ctaEdit) return;
+  a._ctaEdit = e => { if (!isEditing) return; e.preventDefault(); openLinkModal(a); };
+  a.addEventListener('click', a._ctaEdit);
+}
+function refreshCtaAdd(block) {
+  const add = block.querySelector('.cta-add-btn');
+  if (add) add.style.display = block.querySelectorAll('.cta-btn').length >= 3 ? 'none' : 'block';
+}
+function setupCta(block) {
+  let row = block.querySelector('.cta-btns');
+  if (!row) {
+    row = document.createElement('div'); row.className = 'cta-btns';
+    [...block.querySelectorAll('.cta-btn')].forEach(b => row.appendChild(b));
+    block.insertBefore(row, block.firstChild);
+  }
+  row.querySelectorAll('.cta-btn').forEach(b => { b.classList.remove('full'); setupCtaBtn(b); });
+  if (!block.querySelector('.cta-add-btn')) {
+    const add = document.createElement('button');
+    add.type = 'button'; add.className = 'cta-add-btn edit-ui'; add.textContent = '＋ Add button';
+    add.onclick = () => {
+      if (row.querySelectorAll('.cta-btn').length >= 3) { showToast('Up to 3 buttons'); return; }
+      const a = document.createElement('a'); a.className = 'cta-btn'; a.target = '_blank'; a.rel = 'sponsored noopener'; a.href = '#'; a.textContent = 'New link';
+      row.appendChild(a); setupCtaBtn(a); refreshCtaAdd(block); openLinkModal(a);
+    };
+    block.insertBefore(add, block.querySelector('.cta-note') || null);
+  }
+  refreshCtaAdd(block);
+}
+function teardownCta(block) {
+  block.querySelectorAll('.cta-btn').forEach(a => { if (a._ctaEdit) { a.removeEventListener('click', a._ctaEdit); delete a._ctaEdit; } });
+}
+
+// Enter / exit
+function _enter() {
+  isEditing = true; document.body.classList.add('edit-mode');
+  editFab.textContent = '💾 Save'; editFab.classList.add('active');
+  guideCards.querySelectorAll('.ab-image').forEach(ensureCaption);
+  guideCards.querySelectorAll('.ab').forEach(b => { addToolbar(b); makeEditable(b); });
+  guideCards.querySelectorAll('.ab-image img').forEach(setupImageClick);
+  guideCards.querySelectorAll('.spec-wrap').forEach(setupSpecTable);
+  guideCards.querySelectorAll('.ab-cta').forEach(setupCta);
+  if (window.Sortable) {
+    sortable = Sortable.create(guideCards, {
+      handle: '.drag', animation: 150, ghostClass: 'sortable-ghost', chosenClass: 'sortable-chosen',
+      group: { name: 'ab', put: ['palette'] },
+      onAdd: evt => {
+        const block = createBlock(evt.item.getAttribute('data-block'));
+        if (block) { evt.item.replaceWith(block); block.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        else evt.item.remove();
+        if (window.buildTOC) window.buildTOC();
+      }
+    });
+    palette = Sortable.create(blockPalette, { group: { name: 'palette', pull: 'clone', put: false }, sort: false, draggable: '.bp-item' });
+  }
+  showToast('Edit mode — click a palette block (right) to add it, or drag it onto the page');
+}
+function exit() {
+  isEditing = false; document.body.classList.remove('edit-mode');
+  editFab.textContent = '✏️ Edit'; editFab.classList.remove('active');
+  if (sortable) { sortable.destroy(); sortable = null; }
+  if (palette) { palette.destroy(); palette = null; }
+  guideCards.querySelectorAll('.ab').forEach(b => { clearEditable(b); removeToolbar(b); });
+  guideCards.querySelectorAll('.ab-image img').forEach(teardownImageClick);
+  guideCards.querySelectorAll('.spec-wrap').forEach(w => w.querySelectorAll('.edit-ui').forEach(e => e.remove()));
+  guideCards.querySelectorAll('.ab-cta').forEach(teardownCta);
+  stripEmptyCaptions(guideCards);
+  if (window.buildTOC) window.buildTOC();
+}
+
+// Save
+async function save() {
+  const key = safeGet(sessionStorage, EDIT_KEY); if (!key) return;
+  const clone = guideCards.cloneNode(true);
+  clone.querySelectorAll('.edit-ui').forEach(e => e.remove());
+  clone.querySelectorAll('[contenteditable]').forEach(e => e.removeAttribute('contenteditable'));
+  clone.querySelectorAll('figcaption').forEach(fc => { if (!fc.textContent.trim()) fc.remove(); });
+  try {
+    const res = await fetch(`/api/guide/${guideSlug}/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key, content: clone.innerHTML }) });
+    const d = await res.json();
+    if (d.ok) { showToast('✅ Saved!'); exit(); }
+    else { showToast('Error: ' + (d.error || 'Unknown'), 4000); if (d.error === 'Unauthorized') safeDel(sessionStorage, EDIT_KEY); }
+  } catch { showToast('Save failed — check connection.', 4000); }
+}
+
+// Main button
+editFab.addEventListener('click', () => {
+  if (isEditing) { save(); return; }
+  const k = safeGet(sessionStorage, EDIT_KEY);
+  if (k) _enter(k);
+  else { epInput.value = ''; epModal.classList.add('open'); setTimeout(() => epInput.focus(), 50); }
+});
+
+// Add block
+addBtn.onclick = () => blockModal.classList.add('open');
+blockModal.addEventListener('click', e => { if (e.target === blockModal) blockModal.classList.remove('open'); });
+document.getElementById('bm-close').onclick = () => blockModal.classList.remove('open');
+
+const TEMPLATES = {
+  heading:   `<div class="ab ab-text"><h2>New heading</h2></div>`,
+  text:      `<div class="ab ab-text"><p>Write your text here.</p></div>`,
+  image:     `<figure class="ab ab-image"><img src="https://placehold.co/1200x675/f3f1fc/6254A4?text=New+Image" alt="Image"><figcaption></figcaption></figure>`,
+  quote:     `<div class="ab ab-quote"><blockquote>Your pull quote goes here.</blockquote></div>`,
+  divider:   `<div class="ab ab-divider">· · ·</div>`,
+  specs:     `<div class="ab ab-text"><div class="spec-wrap"><table class="spec-table"><tbody><tr><th>Spec</th><td>Value</td></tr><tr><th>Spec</th><td>Value</td></tr></tbody></table></div></div>`,
+  affiliate: `<div class="ab ab-cta"><div class="cta-btns"><a href="https://www.goretroid.com/?sca_ref=7339476.fIz7oKv7uT" target="_blank" rel="sponsored noopener" class="cta-btn">Buy / Pre-Order Here</a></div><p class="cta-note">This is an affiliate link which supports me at no extra cost to you! Thank you very much if you use it ❤️</p></div>`,
+};
+
+function createBlock(type) {
+  const tpl = TEMPLATES[type]; if (!tpl) return null;
+  const div = document.createElement('div'); div.innerHTML = tpl.trim();
+  const block = div.firstElementChild;
+  addToolbar(block); makeEditable(block);
+  block.querySelectorAll('.ab-image img').forEach(setupImageClick);
+  block.querySelectorAll('.spec-wrap').forEach(setupSpecTable);
+  return block;
+}
+function insertBlock(type) {
+  const block = createBlock(type); if (!block) return;
+  guideCards.appendChild(block);
+  if (window.buildTOC) window.buildTOC();
+  block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Block modal buttons (secondary entry point)
+document.querySelectorAll('.bm-btn').forEach(btn => {
+  btn.onclick = () => { insertBlock(btn.dataset.block); blockModal.classList.remove('open'); };
+});
+
+// Floating palette — click to add (drag-to-place wired via Sortable in edit mode)
+document.querySelectorAll('.bp-item').forEach(item => {
+  item.addEventListener('click', () => { if (isEditing) insertBlock(item.dataset.block); });
+});
+
+// ── Image lightbox (view mode only) ─────────────────────────────────────────
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbCap = document.getElementById('lb-cap');
+const lbCount = document.getElementById('lb-count');
+const lbPrev = document.getElementById('lb-prev');
+const lbNext = document.getElementById('lb-next');
+let lbList = [], lbIndex = 0;
+function lbShow(i) {
+  if (!lbList.length) return;
+  lbIndex = (i + lbList.length) % lbList.length;
+  const img = lbList[lbIndex];
+  lbImg.src = img.currentSrc || img.src;
+  lbImg.alt = img.alt || '';
+  const fig = img.closest('figure');
+  const cap = fig && fig.querySelector('figcaption') ? fig.querySelector('figcaption').textContent.trim() : '';
+  lbCap.textContent = cap; lbCap.style.display = cap ? '' : 'none';
+  const multi = lbList.length > 1;
+  lbCount.textContent = multi ? (lbIndex + 1) + ' / ' + lbList.length : '';
+  lbPrev.style.display = multi ? '' : 'none';
+  lbNext.style.display = multi ? '' : 'none';
+}
+function openLightbox(img) {
+  lbList = Array.from(guideCards.querySelectorAll('.ab-image img'));
+  const i = lbList.indexOf(img);
+  if (i < 0) return;
+  lbShow(i);
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+lbPrev.onclick = e => { e.stopPropagation(); lbShow(lbIndex - 1); };
+lbNext.onclick = e => { e.stopPropagation(); lbShow(lbIndex + 1); };
+document.getElementById('lb-close').onclick = closeLightbox;
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  else if (e.key === 'ArrowLeft') lbShow(lbIndex - 1);
+  else if (e.key === 'ArrowRight') lbShow(lbIndex + 1);
+});
+guideCards.addEventListener('click', e => {
+  if (isEditing) return;
+  const img = e.target.closest('.ab-image img');
+  if (img) openLightbox(img);
+});
+</script>
+
+<script>
+// ── Table of contents (left rail) ───────────────────────────────────────────
+(function () {
+  const toc     = document.getElementById('toc');
+  const tocList = document.getElementById('toc-list');
+  const body    = document.getElementById('guide-cards');
+  if (!toc || !tocList || !body) return;
+  let io = null;
+  const linkById = {};
+
+  function slug(s, i) {
+    const base = (s || '').toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'section';
+    return base + '-' + i;
   }
 
-  // Apply initial theme
-  applyTheme(currentTheme);
+  window.buildTOC = function buildTOC() {
+    tocList.innerHTML = '';
+    Object.keys(linkById).forEach(k => delete linkById[k]);
+    if (io) { io.disconnect(); io = null; }
 
-  // Handle button click
-  themeBtn.addEventListener('click', () => {
-    const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
-    applyTheme(newTheme);
+    const heads = Array.from(body.querySelectorAll('h2'));
+    if (!heads.length) { toc.classList.add('empty'); return; }
+    toc.classList.remove('empty');
+
+    heads.forEach((h, i) => {
+      if (!h.id) h.id = slug(h.textContent, i);
+      h.style.scrollMarginTop = '90px';
+      const a = document.createElement('a');
+      a.className = 'toc-item';
+      a.href = '#' + h.id;
+      a.innerHTML = '<span class="toc-tick"></span><span class="toc-label"></span>';
+      a.querySelector('.toc-label').textContent = h.textContent.trim();
+      const li = document.createElement('li');
+      li.appendChild(a);
+      tocList.appendChild(li);
+      linkById[h.id] = a;
+    });
+
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          Object.values(linkById).forEach(a => a.classList.remove('active'));
+          const a = linkById[e.target.id];
+          if (a) a.classList.add('active');
+        });
+      }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+      heads.forEach(h => io.observe(h));
+    }
+  };
+
+  toc.addEventListener('click', e => {
+    const link = e.target.closest('.toc-item');
+    if (link) { toc.classList.remove('open'); return; } // native #hash nav handles the scroll
+    toc.classList.toggle('open'); // tapping the rail opens it (touch/click)
   });
+  document.addEventListener('click', e => { if (!toc.contains(e.target)) toc.classList.remove('open'); });
 
-  // Code Copy Button Logic
-  document.querySelectorAll('.rr-copy-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault(); 
-      const codeBlock = btn.closest('details').querySelector('pre');
-      navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-        const label = btn.querySelector('.rr-copy-label');
-        label.textContent = 'Copied!';
-        setTimeout(() => label.textContent = 'Copy', 2000);
-      });
+  buildTOC();
+})();
+</script>
+
+<script>
+// ── Code window copy button ──────────────────────────────────────────────────
+document.querySelectorAll('.rr-copy-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const codeBlock = btn.closest('details').querySelector('pre');
+    if (!codeBlock) return;
+    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+      const label = btn.querySelector('.rr-copy-label');
+      if (!label) return;
+      const original = label.textContent;
+      label.textContent = 'Copied!';
+      setTimeout(() => { label.textContent = original; }, 2000);
     });
   });
+});
 </script>
 
 </body>
