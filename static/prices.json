@@ -51,11 +51,34 @@
     "AliExpress": {
       "currency": "$",
       "lastChecked": "2026-06-28",
-      "merchantTrusted": false,
-      "current": 204,
-      "previous": null,
-      "lowest": 204,
-      "status": "unverified"
+      "merchantTrusted": true,
+      "current": 189,
+      "previous": 189,
+      "lowest": 189,
+      "status": "ok",
+      "offers": [
+        {
+          "price": 199,
+          "merchant": "[DEMO] Retroid Pocket Official Store",
+          "trusted": true,
+          "rating": 96.4,
+          "sales": 885
+        },
+        {
+          "price": 204,
+          "merchant": "[DEMO] Ampown Store",
+          "trusted": true,
+          "rating": 94.1,
+          "sales": 512
+        },
+        {
+          "price": 189,
+          "merchant": "[DEMO] HandheldDepot",
+          "trusted": false,
+          "rating": 79,
+          "sales": 30
+        }
+      ]
     }
   },
   "mangmi_air_x": {
@@ -167,12 +190,29 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "merchant": "YANGMINGYU",
-      "merchantTrusted": false,
+      "merchantTrusted": true,
       "current": 79.98,
       "previous": 79.98,
       "lowest": 79.98,
       "status": "ok",
-      "drop": false
+      "drop": false,
+      "offers": [
+        {
+          "price": 79.98,
+          "merchant": "[DEMO] Amazon.com",
+          "trusted": true
+        },
+        {
+          "price": 84.5,
+          "merchant": "[DEMO] RetroGearPro",
+          "trusted": false
+        },
+        {
+          "price": 88.99,
+          "merchant": "[DEMO] GameHubDirect",
+          "trusted": false
+        }
+      ]
     },
     "AliExpress": {
       "currency": "$",
@@ -181,11 +221,34 @@
       "merchantTrusted": true,
       "rating": 98.2,
       "sales": 106,
-      "current": 107.88,
-      "previous": 107.88,
-      "lowest": 67.61,
+      "current": 99.5,
+      "previous": 99.5,
+      "lowest": 99.5,
       "status": "ok",
-      "drop": false
+      "drop": false,
+      "offers": [
+        {
+          "price": 95,
+          "merchant": "[DEMO] BudgetHandhelds",
+          "trusted": false,
+          "rating": 81,
+          "sales": 45
+        },
+        {
+          "price": 99.5,
+          "merchant": "[DEMO] Ampown Store",
+          "trusted": true,
+          "rating": 94.1,
+          "sales": 320
+        },
+        {
+          "price": 107.88,
+          "merchant": "[DEMO] Anbernic Official Store",
+          "trusted": true,
+          "rating": 98.2,
+          "sales": 106
+        }
+      ]
     }
   },
   "miyoo_mini_v4": {
@@ -286,7 +349,24 @@
       "previous": 79.99,
       "lowest": 79.99,
       "status": "ok",
-      "drop": false
+      "drop": false,
+      "offers": [
+        {
+          "price": 79.99,
+          "merchant": "[DEMO] GameSir Official",
+          "trusted": true
+        },
+        {
+          "price": 82,
+          "merchant": "[DEMO] TechDealsUS",
+          "trusted": false
+        },
+        {
+          "price": 89.95,
+          "merchant": "[DEMO] ControllerWorld",
+          "trusted": false
+        }
+      ]
     }
   },
   "odin3": {
