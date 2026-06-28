@@ -123,7 +123,7 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 179,
-      "previous": 209,
+      "previous": 179,
       "lowest": 179,
       "status": "ok",
       "drop": false
@@ -276,7 +276,7 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 76.4,
-      "previous": 80.75,
+      "previous": 76.4,
       "lowest": 76.4,
       "status": "ok",
       "drop": false
@@ -293,7 +293,7 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 80.74,
-      "previous": 80.75,
+      "previous": 80.74,
       "lowest": 80.74,
       "status": "ok",
       "drop": false
@@ -304,7 +304,7 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 63.65,
-      "previous": 72.75,
+      "previous": 63.65,
       "lowest": 63.65,
       "status": "ok",
       "drop": false
@@ -321,14 +321,14 @@
       "currency": "$",
       "lastChecked": "2026-06-28",
       "current": 61.74,
-      "previous": 61.75,
+      "previous": 61.74,
       "lowest": 61.74,
       "status": "ok",
       "drop": false
     }
   },
   "_meta": {
-    "generated": "2026-06-28T00:27:12.626Z",
+    "generated": "2026-06-28T00:31:28.263Z",
     "products": 25
   }
 }
