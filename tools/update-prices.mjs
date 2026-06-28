@@ -193,6 +193,7 @@ for (const p of products) {
   if (!p.links?.length) continue;
   out[p.id] = {};
   for (const link of p.links) {
+    if (link.noTrack) continue;   // manual-price link (e.g. a variant deal) — keep the hardcoded price
     const prevEntry = prev[p.id]?.[link.store] || {};
     let raw = null, trusted = false, merchant = null, merchantTrusted = false, rating = null, sales = null, offers = null;
     try {
@@ -256,6 +257,7 @@ for (const p of products) {
     }
     out[p.id][link.store] = entry;
   }
+  if (out[p.id] && !Object.keys(out[p.id]).length) delete out[p.id];  // all links noTrack
 }
 
 out._meta = { generated: new Date().toISOString(), products: products.length };
