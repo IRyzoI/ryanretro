@@ -281,13 +281,22 @@ const DROPS_JSON = join(ROOT, 'static', 'drops.json');
 const feed = existsSync(DROPS_JSON) ? JSON.parse(readFileSync(DROPS_JSON, 'utf8')) : [];
 writeFileSync(DROPS_JSON, JSON.stringify([...drops, ...feed].slice(0, 60), null, 2) + '\n');
 
-// This run's new drops, for the email step + a quick CI signal.
-writeFileSync(join(ROOT, 'tools', 'last-run-drops.json'), JSON.stringify(drops, null, 2) + '\n');
-const { postDiscord, buildEmailHtml } = await import('./lib/alerts.mjs');
-writeFileSync(join(ROOT, 'tools', 'email-body.html'), buildEmailHtml(drops));
+// Alerts use `alertDrops`. TEST_ALERT=true injects one synthetic drop so the
+// full pipeline (Discord + email) can be validated WITHOUT touching drops.json.
+const alertDrops = process.env.TEST_ALERT === 'true'
+  ? [{ id: 'test', name: '[TEST] Price drop alert', store: 'Official', merchant: 'Official store',
+       from: 99.99, to: 79.99, pct: 20, atLow: true, date: TODAY,
+       url: 'https://ryanretro.com/deals',
+       image: 'https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/nova.png' }]
+  : drops;
 
-if (drops.length && process.env.DISCORD_WEBHOOK_URL) {
-  try { await postDiscord(process.env.DISCORD_WEBHOOK_URL, drops); console.log('Posted drops to Discord.'); }
+// This run's alert drops, for the email step + a quick CI signal.
+writeFileSync(join(ROOT, 'tools', 'last-run-drops.json'), JSON.stringify(alertDrops, null, 2) + '\n');
+const { postDiscord, buildEmailHtml } = await import('./lib/alerts.mjs');
+writeFileSync(join(ROOT, 'tools', 'email-body.html'), buildEmailHtml(alertDrops));
+
+if (alertDrops.length && process.env.DISCORD_WEBHOOK_URL) {
+  try { await postDiscord(process.env.DISCORD_WEBHOOK_URL, alertDrops); console.log('Posted drops to Discord.'); }
   catch (e) { console.error('Discord post failed:', e.message); }
 }
 

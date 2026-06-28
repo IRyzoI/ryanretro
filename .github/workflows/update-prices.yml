@@ -4,7 +4,12 @@ on:
   schedule:
     # Every 3 days at 13:00 UTC (~6-9am US). Adjust cadence here.
     - cron: '0 13 */3 * *'
-  workflow_dispatch: {}   # allow manual runs from the Actions tab
+  workflow_dispatch:
+    inputs:
+      test_alert:
+        description: 'Send a synthetic test drop alert (Discord + email)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -31,6 +36,7 @@ jobs:
           ALIEXPRESS_APP_SECRET: ${{ secrets.ALIEXPRESS_APP_SECRET }}
           ALIEXPRESS_TRACKING_ID: ${{ secrets.ALIEXPRESS_TRACKING_ID }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TEST_ALERT: ${{ inputs.test_alert }}
         run: |
           node tools/update-prices.mjs
           if [ -s tools/last-run-drops.json ] && [ "$(jq 'length' tools/last-run-drops.json)" -gt 0 ]; then
