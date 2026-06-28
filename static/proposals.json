@@ -121,8 +121,9 @@
     "currentBest": 89.99,
     "savings": 14,
     "url": "https://www.amazon.com/dp/B0DSPX4RQ5?tag=ryanretro-20&linkCode=osi&th=1&psc=1",
-    "status": "new",
-    "firstSeen": "2026-06-28"
+    "status": "rejected",
+    "firstSeen": "2026-06-28",
+    "decidedOn": "2026-06-28"
   },
   {
     "key": "gamesir_g8p:B0GNQ49B1P",
