@@ -2,8 +2,8 @@ name: Update store prices
 
 on:
   schedule:
-    # Every 3 days at 13:00 UTC (~6-9am US). Adjust cadence here.
-    - cron: '0 13 */3 * *'
+    # Daily at 13:00 UTC (~6-9am US). Adjust cadence here.
+    - cron: '0 13 * * *'
   workflow_dispatch:
     inputs:
       test_alert:
