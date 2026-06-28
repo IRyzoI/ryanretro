@@ -38,13 +38,14 @@ function loadProducts() {
 const prices = JSON.parse(readFileSync(join(ROOT, 'static', 'prices.json'), 'utf8'));
 
 const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-const modelTokens = (name) => name.split(/\s+/).filter((t) => /\d/.test(t)).map(norm).filter(Boolean);
+const STOP = new Set(['the', 'for', 'with', 'and']);
+const nameTokens = (name) => name.split(/\s+/).map(norm).filter((t) => (t.length >= 2 || /\d/.test(t)) && !STOP.has(t));
+// Require EVERY meaningful product-name token to appear in the listing title
+// (e.g. "retroid"+"pocket"+"nova"), not just the brand — kills wrong-model matches.
 function titleMatches(title, name) {
   const t = norm(title);
-  const models = modelTokens(name);
-  if (models.length) return models.every((m) => t.includes(m));
-  const brand = norm(name.split(/\s+/)[0]);
-  return brand.length > 2 && t.includes(brand);
+  const toks = nameTokens(name);
+  return toks.length > 0 && toks.every((tok) => t.includes(tok));
 }
 const round2 = (n) => Math.round(n * 100) / 100;
 const currentBest = (id) => {
@@ -63,7 +64,7 @@ async function discover() {
     for (const r of results) {
       // Amazon: any seller is acceptable (Amazon's return policy covers buyers).
       if (!titleMatches(r.title, p.name) || !(r.price > 0)) continue;
-      if (ref && (r.price < ref * 0.3 || r.price > ref * 2)) continue;  // sane band
+      if (ref && (r.price < ref * 0.5 || r.price > ref * 2)) continue;  // sane band (>50% off = likely mismatch)
       if (ref && r.price >= ref - 0.01) continue;                       // must be cheaper
       out.push({
         key: `${p.id}:${r.asin}`, productId: p.id, productName: p.name, image: p.image,
@@ -74,7 +75,13 @@ async function discover() {
     }
     await new Promise((res) => setTimeout(res, 1200));
   }
-  return out;
+  // Collapse duplicate listings (same product + seller + price).
+  const seen = new Set();
+  return out.filter((d) => {
+    const k = `${d.productId}|${norm(d.merchant)}|${d.price}`;
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
 }
 
 async function postDiscord(items) {
