@@ -49,8 +49,9 @@
     "currentBest": 153.19,
     "savings": 13.2,
     "url": "https://www.amazon.com/dp/B0GJF12DC6?tag=ryanretro-20&linkCode=osi&th=1&psc=1",
-    "status": "new",
-    "firstSeen": "2026-06-28"
+    "status": "approved",
+    "firstSeen": "2026-06-28",
+    "decidedOn": "2026-06-28"
   },
   {
     "key": "trimui_smart_pro_s:B0GCMF6NYX",
