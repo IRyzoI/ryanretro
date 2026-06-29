@@ -2,7 +2,7 @@
   "nova": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 229,
@@ -15,22 +15,22 @@
   "anbernic_rg_rotate": {
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Curated Retro Handhelds (Anbernic Authorized Store) Store",
       "merchantTrusted": true,
       "rating": 100,
       "sales": 150,
-      "current": 124.47,
-      "previous": 110.81,
+      "current": 124.39,
+      "previous": 124.47,
       "lowest": 110.81,
       "status": "ok",
-      "drop": false
+      "drop": true
     }
   },
   "rp6": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 244,
@@ -43,7 +43,7 @@
   "steam_deck": {
     "Steam": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchantTrusted": false,
       "current": 549,
       "previous": null,
@@ -54,7 +54,7 @@
   "rp5": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 199,
@@ -65,7 +65,7 @@
     },
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchantTrusted": false,
       "current": 189,
       "previous": 189,
@@ -76,7 +76,7 @@
   "mangmi_air_x": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 99.99,
@@ -89,11 +89,11 @@
   "ayaneo_pocket_air_mini": {
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "AJCOME Store",
       "merchantTrusted": true,
       "rating": 97.4,
-      "sales": 196,
+      "sales": 194,
       "current": 153.19,
       "previous": 153.19,
       "lowest": 113.49,
@@ -104,22 +104,22 @@
   "trimui_smart_pro_s": {
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Ampown Store",
       "merchantTrusted": true,
       "rating": 93.8,
-      "sales": 495,
-      "current": 110.23,
+      "sales": 494,
+      "current": 110.15,
       "previous": 110.23,
       "lowest": 91.85,
       "status": "ok",
-      "drop": false
+      "drop": true
     }
   },
   "trimui_smart_pro": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "game console",
       "merchantTrusted": false,
       "current": 88.99,
@@ -130,13 +130,13 @@
     },
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Factory Game Direct Store",
-      "merchantTrusted": true,
+      "merchantTrusted": false,
       "rating": 93.2,
-      "sales": 100,
-      "current": 82.03,
-      "previous": 79.71,
+      "sales": 98,
+      "current": 81.97,
+      "previous": 82.03,
       "lowest": 57.77,
       "status": "ok",
       "drop": false
@@ -145,7 +145,7 @@
   "rp_classic": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 149,
@@ -156,7 +156,7 @@
     },
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchantTrusted": false,
       "current": 171.62,
       "previous": null,
@@ -167,7 +167,7 @@
   "rp_flip2": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 179,
@@ -180,7 +180,7 @@
   "rg34xx": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "YANGMINGYU",
       "merchantTrusted": false,
       "current": 79.98,
@@ -191,22 +191,22 @@
     },
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Anbernic Direct Store",
       "merchantTrusted": true,
-      "rating": 98.2,
-      "sales": 106,
-      "current": 107.88,
+      "rating": 98.3,
+      "sales": 105,
+      "current": 107.82,
       "previous": 107.88,
       "lowest": 99.5,
       "status": "ok",
-      "drop": false
+      "drop": true
     }
   },
   "miyoo_mini_v4": {
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchantTrusted": false,
       "current": 51,
       "previous": null,
@@ -217,22 +217,22 @@
   "miyoo_mini_plus": {
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Ampown Store",
       "merchantTrusted": true,
       "rating": 94.2,
-      "sales": 122,
-      "current": 81.54,
+      "sales": 118,
+      "current": 81.48,
       "previous": 81.54,
       "lowest": 69.57,
       "status": "ok",
-      "drop": false
+      "drop": true
     }
   },
   "anker_power": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "AnkerDirect",
       "merchantTrusted": true,
       "current": 119.99,
@@ -245,18 +245,20 @@
   "ugreen_power": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
+      "merchant": "Amazon Resale",
       "merchantTrusted": false,
-      "current": 89.99,
-      "previous": null,
-      "lowest": 89.99,
-      "status": "unverified"
+      "current": 77.61,
+      "previous": 89.99,
+      "lowest": 77.61,
+      "status": "ok",
+      "drop": false
     }
   },
   "ugreen_dock": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "UGREEN GROUP LIMITED",
       "merchantTrusted": true,
       "current": 39.99,
@@ -269,7 +271,7 @@
   "rp_ds_addon": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 69,
@@ -282,7 +284,7 @@
   "gamesir_g8p": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "GameSir Official Store US",
       "merchantTrusted": true,
       "current": 79.99,
@@ -295,7 +297,7 @@
   "odin3": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 339,
@@ -308,7 +310,7 @@
   "odin2_portal": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 249,
@@ -321,7 +323,7 @@
   "ayn_thor": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 249,
@@ -334,24 +336,24 @@
   "sd_card": {
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Amazon.com",
       "merchantTrusted": true,
       "current": 105.99,
-      "previous": 106.99,
+      "previous": 105.99,
       "lowest": 59.99,
       "status": "ok",
-      "drop": true
+      "drop": false
     }
   },
   "anbernic_rg477v": {
     "AliExpress": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Anbernic Official Store",
       "merchantTrusted": true,
-      "rating": 96.5,
-      "sales": 211,
+      "rating": 96,
+      "sales": 207,
       "current": 284.99,
       "previous": 284.99,
       "lowest": 199,
@@ -362,7 +364,7 @@
   "trimui_brick_hammer": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 76.4,
@@ -373,7 +375,7 @@
     },
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Timexplayer",
       "merchantTrusted": false,
       "current": 99.99,
@@ -384,7 +386,7 @@
     },
     "PowKiddy": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 80.74,
@@ -397,7 +399,7 @@
   "trimui_brick": {
     "Official": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 63.65,
@@ -408,7 +410,7 @@
     },
     "Amazon": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchantTrusted": false,
       "current": 73,
       "previous": null,
@@ -417,7 +419,7 @@
     },
     "PowKiddy": {
       "currency": "$",
-      "lastChecked": "2026-06-28",
+      "lastChecked": "2026-06-29",
       "merchant": "Official store",
       "merchantTrusted": true,
       "current": 61.74,
@@ -428,7 +430,7 @@
     }
   },
   "_meta": {
-    "generated": "2026-06-28T14:44:34.610Z",
+    "generated": "2026-06-29T16:35:41.185Z",
     "products": 26
   }
 }
