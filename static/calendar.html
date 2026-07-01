@@ -20,6 +20,7 @@ h1,h2,h3{font-weight:700;margin:0}button{font-family:inherit;cursor:pointer}
 .seg{display:inline-flex;border:1px solid var(--bord);border-radius:8px;overflow:hidden;background:#fff}body.dark .seg{background:#2A3040}
 .seg button{border:0;background:transparent;font-weight:600;font-size:12px;padding:7px 13px;color:var(--title)}body.dark .seg button{color:#C9CEE4}.seg button+button{border-left:1px solid var(--sep)}.seg button.on{background:var(--title);color:#fff}body.dark .seg button.on{background:var(--title);color:#14171E}
 .hint{font-size:12px;color:var(--soft)}
+#startDate{border:1px solid var(--bord);border-radius:8px;background:#fff;font:inherit;font-weight:600;font-size:12px;padding:6px 10px;color:var(--title)}body.dark #startDate{background:#2A3040;color:#C9CEE4;color-scheme:dark}
 .band{font-size:12px;font-weight:600;letter-spacing:.3px;text-align:center;padding:8px 12px}
 .b-rose{background:var(--rose-bg);color:var(--rose)}.b-amber{background:var(--amber-bg);color:var(--amber)}.b-teal{background:var(--teal-bg);color:var(--teal)}.b-blue{background:var(--blue-bg);color:var(--blue)}.b-purple{background:var(--purple-bg);color:var(--purple)}.b-green{background:var(--green-bg);color:var(--green)}
 .summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
@@ -58,12 +59,14 @@ h1,h2,h3{font-weight:700;margin:0}button{font-family:inherit;cursor:pointer}
 <div class="controls">
   <span class="hint">Cadence:</span>
   <div class="seg" id="cadenceSeg"><button data-c="mwf" class="on">Mon · Wed · Fri</button><button data-c="tuefri">Tue · Fri (heavy weeks)</button></div>
+  <span class="hint">Start:</span>
+  <input type="date" id="startDate">
   <button class="btn brand" id="autofill">Auto-fill from #1 ↓</button>
   <button class="btn" id="clearBtn">Clear all</button>
 </div>
 <div class="summary" id="summary"></div>
 <div id="cal"></div>
-<div class="foot">Dates auto-start from the next posting day. Your schedule saves in this browser — tap a slot to pick, ✕ to clear, or Auto-fill to drop the top-ranked ideas straight in.</div>
+<div class="foot">Dates begin from your chosen start date. Your schedule saves in this browser — tap a slot to pick, ✕ to clear, or Auto-fill to drop the top-ranked ideas straight in.</div>
 </main>
 
 <div class="ov" id="picker"><div class="modal">
@@ -85,13 +88,16 @@ const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"
 // storage (falls back to memory if blocked)
 let store={}; try{store=JSON.parse(localStorage.getItem('rr_cal_assign')||'{}')}catch(e){store={}}
 let cadence='mwf'; try{cadence=localStorage.getItem('rr_cal_cadence')||'mwf'}catch(e){}
-function persist(){try{localStorage.setItem('rr_cal_assign',JSON.stringify(store));localStorage.setItem('rr_cal_cadence',cadence)}catch(e){}}
+let startISO=''; try{startISO=localStorage.getItem('rr_cal_start')||''}catch(e){}
+function persist(){try{localStorage.setItem('rr_cal_assign',JSON.stringify(store));localStorage.setItem('rr_cal_cadence',cadence);localStorage.setItem('rr_cal_start',startISO)}catch(e){}}
 
 const WEEKS=16;
 const DOW={mwf:[1,3,5],tuefri:[2,5]};
 function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function fmt(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})}
 function mondayOf(d){const x=new Date(d);const g=x.getDay();const diff=(g===0?-6:1-g);x.setDate(x.getDate()+diff);x.setHours(0,0,0,0);return x}
+function todayISO(){return iso(new Date())}
+function startDate(){const s=startISO||todayISO();const d=new Date(s+'T00:00:00');d.setHours(0,0,0,0);return d}
 
 function scheduledRanks(){return new Set(Object.values(store).map(Number))}
 function nextUnscheduled(used){for(const v of byRank){if(!used.has(v.rank))return v.rank}return null}
@@ -103,17 +109,19 @@ function renderSummary(){
 function render(){
   renderSummary();
   const today=new Date();today.setHours(0,0,0,0);
-  let start=mondayOf(today);
+  const startD=startDate();
+  let start=mondayOf(startD);
   let html='';
   for(let w=0;w<WEEKS;w++){
     const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
-    let slots='';let any=false;
+    let slots='';let firstDay=null;let shown=0;let filled=0;
     DOW[cadence].forEach(dw=>{
       const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));
-      if(w===0 && d<today) return; // skip past days this week
-      any=true;
+      if(d<startD) return; // skip days before the chosen start date
+      if(!firstDay) firstDay=d; shown++;
       const key=iso(d);const past=d<today;
       const r=store[key]?Number(store[key]):null;const v=r?vById(r):null;
+      if(v)filled++;
       if(v){const tc=TIERS[v.tier].color;const ec=BCOLOR[v.bucket];
         slots+=`<div class="slot filled${past?' past':''}" style="--edge:var(--${ec})"><div class="date">${fmt(d)}</div>
           <div class="vt">${esc(v.title)}</div>
@@ -123,10 +131,9 @@ function render(){
         slots+=`<div class="slot empty${past?' past':''}" data-pick="${key}"><div class="date">${fmt(d)}</div><div class="add">＋ pick a video</div></div>`;
       }
     });
-    if(!any) continue;
-    const label=wkStart.toLocaleDateString(undefined,{month:'short',day:'numeric'});
-    const filled=DOW[cadence].filter(dw=>{const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));return store[iso(d)]}).length;
-    html+=`<div class="week"><div class="week-h"><span>Week of ${label}</span><span class="wc">${filled}/${DOW[cadence].length} slotted</span></div><div class="slots">${slots}</div></div>`;
+    if(!firstDay) continue;
+    const label=firstDay.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    html+=`<div class="week"><div class="week-h"><span>Week of ${label}</span><span class="wc">${filled}/${shown} slotted</span></div><div class="slots">${slots}</div></div>`;
   }
   $('#cal').innerHTML=html;
   document.querySelectorAll('[data-pick]').forEach(s=>s.addEventListener('click',()=>openPicker(s.dataset.pick)));
@@ -162,10 +169,10 @@ document.querySelectorAll('#cadenceSeg button').forEach(b=>b.addEventListener('c
   cadence=b.dataset.c;document.querySelectorAll('#cadenceSeg button').forEach(x=>x.classList.toggle('on',x===b));persist();render();
 }));
 $('#autofill').addEventListener('click',()=>{
-  const today=new Date();today.setHours(0,0,0,0);const start=mondayOf(today);const used=scheduledRanks();let filled=0;
+  const startD=startDate();const start=mondayOf(startD);const used=scheduledRanks();let filled=0;
   for(let w=0;w<WEEKS;w++){const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
     for(const dw of DOW[cadence]){const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));
-      if(d<today)continue;const key=iso(d);if(store[key])continue;
+      if(d<startD)continue;const key=iso(d);if(store[key])continue;
       const r=nextUnscheduled(used);if(r==null){persist();render();toast('Filled '+filled+' slots');return;}
       store[key]=r;used.add(r);filled++;
     }}
@@ -177,5 +184,9 @@ let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('sh
 
 // set initial cadence button
 document.querySelectorAll('#cadenceSeg button').forEach(b=>b.classList.toggle('on',b.dataset.c===cadence));
+// start date input
+const startInput=$('#startDate');
+startInput.value=startISO||todayISO();
+startInput.addEventListener('change',()=>{startISO=startInput.value||todayISO();if(!startInput.value)startInput.value=startISO;persist();render()});
 render();
 </script></body></html>
