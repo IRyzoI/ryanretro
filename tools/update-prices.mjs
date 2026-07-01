@@ -189,6 +189,21 @@ try { api.ali = await getAliExpressPrices(aliLinks); }
 catch (e) { console.error('AliExpress API failed, falling back to scrape:', e.message); }
 console.log(`API prices fetched — Amazon: ${api.amazon.size}/${amazonLinks.length}, AliExpress: ${api.ali.size}/${aliLinks.length}\n`);
 
+// Alert tuning: a drop must be MEANINGFUL to notify (no 1¢ / 1% noise). Tunable via env.
+const MIN_DROP_ABS = Number(process.env.MIN_DROP_ABS || 3);     // at least $3 off
+const MIN_DROP_PCT = Number(process.env.MIN_DROP_PCT || 0.03);  // AND at least 3% off
+
+// Approved deals (from /admin/deals) count as extra tracked storefronts for the
+// "cheapest available" comparison (their prices are static, set at approval time).
+const approvedByProduct = {};
+try {
+  const propsPath = join(ROOT, 'static', 'proposals.json');
+  const props = existsSync(propsPath) ? JSON.parse(readFileSync(propsPath, 'utf8')) : [];
+  for (const x of props) if (x.status === 'approved' && typeof x.price === 'number') {
+    (approvedByProduct[x.productId] = approvedByProduct[x.productId] || []).push({ store: x.store, current: x.price, merchant: x.merchant, url: x.url });
+  }
+} catch { /* no proposals yet */ }
+
 for (const p of products) {
   if (!p.links?.length) continue;
   out[p.id] = {};
@@ -244,19 +259,39 @@ for (const p of products) {
       entry.status = 'ok';
       // A real drop: cheaper than last measurement, AND from a trusted seller
       // (so we never alert on a scalper shaving a few dollars off an inflated price).
-      entry.drop = measured != null && current < measured - 0.005 && merchantTrusted;
-      if (entry.drop) {
-        const pct = Math.round(((measured - current) / measured) * 100);
-        const atLow = current <= entry.lowest + 0.005;
-        drops.push({
-          id: p.id, name: p.name, store: link.store, merchant: merchant || link.store,
-          from: measured, to: current, pct, atLow, rating, sales,
-          url: link.url, image: p.image, date: TODAY,
-        });
-      }
+      entry.drop = measured != null && current < measured - 0.005 && merchantTrusted;  // per-store flag (card strikethrough only)
     }
     out[p.id][link.store] = entry;
   }
+
+  // --- ALERT: fire only when the CHEAPEST tracked price hits a new low ---
+  // Considers every tracked storefront for this product (its links + approved deals),
+  // trusted sellers preferred. A per-store dip that's still pricier than another
+  // store won't alert, because the product's cheapest hasn't moved.
+  const approved = approvedByProduct[p.id] || [];
+  const nowList = [
+    ...Object.entries(out[p.id] || {}).map(([store, e]) => ({ store, current: e.current, merchant: e.merchant, trusted: !!e.merchantTrusted, url: (p.links.find((l) => l.store === store) || {}).url })),
+    ...approved.map((a) => ({ store: a.store, current: a.current, merchant: a.merchant, trusted: true, url: a.url })),
+  ].filter((x) => typeof x.current === 'number');
+  const prevList = [
+    ...Object.values(prev[p.id] || {}).map((e) => ({ current: e.current, trusted: !!e.merchantTrusted })),
+    ...approved.map((a) => ({ current: a.current, trusted: true })),   // static → never self-triggers
+  ].filter((x) => typeof x.current === 'number');
+
+  if (nowList.length && prevList.length) {
+    const cheapest = (list) => { const t = list.filter((x) => x.trusted); return (t.length ? t : list).reduce((a, b) => (b.current < a.current ? b : a)); };
+    const best = cheapest(nowList);
+    const bestPrev = cheapest(prevList).current;
+    const dropAbs = round2(bestPrev - best.current);
+    if (dropAbs >= MIN_DROP_ABS && dropAbs / bestPrev >= MIN_DROP_PCT) {
+      drops.push({
+        id: p.id, name: p.name, store: best.store, merchant: best.merchant || best.store,
+        from: bestPrev, to: best.current, pct: Math.round((dropAbs / bestPrev) * 100), atLow: true,
+        url: best.url || p.links[0]?.url, image: p.image, date: TODAY,
+      });
+    }
+  }
+
   if (out[p.id] && !Object.keys(out[p.id]).length) delete out[p.id];  // all links noTrack
 }
 
