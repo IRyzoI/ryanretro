@@ -5,20 +5,22 @@
  */
 
 const money = (n) => '$' + Number(n).toFixed(2);
+// CamelCamelCamel-style low context. lastLow === null/undefined => all-time low.
+const lowNote = (d) => (d.lastLow ? `📉 lowest since ${d.lastLow}` : '🔥 all-time low');
 
 /** Post up to 10 drops as rich embeds to a Discord webhook. */
 export async function postDiscord(webhookUrl, drops) {
   if (!drops.length) return;
   const embeds = drops.slice(0, 10).map((d) => ({
-    title: `${d.name} — ${d.pct}% off`,
+    title: `${d.name} — new low ${money(d.to)} (${d.pct}% off)`,
     url: d.url,
-    description: `**${money(d.to)}**  ~~${money(d.from)}~~  ·  ${d.merchant}${d.atLow ? '  ·  🔥 lowest yet' : ''}`,
+    description: `**${money(d.to)}**  ~~${money(d.from)}~~  ·  ${d.merchant}\n${lowNote(d)}`,
     thumbnail: d.image ? { url: d.image } : undefined,
     color: 0x57f287,
   }));
   const body = {
     username: 'Ryan Retro Price Bot',
-    content: `🔻 ${drops.length} price drop${drops.length > 1 ? 's' : ''}`,
+    content: `🔻 ${drops.length} new low${drops.length > 1 ? 's' : ''}`,
     embeds,
   };
   const res = await fetch(webhookUrl, {
@@ -31,14 +33,14 @@ export async function postDiscord(webhookUrl, drops) {
 
 /** Build an HTML email body listing the drops (used by the GitHub Actions mail step). */
 export function buildEmailHtml(drops) {
-  if (!drops.length) return '<p>No new price drops this run.</p>';
+  if (!drops.length) return '<p>No new lows this run.</p>';
   const rows = drops
     .map(
       (d) => `
     <tr>
       <td style="padding:10px;border-bottom:1px solid #eee;">
         <a href="${d.url}" style="color:#6254A4;font-weight:bold;text-decoration:none;">${d.name}</a>
-        <div style="color:#888;font-size:12px;">${d.merchant}${d.atLow ? ' · 🔥 lowest yet' : ''}</div>
+        <div style="color:#888;font-size:12px;">${d.merchant} · ${lowNote(d)}</div>
       </td>
       <td style="padding:10px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap;">
         <span style="color:#2e7d32;font-weight:bold;font-size:16px;">${money(d.to)}</span>
@@ -50,7 +52,7 @@ export function buildEmailHtml(drops) {
     .join('');
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;">
-    <h2 style="color:#6254A4;">🔻 ${drops.length} price drop${drops.length > 1 ? 's' : ''} on Ryan Retro</h2>
+    <h2 style="color:#6254A4;">🔻 ${drops.length} new low${drops.length > 1 ? 's' : ''} on Ryan Retro</h2>
     <table style="width:100%;border-collapse:collapse;">${rows}</table>
     <p style="margin-top:16px;"><a href="https://ryanretro.com/deals" style="color:#6254A4;">See all deals →</a></p>
     <p style="color:#aaa;font-size:11px;">Automated alert from the Ryan Retro price tracker.</p>

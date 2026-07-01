@@ -61,6 +61,18 @@ function loadProducts() {
 const round2 = (n) => Math.round(n * 100) / 100;
 const hostOf = (url) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; } };
 
+// Most recent past date on which the product was at/below `price` (for the
+// CamelCamelCamel-style "lowest since …" line). null => never been this low.
+function lastAtOrBelow(series, price) {
+  if (!Array.isArray(series)) return null;
+  for (let i = series.length - 1; i >= 0; i--) {
+    const [d, p] = series[i];
+    if (d === TODAY) continue;
+    if (p <= price + 0.005) return d;
+  }
+  return null;
+}
+
 async function fetchText(url, opts = {}) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 20000);
@@ -174,6 +186,11 @@ const out = {};
 const drops = [];
 const failures = [];
 
+// Price history loaded up-front so alerts can say "lowest since <date>".
+const HISTORY_JSON = join(ROOT, 'static', 'price-history.json');
+const history = existsSync(HISTORY_JSON) ? JSON.parse(readFileSync(HISTORY_JSON, 'utf8')) : {};
+const productBest = {};   // id -> cheapest price this run (for the product-level history series)
+
 // --- Pre-pass: pull official-API prices in batch (empty maps if unconfigured) ---
 const allLinks = products.flatMap((p) => p.links || []);
 const amazonLinks = allLinks.filter((l) => /amzn|amazon/.test(hostOf(l.url)));
@@ -278,17 +295,21 @@ for (const p of products) {
     ...approved.map((a) => ({ current: a.current, trusted: true })),   // static → never self-triggers
   ].filter((x) => typeof x.current === 'number');
 
-  if (nowList.length && prevList.length) {
+  if (nowList.length) {
     const cheapest = (list) => { const t = list.filter((x) => x.trusted); return (t.length ? t : list).reduce((a, b) => (b.current < a.current ? b : a)); };
     const best = cheapest(nowList);
-    const bestPrev = cheapest(prevList).current;
-    const dropAbs = round2(bestPrev - best.current);
-    if (dropAbs >= MIN_DROP_ABS && dropAbs / bestPrev >= MIN_DROP_PCT) {
-      drops.push({
-        id: p.id, name: p.name, store: best.store, merchant: best.merchant || best.store,
-        from: bestPrev, to: best.current, pct: Math.round((dropAbs / bestPrev) * 100), atLow: true,
-        url: best.url || p.links[0]?.url, image: p.image, date: TODAY,
-      });
+    productBest[p.id] = best.current;   // record the cheapest for the history series
+    if (prevList.length) {
+      const bestPrev = cheapest(prevList).current;
+      const dropAbs = round2(bestPrev - best.current);
+      if (dropAbs >= MIN_DROP_ABS && dropAbs / bestPrev >= MIN_DROP_PCT) {
+        drops.push({
+          id: p.id, name: p.name, store: best.store, merchant: best.merchant || best.store,
+          from: bestPrev, to: best.current, pct: Math.round((dropAbs / bestPrev) * 100), atLow: true,
+          lastLow: lastAtOrBelow(history[p.id], best.current),   // null => all-time low
+          url: best.url || p.links[0]?.url, image: p.image, date: TODAY,
+        });
+      }
     }
   }
 
@@ -299,22 +320,26 @@ out._meta = { generated: new Date().toISOString(), products: products.length };
 writeFileSync(PRICES_JSON, JSON.stringify(out, null, 2) + '\n');
 
 // ---------------------------------------------------------------------------
-// 4. Price history — append a dated point per link whenever the price changes.
+// 4. Price history — per-store series ("id|store") + a product-cheapest series
+// ("id") for the graphs. A dated point is appended whenever the price changes.
 // ---------------------------------------------------------------------------
-const HISTORY_JSON = join(ROOT, 'static', 'price-history.json');
-const history = existsSync(HISTORY_JSON) ? JSON.parse(readFileSync(HISTORY_JSON, 'utf8')) : {};
+const pushPoint = (key, price, cap) => {
+  const arr = history[key] || (history[key] = []);
+  const last = arr[arr.length - 1];
+  if (!last || last[0] !== TODAY || last[1] !== price) {
+    if (last && last[0] === TODAY) arr[arr.length - 1] = [TODAY, price]; // one point per day
+    else arr.push([TODAY, price]);
+  }
+  if (arr.length > cap) history[key] = arr.slice(-cap);
+};
 for (const id of Object.keys(out)) {
   if (id === '_meta') continue;
   for (const store of Object.keys(out[id])) {
     const e = out[id][store];
-    if (e.current == null) continue;
-    const key = `${id}|${store}`;
-    const arr = history[key] || (history[key] = []);
-    const last = arr[arr.length - 1];
-    if (!last || last[1] !== e.current) arr.push([TODAY, e.current]);
-    if (arr.length > 180) history[key] = arr.slice(-180);
+    if (e.current != null) pushPoint(`${id}|${store}`, e.current, 180);
   }
 }
+for (const id of Object.keys(productBest)) pushPoint(id, productBest[id], 365);  // product cheapest, ~1yr
 writeFileSync(HISTORY_JSON, JSON.stringify(history) + '\n');
 
 // ---------------------------------------------------------------------------
