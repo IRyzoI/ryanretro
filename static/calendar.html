@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ryan Retro — Content Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--page:#dfe9fb;--sheet:#f3f8ff;--card:#fff;--ink:#1a1a1a;--title:#3b3a8d;--bord:#3b3c89;--sep:#d4e4ff;--soft:#9fb0d4;
+--teal:#208ab0;--teal-bg:#e5f9ff;--green:#107a47;--green-bg:#e6faf3;--blue:#3a69b9;--blue-bg:#d3e4ff;--purple:#6b46c1;--purple-bg:#efe9fb;--amber:#b5701a;--amber-bg:#fdf3df;--rose:#d6336c;--rose-bg:#fdeaf2;}
+body.dark{--page:#14171E;--sheet:#1C202A;--card:#232936;--ink:#DDE1EE;--title:#A9A8F4;--bord:#3D4358;--sep:#2F3547;--soft:#8E95B5;
+--teal:#5BC8DE;--teal-bg:rgba(91,200,222,.12);--green:#4CC388;--green-bg:rgba(76,195,136,.13);--blue:#8FA9F0;--blue-bg:rgba(143,169,240,.13);--purple:#B49CEF;--purple-bg:rgba(180,156,239,.13);--amber:#E3B964;--amber-bg:rgba(227,185,100,.12);--rose:#E68DB8;--rose-bg:rgba(230,141,184,.13);}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;background:var(--page);color:var(--ink);font-family:'Poppins',Arial,sans-serif;font-size:13.5px;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+h1,h2,h3{font-weight:700;margin:0}button{font-family:inherit;cursor:pointer}
+.topbar{position:sticky;top:0;z-index:50;background:var(--sheet);border-bottom:2px solid var(--title);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px}.play{width:42px;height:31px;background:var(--title);border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}.play::after{content:"";border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:4px}
+.logo h1{font-size:21px;color:var(--title);letter-spacing:-.6px}.logo h1 span{color:var(--teal)}
+.top-actions{margin-left:auto;display:flex;gap:8px}
+.btn{border:1px solid var(--bord);border-radius:5px;background:#fff;font-weight:600;font-size:12px;padding:6px 12px;color:var(--title);text-decoration:none;display:inline-flex;align-items:center;gap:6px}.btn:hover{background:var(--teal-bg)}.btn.brand{background:var(--title);border-color:var(--title);color:#fff}body.dark .btn{background:#2A3040;color:#C9CEE4}body.dark .btn.brand{background:var(--title);color:#14171E}
+.wrap{max-width:1000px;margin:16px auto 0;padding:20px 22px 30px;background:var(--sheet);border:2px solid var(--title);border-radius:4px}@media(max-width:1040px){.wrap{margin:12px 12px 0}}body.dark .wrap{border-color:#4A4F7A}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--bord);border-radius:8px;overflow:hidden;background:#fff}body.dark .seg{background:#2A3040}
+.seg button{border:0;background:transparent;font-weight:600;font-size:12px;padding:7px 13px;color:var(--title)}body.dark .seg button{color:#C9CEE4}.seg button+button{border-left:1px solid var(--sep)}.seg button.on{background:var(--title);color:#fff}body.dark .seg button.on{background:var(--title);color:#14171E}
+.hint{font-size:12px;color:var(--soft)}
+.band{font-size:12px;font-weight:600;letter-spacing:.3px;text-align:center;padding:8px 12px}
+.b-rose{background:var(--rose-bg);color:var(--rose)}.b-amber{background:var(--amber-bg);color:var(--amber)}.b-teal{background:var(--teal-bg);color:var(--teal)}.b-blue{background:var(--blue-bg);color:var(--blue)}.b-purple{background:var(--purple-bg);color:var(--purple)}.b-green{background:var(--green-bg);color:var(--green)}
+.summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--bord);border-radius:8px;padding:8px 13px;font-size:12px}.stat b{color:var(--title);font-size:15px;display:block}
+.week{background:var(--card);border:1px solid var(--bord);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.week-h{display:flex;align-items:center;justify-content:space-between;padding:8px 13px;background:var(--blue-bg);color:var(--blue);font-weight:600;font-size:12.5px}
+.week-h .wc{opacity:.7;font-weight:600}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;padding:12px}
+.slot{border:1px dashed var(--bord);border-radius:8px;padding:10px 11px;min-height:74px;display:flex;flex-direction:column;gap:6px;transition:.12s;position:relative}
+.slot .date{font-size:11px;font-weight:600;color:var(--soft);text-transform:uppercase;letter-spacing:.4px}
+.slot.empty{cursor:pointer}.slot.empty:hover{border-color:var(--teal);background:var(--teal-bg)}
+.slot.empty .add{margin:auto;color:var(--soft);font-weight:600;font-size:12.5px}
+.slot.filled{border-style:solid}
+.slot.past{opacity:.5}
+.slot .vt{font-size:12.5px;font-weight:600;line-height:1.3;color:var(--ink)}
+.slot .vmeta{display:flex;align-items:center;gap:6px;margin-top:auto}
+.rk{font-size:10px;font-weight:700;color:var(--title)}
+.tb{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:20px;padding:2px 7px}
+.x{position:absolute;top:6px;right:6px;width:20px;height:20px;border:none;border-radius:50%;background:rgba(0,0,0,.18);color:#fff;font-size:12px;line-height:1;padding:0}
+.slot.filled{--edge:var(--blue)}.slot.filled{border-left:4px solid var(--edge)}
+/* picker */
+.ov{position:fixed;inset:0;background:rgba(20,22,45,.6);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:24px 14px;overflow:auto}.ov.show{display:flex}
+.modal{background:var(--sheet);border:2px solid var(--title);border-radius:8px;max-width:560px;width:100%;padding:16px}body.dark .modal{border-color:#4A4F7A}
+.modal h3{color:var(--title);margin-bottom:4px}.modal .msub{font-size:12px;color:var(--soft);margin-bottom:10px}
+.psearch{width:100%;border:1px solid var(--bord);border-radius:6px;padding:8px 11px;font:inherit;font-size:13px;background:#fff;margin-bottom:10px}body.dark .psearch{background:#1C212D;color:var(--ink)}
+.plist{max-height:52vh;overflow:auto}
+.prow{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:6px;cursor:pointer;border:1px solid transparent}.prow:hover{background:var(--teal-bg);border-color:var(--bord)}
+.prow .rk{min-width:26px}.prow .pt{flex:1;font-size:12.5px;font-weight:500}
+.tier-h{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--soft);padding:8px 4px 4px}
+.foot{text-align:center;color:var(--soft);font-size:12px;padding:22px 0 40px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--title);color:#fff;font-weight:500;font-size:12.5px;padding:10px 18px;border-radius:6px;z-index:200;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+</style></head><body>
+<header class="topbar"><div class="logo"><div class="play"></div><h1>RYAN RETRO <span>CONTENT CALENDAR</span></h1></div>
+<div class="top-actions"><a class="btn" href="/playbook">← Playbook</a><a class="btn" href="/planner">Planner</a><button class="btn" id="themeBtn">Dark mode</button></div></header>
+<main class="wrap">
+<div class="controls">
+  <span class="hint">Cadence:</span>
+  <div class="seg" id="cadenceSeg"><button data-c="mwf" class="on">Mon · Wed · Fri</button><button data-c="tuefri">Tue · Fri (heavy weeks)</button></div>
+  <button class="btn brand" id="autofill">Auto-fill from #1 ↓</button>
+  <button class="btn" id="clearBtn">Clear all</button>
+</div>
+<div class="summary" id="summary"></div>
+<div id="cal"></div>
+<div class="foot">Dates auto-start from the next posting day. Your schedule saves in this browser — tap a slot to pick, ✕ to clear, or Auto-fill to drop the top-ranked ideas straight in.</div>
+</main>
+
+<div class="ov" id="picker"><div class="modal">
+  <h3>Pick a video</h3><div class="msub" id="pickDate"></div>
+  <input class="psearch" id="psearch" placeholder="Search ideas…" autocomplete="off">
+  <div class="plist" id="plist"></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const VIDEOS = [{"rank": 1, "title": "How To Create Your Own Portable Gaming Drive", "tier": "S", "bucket": "A", "score": 95}, {"rank": 2, "title": "The Best Handheld Is Already In Your Pocket", "tier": "S", "bucket": "B", "score": 88}, {"rank": 3, "title": "Xbox 360 Emulation on Android is FINALLY Here! (x360)", "tier": "S", "bucket": "B", "score": 87}, {"rank": 4, "title": "GameNative: PC Games on Android", "tier": "S", "bucket": "B", "score": 84}, {"rank": 5, "title": "Turning My Apple Watch Into a Game Boy", "tier": "S", "bucket": "A", "score": 83}, {"rank": 6, "title": "Why the AYN Thor is the best gaming handheld", "tier": "S", "bucket": "C", "score": 82}, {"rank": 7, "title": "Can the AYN Thor really replace my Switch 2?", "tier": "S", "bucket": "C", "score": 81}, {"rank": 8, "title": "MrWhoseTheBoss Style Shopping", "tier": "S", "bucket": "A", "score": 80}, {"rank": 9, "title": "50 Forgotten Games No One Plays Anymore", "tier": "A", "bucket": "A", "score": 78}, {"rank": 10, "title": "This Full PC Costs Less Than an SSD ($100)", "tier": "A", "bucket": "A", "score": 77}, {"rank": 11, "title": "EVERY Pokemon Game EVER on the AYN Thor", "tier": "A", "bucket": "C", "score": 76}, {"rank": 12, "title": "This $76 Handheld is a Tiny PS2 & GameCube", "tier": "A", "bucket": "D", "score": 74}, {"rank": 13, "title": "Can the AYN Thor really replace my Steam Deck?", "tier": "A", "bucket": "C", "score": 73}, {"rank": 14, "title": "21 Settings That Level Up Your AYN Thor", "tier": "A", "bucket": "C", "score": 72}, {"rank": 15, "title": "Retroid Pocket Nova Review", "tier": "A", "bucket": "D", "score": 71}, {"rank": 16, "title": "Real DS vs Clone vs Thor", "tier": "A", "bucket": "C", "score": 70}, {"rank": 17, "title": "Playing Wii Games on my Phone", "tier": "A", "bucket": "B", "score": 69}, {"rank": 18, "title": "Gaming on a Credit Card Sized PC", "tier": "A", "bucket": "A", "score": 68}, {"rank": 19, "title": "The Best Handheld Under $100", "tier": "A", "bucket": "D", "score": 67}, {"rank": 20, "title": "Playing Switch Games on Mac (Astris Emulator)", "tier": "A", "bucket": "B", "score": 66}, {"rank": 21, "title": "The Ultimate Docked Handheld Setup (Auto Controller Mapping)", "tier": "B", "bucket": "B", "score": 65}, {"rank": 22, "title": "Broken Phone to PC", "tier": "B", "bucket": "A", "score": 63}, {"rank": 23, "title": "The Lenovo Retro Handheld. What ACTUALLY Is it?!", "tier": "B", "bucket": "D", "score": 62}, {"rank": 24, "title": "RP Nova + RDS vs Thor", "tier": "B", "bucket": "C", "score": 61}, {"rank": 25, "title": "Tiny iPhone Video Project", "tier": "B", "bucket": "A", "score": 60}, {"rank": 26, "title": "ClusterTune: Underclock Your Handheld for Cooler, Quieter Gaming", "tier": "B", "bucket": "D", "score": 59}, {"rank": 27, "title": "Anbernic FIXED the RG DS! (Official Linux Update)", "tier": "B", "bucket": "E", "score": 58}, {"rank": 28, "title": "I Waited 8 Months for the Odin 3 to Get Good (Review & Giveaway)", "tier": "B", "bucket": "E", "score": 57}, {"rank": 29, "title": "Raspberry Pi DIY Handheld ", "tier": "B", "bucket": "A", "score": 56}, {"rank": 30, "title": "Postmaster on Android!", "tier": "B", "bucket": "B", "score": 55}, {"rank": 31, "title": "GameSir Pocket Taco Controller Review", "tier": "B", "bucket": "D", "score": 54}, {"rank": 32, "title": "RG Rotate review", "tier": "B", "bucket": "D", "score": 53}, {"rank": 33, "title": "Make music on handhelds", "tier": "B", "bucket": "B", "score": 52}, {"rank": 34, "title": "The Most Beautiful Game Launcher for Mac (Nostalgi)", "tier": "B", "bucket": "B", "score": 51}, {"rank": 35, "title": "The Best 3D Printed Accessories for the AYN Thor", "tier": "B", "bucket": "C", "score": 51}, {"rank": 36, "title": "Llano S850 Wireless HDMI Dock Review", "tier": "B", "bucket": "D", "score": 50}, {"rank": 37, "title": "Can I Get My Girlfriend to Approve of the AYN Thor?", "tier": "C", "bucket": "C", "score": 49}, {"rank": 38, "title": "iisu is finally out!", "tier": "C", "bucket": "B", "score": 48}, {"rank": 39, "title": "The Retro News", "tier": "C", "bucket": "E", "score": 46}, {"rank": 40, "title": "Korea's #1 Food Market is a Tourist Trap (Go Here Instead)", "tier": "C", "bucket": "G", "score": 44}, {"rank": 41, "title": "I Tried EVERY Street Food in Myeongdong", "tier": "C", "bucket": "G", "score": 42}, {"rank": 42, "title": "This channel is about to change!", "tier": "C", "bucket": "F", "score": 40}, {"rank": 43, "title": "Escaping Seoul: A Quiet Korean Countryside Vlog", "tier": "C", "bucket": "G", "score": 35}];   // [{rank,title,tier,bucket,score}]
+const TIERS={S:{name:'Big Hitter',color:'rose'},A:{name:'Strong',color:'amber'},B:{name:'Solid',color:'teal'},C:{name:'Foundation',color:'blue'}};
+const BCOLOR={A:'rose',B:'teal',C:'purple',D:'amber',E:'blue',F:'green',G:'teal'};
+const byRank=[...VIDEOS].sort((a,b)=>a.rank-b.rank);
+const vById=r=>byRank.find(v=>v.rank===r);
+const $=s=>document.querySelector(s);
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// storage (falls back to memory if blocked)
+let store={}; try{store=JSON.parse(localStorage.getItem('rr_cal_assign')||'{}')}catch(e){store={}}
+let cadence='mwf'; try{cadence=localStorage.getItem('rr_cal_cadence')||'mwf'}catch(e){}
+function persist(){try{localStorage.setItem('rr_cal_assign',JSON.stringify(store));localStorage.setItem('rr_cal_cadence',cadence)}catch(e){}}
+
+const WEEKS=16;
+const DOW={mwf:[1,3,5],tuefri:[2,5]};
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmt(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})}
+function mondayOf(d){const x=new Date(d);const g=x.getDay();const diff=(g===0?-6:1-g);x.setDate(x.getDate()+diff);x.setHours(0,0,0,0);return x}
+
+function scheduledRanks(){return new Set(Object.values(store).map(Number))}
+function nextUnscheduled(used){for(const v of byRank){if(!used.has(v.rank))return v.rank}return null}
+
+function renderSummary(){
+  const n=Object.keys(store).length;const bh=Object.values(store).map(Number).filter(r=>{const v=vById(r);return v&&v.tier==='S'}).length;
+  $('#summary').innerHTML=`<div class="stat"><b>${n}</b>scheduled</div><div class="stat"><b>${8-bh}</b>big hitters still unscheduled</div><div class="stat"><b>${cadence==='mwf'?'3/wk':'2/wk'}</b>current cadence</div>`;
+}
+function render(){
+  renderSummary();
+  const today=new Date();today.setHours(0,0,0,0);
+  let start=mondayOf(today);
+  let html='';
+  for(let w=0;w<WEEKS;w++){
+    const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
+    let slots='';let any=false;
+    DOW[cadence].forEach(dw=>{
+      const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));
+      if(w===0 && d<today) return; // skip past days this week
+      any=true;
+      const key=iso(d);const past=d<today;
+      const r=store[key]?Number(store[key]):null;const v=r?vById(r):null;
+      if(v){const tc=TIERS[v.tier].color;const ec=BCOLOR[v.bucket];
+        slots+=`<div class="slot filled${past?' past':''}" style="--edge:var(--${ec})"><div class="date">${fmt(d)}</div>
+          <div class="vt">${esc(v.title)}</div>
+          <div class="vmeta"><span class="rk">#${v.rank}</span><span class="tb b-${tc}">${esc(TIERS[v.tier].name)}</span></div>
+          <button class="x" data-clear="${key}" title="Remove">×</button></div>`;
+      }else{
+        slots+=`<div class="slot empty${past?' past':''}" data-pick="${key}"><div class="date">${fmt(d)}</div><div class="add">＋ pick a video</div></div>`;
+      }
+    });
+    if(!any) continue;
+    const label=wkStart.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+    const filled=DOW[cadence].filter(dw=>{const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));return store[iso(d)]}).length;
+    html+=`<div class="week"><div class="week-h"><span>Week of ${label}</span><span class="wc">${filled}/${DOW[cadence].length} slotted</span></div><div class="slots">${slots}</div></div>`;
+  }
+  $('#cal').innerHTML=html;
+  document.querySelectorAll('[data-pick]').forEach(s=>s.addEventListener('click',()=>openPicker(s.dataset.pick)));
+  document.querySelectorAll('[data-clear]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();delete store[b.dataset.clear];persist();render()}));
+}
+
+// picker
+let pickKey=null;
+function openPicker(key){pickKey=key;const d=new Date(key+'T00:00:00');
+  $('#pickDate').textContent='For '+d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  $('#psearch').value='';renderPicker('');$('#picker').classList.add('show');setTimeout(()=>$('#psearch').focus(),50);}
+function renderPicker(q){
+  const used=scheduledRanks();q=q.toLowerCase();
+  let h='';['S','A','B','C'].forEach(tk=>{
+    const items=byRank.filter(v=>v.tier===tk && !used.has(v.rank) && (!q||v.title.toLowerCase().includes(q)));
+    if(!items.length)return;
+    h+=`<div class="tier-h">${TIERS[tk].name}s</div>`;
+    items.forEach(v=>{const tc=TIERS[v.tier].color;
+      h+=`<div class="prow" data-assign="${v.rank}"><span class="rk">#${v.rank}</span><span class="pt">${esc(v.title)}</span><span class="tb b-${tc}">${v.score}</span></div>`;});
+  });
+  if(!h)h='<div class="tier-h">No unscheduled videos match.</div>';
+  $('#plist').innerHTML=h;
+  document.querySelectorAll('[data-assign]').forEach(r=>r.addEventListener('click',()=>{
+    store[pickKey]=Number(r.dataset.assign);persist();$('#picker').classList.remove('show');render();
+    toast('Scheduled #'+r.dataset.assign);
+  }));
+}
+$('#psearch').addEventListener('input',e=>renderPicker(e.target.value.trim()));
+$('#picker').addEventListener('click',e=>{if(e.target.id==='picker')e.target.classList.remove('show')});
+
+// controls
+document.querySelectorAll('#cadenceSeg button').forEach(b=>b.addEventListener('click',()=>{
+  cadence=b.dataset.c;document.querySelectorAll('#cadenceSeg button').forEach(x=>x.classList.toggle('on',x===b));persist();render();
+}));
+$('#autofill').addEventListener('click',()=>{
+  const today=new Date();today.setHours(0,0,0,0);const start=mondayOf(today);const used=scheduledRanks();let filled=0;
+  for(let w=0;w<WEEKS;w++){const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
+    for(const dw of DOW[cadence]){const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));
+      if(d<today)continue;const key=iso(d);if(store[key])continue;
+      const r=nextUnscheduled(used);if(r==null){persist();render();toast('Filled '+filled+' slots');return;}
+      store[key]=r;used.add(r);filled++;
+    }}
+  persist();render();toast('Filled '+filled+' slots');
+});
+$('#clearBtn').addEventListener('click',()=>{if(confirm('Clear the whole schedule?')){store={};persist();render();}});
+$('#themeBtn').addEventListener('click',()=>{const d=document.body.classList.toggle('dark');$('#themeBtn').textContent=d?'Light mode':'Dark mode'});
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1400)}
+
+// set initial cadence button
+document.querySelectorAll('#cadenceSeg button').forEach(b=>b.classList.toggle('on',b.dataset.c===cadence));
+render();
+</script></body></html>

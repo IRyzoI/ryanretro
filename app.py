@@ -541,6 +541,14 @@ def ranking_page():
 async def planner_page():
     return FileResponse(os.path.join(STATIC_DIR, "planner.html"))
 
+@app.get("/playbook", response_class=HTMLResponse)
+async def playbook_page():
+    return FileResponse(os.path.join(STATIC_DIR, "playbook.html"))
+
+@app.get("/calendar", response_class=HTMLResponse)
+async def calendar_page():
+    return FileResponse(os.path.join(STATIC_DIR, "calendar.html"))
+
 @app.get("/start", response_class=HTMLResponse)
 async def start_page():
     return FileResponse(os.path.join(STATIC_DIR, "start.html"))
