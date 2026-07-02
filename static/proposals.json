@@ -1,5 +1,22 @@
 [
   {
+    "key": "miyoo_mini_plus:B0DF33HBKX",
+    "productId": "miyoo_mini_plus",
+    "productName": "Miyoo Mini Plus",
+    "image": "https://raw.githubusercontent.com/IRyzoI/ryanretro/main/images/shop/miyoo%20mini%20plus.png",
+    "store": "Amazon",
+    "merchant": "FINGEREVO",
+    "trusted": false,
+    "asin": "B0DF33HBKX",
+    "title": "Miyoo Mini Plus Handheld Game Console 3.5-inch 640*480 IPS Screen 3000mAh Miyoo-mini+ with Portable Case White",
+    "price": 69.99,
+    "currentBest": 79.72,
+    "savings": 9.73,
+    "url": "https://www.amazon.com/dp/B0DF33HBKX?tag=ryanretro-20&linkCode=osi&th=1&psc=1",
+    "status": "new",
+    "firstSeen": "2026-07-02"
+  },
+  {
     "key": "miyoo_mini_plus:B0DM593K5Y",
     "productId": "miyoo_mini_plus",
     "productName": "Miyoo Mini Plus",
