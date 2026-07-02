@@ -52,21 +52,69 @@ h1,h2,h3{font-weight:700;margin:0}button{font-family:inherit;cursor:pointer}
 .tier-h{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--soft);padding:8px 4px 4px}
 .foot{text-align:center;color:var(--soft);font-size:12px;padding:22px 0 40px}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--title);color:#fff;font-weight:500;font-size:12.5px;padding:10px 18px;border-radius:6px;z-index:200;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+/* multi-row controls */
+.controls-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.controls-row+.controls-row{margin-top:8px}
+.spacer{flex:1 1 12px}
+.dayseg{display:inline-flex;border:1px solid var(--bord);border-radius:8px;overflow:hidden;background:#fff}
+body.dark .dayseg{background:#2A3040}
+.dayseg button{border:0;background:transparent;font-weight:700;font-size:12px;width:30px;padding:7px 0;color:var(--soft)}
+.dayseg button+button{border-left:1px solid var(--sep)}
+.dayseg button.on{background:var(--title);color:#fff}
+body.dark .dayseg button.on{background:var(--title);color:#14171E}
+/* week-view: turn a day off */
+.slot .off-btn{position:absolute;top:6px;right:6px;width:20px;height:20px;border:none;border-radius:50%;background:rgba(0,0,0,.12);color:var(--soft);font-size:11px;line-height:1;padding:0}
+body.dark .slot .off-btn{background:rgba(255,255,255,.12)}
+.slot.empty:hover .off-btn{background:rgba(0,0,0,.22);color:#fff}
+/* month view */
+.mnav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
+.mnav .mtitle{font-size:15px;font-weight:700;color:var(--title);min-width:150px;text-align:center}
+.mnav button{border:1px solid var(--bord);background:#fff;color:var(--title);border-radius:6px;height:30px;min-width:30px;font-size:15px;font-weight:700;line-height:1}
+body.dark .mnav button{background:#2A3040;color:#C9CEE4}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.mhead{font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--soft);text-align:center;padding:2px 0}
+.mcell{position:relative;min-height:88px;border:1px solid var(--sep);border-radius:8px;padding:5px 6px;display:flex;flex-direction:column;gap:2px;background:var(--card)}
+.mcell.oom{opacity:.42}
+.mcell.pastdim{opacity:.5}
+.mcell.slot{border-color:var(--bord)}
+.mcell.slot.filled{border-left:4px solid var(--edge,var(--blue))}
+.mcell.today{box-shadow:0 0 0 2px var(--teal)}
+.mcell .num{font-size:11px;font-weight:700;color:var(--soft)}
+.mcell.slot .num{color:var(--ink)}
+.mtoggle{position:absolute;top:5px;right:5px;width:15px;height:15px;border-radius:50%;border:1.5px solid var(--soft);background:transparent;padding:0}
+.mcell.slot .mtoggle{background:var(--title);border-color:var(--title)}
+.mbody{flex:1;display:flex;flex-direction:column;justify-content:center;border-radius:5px;min-height:0}
+.mcell.slot .mbody{cursor:pointer}
+.mcell.slot.empty .mbody:hover{background:var(--teal-bg)}
+.mcell .mv{font-size:10.5px;font-weight:600;line-height:1.22;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mcell .mrk{font-size:9px;font-weight:700;color:var(--title);margin-top:2px}
+.mcell .madd{font-size:15px;color:var(--soft);text-align:center;font-weight:700;line-height:1}
+.mcell.off .mbody{align-items:center}
+.mcell.off .mbody::after{content:'day off';font-size:8.5px;color:var(--soft);text-transform:uppercase;letter-spacing:.4px;opacity:.65}
+.mcell .mx{position:absolute;bottom:4px;right:5px;width:16px;height:16px;border:none;border-radius:50%;background:rgba(0,0,0,.16);color:#fff;font-size:10px;line-height:1;padding:0}
+@media(max-width:640px){.mcell{min-height:62px}.mcell .mv{-webkit-line-clamp:2}.mgrid{gap:4px}}
 </style></head><body>
 <header class="topbar"><div class="logo"><div class="play"></div><h1>RYAN RETRO <span>CONTENT CALENDAR</span></h1></div>
 <div class="top-actions"><a class="btn" href="/playbook">← Playbook</a><a class="btn" href="/planner">Planner</a><button class="btn" id="themeBtn">Dark mode</button></div></header>
 <main class="wrap">
-<div class="controls">
-  <span class="hint">Cadence:</span>
-  <div class="seg" id="cadenceSeg"><button data-c="mwf" class="on">Mon · Wed · Fri</button><button data-c="tuefri">Tue · Fri (heavy weeks)</button></div>
+<div class="controls-row">
+  <div class="seg" id="viewSeg"><button data-v="week">Week list</button><button data-v="month">Month</button></div>
   <span class="hint">Start:</span>
   <input type="date" id="startDate">
-  <button class="btn brand" id="autofill">Auto-fill from #1 ↓</button>
+  <span class="spacer"></span>
+  <button class="btn brand" id="autofill">Auto-fill ↓</button>
+  <button class="btn" id="copyBtn">Copy plan</button>
   <button class="btn" id="clearBtn">Clear all</button>
+</div>
+<div class="controls-row">
+  <span class="hint">Posting days:</span>
+  <div class="dayseg" id="daySeg"></div>
+  <div class="seg" id="presetSeg"><button data-p="mwf">M·W·F</button><button data-p="tuefri">Tue·Fri</button></div>
+  <span class="hint" style="margin-left:auto">Tap a day to turn it on/off — some weeks 2, some 3, days off whenever.</span>
 </div>
 <div class="summary" id="summary"></div>
 <div id="cal"></div>
-<div class="foot">Dates begin from your chosen start date. Your schedule saves in this browser — tap a slot to pick, ✕ to clear, or Auto-fill to drop the top-ranked ideas straight in.</div>
+<div class="foot">Two-day weeks, three-day weeks, days off for special plans — it's all yours, and everything saves in this browser. Tap a slot to pick a video, ✕ to clear, the dot to turn a day on/off, Auto-fill to drop the top ideas in, or Copy plan to grab the whole schedule as text.</div>
 </main>
 
 <div class="ov" id="picker"><div class="modal">
@@ -87,27 +135,50 @@ const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"
 
 // storage (falls back to memory if blocked)
 let store={}; try{store=JSON.parse(localStorage.getItem('rr_cal_assign')||'{}')}catch(e){store={}}
-let cadence='mwf'; try{cadence=localStorage.getItem('rr_cal_cadence')||'mwf'}catch(e){}
+let overrides={}; try{overrides=JSON.parse(localStorage.getItem('rr_cal_over')||'{}')}catch(e){overrides={}}
 let startISO=''; try{startISO=localStorage.getItem('rr_cal_start')||''}catch(e){}
-function persist(){try{localStorage.setItem('rr_cal_assign',JSON.stringify(store));localStorage.setItem('rr_cal_cadence',cadence);localStorage.setItem('rr_cal_start',startISO)}catch(e){}}
+let view='week'; try{view=localStorage.getItem('rr_cal_view')||'week'}catch(e){}
+let pattern; try{pattern=JSON.parse(localStorage.getItem('rr_cal_pattern')||'null')}catch(e){pattern=null}
+if(!Array.isArray(pattern)){ let cad='mwf'; try{cad=localStorage.getItem('rr_cal_cadence')||'mwf'}catch(e){} pattern=(cad==='tuefri')?[2,5]:[1,3,5]; }
+function persist(){try{
+  localStorage.setItem('rr_cal_assign',JSON.stringify(store));
+  localStorage.setItem('rr_cal_over',JSON.stringify(overrides));
+  localStorage.setItem('rr_cal_pattern',JSON.stringify(pattern));
+  localStorage.setItem('rr_cal_start',startISO);
+  localStorage.setItem('rr_cal_view',view);
+}catch(e){}}
 
-const WEEKS=16;
-const DOW={mwf:[1,3,5],tuefri:[2,5]};
+const WEEKS=26;
+const DAYLETTERS=['S','M','T','W','T','F','S'];
+const WD_FULL=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function fmt(d){return d.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})}
 function mondayOf(d){const x=new Date(d);const g=x.getDay();const diff=(g===0?-6:1-g);x.setDate(x.getDate()+diff);x.setHours(0,0,0,0);return x}
 function todayISO(){return iso(new Date())}
 function startDate(){const s=startISO||todayISO();const d=new Date(s+'T00:00:00');d.setHours(0,0,0,0);return d}
+function dISO(k){const d=new Date(k+'T00:00:00');d.setHours(0,0,0,0);return d}
+function firstOfMonth(d){return new Date(d.getFullYear(),d.getMonth(),1)}
+let monthCursor=firstOfMonth(startDate());
+
+// a date is a posting slot if explicitly turned on, else falls to the weekly pattern
+function isSlot(d){const o=overrides[iso(d)];if(o==='on')return true;if(o==='off')return false;return pattern.includes(d.getDay());}
+function toggleDay(k){const d=dISO(k);const on=isSlot(d);const patternOn=pattern.includes(d.getDay());const desired=!on;
+  if(desired===patternOn) delete overrides[k]; else overrides[k]=desired?'on':'off';
+  if(!desired) delete store[k]; // turning a day off clears any video on it
+  persist();}
 
 function scheduledRanks(){return new Set(Object.values(store).map(Number))}
 function nextUnscheduled(used){for(const v of byRank){if(!used.has(v.rank))return v.rank}return null}
 
 function renderSummary(){
-  const n=Object.keys(store).length;const bh=Object.values(store).map(Number).filter(r=>{const v=vById(r);return v&&v.tier==='S'}).length;
-  $('#summary').innerHTML=`<div class="stat"><b>${n}</b>scheduled</div><div class="stat"><b>${8-bh}</b>big hitters still unscheduled</div><div class="stat"><b>${cadence==='mwf'?'3/wk':'2/wk'}</b>current cadence</div>`;
+  const n=Object.keys(store).length;
+  const bh=Object.values(store).map(Number).filter(r=>{const v=vById(r);return v&&v.tier==='S'}).length;
+  $('#summary').innerHTML=`<div class="stat"><b>${n}</b>videos scheduled</div><div class="stat"><b>${Math.max(0,8-bh)}</b>big hitters left</div><div class="stat"><b>${pattern.length}</b>default posting days / wk</div>`;
 }
-function render(){
-  renderSummary();
+
+function render(){ renderSummary(); if(view==='month') renderMonth(); else renderWeek(); wire(); }
+
+function renderWeek(){
   const today=new Date();today.setHours(0,0,0,0);
   const startD=startDate();
   let start=mondayOf(startD);
@@ -115,9 +186,10 @@ function render(){
   for(let w=0;w<WEEKS;w++){
     const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
     let slots='';let firstDay=null;let shown=0;let filled=0;
-    DOW[cadence].forEach(dw=>{
-      const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));
-      if(d<startD) return; // skip days before the chosen start date
+    for(let i=0;i<7;i++){
+      const d=new Date(wkStart);d.setDate(wkStart.getDate()+i);
+      if(d<startD) continue;
+      if(!isSlot(d)) continue;
       if(!firstDay) firstDay=d; shown++;
       const key=iso(d);const past=d<today;
       const r=store[key]?Number(store[key]):null;const v=r?vById(r):null;
@@ -126,18 +198,67 @@ function render(){
         slots+=`<div class="slot filled${past?' past':''}" style="--edge:var(--${ec})"><div class="date">${fmt(d)}</div>
           <div class="vt">${esc(v.title)}</div>
           <div class="vmeta"><span class="rk">#${v.rank}</span><span class="tb b-${tc}">${esc(TIERS[v.tier].name)}</span></div>
-          <button class="x" data-clear="${key}" title="Remove">×</button></div>`;
+          <button class="x" data-clear="${key}" title="Remove video">×</button></div>`;
       }else{
-        slots+=`<div class="slot empty${past?' past':''}" data-pick="${key}"><div class="date">${fmt(d)}</div><div class="add">＋ pick a video</div></div>`;
+        slots+=`<div class="slot empty${past?' past':''}" data-pick="${key}"><div class="date">${fmt(d)}</div><div class="add">＋ pick a video</div>
+          <button class="off-btn" data-off="${key}" title="Day off (special plans)">✕</button></div>`;
       }
-    });
+    }
     if(!firstDay) continue;
     const label=firstDay.toLocaleDateString(undefined,{month:'short',day:'numeric'});
     html+=`<div class="week"><div class="week-h"><span>Week of ${label}</span><span class="wc">${filled}/${shown} slotted</span></div><div class="slots">${slots}</div></div>`;
   }
+  if(!html) html=`<div class="foot">No posting days coming up. Add some “posting days” above, or switch to Month view and tap days on.</div>`;
   $('#cal').innerHTML=html;
-  document.querySelectorAll('[data-pick]').forEach(s=>s.addEventListener('click',()=>openPicker(s.dataset.pick)));
+}
+
+function renderMonth(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const startD=startDate();
+  const y=monthCursor.getFullYear(),m=monthCursor.getMonth();
+  const first=new Date(y,m,1);
+  const gridStart=new Date(first);gridStart.setDate(1-first.getDay()); // back to the Sunday on/before the 1st
+  const title=first.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+  let cells='';
+  for(let i=0;i<7;i++) cells+=`<div class="mhead">${WD_FULL[i]}</div>`;
+  for(let i=0;i<42;i++){
+    const d=new Date(gridStart);d.setDate(gridStart.getDate()+i);d.setHours(0,0,0,0);
+    const key=iso(d);const oom=d.getMonth()!==m;const dim=d<today||d<startD;
+    const slot=isSlot(d);const r=store[key]?Number(store[key]):null;const v=r?vById(r):null;
+    let cls='mcell';
+    if(oom)cls+=' oom'; else if(dim)cls+=' pastdim';
+    if(slot)cls+=v?' slot filled':' slot empty'; else if(overrides[key]==='off')cls+=' off';
+    if(key===todayISO())cls+=' today';
+    const edge=v?`style="--edge:var(--${BCOLOR[v.bucket]})"`:'';
+    let body='';
+    if(slot&&v){body=`<div class="mv">${esc(v.title)}</div><div class="mrk">#${v.rank} · ${esc(TIERS[v.tier].name)}</div>`;}
+    else if(slot){body=`<div class="madd">＋</div>`;}
+    cells+=`<div class="${cls}" ${edge}>
+      <div class="num">${d.getDate()}</div>
+      <button class="mtoggle" data-toggle="${key}" title="Turn posting day on/off"></button>
+      <div class="mbody" data-pick="${key}">${body}</div>
+      ${(slot&&v)?`<button class="mx" data-clear="${key}" title="Remove video">×</button>`:''}
+    </div>`;
+  }
+  $('#cal').innerHTML=`<div class="mnav"><button data-mo="-1" title="Previous month">‹</button><span class="mtitle">${esc(title)}</span><button data-mo="1" title="Next month">›</button><button data-mo="0" style="min-width:auto;padding:0 11px;font-size:12px">Today</button></div><div class="mgrid">${cells}</div>`;
+}
+
+function wire(){
+  document.querySelectorAll('[data-pick]').forEach(el=>el.addEventListener('click',e=>{
+    if(e.target.closest('[data-clear],[data-off],[data-toggle]'))return;
+    const key=el.dataset.pick;const d=dISO(key);
+    if(d<startDate()){toast('That day is before your start date');return;}
+    if(!isSlot(d)) toggleDay(key); // clicking an off day activates it
+    openPicker(key);
+  }));
   document.querySelectorAll('[data-clear]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();delete store[b.dataset.clear];persist();render()}));
+  document.querySelectorAll('[data-off]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();toggleDay(b.dataset.off);render()}));
+  document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();toggleDay(b.dataset.toggle);render()}));
+  document.querySelectorAll('[data-mo]').forEach(b=>b.addEventListener('click',()=>{
+    const v=Number(b.dataset.mo);
+    monthCursor=(v===0)?firstOfMonth(new Date()):new Date(monthCursor.getFullYear(),monthCursor.getMonth()+v,1);
+    render();
+  }));
 }
 
 // picker
@@ -164,29 +285,56 @@ function renderPicker(q){
 $('#psearch').addEventListener('input',e=>renderPicker(e.target.value.trim()));
 $('#picker').addEventListener('click',e=>{if(e.target.id==='picker')e.target.classList.remove('show')});
 
-// controls
-document.querySelectorAll('#cadenceSeg button').forEach(b=>b.addEventListener('click',()=>{
-  cadence=b.dataset.c;document.querySelectorAll('#cadenceSeg button').forEach(x=>x.classList.toggle('on',x===b));persist();render();
+// view toggle
+document.querySelectorAll('#viewSeg button').forEach(b=>{
+  b.classList.toggle('on',b.dataset.v===view);
+  b.addEventListener('click',()=>{view=b.dataset.v;document.querySelectorAll('#viewSeg button').forEach(x=>x.classList.toggle('on',x===b));persist();render();});
+});
+
+// weekly posting-day pattern
+const daySeg=$('#daySeg');
+daySeg.innerHTML=DAYLETTERS.map((l,i)=>`<button data-d="${i}" title="${WD_FULL[i]}">${l}</button>`).join('');
+function paintDaySeg(){daySeg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',pattern.includes(Number(b.dataset.d))));}
+daySeg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  const d=Number(b.dataset.d);
+  if(pattern.includes(d)) pattern=pattern.filter(x=>x!==d); else {pattern.push(d);pattern.sort((a,b)=>a-b);}
+  paintDaySeg();persist();render();
 }));
+document.querySelectorAll('#presetSeg button').forEach(b=>b.addEventListener('click',()=>{
+  pattern=(b.dataset.p==='tuefri')?[2,5]:[1,3,5];paintDaySeg();persist();render();
+}));
+paintDaySeg();
+
+// auto-fill top-ranked ideas into open posting days
 $('#autofill').addEventListener('click',()=>{
   const startD=startDate();const start=mondayOf(startD);const used=scheduledRanks();let filled=0;
-  for(let w=0;w<WEEKS;w++){const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
-    for(const dw of DOW[cadence]){const d=new Date(wkStart);d.setDate(wkStart.getDate()+(dw-1));
-      if(d<startD)continue;const key=iso(d);if(store[key])continue;
-      const r=nextUnscheduled(used);if(r==null){persist();render();toast('Filled '+filled+' slots');return;}
+  outer:for(let w=0;w<WEEKS;w++){const wkStart=new Date(start);wkStart.setDate(start.getDate()+w*7);
+    for(let i=0;i<7;i++){const d=new Date(wkStart);d.setDate(wkStart.getDate()+i);
+      if(d<startD)continue;if(!isSlot(d))continue;const key=iso(d);if(store[key])continue;
+      const r=nextUnscheduled(used);if(r==null)break outer;
       store[key]=r;used.add(r);filled++;
     }}
-  persist();render();toast('Filled '+filled+' slots');
+  persist();render();toast('Filled '+filled+' slot'+(filled===1?'':'s'));
 });
-$('#clearBtn').addEventListener('click',()=>{if(confirm('Clear the whole schedule?')){store={};persist();render();}});
+
+// copy the whole plan as text
+$('#copyBtn').addEventListener('click',()=>{
+  const rows=Object.keys(store).sort().map(k=>{const v=vById(Number(store[k]));
+    return dISO(k).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})+' — '+(v?v.title+' (#'+v.rank+')':'?');});
+  if(!rows.length){toast('Nothing scheduled yet');return;}
+  const text='Ryan Retro — Content Calendar\n\n'+rows.join('\n');
+  const done=()=>toast('Copied '+rows.length+'-video plan');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(()=>fbCopy(text,done)); else fbCopy(text,done);
+});
+function fbCopy(text,cb){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');cb();}catch(e){toast('Press ⌘/Ctrl+C');}document.body.removeChild(ta);}
+
+$('#clearBtn').addEventListener('click',()=>{if(confirm('Clear all scheduled videos? Your posting-day setup stays.')){store={};persist();render();}});
 $('#themeBtn').addEventListener('click',()=>{const d=document.body.classList.toggle('dark');$('#themeBtn').textContent=d?'Light mode':'Dark mode'});
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1400)}
 
-// set initial cadence button
-document.querySelectorAll('#cadenceSeg button').forEach(b=>b.classList.toggle('on',b.dataset.c===cadence));
 // start date input
 const startInput=$('#startDate');
 startInput.value=startISO||todayISO();
-startInput.addEventListener('change',()=>{startISO=startInput.value||todayISO();if(!startInput.value)startInput.value=startISO;persist();render()});
+startInput.addEventListener('change',()=>{startISO=startInput.value||todayISO();if(!startInput.value)startInput.value=startISO;monthCursor=firstOfMonth(startDate());persist();render()});
 render();
 </script></body></html>
